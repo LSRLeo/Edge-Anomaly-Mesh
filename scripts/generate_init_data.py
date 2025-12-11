@@ -12,7 +12,7 @@ import numpy as np
 
 
 def generate_starter_data():
-    """Generate small sample datasets for each motion type"""
+    #Generate small sample datasets for each motion type
     
     data_dir = Path('data/generated_data')
     data_dir.mkdir(parents=True, exist_ok=True)
@@ -54,11 +54,6 @@ def generate_starter_data():
     print(f"  Each motion type has:")
     print(f"    - *_starter.json  (REDIS format)")
     print(f"    - *_starter.csv   (Table format)")
-    print("\nUse for:")
-    print("  - Testing Team 2 inference pipeline")
-    print("  - Testing Team 3 database storage")
-    print("  - Testing Team 4 UI visualization")
-    print("  - Unit/integration testing")
 
 
 def generate_idle_data():
@@ -81,7 +76,7 @@ def generate_idle_data():
 
 
 def generate_terrestrial_data():
-    """Generate TERRESTRIAL motion data"""
+    #Generate TERRESTRIAL motion data#
     g = 9.81
     frequency = 3.0
     data = []
@@ -101,7 +96,7 @@ def generate_terrestrial_data():
 
 
 def generate_maritime_data():
-    """Generate MARITIME motion data"""
+    #Generate MARITIME motion data
     g = 9.81
     frequencies = [0.7, 1.3, 2.1, 3.2]
     data = []
@@ -138,7 +133,7 @@ def generate_maritime_data():
 
 
 def generate_lift_data():
-    """Generate LIFT motion data"""
+    #Generate LIFT motion data
     g = 9.81
     cycle_duration = 8.0
     data = []
@@ -179,7 +174,7 @@ def generate_lift_data():
 
 
 def generate_idle_with_anomaly_data():
-    """Generate IDLE data with injected anomalies"""
+    #Generate IDLE data with injected anomalies
     data = generate_idle_data()
     
     # Inject 2 shocks
@@ -194,7 +189,7 @@ def generate_idle_with_anomaly_data():
 
 
 def save_json(data, filepath, motion_type):
-    """Save as JSON (REDIS format)"""
+    #Save as JSON (REDIS format)
     Path(filepath).parent.mkdir(parents=True, exist_ok=True)
     
     messages = []
@@ -220,7 +215,7 @@ def save_json(data, filepath, motion_type):
 
 
 def save_csv(data, filepath, motion_type):
-    """Save as CSV"""
+    #Save as CSV
     import csv
     Path(filepath).parent.mkdir(parents=True, exist_ok=True)
     
