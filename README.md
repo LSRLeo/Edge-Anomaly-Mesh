@@ -13,14 +13,12 @@ This is a simulation-based project.
 What We Are Building: 
 A distributed anomaly detection system that simulates cargo monitoring networks
 
-Tech Stack
+Tech Stack:
 REDIS
-TensorFlow Lite
-Scikit-learn
+Pytorch
 SQLite
-Flask(Maybe?)
-Tkinger
-Pytest
+Tkinter
+
 
 The 4 Motion Classes
 The system learns to classify movement into 4 categories:
@@ -64,71 +62,4 @@ Sudden impacts/drops
 Sensor failures (loss of gravity signal)
 Unexpected high-frequency vibration
 Calibration drift over time
-
-Team Roles & Responsibilities
-Team 1: Data Generation (Simulation)
-Your Job: Create realistic simulated accelerometer data.
-What You'll Build:
-
-A sensor simulator that generates MPU6050 accelerometer/gyroscope data
-Realistic motion patterns for all 4 motion types
-The ability to inject anomalies (simulate problems)
-Publishing system to send data to REDIS
-
-Example:REDIS channel: sensor:raw:{node_id}
-{
-  "node_id": "node_001",
-  "timestamp": 1702656000.123,
-  "accel": {"x": 0.05, "y": -0.02, "z": 9.81},
-  "gyro": {"x": 0.01, "y": 0.02, "z": 0.0}
-}
-
-Team 2: Brain (Data Processing & ML)
-Your Job: Process sensor data and classify motion using machine learning.
-What You'll Build:
-
-A data processing pipeline that listens to REDIS
-Integration with a pre-trained TensorFlow Lite model
-Anomaly detection using K-means clustering
-Publishing system to send results back to REDIS
-
-Example:REDIS channel: inference:results:{node_id}
-{
-  "node_id": "node_001",
-  "timestamp": 1702656000.123,
-  "motion_class": "IDLE",
-  "motion_confidence": 0.95,
-  "anomaly_flag": false,
-  "anomaly_score": 0.12
-}
-
-Team 3: Database (Persistence & API)
-Your Job: Store results and provide an API for querying data.
-What You'll Build:
-
-SQLite database schema for storing inferences
-Background listener to REDIS for incoming results
-Flask REST API with GET endpoints
-Query system for filtering/searching data
-
-
-
-Team 4: UI (Visualization)
-Your Job: Build a GUI that displays everything happening in the system.
-What You'll Build:
-
-Tkinter GUI application
-Real-time dashboard showing node status
-Visualization of motion classifications
-Anomaly alerts and statistics
-
-Example:
-Tkinter GUI with four tabs (Network, Anomalies, Analytics, Node Detials). Network woulld display a visual map of active modes (could be color-coded by motion state). Anomalies, live feed of alerts with a severity level. Analytics, which includes motion class distribution, anomaly trends. Node Detials, motion histroy, anomoly score trend, feature heatmap
-
-Team Interfaces:
-Team 1 -> Team 2 
-Timestamps should be monotonically increasing per node, team 2 should be able to handle gaps.
-Team 2 -> Team 3 
-Message format should include annomly_flag(boolean) as well as anomaly_score(float)
-Team 3 -> Tema 4 
 
