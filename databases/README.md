@@ -1,4 +1,4 @@
-Team 3: Persistence & Query Layer (Database)
+Team 3: Databases
 
 Goal:Store all inferences durably and provide query access for Team 4.
 
