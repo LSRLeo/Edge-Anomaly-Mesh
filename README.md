@@ -62,7 +62,7 @@ The system learns to classify movement into 4 categories:
    - Non-periodic, unpredictable pattern
    - Example: Sine wave pattern, peaks in X and Y axes (if the ocean was a perfect sine wave)
 
-4. **LIFT** - Cargo being lifted by a forklift.
+4. **LIFT** - Cargo being lifted by a forklift or freight elevator
    - Vertical acceleration/deceleration
    - Clear 8-10 second cycle: up → hold → down → rest
    - Minimal horizontal movement
