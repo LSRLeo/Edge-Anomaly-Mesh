@@ -1,5 +1,5 @@
 """
-Team 1: Data Engineering / Simulation Package
+Team 1: Data Engineering
 
 This package provides the sensor network simulation for the
 edge-anomaly-mesh project.
@@ -12,7 +12,7 @@ Main components:
 - Motion Generators: Generate realistic motion data
 
 Usage:
-    from team1_simulator import Simulator, SimulatorConfig
+    from data-engineering import Simulator, SimulatorConfig
     
     config = SimulatorConfig(num_nodes=10, duration=60)
     sim = Simulator(config)
