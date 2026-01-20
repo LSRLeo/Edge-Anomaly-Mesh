@@ -23,20 +23,67 @@ Example with 50% overlap:
     Each window becomes one feature vector → one classification
 
 Usage:
-    from feature_extraction import FeatureExtractor, create_windows
+    # Run with defaults
+    python feature_extraction.py
     
-    windows = create_windows(sensor_data, window_size=100, overlap=0.5)
-    extractor = FeatureExtractor()
-    features = extractor.extract_batch(windows)
+    # Custom settings
+    python feature_extraction.py --window-size 150 --overlap 0.5 --data-dir data/generated_data
 
 Requirements:
     pip install numpy scipy
 """
 
+import argparse
 import numpy as np
 from scipy import fft
 from pathlib import Path
 import csv
+
+
+# ============================================================================
+# ARGUMENT PARSING
+# ============================================================================
+
+def parse_args():
+    """
+    Parse command-line arguments.
+    
+    This allows users to customize behavior without editing code.
+    
+    Returns:
+        argparse.Namespace with all arguments as attributes
+        Access like: args.window_size, args.overlap, etc.
+    """
+    parser = argparse.ArgumentParser(
+        description='Extract features from motion sensor data',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter  # Shows defaults in --help
+    )
+    
+    # Data arguments
+    parser.add_argument('--data-dir', type=str, default='data/generated_data',
+                        help='Directory containing sensor data CSV files')
+    
+    parser.add_argument('--output-dir', type=str, default='data/features',
+                        help='Directory to save extracted features')
+    
+    # Windowing arguments
+    parser.add_argument('--window-size', type=int, default=100,
+                        help='Number of samples per window (100 = 2 sec at 50Hz)')
+    
+    parser.add_argument('--overlap', type=float, default=0.5,
+                        help='Fraction of overlap between windows (0.0 to 0.99)')
+    
+    parser.add_argument('--sample-rate', type=int, default=50,
+                        help='Sensor sample rate in Hz')
+    
+    # Output options
+    parser.add_argument('--save', action='store_true',
+                        help='Save extracted features to files')
+    
+    parser.add_argument('--verbose', action='store_true',
+                        help='Print detailed progress information')
+    
+    return parser.parse_args()
 
 
 # ============================================================================
@@ -306,8 +353,6 @@ def load_csv_data(filepath):
     """
     Load sensor data from CSV file.
     
-    (Same as in visualize_motion_data.py - can import from there instead)
-    
     Args:
         filepath: path to CSV file
     
@@ -317,13 +362,32 @@ def load_csv_data(filepath):
     pass  # TODO: Implement
 
 
+def save_features(features, labels, output_path):
+    """
+    Save extracted features to a file.
+    
+    Args:
+        features: numpy array of shape (n_samples, n_features)
+        labels: numpy array of shape (n_samples,)
+        output_path: path to save the file (e.g., .npz format)
+    
+    Implementation hints:
+        - Use np.savez(output_path, features=features, labels=labels)
+        - This creates a compressed file that can be loaded with np.load()
+    """
+    pass  # TODO: Implement
+
+
 # ============================================================================
-# DEMO / TESTING
+# DEMO / MAIN
 # ============================================================================
 
-def demo():
+def demo(args):
     """
     Demonstrate feature extraction on generated data.
+    
+    Args:
+        args: parsed command-line arguments
     
     This function should:
         1. Load data from each motion type
@@ -331,11 +395,34 @@ def demo():
         3. Extract features from windows
         4. Print shapes and statistics
         5. Show that features differ between motion types
+        6. Optionally save features if --save flag is set
     
     Use this to verify your implementation works correctly.
     """
     pass  # TODO: Implement
 
 
+def main():
+    """
+    Main entry point.
+    
+    Parses arguments and runs the demo.
+    """
+    args = parse_args()
+    
+    if args.verbose:
+        print("=" * 60)
+        print("Feature Extraction")
+        print("=" * 60)
+        print(f"  Data directory:  {args.data_dir}")
+        print(f"  Window size:     {args.window_size} samples")
+        print(f"  Overlap:         {args.overlap * 100}%")
+        print(f"  Sample rate:     {args.sample_rate} Hz")
+        print(f"  Save features:   {args.save}")
+        print("=" * 60)
+    
+    demo(args)
+
+
 if __name__ == '__main__':
-    demo()
+    main()

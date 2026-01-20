@@ -35,12 +35,20 @@ TRAINING PROCESS:
 5. Repeat for many epochs until loss stops decreasing
 
 Usage:
-    python3 ml/train_classifier.py
+    # Run with defaults
+    python train_classifier.py
+    
+    # Custom training settings
+    python train_classifier.py --epochs 200 --batch-size 64 --learning-rate 0.0005
+    
+    # Specify data and output locations
+    python train_classifier.py --data-dir data/generated_data --model-output models/my_model.pt
 
 Requirements:
     pip install torch numpy scikit-learn
 """
 
+import argparse
 import numpy as np
 import torch
 import torch.nn as nn
@@ -52,6 +60,79 @@ from datetime import datetime
 
 # Import from our feature extraction module
 from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
+
+
+# ============================================================================
+# ARGUMENT PARSING
+# ============================================================================
+
+def parse_args():
+    """
+    Parse command-line arguments for training configuration.
+    
+    This allows users to experiment with different hyperparameters
+    without editing code.
+    
+    Returns:
+        argparse.Namespace with all arguments as attributes
+    """
+    parser = argparse.ArgumentParser(
+        description='Train motion classifier on sensor data',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    
+    # Data arguments
+    parser.add_argument('--data-dir', type=str, default='data/generated_data',
+                        help='Directory containing training data')
+    
+    parser.add_argument('--features-file', type=str, default=None,
+                        help='Pre-extracted features file (.npz). If provided, skip extraction.')
+    
+    # Training hyperparameters
+    parser.add_argument('--epochs', type=int, default=100,
+                        help='Maximum number of training epochs')
+    
+    parser.add_argument('--batch-size', type=int, default=32,
+                        help='Number of samples per training batch')
+    
+    parser.add_argument('--learning-rate', type=float, default=0.001,
+                        help='Learning rate for Adam optimizer')
+    
+    parser.add_argument('--patience', type=int, default=10,
+                        help='Early stopping patience (epochs without improvement)')
+    
+    parser.add_argument('--dropout', type=float, default=0.3,
+                        help='Dropout probability for regularization')
+    
+    # Model architecture
+    parser.add_argument('--hidden-dims', type=int, nargs='+', default=[64, 32],
+                        help='Hidden layer dimensions (e.g., --hidden-dims 64 32)')
+    
+    # Feature extraction (if not using pre-extracted)
+    parser.add_argument('--window-size', type=int, default=100,
+                        help='Window size for feature extraction')
+    
+    parser.add_argument('--overlap', type=float, default=0.5,
+                        help='Window overlap for feature extraction')
+    
+    # Output arguments
+    parser.add_argument('--model-output', type=str, default='models/motion_classifier.pt',
+                        help='Path to save trained model')
+    
+    parser.add_argument('--history-output', type=str, default='models/training_history.json',
+                        help='Path to save training history')
+    
+    # Runtime options
+    parser.add_argument('--seed', type=int, default=42,
+                        help='Random seed for reproducibility')
+    
+    parser.add_argument('--no-cuda', action='store_true',
+                        help='Disable CUDA even if available')
+    
+    parser.add_argument('--verbose', action='store_true',
+                        help='Print detailed training progress')
+    
+    return parser.parse_args()
 
 
 # ============================================================================
@@ -341,12 +422,14 @@ def print_classification_report(matrix, class_names):
 # DATA LOADING
 # ============================================================================
 
-def load_all_data(data_dir):
+def load_all_data(data_dir, window_size=100, overlap=0.5):
     """
     Load and process data from all motion types.
     
     Args:
         data_dir: Path to data/generated_data directory
+        window_size: Window size for feature extraction
+        overlap: Window overlap for feature extraction
     
     Returns:
         X: numpy array of features, shape (n_samples, n_features)
@@ -373,77 +456,102 @@ def main():
     """
     Main training function.
     
+    Uses command-line arguments to configure training.
+    
     Steps:
-        1. Configuration (hyperparameters, paths)
-        2. Load and preprocess data
-        3. Create train/val/test splits
-        4. Initialize model, optimizer, loss function
-        5. Training loop with early stopping
-        6. Evaluate on test set
-        7. Save model and results
-    
-    Key hyperparameters to set:
-        - BATCH_SIZE: 32 (samples per gradient update)
-        - LEARNING_RATE: 0.001 (step size for optimizer)
-        - EPOCHS: 100 (maximum training iterations)
-        - PATIENCE: 10 (early stopping patience)
-    
-    Early stopping:
-        - Track validation accuracy each epoch
-        - If it doesn't improve for PATIENCE epochs, stop training
-        - Save the best model (highest validation accuracy)
-    
-    Implementation outline:
-        
-        # Setup
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        
-        # Load data
-        X, y, extractor = load_all_data(DATA_DIR)
-        X_normalized, scaler = normalize_features(X)
-        
-        # Create dataset and split
-        dataset = MotionDataset(X_normalized, y)
-        train_set, val_set, test_set = random_split(dataset, [0.7, 0.15, 0.15])
-        
-        # Create dataloaders
-        train_loader = DataLoader(train_set, batch_size=32, shuffle=True)
-        val_loader = DataLoader(val_set, batch_size=32)
-        test_loader = DataLoader(test_set, batch_size=32)
-        
-        # Initialize model
-        model = MotionClassifier(input_dim=extractor.n_features).to(device)
-        criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(model.parameters(), lr=0.001)
-        
-        # Training loop
-        best_val_acc = 0
-        patience_counter = 0
-        
-        for epoch in range(EPOCHS):
-            train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, device)
-            val_loss, val_acc, _, _ = evaluate(model, val_loader, criterion, device)
-            
-            # Early stopping check
-            if val_acc > best_val_acc:
-                best_val_acc = val_acc
-                patience_counter = 0
-                torch.save(model.state_dict(), 'best_model.pt')
-            else:
-                patience_counter += 1
-                if patience_counter >= PATIENCE:
-                    print("Early stopping!")
-                    break
-        
-        # Load best model and evaluate on test set
-        model.load_state_dict(torch.load('best_model.pt'))
-        test_loss, test_acc, predictions, labels = evaluate(model, test_loader, criterion, device)
-        
-        # Print results
-        conf_matrix = compute_confusion_matrix(predictions, labels)
-        print_confusion_matrix(conf_matrix, CLASS_NAMES)
-        print_classification_report(conf_matrix, CLASS_NAMES)
+        1. Parse arguments
+        2. Set random seeds for reproducibility
+        3. Load and preprocess data
+        4. Create train/val/test splits
+        5. Initialize model, optimizer, loss function
+        6. Training loop with early stopping
+        7. Evaluate on test set
+        8. Save model and results
     """
+    # Parse arguments
+    args = parse_args()
+    
+    # Set random seeds for reproducibility
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+    
+    # Determine device
+    if args.no_cuda:
+        device = torch.device('cpu')
+    else:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
+    # Class names for reporting
+    CLASS_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT']
+    
+    if args.verbose:
+        print("=" * 60)
+        print("Motion Classifier Training")
+        print("=" * 60)
+        print(f"  Device:         {device}")
+        print(f"  Data directory: {args.data_dir}")
+        print(f"  Epochs:         {args.epochs}")
+        print(f"  Batch size:     {args.batch_size}")
+        print(f"  Learning rate:  {args.learning_rate}")
+        print(f"  Hidden dims:    {args.hidden_dims}")
+        print(f"  Dropout:        {args.dropout}")
+        print(f"  Patience:       {args.patience}")
+        print(f"  Model output:   {args.model_output}")
+        print("=" * 60)
+    
+    # Create output directory
+    Path(args.model_output).parent.mkdir(parents=True, exist_ok=True)
+    
+    # =========================================================================
+    # TODO: Implement the rest of main()
+    # =========================================================================
+    #
+    # 1. Load data:
+    #    X, y, extractor = load_all_data(args.data_dir, args.window_size, args.overlap)
+    #    X_normalized, scaler = normalize_features(X)
+    #
+    # 2. Create dataset and split:
+    #    dataset = MotionDataset(X_normalized, y)
+    #    train_set, val_set, test_set = random_split(dataset, [0.7, 0.15, 0.15])
+    #
+    # 3. Create dataloaders:
+    #    train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
+    #    val_loader = DataLoader(val_set, batch_size=args.batch_size)
+    #    test_loader = DataLoader(test_set, batch_size=args.batch_size)
+    #
+    # 4. Initialize model:
+    #    model = MotionClassifier(
+    #        input_dim=extractor.n_features,
+    #        hidden_dims=tuple(args.hidden_dims),
+    #        dropout=args.dropout
+    #    ).to(device)
+    #    criterion = nn.CrossEntropyLoss()
+    #    optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
+    #
+    # 5. Training loop with early stopping:
+    #    best_val_acc = 0
+    #    patience_counter = 0
+    #    history = {'train_loss': [], 'train_acc': [], 'val_loss': [], 'val_acc': []}
+    #
+    #    for epoch in range(args.epochs):
+    #        train_loss, train_acc = train_epoch(...)
+    #        val_loss, val_acc, _, _ = evaluate(...)
+    #
+    #        # Early stopping check
+    #        if val_acc > best_val_acc:
+    #            best_val_acc = val_acc
+    #            patience_counter = 0
+    #            # Save best model
+    #        else:
+    #            patience_counter += 1
+    #            if patience_counter >= args.patience:
+    #                print("Early stopping!")
+    #                break
+    #
+    # 6. Evaluate on test set and print results
+    #
+    # 7. Save model and training history
+    #
     pass  # TODO: Implement
 
 
