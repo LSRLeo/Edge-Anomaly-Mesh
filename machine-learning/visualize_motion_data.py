@@ -292,7 +292,7 @@ def main():
     print("\nTo view plots, open the PNG files or run with plt.show()")
     
     # Uncomment to display plots interactively:
-    plt.show()
+    # plt.show()
 
 
 if __name__ == '__main__':
