@@ -1,0 +1,459 @@
+"""
+anomalies_tab.py - Anomalies feed tab with filtering and table display.
+
+This module contains:
+- AnomaliesTab: Frame containing anomaly list with filters
+- Treeview table for anomaly display
+- Filter controls (node, severity, time range)
+- Row selection handling
+
+Features:
+- Live feed of detected anomalies
+- Filter by node ID, severity level, time range
+- Color-coded severity (HIGH=red, MEDIUM=orange, LOW=blue)
+- Click row to view node details
+- Status tracking (NEW, ACKNOWLEDGED, RESOLVED)
+"""
+
+import tkinter as tk
+from tkinter import ttk
+from typing import Dict, List, Optional, Any, TYPE_CHECKING
+from datetime import datetime, timedelta
+
+from ui.ui_utils import (
+    SEVERITY_COLORS, STATUS_COLORS,
+    format_timestamp, format_anomaly_score,
+    get_severity_color
+)
+
+# Avoid circular import
+if TYPE_CHECKING:
+    from ui.dashboard_main import DashboardApp
+
+
+# =============================================================================
+# MOCK DATA - Replace with database queries
+# =============================================================================
+
+MOCK_ANOMALIES = [
+    {
+        'id': 1,
+        'timestamp': datetime.now() - timedelta(minutes=5),
+        'node_id': 'node_003',
+        'severity': 'HIGH',
+        'motion_class': 'MARITIME',
+        'score': 0.92,
+        'status': 'NEW',
+        'description': 'Sudden impact detected'
+    },
+    {
+        'id': 2,
+        'timestamp': datetime.now() - timedelta(minutes=12),
+        'node_id': 'node_005',
+        'severity': 'MEDIUM',
+        'motion_class': 'IDLE',
+        'score': 0.67,
+        'status': 'NEW',
+        'description': 'Unexpected vibration pattern'
+    },
+    {
+        'id': 3,
+        'timestamp': datetime.now() - timedelta(minutes=30),
+        'node_id': 'node_001',
+        'severity': 'LOW',
+        'motion_class': 'TERRESTRIAL',
+        'score': 0.45,
+        'status': 'ACKNOWLEDGED',
+        'description': 'Minor sensor drift'
+    },
+    {
+        'id': 4,
+        'timestamp': datetime.now() - timedelta(hours=1),
+        'node_id': 'node_003',
+        'severity': 'HIGH',
+        'motion_class': 'LIFT',
+        'score': 0.88,
+        'status': 'RESOLVED',
+        'description': 'Drop detected during lift'
+    },
+]
+
+
+class AnomaliesTab(ttk.Frame):
+    """
+    Anomalies feed tab.
+    
+    Displays a filterable table of detected anomalies with
+    severity coloring and click-to-view-details functionality.
+    """
+    
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp'):
+        """
+        Initialize the Anomalies tab.
+        
+        Args:
+            parent: Parent notebook widget
+            dashboard: Reference to main dashboard for callbacks
+        """
+        super().__init__(parent)
+        
+        self.dashboard = dashboard
+        
+        # UI components
+        self.tree: Optional[ttk.Treeview] = None
+        self.node_filter: Optional[ttk.Combobox] = None
+        self.severity_filter: Optional[ttk.Combobox] = None
+        self.time_filter: Optional[ttk.Combobox] = None
+        
+        # Current filter values
+        self.current_filters: Dict[str, str] = {
+            'node_id': 'All',
+            'severity': 'All',
+            'time_range': 'Last 24 hours'
+        }
+        
+        # Build UI
+        self._setup_ui()
+    
+    def _setup_ui(self):
+        """
+        Create the tab layout.
+        
+        Layout:
+        ┌─────────────────────────────────────┐
+        │  Node: [▼]  Severity: [▼]  Time: [▼]│
+        ├─────────────────────────────────────┤
+        │  Timestamp  │ Node │ Sev │ Score │  │
+        │  ─────────────────────────────────  │
+        │  10:30:00   │ 003  │ HIGH│ 0.92  │  │
+        │  10:18:00   │ 005  │ MED │ 0.67  │  │
+        │  ...        │ ...  │ ... │ ...   │  │
+        └─────────────────────────────────────┘
+        """
+        # Configure grid
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        
+        # TODO: Create filter bar
+        # self._setup_filters()
+        
+        # TODO: Create treeview table
+        # self._setup_table()
+        
+        # TEMPORARY: Placeholder
+        ttk.Label(self, text="Anomalies Tab - TODO: Implement filters and table").pack(pady=20)
+    
+    def _setup_filters(self):
+        """
+        Create the filter controls bar.
+        
+        Filters:
+        - Node ID: Dropdown with all node IDs + "All"
+        - Severity: Dropdown with HIGH, MEDIUM, LOW + "All"
+        - Time Range: Dropdown with preset time ranges
+        """
+        # TODO: Implement filters
+        #
+        # filter_frame = ttk.Frame(self)
+        # filter_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
+        #
+        # # Node filter
+        # ttk.Label(filter_frame, text="Node:").grid(row=0, column=0, padx=(0, 5))
+        # self.node_filter = ttk.Combobox(filter_frame, values=['All'], 
+        #                                  state='readonly', width=12)
+        # self.node_filter.current(0)
+        # self.node_filter.grid(row=0, column=1, padx=(0, 15))
+        # self.node_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
+        #
+        # # Severity filter
+        # ttk.Label(filter_frame, text="Severity:").grid(row=0, column=2, padx=(0, 5))
+        # self.severity_filter = ttk.Combobox(
+        #     filter_frame, 
+        #     values=['All', 'HIGH', 'MEDIUM', 'LOW'],
+        #     state='readonly', width=10
+        # )
+        # self.severity_filter.current(0)
+        # self.severity_filter.grid(row=0, column=3, padx=(0, 15))
+        # self.severity_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
+        #
+        # # Time range filter
+        # ttk.Label(filter_frame, text="Time:").grid(row=0, column=4, padx=(0, 5))
+        # self.time_filter = ttk.Combobox(
+        #     filter_frame,
+        #     values=['Last hour', 'Last 6 hours', 'Last 24 hours', 'Last 7 days', 'All time'],
+        #     state='readonly', width=15
+        # )
+        # self.time_filter.current(2)  # Default: Last 24 hours
+        # self.time_filter.grid(row=0, column=5, padx=(0, 15))
+        # self.time_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
+        #
+        # # Refresh button
+        # ttk.Button(filter_frame, text="Refresh", 
+        #            command=self.refresh).grid(row=0, column=6, padx=(15, 0))
+        pass
+    
+    def _setup_table(self):
+        """
+        Create the Treeview table for displaying anomalies.
+        
+        Columns:
+        - Timestamp (150px)
+        - Node ID (100px)
+        - Severity (80px)
+        - Motion Class (100px)
+        - Score (80px)
+        - Status (100px)
+        - Description (remaining space)
+        """
+        # TODO: Implement table
+        #
+        # # Frame for treeview and scrollbar
+        # table_frame = ttk.Frame(self)
+        # table_frame.grid(row=1, column=0, sticky='nsew', padx=10, pady=(0, 10))
+        # table_frame.columnconfigure(0, weight=1)
+        # table_frame.rowconfigure(0, weight=1)
+        #
+        # # Define columns
+        # columns = ('timestamp', 'node_id', 'severity', 'motion_class', 
+        #            'score', 'status', 'description')
+        #
+        # # Create treeview
+        # self.tree = ttk.Treeview(table_frame, columns=columns, show='headings',
+        #                          selectmode='browse')
+        #
+        # # Configure columns
+        # self.tree.heading('timestamp', text='Timestamp')
+        # self.tree.heading('node_id', text='Node ID')
+        # self.tree.heading('severity', text='Severity')
+        # self.tree.heading('motion_class', text='Motion')
+        # self.tree.heading('score', text='Score')
+        # self.tree.heading('status', text='Status')
+        # self.tree.heading('description', text='Description')
+        #
+        # self.tree.column('timestamp', width=150, anchor='center')
+        # self.tree.column('node_id', width=100, anchor='center')
+        # self.tree.column('severity', width=80, anchor='center')
+        # self.tree.column('motion_class', width=100, anchor='center')
+        # self.tree.column('score', width=80, anchor='center')
+        # self.tree.column('status', width=100, anchor='center')
+        # self.tree.column('description', width=200, anchor='w')
+        #
+        # self.tree.grid(row=0, column=0, sticky='nsew')
+        #
+        # # Scrollbar
+        # scrollbar = ttk.Scrollbar(table_frame, orient='vertical', 
+        #                           command=self.tree.yview)
+        # scrollbar.grid(row=0, column=1, sticky='ns')
+        # self.tree.configure(yscrollcommand=scrollbar.set)
+        #
+        # # Bind selection event
+        # self.tree.bind('<<TreeviewSelect>>', self._on_row_select)
+        #
+        # # Configure row tags for coloring
+        # self.tree.tag_configure('HIGH', foreground=SEVERITY_COLORS['HIGH'])
+        # self.tree.tag_configure('MEDIUM', foreground=SEVERITY_COLORS['MEDIUM'])
+        # self.tree.tag_configure('LOW', foreground=SEVERITY_COLORS['LOW'])
+        pass
+    
+    def load_anomalies(self, anomalies: List[Dict[str, Any]]):
+        """
+        Load anomalies into the table.
+        
+        Args:
+            anomalies: List of anomaly dictionaries
+        """
+        # TODO: Implement
+        #
+        # # Clear existing rows
+        # for item in self.tree.get_children():
+        #     self.tree.delete(item)
+        #
+        # # Add new rows
+        # for anomaly in anomalies:
+        #     self._add_anomaly_row(anomaly)
+        pass
+    
+    def _add_anomaly_row(self, anomaly: Dict[str, Any]):
+        """
+        Add a single anomaly row to the table.
+        
+        Args:
+            anomaly: Anomaly dictionary
+        """
+        # TODO: Implement
+        #
+        # values = (
+        #     format_timestamp(anomaly['timestamp']),
+        #     anomaly['node_id'],
+        #     anomaly['severity'],
+        #     anomaly['motion_class'],
+        #     format_anomaly_score(anomaly['score']),
+        #     anomaly['status'],
+        #     anomaly.get('description', '')
+        # )
+        #
+        # # Insert with severity tag for coloring
+        # self.tree.insert('', 'end', iid=str(anomaly['id']), values=values,
+        #                  tags=(anomaly['severity'],))
+        pass
+    
+    def apply_filters(self):
+        """
+        Re-query data with current filter settings.
+        
+        Reads filter values from UI and fetches matching anomalies.
+        """
+        # TODO: Implement
+        #
+        # # Get current filter values
+        # self.current_filters['node_id'] = self.node_filter.get()
+        # self.current_filters['severity'] = self.severity_filter.get()
+        # self.current_filters['time_range'] = self.time_filter.get()
+        #
+        # # Convert time range to datetime
+        # time_ranges = {
+        #     'Last hour': timedelta(hours=1),
+        #     'Last 6 hours': timedelta(hours=6),
+        #     'Last 24 hours': timedelta(hours=24),
+        #     'Last 7 days': timedelta(days=7),
+        #     'All time': None
+        # }
+        # time_delta = time_ranges.get(self.current_filters['time_range'])
+        #
+        # # Fetch filtered data from database
+        # # anomalies = db.get_anomalies(
+        # #     node_id=None if self.current_filters['node_id'] == 'All' else self.current_filters['node_id'],
+        # #     severity=None if self.current_filters['severity'] == 'All' else self.current_filters['severity'],
+        # #     since=datetime.now() - time_delta if time_delta else None
+        # # )
+        #
+        # # For now, filter mock data
+        # anomalies = self._filter_mock_data()
+        #
+        # # Update table
+        # self.load_anomalies(anomalies)
+        pass
+    
+    def _filter_mock_data(self) -> List[Dict[str, Any]]:
+        """
+        Filter mock data based on current filters (temporary).
+        
+        Returns:
+            Filtered list of anomalies
+        """
+        # TODO: Remove when real database is connected
+        filtered = MOCK_ANOMALIES.copy()
+        
+        # Apply node filter
+        if self.current_filters['node_id'] != 'All':
+            filtered = [a for a in filtered 
+                       if a['node_id'] == self.current_filters['node_id']]
+        
+        # Apply severity filter
+        if self.current_filters['severity'] != 'All':
+            filtered = [a for a in filtered 
+                       if a['severity'] == self.current_filters['severity']]
+        
+        return filtered
+    
+    def _on_filter_change(self, event):
+        """
+        Handle filter dropdown change.
+        
+        Args:
+            event: Combobox selection event
+        """
+        # TODO: Implement
+        # self.apply_filters()
+        pass
+    
+    def _on_row_select(self, event):
+        """
+        Handle row selection in the table.
+        
+        Navigates to Node Details tab for the selected anomaly's node.
+        
+        Args:
+            event: Treeview selection event
+        """
+        # TODO: Implement
+        #
+        # selection = self.tree.selection()
+        # if not selection:
+        #     return
+        #
+        # # Get the selected row's values
+        # item = self.tree.item(selection[0])
+        # values = item['values']
+        # node_id = values[1]  # node_id is column index 1
+        #
+        # # Navigate to node details
+        # self.dashboard.show_node_details(node_id)
+        pass
+    
+    def update_node_filter_options(self, node_ids: List[str]):
+        """
+        Update the node filter dropdown with available node IDs.
+        
+        Args:
+            node_ids: List of all node IDs
+        """
+        # TODO: Implement
+        #
+        # if self.node_filter:
+        #     current = self.node_filter.get()
+        #     self.node_filter['values'] = ['All'] + sorted(node_ids)
+        #     # Preserve selection if still valid
+        #     if current in ['All'] + node_ids:
+        #         self.node_filter.set(current)
+        #     else:
+        #         self.node_filter.current(0)
+        pass
+    
+    def refresh(self):
+        """
+        Refresh the anomalies table with latest data.
+        
+        Fetches current anomalies from database and updates display.
+        """
+        # TODO: Implement with real database queries
+        #
+        # try:
+        #     # Update node filter options
+        #     # node_ids = db.get_all_node_ids()
+        #     # self.update_node_filter_options(node_ids)
+        #     
+        #     # Apply current filters and reload
+        #     self.apply_filters()
+        #     
+        # except Exception as e:
+        #     print(f"Error refreshing anomalies tab: {e}")
+        pass
+
+
+# =============================================================================
+# DEMO / TEST
+# =============================================================================
+
+def demo():
+    """Demonstrate the AnomaliesTab independently."""
+    root = tk.Tk()
+    root.title("Anomalies Tab Demo")
+    root.geometry("900x500")
+    
+    # Create a mock dashboard
+    class MockDashboard:
+        def show_node_details(self, node_id):
+            print(f"Show details for: {node_id}")
+    
+    notebook = ttk.Notebook(root)
+    notebook.pack(fill='both', expand=True)
+    
+    tab = AnomaliesTab(notebook, dashboard=MockDashboard())
+    notebook.add(tab, text='Anomalies')
+    
+    root.mainloop()
+
+
+if __name__ == '__main__':
+    demo()
