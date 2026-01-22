@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-01-22T18:52:12.818830",
+  "hubs": [
+    {
+      "hub_id": "hub_nyc_01",
+      "name": "NYC Distribution Center",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "altitude_m": 10.0,
+      "radius_m": 500,
+      "type": "distribution_center"
+    },
+    {
+      "hub_id": "hub_la_01",
+      "name": "LA Warehouse",
+      "lat": 34.0522,
+      "lon": -118.2437,
+      "altitude_m": 85.0,
+      "radius_m": 750,
+      "type": "warehouse"
+    },
+    {
+      "hub_id": "hub_chicago_01",
+      "name": "Chicago Logistics Hub",
+      "lat": 41.8781,
+      "lon": -87.6298,
+      "altitude_m": 180.0,
+      "radius_m": 600,
+      "type": "logistics_hub"
+    },
+    {
+      "hub_id": "hub_miami_port_01",
+      "name": "Miami Port Facility",
+      "lat": 25.7617,
+      "lon": -80.1918,
+      "altitude_m": 2.0,
+      "radius_m": 1000,
+      "type": "port"
+    }
+  ]
+}

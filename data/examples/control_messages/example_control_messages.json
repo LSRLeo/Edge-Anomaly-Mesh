@@ -1,0 +1,54 @@
+[
+  {
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:12.977452",
+    "command": "SET_MODE",
+    "payload": {
+      "mode": "SLEEP",
+      "reason": "delivered_to_destination",
+      "resume_at": "2026-01-23T06:52:12.977434"
+    },
+    "issued_by": "operator_jane"
+  },
+  {
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:12.977456",
+    "command": "WAKE",
+    "payload": {
+      "mode": "TRANSIT",
+      "reason": "shipment_departure"
+    },
+    "issued_by": "operator_bob"
+  },
+  {
+    "node_id": "node_003",
+    "timestamp": "2026-01-22T18:52:12.977460",
+    "command": "SET_SAMPLE_RATE",
+    "payload": {
+      "sample_rate_hz": 100,
+      "reason": "debugging_anomaly",
+      "duration_sec": 300
+    },
+    "issued_by": "engineer_alice"
+  },
+  {
+    "node_id": "node_004",
+    "timestamp": "2026-01-22T18:52:12.977463",
+    "command": "SHUTDOWN",
+    "payload": {
+      "reason": "maintenance_required",
+      "alert_sent": true
+    },
+    "issued_by": "system"
+  },
+  {
+    "node_id": "node_005",
+    "timestamp": "2026-01-22T18:52:12.977466",
+    "command": "CALIBRATE",
+    "payload": {
+      "reason": "drift_detected",
+      "baseline_reset": true
+    },
+    "issued_by": "ml_system"
+  }
+]
