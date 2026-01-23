@@ -9,4 +9,3 @@ value = r.get('test_key')
 print(f'Value for "test_key": {value}')  # Expected output: test_value
 
 #remember to SHUTDOWN redis-client
-r.shutdown()
