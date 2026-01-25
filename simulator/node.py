@@ -1,9 +1,11 @@
 from generators import Idle, Lift, Maritime, Terrestrial
 import time
 import json
+from publisher import RedisPublisher
+import threading
 
 class Node:
-    def __init__(self, node_id: str, mode: str):
+    def __init__(self, node_id: str, mode: str, redis: RedisPublisher):
         self.node_id = node_id
         self.gps_lat = 0
         self.gps_lon = 0
@@ -12,7 +14,9 @@ class Node:
         self.battery_pct = 100
         self.mode = "IDLE"
         self.seq = 0
-        # self.running_state = 0 # 1 = running, 2 = paused, 0 = stopped
+        self.redis = redis
+        self._thread = None
+        self.running_state = 0 # 1 = running, 2 = paused, 0 = stopped
     
     def generate_message(self) -> json:
         if self.mode == "IDLE":
@@ -26,7 +30,9 @@ class Node:
         else:
             raise ValueError(f"Invalid mode: {self.mode}")
         
-        return json.dump({            
+        self.seq += 1
+
+        return json.dumps({            
             "node_id": self.node_id,
             "timestamp": time.time(),
             "seq": self.seq,
@@ -43,18 +49,42 @@ class Node:
             "battery_pct": self.battery_pct,
             "mode": self.mode
         })
-
-
-
-    # def start(self):
-    #     self.running_state = 1
     
-    # def stop(self):
-    #     self.running_state = 0
-    #     self.seq = 0
-    
-    # def pause(self):
-    #     self.running_state = 2
+    def _run(self):
+        period = 1.0 / self.sample_rate_hz
+
+        next_time = time.perf_counter()
+
+        while self.running_state != 0:
+            if self.running_state == 2:
+                time.sleep(0.1)
+                continue
+
+            message = self.generate_message()
+            self.redis.publish(message)
+
+            next_time += period
+            sleep_time = next_time - time.perf_counter()
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+
+    def start(self):
+        if self.running_state == 1:
+            return
+
+        self.running_state = 1
+        self._thread = threading.Thread(target=self._run, daemon=True)
+        self._thread.start()
+
+
+    def pause(self):
+        self.running_state = 2
+
+
+    def stop(self):
+        self.running_state = 0
+        self.seq = 0
+
 
     
 #         node_id, gps_lat, gps_lon, gps_altitude_m, sample_rate_hz, battery_pct, mode
