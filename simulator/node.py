@@ -1,4 +1,6 @@
-
+from generators import Idle, Lift, Maritime, Terrestrial
+import time
+import json
 
 class Node:
     def __init__(self, node_id: str, mode: str):
@@ -10,19 +12,49 @@ class Node:
         self.battery_pct = 100
         self.mode = "IDLE"
         self.seq = 0
-        self.running_state = 0 # 1 = running, 2 = paused, 0 = stopped
+        # self.running_state = 0 # 1 = running, 2 = paused, 0 = stopped
     
-    def generate_message(self):
-        pass
+    def generate_message(self) -> json:
+        if self.mode == "IDLE":
+            readings = Idle.generate_reading()
+        elif self.mode == "LIFT":
+            readings = Lift.generate_reading()
+        elif self.mode == "MARITIME":
+            readings = Maritime.generate_reading()
+        elif self.mode == "TERRESTRIAL":
+            readings = Terrestrial.generate_reading()
+        else:
+            raise ValueError(f"Invalid mode: {self.mode}")
+        
+        return json.dump({            
+            "node_id": self.node_id,
+            "timestamp": time.time(),
+            "seq": self.seq,
+            "gps_lat": self.gps_lat,
+            "gps_lon": self.gps_lon,
+            "gps_altitude_m": self.gps_altitude_m,
+            "accel_x": readings.accel_x,
+            "accel_y": readings.accel_y,
+            "accel_z": readings.accel_z,
+            "gyro_x": readings.gyro_x,
+            "gyro_y": readings.gyro_y,
+            "gyro_z": readings.gyro_z,
+            "sample_rate_hz": self.sample_rate_hz,
+            "battery_pct": self.battery_pct,
+            "mode": self.mode
+        })
 
-    def start(self):
-        pass
+
+
+    # def start(self):
+    #     self.running_state = 1
     
-    def stop(self):
-        pass
+    # def stop(self):
+    #     self.running_state = 0
+    #     self.seq = 0
     
-    def pause(self):
-        pass
+    # def pause(self):
+    #     self.running_state = 2
 
     
 #         node_id, gps_lat, gps_lon, gps_altitude_m, sample_rate_hz, battery_pct, mode
