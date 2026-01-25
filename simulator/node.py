@@ -5,12 +5,12 @@ from publisher import RedisPublisher
 import threading
 
 class Node:
-    def __init__(self, node_id: str, mode: str, redis: RedisPublisher):
+    def __init__(self, node_id: str, mode: str, redis: RedisPublisher, sample_rate = 50):
         self.node_id = node_id
         self.gps_lat = 0
         self.gps_lon = 0
         self.gps_altitude_m = 0
-        self.sample_rate_hz = 50
+        self.sample_rate_hz = sample_rate
         self.battery_pct = 100
         self.mode = "IDLE"
         self.seq = 0
