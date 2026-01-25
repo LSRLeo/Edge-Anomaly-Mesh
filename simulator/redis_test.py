@@ -10,27 +10,45 @@ from datetime import datetime, timezone
 # by tues: finish publisher.py, ideally node.py as well
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
-test_node = Node("node_1", "IDLE")
-channel = f"sensor:raw:{test_node.node_id}"
+# test_node = Node("node_1", "IDLE")
+# channel = f"sensor:raw:{test_node.node_id}"
 
-#create a sample test message and we can build this text format later on in node.py
-message = {
-    "node_id": test_node.node_id,
-    "time_stamp": datetime.now(timezone.utc).isoformat(),
-    "seq": test_node.seq,
-    "gps_lat": 40.7128,
-    "gps_lon": -74.006,
-    "gps_altitude_m": 50.0,
-    "accel_x": -0.0071,
-    "accel_y": 0.1012,
-    "accel_z": 10.0357,
-    "gyro_x": 0.0111,
-    "gyro_y": -0.0012,
-    "gyro_z": 0.0294,
-    "sample_rate_hz": 50,
-    "battery_pct": 100,
-    "mode": test_node.mode,
-}
+# #create a sample test message and we can build this text format later on in node.py
+# message = {
+#     "node_id": test_node.node_id,
+#     "time_stamp": datetime.now(timezone.utc).isoformat(),
+#     "seq": test_node.seq,
+#     "gps_lat": 40.7128,
+#     "gps_lon": -74.006,
+#     "gps_altitude_m": 50.0,
+#     "accel_x": -0.0071,
+#     "accel_y": 0.1012,
+#     "accel_z": 10.0357,
+#     "gyro_x": 0.0111,
+#     "gyro_y": -0.0012,
+#     "gyro_z": 0.0294,
+#     "sample_rate_hz": 50,
+#     "battery_pct": 100,
+#     "mode": test_node.mode,
+# }
 
-r.publish(channel, json.dumps(message))
-print(f"Published to channel {channel}: {message}")
+# r.publish(channel, json.dumps(message))
+# print(f"Published to channel {channel}: {message}")
+
+
+class RedisPublisher:
+
+    def __init__(self, node: Node):
+        self.node = node
+        self.channel = f"sensor:raw:{self.node.node_id}"
+    
+    def publish(self):
+        message = self.node.generate_message()
+        r.publish(self.channel, json.dumps(message))
+        print(f"Published to channel {self.channel}: {message}")
+
+
+
+
+
+  
