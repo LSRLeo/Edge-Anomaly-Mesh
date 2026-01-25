@@ -18,6 +18,17 @@ message = {
     "node_id": test_node.node_id,
     "time_stamp": datetime.now(timezone.utc).isoformat(),
     "seq": test_node.seq,
+    "gps_lat": 40.7128,
+    "gps_lon": -74.006,
+    "gps_altitude_m": 50.0,
+    "accel_x": -0.0071,
+    "accel_y": 0.1012,
+    "accel_z": 10.0357,
+    "gyro_x": 0.0111,
+    "gyro_y": -0.0012,
+    "gyro_z": 0.0294,
+    "sample_rate_hz": 50,
+    "battery_pct": 100,
     "mode": test_node.mode,
 }
 
