@@ -1,5 +1,6 @@
-from .base import BaseMotionGenerator, SensorReading
+# from .base import BaseMotionGenerator, SensorReading
 from typing import List, Tuple
+from enum import Enum
 
 class Idle:
     """

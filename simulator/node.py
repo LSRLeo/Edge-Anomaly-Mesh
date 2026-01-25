@@ -32,7 +32,7 @@ class Node:
         
         self.seq += 1
 
-        return json.dumps({            
+        return {            
             "node_id": self.node_id,
             "timestamp": time.time(),
             "seq": self.seq,
@@ -48,7 +48,7 @@ class Node:
             "sample_rate_hz": self.sample_rate_hz,
             "battery_pct": self.battery_pct,
             "mode": self.mode
-        })
+        }
     
     def _run(self):
         period = 1.0 / self.sample_rate_hz
@@ -61,7 +61,7 @@ class Node:
                 continue
 
             message = self.generate_message()
-            self.redis.publish(message)
+            self.redis.publish(self.node_id,message)
 
             next_time += period
             sleep_time = next_time - time.perf_counter()
