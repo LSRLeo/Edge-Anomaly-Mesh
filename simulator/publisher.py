@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 # command to start docker server: docker run -p 6379:6379 redis
 # keep server open and work in new terminal while using redis
 # by tues: finish publisher.py, ideally node.py as well
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+
 
 # test_node = Node("node_1", "IDLE")
 # channel = f"sensor:raw:{test_node.node_id}"
@@ -38,17 +38,19 @@ r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 class RedisPublisher:
 
-    def __init__(self, node: Node):
+   
+
+    def __init__(self, node: Node, host:str, port:int, db:int): 
         self.node = node
+        self.host = host
+        self.port = port
+        self.db = db
         self.channel = f"sensor:raw:{self.node.node_id}"
+        self.redis_client = redis.Redis(host=self.host, port=self.port, db=self.db)
     
     def publish(self):
         message = self.node.generate_message()
-        r.publish(self.channel, json.dumps(message))
+        self.redis_client.publish(self.channel, json.dumps(message))
         print(f"Published to channel {self.channel}: {message}")
-
-
-
-
 
   
