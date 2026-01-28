@@ -2,8 +2,15 @@
 
 # Message Definitions
 
-M_Types: 'raw-data', 'inference-output', 'Error'
+m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'Error'
 
+## Message ID Convention
+
+All messages include an `m_id` field for tracking:
+- Format: `{sender_id}_{seq}`
+- Example: `node_001_12345`, `ui_00001`, `db_00042`
+
+Response messages include a `responding_to` field that references the original request's `m_id`.
 
 ## 1. raw-data
 
@@ -11,22 +18,23 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 
 ```json
 {
-  "M_type": "raw-data",
+  "m_type": "raw-data",
+  "m_id": "node_001_12345",
   "event_id": "node_001_2026-01-22T18:52:14.818400",
   "node_id": "node_001",
   "timestamp": "2026-01-22T18:52:14.818400",
   "seq": 12345,
   "gps": {
-    "lat": 40.713923,
-    "lon": -74.004764,
+    "lat_deg": 40.713923,
+    "lon_deg": -74.004764,
     "altitude_m": 50.1
   },
-  "accel": {
+  "accel_mss": {
     "x": 0.05,
     "y": 0.02,
     "z": 9.81
   },
-  "gyro": {
+  "gyro_rads": {
     "x": 0.01,
     "y": 0.01,
     "z": 0.01
@@ -38,13 +46,13 @@ M_Types: 'raw-data', 'inference-output', 'Error'
     "sim_anomaly": false
   },
   "origin": {
-    "lat": 40.712776,
-    "lon": -74.005974,
+    "lat_deg": 40.712776,
+    "lon_deg": -74.005974,
     "altitude_m": 10.0
   },
   "dest": {
-    "lat": 41.878113,
-    "lon": -87.629799,
+    "lat_deg": 41.878113,
+    "lon_deg": -87.629799,
     "altitude_m": 180.0
   }
 }
@@ -53,6 +61,8 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 **Notes:**
 - `sim_mode` values: `IDLE`, `TERRESTRIAL`, `MARITIME`, `LIFT`
 - `event_id` format: `{node_id}_{timestamp}`
+- `accel_mss`: acceleration in meters per second squared (m/s²)
+- `gyro_rads`: angular velocity in radians per second (rad/s)
 
 ---
 
@@ -62,7 +72,8 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 
 ```json
 {
-  "M_type": "inference-output",
+  "m_type": "inference-output",
+  "m_id": "ml_00001",
   "event_id": "node_001_2026-01-22T18:52:14.818400",
   "node_id": "node_001",
   "timestamp": "2026-01-22T18:52:14.818400",
@@ -76,6 +87,7 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 **Notes:**
 - `classification` values: `IDLE`, `TERRESTRIAL`, `MARITIME`, `LIFT`, `UNKNOWN`
 - `confidence` and `anomaly_score` range: 0.0 to 1.0
+- `anomaly_score`: ratio from 0.0 to 1.0
 
 ---
 
@@ -86,14 +98,16 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 **Request:**
 ```json
 {
-  "M_type": "get-nodes"
+  "m_type": "get-nodes"
+  "m_id": "ui_00001"
 }
 ```
 
 **Response:**
 ```json
 {
-  "M_type": "get-nodes-response",
+  "m_type": "get-nodes-response",
+  "m_id": "db_00001",
   "nodes": [
     "node_001",
     "node_002",
@@ -111,7 +125,8 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 **Request:**
 ```json
 {
-  "M_type": "get-node-data-ids",
+  "m_type": "get-node-data-ids",
+  "m_id": "ui_00001",
   "node_id": "node_001"
 }
 ```
@@ -119,7 +134,8 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 **Response:**
 ```json
 {
-  "M_type": "get-node-data-ids-response",
+  "m_type": "get-node-data-ids-response",
+  "m_id": "ui_00002",
   "node_id": "node_001",
   "data_ids": [
     "node_001_2026-01-22T18:52:14.818400",
@@ -138,7 +154,8 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 **Request:**
 ```json
 {
-  "M_type": "get-datum",
+  "m_type": "get-datum",
+  "m_id": "ui_00001",
   "event_id": "node_001_2026-01-22T18:52:14.818400"
 }
 ```
@@ -146,7 +163,8 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 **Response:**
 ```json
 {
-  "M_type": "get-datum-response",
+  "m_type": "get-datum-response",
+  "m_id": "ui_00001",
   "event_id": "node_001_2026-01-22T18:52:14.818400",
   "node_id": "node_001",
   "timestamp": "2026-01-22T18:52:14.818400",
@@ -200,7 +218,8 @@ M_Types: 'raw-data', 'inference-output', 'Error'
 
 ```json
 {
-  "M_type": "error",
+  "m_type": "error",
+  "m_id": "ui_00002",
   "original_request": "get-datum",
   "error_code": "NOT_FOUND",
   "error_message": "Event ID not found"
