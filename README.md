@@ -114,14 +114,28 @@ A distributed anomaly detection system that simulates cargo monitoring networks.
 
 ## Architecture
 
-The project is organized into 4 team modules that form a data pipeline:
+The project is organized into 4 modules with the database at the center:
 
 ```
-data-engineering → machine-learning → databases → frontend-engineering
-   (Team 1)           (Team 2)         (Team 3)       (Team 4)
+                    ┌──────────────────┐
+                    │  node-simulator  │
+                    │     (Team 1)     │
+                    └────────┬─────────┘
+                             │
+                             ▼
+                    ┌──────────────────┐
+    ┌───────────────│    database      │───────────────┐
+    │               │     (Team 3)     │               │
+    │               └──────────────────┘               │
+    │                        │                         │
+    ▼                        ▼                         ▼
+┌───┴───┐                                          ┌───┴───┐
+│  ml   │◄────────────────────────────────────────►│  ui   │
+│(Team 2)                                          │(Team 4)
+└───────┘                                          └───────┘
 ```
 
-### Team 1: Data Engineering (`data-engineering/`)
+### Team 1: Node Simulator (`node-simulator/`)
 - Generates simulated sensor data at 50-100 Hz
 - Motion generators in `motion_generators/` create realistic patterns for each motion type
 - `node_simulator.py` - Manages sensor nodes attached to cargo
@@ -130,27 +144,27 @@ data-engineering → machine-learning → databases → frontend-engineering
 - `training_data_generator.py` - Creates labeled datasets for ML training
 - `run_simulator.py` - Main entry point
 
-### Team 2: Machine Learning (`machine-learning/`)
+### Team 2: Machine Learning (`ml/`)
 - Subscribes to `sensor:raw:*` channels
 - Buffers 2-5 second windows, extracts features (RMS, peaks, variance, FFT)
 - Classifies motion using PyTorch model
 - Detects anomalies via K-means clustering
 - Publishes results to `inference:results:{node_id}`
 
-### Team 3: Databases (`databases/`)
+### Team 3: Database (`database/`)
 - SQLite with 3 tables: `inference_results`, `nodes`, `anomaly_events`
 - Subscribes to `inference:results:*`
-- Provides query functions for Team 4
+- Provides query functions for Team 2 and Team 4
 
-### Team 4: Frontend Engineering (`frontend-engineering/`)
+### Team 4: UI (`ui/`)
 - Tkinter dashboard with tabs: Network map, Anomalies feed, Analytics charts, Node details
 
 | Directory | Description |
 |-----------|-------------|
-| [data-engineering](data-engineering/) | Sensor simulation, motion generators, and training data generation |
-| [machine-learning](machine-learning/) | Motion classification and anomaly detection models |
-| [databases](databases/) | SQLite storage and query functions for inference results |
-| [frontend-engineering](frontend-engineering/) | Tkinter dashboard for real-time visualization |
+| [node-simulator](node-simulator/) | Sensor simulation, motion generators, and training data generation |
+| [ml](ml/) | Motion classification and anomaly detection models |
+| [database](database/) | SQLite storage and query functions for inference results |
+| [ui](ui/) | Tkinter dashboard for real-time visualization |
 | tests/ | Test suites for all modules |
 | data/ | Generated training and simulation data |
 
@@ -201,19 +215,19 @@ The system learns to classify movement into 4 categories:
 
 ```bash
 # Run simulator
-python data-engineering/run_simulator.py
-python data-engineering/run_simulator.py --nodes 10 --duration 60
+python node-simulator/run_simulator.py
+python node-simulator/run_simulator.py --nodes 10 --duration 60
 
 # Generate training data
-python data-engineering/training_data_generator.py --samples 1000 --output data/training
+python node-simulator/training_data_generator.py --samples 1000 --output data/training
 
 # Run tests
 pytest tests/
 
 # Run specific test module
-pytest tests/test-data-engineering/
-pytest tests/test-machine-learning/
-pytest tests/test-databases/
+pytest tests/test-node-simulator/
+pytest tests/test-ml/
+pytest tests/test-database/
 ```
 
 ## Key Constraints
