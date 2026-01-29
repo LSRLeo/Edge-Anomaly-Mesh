@@ -1,7 +1,9 @@
 import redis
 import json
-from node import Node
 from datetime import datetime, timezone
+from redis import TimeoutError, ConnectionError, AuthenticationError
+
+
 # Before running this code, go to terminal and connect to redis server first
 # Connect to a local Redis server (default host: localhost, port: 6379)
 
@@ -38,19 +40,23 @@ from datetime import datetime, timezone
 
 class RedisPublisher:
 
-   
+    
 
-    def __init__(self, node: Node, host:str, port:int, db:int): 
-        self.node = node
+    def __init__(self, host:str, port:int, db:bool): #initialize with node object, host, port, db
         self.host = host
         self.port = port
         self.db = db
-        self.channel = f"sensor:raw:{self.node.node_id}"
-        self.redis_client = redis.Redis(host=self.host, port=self.port, db=self.db)
-    
-    def publish(self):
-        message = self.node.generate_message()
-        self.redis_client.publish(self.channel, json.dumps(message))
-        print(f"Published to channel {self.channel}: {message}")
 
-  
+        try:
+            self.redis_client = redis.Redis(host=self.host, port=self.port, db=self.db) #connect to redis server
+        except (TimeoutError, ConnectionError, AuthenticationError) as e:
+            print(f"Failed to connect to Redis: {e}")
+
+    def publish(self, nodeID, message):
+        channel = f"sensor:raw:{nodeID}"
+        self.redis_client.publish(channel, json.dumps(message)) #publish message to redis channel
+        print(f"Published to channel {channel}: {message}")
+
+
+
+

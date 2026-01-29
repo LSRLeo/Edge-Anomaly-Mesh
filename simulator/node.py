@@ -5,12 +5,12 @@ from publisher import RedisPublisher
 import threading
 
 class Node:
-    def __init__(self, node_id: str, mode: str, redis: RedisPublisher):
+    def __init__(self, node_id: str, mode: str, redis: RedisPublisher, sample_rate = 50):
         self.node_id = node_id
         self.gps_lat = 0
         self.gps_lon = 0
         self.gps_altitude_m = 0
-        self.sample_rate_hz = 50
+        self.sample_rate_hz = sample_rate
         self.battery_pct = 100
         self.mode = "IDLE"
         self.seq = 0
@@ -32,7 +32,7 @@ class Node:
         
         self.seq += 1
 
-        return json.dumps({            
+        return {            
             "node_id": self.node_id,
             "timestamp": time.time(),
             "seq": self.seq,
@@ -49,7 +49,7 @@ class Node:
             "battery_pct": self.battery_pct,
             "mode": self.mode #calculated by db team
             #dont need anomaly, will be calculated by ml team
-        })
+        }
     
     def _run(self):
         period = 1.0 / self.sample_rate_hz
@@ -62,7 +62,7 @@ class Node:
                 continue
 
             message = self.generate_message()
-            self.redis.publish(message)
+            self.redis.publish(self.node_id,message)
 
             next_time += period
             sleep_time = next_time - time.perf_counter()
