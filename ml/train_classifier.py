@@ -61,6 +61,7 @@ from datetime import datetime
 # Import from our feature extraction module
 from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
 
+<<<<<<< HEAD:ml/train_classifier.py
 
 # ============================================================================
 # ARGUMENT PARSING
@@ -448,6 +449,8 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
     pass  # TODO: Implement
 
 
+=======
+>>>>>>> 997c19f (Committing Initial File Split):machine-learning/train_classifier.py
 # ============================================================================
 # MAIN TRAINING SCRIPT
 # ============================================================================
