@@ -90,3 +90,31 @@ def train_epoch(model, dataloader, criterion, optimizer, device):
         - Call model.train() at the start (enables dropout)
     """
     pass  # TODO: Implement
+
+
+def evaluate(model, dataloader, criterion, device):
+
+    """
+    Evaluate the model on a dataset (validation or test).
+    
+    Args:
+        model: The neural network
+        dataloader: DataLoader for evaluation data
+        criterion: Loss function
+        device: 'cuda' or 'cpu'
+    
+    Returns:
+        avg_loss: Average loss
+        accuracy: Fraction correct
+        predictions: numpy array of all predictions
+        labels: numpy array of all true labels
+    
+    Implementation:
+        - Call model.eval() at the start (disables dropout)
+        - Use torch.no_grad() context (no gradient computation needed)
+        - Otherwise similar to train_epoch but without backward/step
+    
+    Important:
+        - Save all predictions and labels for confusion matrix later
+    """
+    pass  # TODO: Implement
