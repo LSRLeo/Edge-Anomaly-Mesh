@@ -38,16 +38,17 @@ class Node:
             "seq": self.seq,
             "gps_lat": self.gps_lat,
             "gps_lon": self.gps_lon,
-            "gps_altitude_m": self.gps_altitude_m,
+            "gps_altitude_m": self.gps_altitude_m, #do we need this? talk later
             "accel_x": readings.accel_x,
             "accel_y": readings.accel_y,
             "accel_z": readings.accel_z,
             "gyro_x": readings.gyro_x,
             "gyro_y": readings.gyro_y,
             "gyro_z": readings.gyro_z,
-            "sample_rate_hz": self.sample_rate_hz,
+            "sample_rate_hz": self.sample_rate_hz, #can already calculate from existing data
             "battery_pct": self.battery_pct,
-            "mode": self.mode
+            "mode": self.mode #calculated by db team
+            #dont need anomaly, will be calculated by ml team
         }
     
     def _run(self):
