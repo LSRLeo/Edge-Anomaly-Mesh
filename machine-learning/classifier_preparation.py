@@ -15,6 +15,7 @@ from feature_extraction import FeatureExtractor, create_windows, load_csv_data, 
 # ============================================================================
 
 class MotionDataset(Dataset):
+
     """
     PyTorch Dataset for motion classification.
     
@@ -29,6 +30,7 @@ class MotionDataset(Dataset):
     """
     
     def __init__(self, features, labels):
+
         """
         Initialize the dataset.
         
@@ -54,6 +56,7 @@ class MotionDataset(Dataset):
         pass  # TODO: Implement
     
     def __getitem__(self, idx):
+
         """
         Return one sample by index.
         
@@ -69,26 +72,26 @@ class MotionDataset(Dataset):
 # DATA LOADING
 # ============================================================================
 
-def load_all_data(data_dir):
+# def load_all_data(data_dir):
 
-    """
-    Load and process data from all motion types.
+#     """
+#     Load and process data from all motion types.
     
-    Args:
-        data_dir: Path to data/generated_data directory
+#     Args:
+#         data_dir: Path to data/generated_data directory
     
-    Returns:
-        X: numpy array of features, shape (n_samples, n_features)
-        y: numpy array of labels, shape (n_samples,)
-        extractor: FeatureExtractor instance (for n_features info)
+#     Returns:
+#         X: numpy array of features, shape (n_samples, n_features)
+#         y: numpy array of labels, shape (n_samples,)
+#         extractor: FeatureExtractor instance (for n_features info)
     
-    Implementation:
-        1. Create FeatureExtractor
-        2. For each motion type (idle, terrestrial, maritime, lift):
-            a. Load CSV data
-            b. Create windows
-            c. Extract features
-            d. Add to lists with appropriate labels
-        3. Stack all features and labels
-    """
-    pass  # TODO: Implement
+#     Implementation:
+#         1. Create FeatureExtractor
+#         2. For each motion type (idle, terrestrial, maritime, lift):
+#             a. Load CSV data
+#             b. Create windows
+#             c. Extract features
+#             d. Add to lists with appropriate labels
+#         3. Stack all features and labels
+#     """
+#     pass  # TODO: Implement
