@@ -8,4 +8,6 @@ packaging==26.0
 pillow==12.1.0
 pyparsing==3.3.2
 python-dateutil==2.9.0.post0
+redis==7.1.0
 six==1.17.0
+tk==0.1.0

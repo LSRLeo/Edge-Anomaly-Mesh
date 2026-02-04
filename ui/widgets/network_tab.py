@@ -19,15 +19,15 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 
-from ui.ui_utils import (
-    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
-    ANOMALY_BORDER_COLOR, ANOMALY_BORDER_WIDTH,
-    get_motion_color
-)
+#from ui.ui_utils import (
+#    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
+#    ANOMALY_BORDER_COLOR, ANOMALY_BORDER_WIDTH,
+#    get_motion_color
+#)
 
 # Avoid circular import
-if TYPE_CHECKING:
-    from ui.dashboard_main import DashboardApp
+#if TYPE_CHECKING:
+#    from ui.dashboard_main import DashboardApp
 
 
 # =============================================================================
@@ -94,6 +94,9 @@ class NetworkTab(ttk.Frame):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
         
+        self._setup_legend()
+        self._setup_canvas()
+        ttk.Label(self, text="Network Tab - TODO: Implement canvas and legend").grid(row=2, column=0, pady=20)
         # TODO: Create legend frame at top
         # self._setup_legend()
         
@@ -101,7 +104,7 @@ class NetworkTab(ttk.Frame):
         # self._setup_canvas()
         
         # TEMPORARY: Placeholder
-        ttk.Label(self, text="Network Tab - TODO: Implement canvas and legend").pack(pady=20)
+        #ttk.Label(self, text="Network Tab - TODO: Implement canvas and legend").pack(pady=20)
     
     def _setup_legend(self):
         """
@@ -143,6 +146,28 @@ class NetworkTab(ttk.Frame):
         - Scrollbars if content exceeds visible area
         - Click binding for node selection
         """
+
+       
+        canvas_frame = ttk.Frame(self)
+        canvas_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
+        canvas_frame.columnconfigure(0, weight=1)
+        canvas_frame.rowconfigure(0, weight=1)
+        self.canvas = tk.Canvas(canvas_frame, bg='white', highlightthickness=1,
+                                highlightbackground='gray')
+        self.canvas.grid(row=0, column=0, sticky='nsew')
+        # Scrollbars (optional)
+        v_scroll = ttk.Scrollbar(canvas_frame, orient='vertical', 
+                                 command=self.canvas.yview)
+        v_scroll.grid(row=0, column=1, sticky='ns')
+        h_scroll = ttk.Scrollbar(canvas_frame, orient='horizontal',
+                                 command=self.canvas.xview)
+        h_scroll.grid(row=1, column=0, sticky='ew')
+        self.canvas.configure(yscrollcommand=v_scroll.set,
+                              xscrollcommand=h_scroll.set)
+        # Bind click event
+        self.canvas.bind('<Button-1>', self._on_canvas_click)
+        #
+        
         # TODO: Implement canvas
         #
         # # Frame to hold canvas and scrollbars
@@ -200,6 +225,12 @@ class NetworkTab(ttk.Frame):
         Args:
             node: Node dictionary with position and state info
         """
+        node_id = node['node_id']
+        x = node['x']
+        y = node['y']
+        motion_class = node.get['motion_class','UNKNOWN']
+        is_anomaly = node.get['anomaly', 'FALSE']
+        # TODO: implement color and legend
         # TODO: Implement
         #
         # node_id = node['node_id']
