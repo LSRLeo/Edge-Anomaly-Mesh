@@ -72,6 +72,35 @@ class MotionDataset(Dataset):
 # DATA LOADING
 # ============================================================================
 
+def normalize_features(features, scaler=None):
+    """
+    Normalize features to zero mean and unit variance.
+    
+    Normalization is important because:
+        - Features have different scales (accel in m/s², gyro in rad/s)
+        - Neural networks train better with normalized inputs
+        - Prevents features with large values from dominating
+    
+    Args:
+        features: numpy array of shape (n_samples, n_features)
+        scaler: optional tuple of (mean, std) from training data
+                If None, compute from the input features.
+                If provided, use these values (for test data).
+    
+    Returns:
+        normalized: numpy array of same shape, normalized
+        scaler: tuple of (mean, std) arrays for reuse
+    
+    Formula:
+        normalized = (features - mean) / std
+    
+    Implementation hints:
+        - Compute mean and std along axis=0 (per feature)
+        - Handle std=0 case: set to 1 to avoid division by zero
+        - Save scaler during training, reuse for inference
+    """
+    pass  # TODO: Implement
+
 # def load_all_data(data_dir):
 
 #     """
