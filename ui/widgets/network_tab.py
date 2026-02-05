@@ -18,7 +18,8 @@ Features:
 import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
-
+import os
+import json
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
 #    ANOMALY_BORDER_COLOR, ANOMALY_BORDER_WIDTH,
@@ -403,6 +404,13 @@ class NetworkTab(ttk.Frame):
         # self.dashboard.show_node_details(node_id)
         pass
     
+
+    def load_json(filename):
+        if not os.path.exists(filename):
+            raise FileNotFoundError
+        with open(filename, 'r') as file:
+            return()
+
     def refresh(self):
         """
         Refresh the network visualization with latest data.
