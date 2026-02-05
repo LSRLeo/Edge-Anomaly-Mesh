@@ -20,62 +20,52 @@ from tkinter import ttk
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 from datetime import datetime, timedelta
 
-from ui.ui_utils import (
-    SEVERITY_COLORS, STATUS_COLORS,
-    format_timestamp, format_anomaly_score,
-    get_severity_color
-)
+# from ui.ui_utils import (
+#     SEVERITY_COLORS, STATUS_COLORS,
+#     format_timestamp, format_anomaly_score,
+#     get_severity_color
+# )
 
 # Avoid circular import
 if TYPE_CHECKING:
-    from ui.dashboard_main import DashboardApp
+    from ui.widgets.dashboard_main import DashboardApp
 
 
 # =============================================================================
 # MOCK DATA - Replace with database queries
 # =============================================================================
-
+#confidence_list is [IDLE, GROUND, MARITIME, LIFT, IDLE_ANOMALY, MARITIME_ANOMALY, TERRESTRIAL_ANOMALY, LIFT_ANOMALY]
 MOCK_ANOMALIES = [
     {
         'id': 1,
         'timestamp': datetime.now() - timedelta(minutes=5),
         'node_id': 'node_003',
-        'severity': 'HIGH',
-        'motion_class': 'MARITIME',
-        'score': 0.92,
-        'status': 'NEW',
-        'description': 'Sudden impact detected'
+        'motion_class': 'MARITIME_ANOMALY',
+        'confidence_list': [.01,.01,.03,.01,.01,.92,.01,.01], #should sum to 1 will need to take max(confidence_list) for score
     },
+    
     {
         'id': 2,
         'timestamp': datetime.now() - timedelta(minutes=12),
-        'node_id': 'node_005',
-        'severity': 'MEDIUM',
-        'motion_class': 'IDLE',
-        'score': 0.67,
-        'status': 'NEW',
-        'description': 'Unexpected vibration pattern'
+        'node_id': 'node_007',
+        'motion_class': 'IDLE_ANOMALY',
+        'confidence_list': [0.07, 0.01, 0.01, 0.01, 0.88, 0.01, 0.01, 0.00],  # max=0.88 (IDLE), anomaly label chosen by model rule
     },
     {
         'id': 3,
-        'timestamp': datetime.now() - timedelta(minutes=30),
-        'node_id': 'node_001',
-        'severity': 'LOW',
-        'motion_class': 'TERRESTRIAL',
-        'score': 0.45,
-        'status': 'ACKNOWLEDGED',
-        'description': 'Minor sensor drift'
+        'timestamp': datetime.now() - timedelta(minutes=18),
+        'node_id': 'node_011',
+        'motion_class': 'TERRESTRIAL_ANOMALY',
+        'confidence_list': [0.02, 0.05, 0.02, 0.01, 0.02, 0.02, 0.84, 0.02],  # max=0.84
     },
     {
         'id': 4,
-        'timestamp': datetime.now() - timedelta(hours=1),
-        'node_id': 'node_003',
-        'severity': 'HIGH',
-        'motion_class': 'LIFT',
-        'score': 0.88,
-        'status': 'RESOLVED',
-        'description': 'Drop detected during lift'
-    },
+        'timestamp': datetime.now() - timedelta(minutes=27),
+        'node_id': 'node_015',
+        'motion_class': 'LIFT_ANOMALY',
+        'confidence_list': [0.01, 0.01, 0.01, 0.03, 0.02, 0.02, 0.00, 0.90],  # max=0.90
+    }
+
 ]
 
 
@@ -143,54 +133,54 @@ class AnomaliesTab(ttk.Frame):
         # TEMPORARY: Placeholder
         ttk.Label(self, text="Anomalies Tab - TODO: Implement filters and table").pack(pady=20)
     
-    def _setup_filters(self):
-        """
-        Create the filter controls bar.
+    # def _setup_filters(self):
+    #     """
+    #     Create the filter controls bar.
         
-        Filters:
-        - Node ID: Dropdown with all node IDs + "All"
-        - Severity: Dropdown with HIGH, MEDIUM, LOW + "All"
-        - Time Range: Dropdown with preset time ranges
-        """
-        # TODO: Implement filters
-        #
-        # filter_frame = ttk.Frame(self)
-        # filter_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
-        #
-        # # Node filter
-        # ttk.Label(filter_frame, text="Node:").grid(row=0, column=0, padx=(0, 5))
-        # self.node_filter = ttk.Combobox(filter_frame, values=['All'], 
-        #                                  state='readonly', width=12)
-        # self.node_filter.current(0)
-        # self.node_filter.grid(row=0, column=1, padx=(0, 15))
-        # self.node_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
-        #
-        # # Severity filter
-        # ttk.Label(filter_frame, text="Severity:").grid(row=0, column=2, padx=(0, 5))
-        # self.severity_filter = ttk.Combobox(
-        #     filter_frame, 
-        #     values=['All', 'HIGH', 'MEDIUM', 'LOW'],
-        #     state='readonly', width=10
-        # )
-        # self.severity_filter.current(0)
-        # self.severity_filter.grid(row=0, column=3, padx=(0, 15))
-        # self.severity_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
-        #
-        # # Time range filter
-        # ttk.Label(filter_frame, text="Time:").grid(row=0, column=4, padx=(0, 5))
-        # self.time_filter = ttk.Combobox(
-        #     filter_frame,
-        #     values=['Last hour', 'Last 6 hours', 'Last 24 hours', 'Last 7 days', 'All time'],
-        #     state='readonly', width=15
-        # )
-        # self.time_filter.current(2)  # Default: Last 24 hours
-        # self.time_filter.grid(row=0, column=5, padx=(0, 15))
-        # self.time_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
-        #
-        # # Refresh button
-        # ttk.Button(filter_frame, text="Refresh", 
-        #            command=self.refresh).grid(row=0, column=6, padx=(15, 0))
-        pass
+    #     Filters:
+    #     - Node ID: Dropdown with all node IDs + "All"
+    #     - Severity: Dropdown with HIGH, MEDIUM, LOW + "All"
+    #     - Time Range: Dropdown with preset time ranges
+    #     """
+    #     # TODO: Implement filters
+    #     #
+    #     # filter_frame = ttk.Frame(self)
+    #     # filter_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
+    #     #
+    #     # # Node filter
+    #     # ttk.Label(filter_frame, text="Node:").grid(row=0, column=0, padx=(0, 5))
+    #     # self.node_filter = ttk.Combobox(filter_frame, values=['All'], 
+    #     #                                  state='readonly', width=12)
+    #     # self.node_filter.current(0)
+    #     # self.node_filter.grid(row=0, column=1, padx=(0, 15))
+    #     # self.node_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
+    #     #
+    #     # # Severity filter
+    #     # ttk.Label(filter_frame, text="Severity:").grid(row=0, column=2, padx=(0, 5))
+    #     # self.severity_filter = ttk.Combobox(
+    #     #     filter_frame, 
+    #     #     values=['All', 'HIGH', 'MEDIUM', 'LOW'],
+    #     #     state='readonly', width=10
+    #     # )
+    #     # self.severity_filter.current(0)
+    #     # self.severity_filter.grid(row=0, column=3, padx=(0, 15))
+    #     # self.severity_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
+    #     #
+    #     # # Time range filter
+    #     # ttk.Label(filter_frame, text="Time:").grid(row=0, column=4, padx=(0, 5))
+    #     # self.time_filter = ttk.Combobox(
+    #     #     filter_frame,
+    #     #     values=['Last hour', 'Last 6 hours', 'Last 24 hours', 'Last 7 days', 'All time'],
+    #     #     state='readonly', width=15
+    #     # )
+    #     # self.time_filter.current(2)  # Default: Last 24 hours
+    #     # self.time_filter.grid(row=0, column=5, padx=(0, 15))
+    #     # self.time_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
+    #     #
+    #     # # Refresh button
+    #     # ttk.Button(filter_frame, text="Refresh", 
+    #     #            command=self.refresh).grid(row=0, column=6, padx=(15, 0))
+    #     pass
     
     def _setup_table(self):
         """
@@ -199,11 +189,8 @@ class AnomaliesTab(ttk.Frame):
         Columns:
         - Timestamp (150px)
         - Node ID (100px)
-        - Severity (80px)
         - Motion Class (100px)
-        - Score (80px)
-        - Status (100px)
-        - Description (remaining space)
+        - Confidence Score (80px)
         """
         # TODO: Implement table
         #
@@ -214,8 +201,7 @@ class AnomaliesTab(ttk.Frame):
         # table_frame.rowconfigure(0, weight=1)
         #
         # # Define columns
-        # columns = ('timestamp', 'node_id', 'severity', 'motion_class', 
-        #            'score', 'status', 'description')
+        # columns = ('timestamp', 'node_id', 'motion_class', 'confidence_score')
         #
         # # Create treeview
         # self.tree = ttk.Treeview(table_frame, columns=columns, show='headings',
@@ -224,20 +210,14 @@ class AnomaliesTab(ttk.Frame):
         # # Configure columns
         # self.tree.heading('timestamp', text='Timestamp')
         # self.tree.heading('node_id', text='Node ID')
-        # self.tree.heading('severity', text='Severity')
-        # self.tree.heading('motion_class', text='Motion')
-        # self.tree.heading('score', text='Score')
-        # self.tree.heading('status', text='Status')
-        # self.tree.heading('description', text='Description')
-        #
+        # self.tree.heading('motion_class', text='Motion Class')
+        # self.tree.heading('confidence_score', text='Confidence Score')
+        # 
         # self.tree.column('timestamp', width=150, anchor='center')
         # self.tree.column('node_id', width=100, anchor='center')
-        # self.tree.column('severity', width=80, anchor='center')
         # self.tree.column('motion_class', width=100, anchor='center')
-        # self.tree.column('score', width=80, anchor='center')
-        # self.tree.column('status', width=100, anchor='center')
-        # self.tree.column('description', width=200, anchor='w')
-        #
+        # self.tree.column('confidence_score', width=80, anchor='center')
+        # 
         # self.tree.grid(row=0, column=0, sticky='nsew')
         #
         # # Scrollbar
@@ -273,148 +253,150 @@ class AnomaliesTab(ttk.Frame):
         #     self._add_anomaly_row(anomaly)
         pass
     
-    def _add_anomaly_row(self, anomaly: Dict[str, Any]):
-        """
-        Add a single anomaly row to the table.
+    # def _add_anomaly_row(self, anomaly: Dict[str, Any]):
+    #     """
+    #     Add a single anomaly row to the table.
         
-        Args:
-            anomaly: Anomaly dictionary
-        """
-        # TODO: Implement
-        #
-        # values = (
-        #     format_timestamp(anomaly['timestamp']),
-        #     anomaly['node_id'],
-        #     anomaly['severity'],
-        #     anomaly['motion_class'],
-        #     format_anomaly_score(anomaly['score']),
-        #     anomaly['status'],
-        #     anomaly.get('description', '')
-        # )
-        #
-        # # Insert with severity tag for coloring
-        # self.tree.insert('', 'end', iid=str(anomaly['id']), values=values,
-        #                  tags=(anomaly['severity'],))
-        pass
+    #     Args:
+    #         anomaly: Anomaly dictionary
+    #     """
+    #     # TODO: Implement
+    #     #
+    #     # values = (
+    #     #     format_timestamp(anomaly['timestamp']),
+    #     #     anomaly['node_id'],
+    #     #     anomaly['severity'],
+    #     #     anomaly['motion_class'],
+    #     #     format_anomaly_score(anomaly['score']),
+    #     #     anomaly['status'],
+    #     #     anomaly.get('description', '')
+    #     # )
+    #     #
+    #     # # Insert with severity tag for coloring
+    #     # self.tree.insert('', 'end', iid=str(anomaly['id']), values=values,
+    #     #                  tags=(anomaly['severity'],))
+    #     pass
     
-    def apply_filters(self):
-        """
-        Re-query data with current filter settings.
+    # def apply_filters(self):
+    #     """
+    #     Re-query data with current filter settings.
         
-        Reads filter values from UI and fetches matching anomalies.
-        """
-        # TODO: Implement
-        #
-        # # Get current filter values
-        # self.current_filters['node_id'] = self.node_filter.get()
-        # self.current_filters['severity'] = self.severity_filter.get()
-        # self.current_filters['time_range'] = self.time_filter.get()
-        #
-        # # Convert time range to datetime
-        # time_ranges = {
-        #     'Last hour': timedelta(hours=1),
-        #     'Last 6 hours': timedelta(hours=6),
-        #     'Last 24 hours': timedelta(hours=24),
-        #     'Last 7 days': timedelta(days=7),
-        #     'All time': None
-        # }
-        # time_delta = time_ranges.get(self.current_filters['time_range'])
-        #
-        # # Fetch filtered data from database
-        # # anomalies = db.get_anomalies(
-        # #     node_id=None if self.current_filters['node_id'] == 'All' else self.current_filters['node_id'],
-        # #     severity=None if self.current_filters['severity'] == 'All' else self.current_filters['severity'],
-        # #     since=datetime.now() - time_delta if time_delta else None
-        # # )
-        #
-        # # For now, filter mock data
-        # anomalies = self._filter_mock_data()
-        #
-        # # Update table
-        # self.load_anomalies(anomalies)
-        pass
+    #     Reads filter values from UI and fetches matching anomalies.
+    #     """
+    #     # TODO: Implement
+    #     #
+    #     # # Get current filter values
+    #     # self.current_filters['node_id'] = self.node_filter.get()
+    #     # self.current_filters['severity'] = self.severity_filter.get()
+    #     # self.current_filters['time_range'] = self.time_filter.get()
+    #     #
+    #     # # Convert time range to datetime
+    #     # time_ranges = {
+    #     #     'Last hour': timedelta(hours=1),
+    #     #     'Last 6 hours': timedelta(hours=6),
+    #     #     'Last 24 hours': timedelta(hours=24),
+    #     #     'Last 7 days': timedelta(days=7),
+    #     #     'All time': None
+    #     # }
+    #     # time_delta = time_ranges.get(self.current_filters['time_range'])
+    #     #
+    #     # # Fetch filtered data from database
+    #     # # anomalies = db.get_anomalies(
+    #     # #     node_id=None if self.current_filters['node_id'] == 'All' else self.current_filters['node_id'],
+    #     # #     severity=None if self.current_filters['severity'] == 'All' else self.current_filters['severity'],
+    #     # #     since=datetime.now() - time_delta if time_delta else None
+    #     # # )
+    #     #
+    #     # # For now, filter mock data
+    #     # anomalies = self._filter_mock_data()
+    #     #
+    #     # # Update table
+    #     # self.load_anomalies(anomalies)
+    #     pass
     
-    def _filter_mock_data(self) -> List[Dict[str, Any]]:
-        """
-        Filter mock data based on current filters (temporary).
+    # def _filter_mock_data(self) -> List[Dict[str, Any]]:
+    #     """
+    #     Filter mock data based on current filters (temporary).
         
-        Returns:
-            Filtered list of anomalies
-        """
-        # TODO: Remove when real database is connected
-        filtered = MOCK_ANOMALIES.copy()
+    #     Returns:
+    #         Filtered list of anomalies
+    #     """
+    #     # TODO: Remove when real database is connected
+    #     filtered = MOCK_ANOMALIES.copy()
         
-        # Apply node filter
-        if self.current_filters['node_id'] != 'All':
-            filtered = [a for a in filtered 
-                       if a['node_id'] == self.current_filters['node_id']]
+    #     # Apply node filter
+    #     if self.current_filters['node_id'] != 'All':
+    #         filtered = [a for a in filtered 
+    #                    if a['node_id'] == self.current_filters['node_id']]
         
-        # Apply severity filter
-        if self.current_filters['severity'] != 'All':
-            filtered = [a for a in filtered 
-                       if a['severity'] == self.current_filters['severity']]
+    #     # Apply severity filter
+    #     if self.current_filters['severity'] != 'All':
+    #         filtered = [a for a in filtered 
+    #                    if a['severity'] == self.current_filters['severity']]
         
-        return filtered
+    #     return filtered
     
-    def _on_filter_change(self, event):
-        """
-        Handle filter dropdown change.
+    # def _on_filter_change(self, event):
+    #     """
+    #     Handle filter dropdown change.
         
-        Args:
-            event: Combobox selection event
-        """
-        # TODO: Implement
-        # self.apply_filters()
-        pass
+    #     Args:
+    #         event: Combobox selection event
+    #     """
+    #     # TODO: Implement
+    #     # self.apply_filters()
+    #     pass
     
-    def _on_row_select(self, event):
-        """
-        Handle row selection in the table.
+    # def _on_row_select(self, event):
+    #     """
+    #     Handle row selection in the table.
         
-        Navigates to Node Details tab for the selected anomaly's node.
+    #     Navigates to Node Details tab for the selected anomaly's node.
         
-        Args:
-            event: Treeview selection event
-        """
-        # TODO: Implement
-        #
-        # selection = self.tree.selection()
-        # if not selection:
-        #     return
-        #
-        # # Get the selected row's values
-        # item = self.tree.item(selection[0])
-        # values = item['values']
-        # node_id = values[1]  # node_id is column index 1
-        #
-        # # Navigate to node details
-        # self.dashboard.show_node_details(node_id)
-        pass
+    #     Args:
+    #         event: Treeview selection event
+    #     """
+    #     # TODO: Implement
+    #     #
+    #     # selection = self.tree.selection()
+    #     # if not selection:
+    #     #     return
+    #     #
+    #     # # Get the selected row's values
+    #     # item = self.tree.item(selection[0])
+    #     # values = item['values']
+    #     # node_id = values[1]  # node_id is column index 1
+    #     #
+    #     # # Navigate to node details
+    #     # self.dashboard.show_node_details(node_id)
+    #     pass
     
-    def update_node_filter_options(self, node_ids: List[str]):
-        """
-        Update the node filter dropdown with available node IDs.
+    # def update_node_filter_options(self, node_ids: List[str]):
+    #     """
+    #     Update the node filter dropdown with available node IDs.
         
-        Args:
-            node_ids: List of all node IDs
-        """
-        # TODO: Implement
-        #
-        # if self.node_filter:
-        #     current = self.node_filter.get()
-        #     self.node_filter['values'] = ['All'] + sorted(node_ids)
-        #     # Preserve selection if still valid
-        #     if current in ['All'] + node_ids:
-        #         self.node_filter.set(current)
-        #     else:
-        #         self.node_filter.current(0)
-        pass
+    #     Args:
+    #         node_ids: List of all node IDs
+    #     """
+    #     # TODO: Implement
+    #     #
+    #     # if self.node_filter:
+    #     #     current = self.node_filter.get()
+    #     #     self.node_filter['values'] = ['All'] + sorted(node_ids)
+    #     #     # Preserve selection if still valid
+    #     #     if current in ['All'] + node_ids:
+    #     #         self.node_filter.set(current)
+    #     #     else:
+    #     #         self.node_filter.current(0)
+    #     pass
     
     def refresh(self):
         """
         Refresh the anomalies table with latest data.
         
         Fetches current anomalies from database and updates display.
+
+        Will be tied to a "Refresh" button in the UI to prevent excessive queries and ensure readability
         """
         # TODO: Implement with real database queries
         #
