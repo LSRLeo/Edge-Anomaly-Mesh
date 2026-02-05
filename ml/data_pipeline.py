@@ -37,7 +37,7 @@ import numpy as np
 from pathlib import Path
 import json
 
-from feature_extraction import FeatureExtractor
+from ml.feature_extraction import FeatureExtractor
 
 # ============================================================================
 # ARGUMENT PARSING
@@ -126,15 +126,71 @@ def create_windows(data, window_size=100, overlap=0.5):
 
 def load_json_data(filepath):
     """
-    Load sensor data from JSON file.
-    
-    Args:
-        filepath: path to JSON file
-    
+    Load sensor data from a JSON file (single object or list of objects).
+    Handles both accel/accel_mss and gyro/gyro_rads keys.
+
     Returns:
-        dict with numpy arrays for each sensor channel
+        data: dict of numpy arrays (accel_x, ..., gyro_z)
+        label: motion label (sim_mode / mode) or None
     """
-    pass  # TODO: Implement
+    filepath = Path(filepath)
+    with open(filepath, "r") as f:
+        raw = json.load(f)
+
+    # Always work with a list of events
+    if type(raw) is dict:
+        events = [raw]
+    elif type(raw) is list:
+        events = raw
+    else:
+        raise ValueError("Unsupported JSON format")
+
+    def get_sequence_number(event):
+        """Helper function for sorting (if happens to be out of order)."""
+        return event["seq"] if "seq" in event else -1
+
+    # Sort by 'seq' if present
+    if events and "seq" in events[0]:
+        events = sorted(events, key=get_sequence_number)
+
+    accel_x, accel_y, accel_z = [], [], []
+    gyro_x, gyro_y, gyro_z = [], [], []
+    labels = []
+
+    for event in events:
+        accel = event.get("accel_mss") or event.get("accel")
+        gyro = event.get("gyro_rads") or event.get("gyro")
+        if accel is None:
+            raise KeyError("Missing accel data")
+        if gyro is None:
+            raise KeyError("Missing gyro data")
+
+        accel_x.append(accel["x"])
+        accel_y.append(accel["y"])
+        accel_z.append(accel["z"])
+        gyro_x.append(gyro["x"])
+        gyro_y.append(gyro["y"])
+        gyro_z.append(gyro["z"])
+
+        meta = event.get("meta", {})
+        if "sim_mode" in meta:
+            labels.append(meta["sim_mode"])
+        elif "mode" in meta:
+            labels.append(meta["mode"])
+        else:
+            labels.append(None)
+
+    data = {
+        "accel_x": np.array(accel_x, dtype=np.float32),
+        "accel_y": np.array(accel_y, dtype=np.float32),
+        "accel_z": np.array(accel_z, dtype=np.float32),
+        "gyro_x":  np.array(gyro_x,  dtype=np.float32),
+        "gyro_y":  np.array(gyro_y,  dtype=np.float32),
+        "gyro_z":  np.array(gyro_z,  dtype=np.float32),
+    }
+    labels = np.array(labels)
+
+    return data, labels
 
 
 def save_features(features, labels, output_path):
