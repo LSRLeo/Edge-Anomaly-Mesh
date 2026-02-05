@@ -64,7 +64,8 @@ class NetworkTab(ttk.Frame):
         super().__init__(parent)
         
         self.dashboard = dashboard
-        self.test_nodes: List[Dict[str, any]] = []
+        # Dict[node_id: str, node_data: dict]
+        self.test_nodes: Dict[str, dict] = {} 
         # Canvas for drawing nodes
         self.canvas: Optional[tk.Canvas] = None
         
@@ -198,6 +199,10 @@ class NetworkTab(ttk.Frame):
 
         # Bind click event
         self.canvas.bind('<Button-1>', self._on_canvas_click)
+
+        self.populate_test_nodes()
+
+
         #
         
         # TODO: Implement canvas
@@ -310,6 +315,9 @@ class NetworkTab(ttk.Frame):
             node_id: ID of the node to update
             motion_class: New motion class for coloring
         """
+        if node_id in self.node_items:
+            item_id = self.node_items[node_id]
+            color = self.get_motion_color(motion_class)
         # TODO: Implement
         #
         # if node_id in self.node_items:
@@ -317,6 +325,16 @@ class NetworkTab(ttk.Frame):
         #     color = get_motion_color(motion_class)
         #     self.canvas.itemconfig(item_id, fill=color)
         pass
+
+    def get_motion_color(motion_class):
+        MOTION_COLORS = {
+        'IDLE' : 'gray',
+        'TERRESTRIAL' : 'blue',
+        'MARITIME' : 'green',
+        'LIFT' : 'red',
+        'Anomaly indicator' : 'red'
+        }
+        return MOTION_COLORS[motion_class]
     
     def highlight_anomaly(self, node_id: str, is_anomaly: bool):
         """
@@ -408,22 +426,21 @@ class NetworkTab(ttk.Frame):
         pass
     
 
-    def load_json(filename):
+    def load_json(self, filename):
         if not os.path.exists(filename):
             raise FileNotFoundError
         with open(filename, 'r') as file:
-            return(json.load(file))
+            return json.load(file)
     def populate_test_nodes(self):
         file = self.load_json('test_nodes.json')
         
         # TODO: Populate self.node_items{} with file['node_id'], i
 
-        for node_data in file:
-            count = 0
+        for i, node_data in enumerate(file):
             node_id = node_data['node_id']
-            self.node_items[node_id] = count
-            count+=1
-            self.test_nodes.append(node_id ,node_data)
+            self.node_items[node_id] = i
+            self.test_nodes[node_id] = node_data #insert dict with key str node_id and value dict node_data into self.test_nodes
+
         self.draw_nodes(self.test_nodes)
 
     def refresh(self):
