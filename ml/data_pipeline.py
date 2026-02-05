@@ -124,12 +124,12 @@ def create_windows(data, window_size=100, overlap=0.5):
 # DATA LOADING
 # ============================================================================
 
-def load_csv_data(filepath):
+def load_json_data(filepath):
     """
-    Load sensor data from CSV file.
+    Load sensor data from JSON file.
     
     Args:
-        filepath: path to CSV file
+        filepath: path to JSON file
     
     Returns:
         dict with numpy arrays for each sensor channel

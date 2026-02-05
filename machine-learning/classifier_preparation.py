@@ -8,7 +8,8 @@ import json
 from datetime import datetime
 
 # Import from our feature extraction module
-from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
+from ml.feature_extraction import FeatureExtractor
+from ml.data_pipeline import load_json_data, create_windows
 
 # ============================================================================
 # DATASET
