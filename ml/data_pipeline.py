@@ -82,7 +82,7 @@ def parse_args():
 # WINDOWING
 # ============================================================================
 
-def create_windows(data, window_size=100, overlap=0.5):
+def create_windows(data, window_size=100, overlap=0.0, labels=None):
     """
     Create sliding windows from continuous sensor data.
     
@@ -101,9 +101,12 @@ def create_windows(data, window_size=100, overlap=0.5):
         overlap: fraction of overlap between consecutive windows (0.0 to 0.99)
                  0.5 = 50% overlap (recommended)
                  0.0 = no overlap (windows are adjacent)
+        
+        labels: optional numpy array of shape (n_samples,)
     
     Returns:
-        numpy array of shape (n_windows, window_size, 6)
+        windows: numpy array of shape (n_windows, window_size, 6)
+        window_labels: numpy array of shape (n_windows,) if labels provided
         The 6 channels are: [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z]
     
     Example:
@@ -117,7 +120,44 @@ def create_windows(data, window_size=100, overlap=0.5):
         - Loop: for start in range(0, n_samples - window_size + 1, step)
         - Use np.column_stack() to combine the 6 axes
     """
-    pass  # TODO: Implement
+    # Stack sensor axes into (n_samples, 6) array
+    stacked = np.column_stack([
+        data['accel_x'],
+        data['accel_y'],
+        data['accel_z'],
+        data['gyro_x'],
+        data['gyro_y'],
+        data['gyro_z']
+    ])
+    
+    n_samples = stacked.shape[0]
+    step = int(window_size * (1 - overlap))
+
+    if step < 1:
+        raise ValueError("Step size must be at least 1.")
+    
+    windows, window_labels = [], []
+
+    for start in range(0, n_samples - window_size + 1, step):
+        # Extract window
+        window = stacked[start:start + window_size, :]
+        windows.append(window)
+        # Assign majority label if labels provided
+        if labels is not None:
+            label_slice = labels[start:start + window_size]
+            label_counts = {}
+
+            for label in label_slice:
+                label_counts[label] = label_counts.get(label, 0) + 1
+
+            majority_label = max(label_counts, key=label_counts.get)
+            window_labels.append(majority_label)
+
+    windows = np.array(windows)
+    if labels is not None:
+        return windows, np.array(window_labels)
+    
+    return windows
 
 
 # ============================================================================
