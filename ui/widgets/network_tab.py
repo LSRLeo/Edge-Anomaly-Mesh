@@ -64,7 +64,7 @@ class NetworkTab(ttk.Frame):
         super().__init__(parent)
         
         self.dashboard = dashboard
-        
+        self.test_nodes: List[Dict[str, any]] = []
         # Canvas for drawing nodes
         self.canvas: Optional[tk.Canvas] = None
         
@@ -193,6 +193,9 @@ class NetworkTab(ttk.Frame):
         h_scroll.grid(row=1, column=0, sticky='ew')
         self.canvas.configure(yscrollcommand=v_scroll.set,
                               xscrollcommand=h_scroll.set)
+        
+        # Draw Nodes
+
         # Bind click event
         self.canvas.bind('<Button-1>', self._on_canvas_click)
         #
@@ -409,9 +412,22 @@ class NetworkTab(ttk.Frame):
         if not os.path.exists(filename):
             raise FileNotFoundError
         with open(filename, 'r') as file:
-            return()
+            return(json.load(file))
+    def populate_test_nodes(self):
+        file = self.load_json('test_nodes.json')
+        
+        # TODO: Populate self.node_items{} with file['node_id'], i
+
+        for node_data in file:
+            count = 0
+            node_id = node_data['node_id']
+            self.node_items[node_id] = count
+            count+=1
+            self.test_nodes.append(node_id ,node_data)
 
     def refresh(self):
+        
+        
         """
         Refresh the network visualization with latest data.
         
