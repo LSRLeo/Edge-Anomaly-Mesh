@@ -117,6 +117,34 @@ class NetworkTab(ttk.Frame):
         - LIFT (red circle)
         - Anomaly indicator (red border)
         """
+
+        MOTION_COLORS = {
+        'IDLE' : 'gray',
+        'TERRESTRIAL' : 'blue',
+        'MARITIME' : 'green',
+        'LIFT' : 'red',
+        'Anomaly indicator' : 'red'
+        }
+
+        legend_frame = ttk.Frame(self)
+        legend_frame.grid(row=0, column=0,sticky='ew',padx=10,pady=5)
+
+        # Mini canvas for each key/value pair
+        for i, (motion,color) in enumerate(MOTION_COLORS.items()):
+            if motion == 'UNKNOWN':
+                continue
+
+            # Reusable mini canvas
+            mini_canvas = tk.Canvas(legend_frame, width=20, height=20, 
+                                    highlightthickness=0)
+            if motion != 'Anomaly indicator':
+                mini_canvas.create_oval(2, 2, 18, 18, fill=color, outline='black')
+            elif motion == 'Anomaly indicator':
+                mini_canvas.create_oval(2, 2, 18, 18, fill = color, outline='red')
+            mini_canvas.grid(row=0,column=i*2,padx=(10,2))
+            
+            ttk.Label(legend_frame, text=motion).grid(row=0,column=i*2+1,padx=(0, 10))
+
         # TODO: Implement legend
         #
         # legend_frame = ttk.Frame(self)
