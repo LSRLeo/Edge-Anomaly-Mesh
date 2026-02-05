@@ -424,6 +424,7 @@ class NetworkTab(ttk.Frame):
             self.node_items[node_id] = count
             count+=1
             self.test_nodes.append(node_id ,node_data)
+        self.draw_nodes(self.test_nodes)
 
     def refresh(self):
         
