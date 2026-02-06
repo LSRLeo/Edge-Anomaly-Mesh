@@ -4,6 +4,15 @@ Utility scripts for working with Redis pub/sub in the edge-anomaly-mesh project.
 
 New to Redis? Start with the [Skills Building](#skills-building) exercise.
 
+## About These Instructions
+
+All commands shown in code blocks are **terminal/shell that works in terminal application:
+- macOS: Terminal application
+- Windows: Command Prompt, PowerShell, Git Bash
+- Linx: Any terminal emulator
+
+There are **not** VS Code-Specific commands so if you utalize them within VS Code you will need different commands
+
 ## REDIS Server Setup
 
 This project uses [Redis](https://redis.io/) as middleware for inter-module communication.
