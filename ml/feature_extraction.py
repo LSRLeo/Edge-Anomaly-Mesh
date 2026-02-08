@@ -31,7 +31,7 @@ Usage:
 
 Requirements:
     pip install numpy scipy
-"""
+""" 
 
 import argparse
 import numpy as np
@@ -93,7 +93,26 @@ class FeatureExtractor:
         Example output:
             ['accel_x_mean', 'accel_x_std', 'accel_x_rms', ...]
         """
-        pass  # TODO: Implement
+        feature_names = []
+        axes = ['accel_x', 'accel_y', 'accel_z', 'gyro_x', 'gyro_y', 'gyro_z']
+        time_features = ['mean', 'std', 'rms', 'peak_to_peak', 'zero_crossings']
+        freq_features = ['dominant_freq', 'spectral_energy']
+
+        # Time-domain features for each axis
+        for axis in axes:
+            for feat in time_features:
+                feature_names.append(f"{axis}_{feat}")
+
+        # Frequency-domain features for accelerometer axes
+        for axis in axes[:3]:  # accel_x, accel_y, accel_z
+            for feat in freq_features:
+                feature_names.append(f"{axis}_{feat}")
+
+        # Cross-axis features
+        feature_names.append("accel_magnitude_mean")
+        feature_names.append("gyro_magnitude_mean")
+
+        return feature_names
     
     @property
     def n_features(self):
@@ -120,7 +139,21 @@ class FeatureExtractor:
             3. Extract cross-axis features
             4. Concatenate all into one vector
         """
-        pass  # TODO: Implement
+        features = []
+
+        # 1. Time-domain features for each of the 6 axes
+        for i in range(6):
+            features.extend(self._time_domain_features(window[:, i]))
+
+        # 2. Frequency-domain features for accelerometer axes (columns 0,1,2)
+        for i in range(3):
+            features.extend(self._frequency_domain_features(window[:, i]))
+
+        # 3. Cross-axis features
+        features.extend(self._cross_axis_features(window))
+
+        # 4. Concatenate all into one vector
+        return np.array(features)
     
     def extract_batch(self, windows):
         """
@@ -131,12 +164,8 @@ class FeatureExtractor:
         
         Returns:
             numpy array of shape (n_windows, n_features)
-        
-        Implementation hints:
-            - Simply call extract() on each window
-            - Use list comprehension or np.array([self.extract(w) for w in windows])
         """
-        pass  # TODO: Implement
+        return np.array([self.extract(w) for w in windows])
     
     def _time_domain_features(self, signal):
         """
@@ -175,8 +204,21 @@ class FeatureExtractor:
             - RMS: np.sqrt(np.mean(signal ** 2))
             - Zero crossings: np.sum(np.diff(np.sign(signal)) != 0)
         """
-        pass  # TODO: Implement
-    
+        #mean
+        mean = np.mean(signal)
+
+        #standard deviation
+        std = np.std(signal)
+        #root mean square
+        rms = np.sqrt(np.mean(signal ** 2))
+        #peak to peak
+        peak_to_peak = np.max(signal) - np.min(signal)
+
+        #zero crossings
+        zero_crossings = np.sum(np.diff(np.sign(signal)) != 0)
+        
+        return [mean, std, rms, peak_to_peak, zero_crossings]
+
     def _frequency_domain_features(self, signal):
         """
         Extract frequency-domain features using FFT.
@@ -206,7 +248,29 @@ class FeatureExtractor:
             - Only use positive frequencies (first half of FFT output)
             - Skip index 0 when finding dominant frequency (that's DC)
         """
-        pass  # TODO: Implement
+        # Remove DC component
+        signal_centered = signal - np.mean(signal)
+        n = len(signal_centered)
+
+        # FFT transform
+        fft_vals = fft.fft(signal_centered)
+        freqs = fft.fftfreq(n, d=1/self.sample_rate)
+
+        # Only positive frequencies
+        pos_mask = freqs > 0
+        fft_mags = np.abs(fft_vals)[pos_mask]
+        pos_freqs = freqs[pos_mask]
+
+        # Spectral energy
+        spectral_energy = np.sum(fft_mags ** 2)
+        
+        # Dominant frequency (skip DC)
+        if len(fft_mags) > 0:
+            dominant_idx = np.argmax(fft_mags)
+            dominant_freq = pos_freqs[dominant_idx]
+        else:
+            dominant_freq = 0.0
+        return [dominant_freq, spectral_energy]
     
     def _cross_axis_features(self, window):
         """
@@ -232,7 +296,15 @@ class FeatureExtractor:
             - accel_magnitude = np.sqrt(window[:,0]**2 + window[:,1]**2 + window[:,2]**2)
             - Take the mean of the magnitude array
         """
-        pass  # TODO: Implement
+        # Accelerometer magnitude mean
+        accel_magnitude = np.sqrt(window[:, 0]**2 + window[:, 1]**2 + window[:, 2]**2)
+        accel_magnitude_mean = np.mean(accel_magnitude)
+
+        # Gyroscope magnitude mean
+        gyro_magnitude = np.sqrt(window[:, 3]**2 + window[:, 4]**2 + window[:, 5]**2)
+        gyro_magnitude_mean = np.mean(gyro_magnitude)
+
+        return [accel_magnitude_mean, gyro_magnitude_mean]
 
 
 # ============================================================================
