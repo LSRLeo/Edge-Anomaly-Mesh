@@ -159,6 +159,21 @@ def create_windows(data, window_size=100, overlap=0.0, labels=None):
     
     return windows
 
+def windows_to_features(windows, sample_rate=50):
+    """
+    Convert sliding windows into feature vectors.
+
+    Args:
+        windows: numpy array (n_windows, window_size, 6)
+        sample_rate: sensor sample rate in Hz
+
+    Returns:
+        features: numpy array (n_windows, n_features)
+    """
+    extractor = FeatureExtractor(sample_rate=sample_rate)
+    features = extractor.extract_batch(windows)
+    return features
+
 
 # ============================================================================
 # DATA LOADING
@@ -232,6 +247,31 @@ def load_json_data(filepath):
 
     return data, labels
 
+def process_file(filepath, window_size=100, overlap=0.0, sample_rate=50):
+    """
+    Full pipeline from raw sensor file to features.
+
+    Args:
+        filepath: path to JSON sensor file
+        window_size: number of samples per window
+        overlap: window overlap fraction
+        sample_rate: sensor sample rate in Hz
+
+    Returns:
+        features: numpy array (n_windows, n_features)
+        labels: numpy array (n_windows,)
+    """
+    # 1. Load raw data
+    data, labels = load_json_data(filepath)
+
+    # 2. Create windows
+    windows, window_labels = create_windows(data, window_size=window_size, overlap=overlap, labels=labels)
+
+    # 3. Extract features
+    features = windows_to_features(windows, sample_rate=sample_rate)
+
+    return features, window_labels
+
 
 def save_features(features, labels, output_path):
     """
@@ -269,8 +309,47 @@ def demo(args):
         6. Optionally save features if --save flag is set
     
     Use this to verify your implementation works correctly.
+    Running our example program:
+    python -m ml.data_pipeline --data-dir data/examples/raw_sensor_data --window-size 100 --overlap 0.0
     """
-    pass  # TODO: Implement
+    
+    # Step 1: Load data from the files in the data directory
+    data_files = list(Path(args.data_dir).rglob("*.json"))
+    
+    # If no data files are found, print a message and return
+    if not data_files:
+        print("No data files found in the specified directory.")
+        return
+    
+    for filepath in data_files:
+        print(f"Processing file: {filepath}")
+        
+        # Step 2: Load raw sensor data and labels from the file
+        data, labels = load_json_data(filepath)
+        
+        # Step 3: Create sliding windows from the data
+        windows, window_labels = create_windows(data, window_size=args.window_size, 
+                                                 overlap=args.overlap, labels=labels)
+        
+        # Step 4: Extract features from the windows
+        features = windows_to_features(windows, sample_rate=args.sample_rate)
+        
+        # Step 5: Print the shapes of the features and the labels
+        print(f"Features shape: {features.shape}")
+        print(f"Window labels (first 5): {window_labels[:5]}")
+        print(f"First feature vector (first 5 values): {features[0][:5]}")
+        
+        # Step 6: Print feature statistics (min, max, mean)
+        print("Feature statistics (min, max, mean):")
+        print(f"  Min values: {features.min (axis=0)}")
+        print(f"  Max values: {features.max(axis=0)}")
+        print(f"  Mean values: {features.mean(axis=0)}")
+        
+        # Step 7: Check for the unique motion labels in this file
+        unique_labels = np.unique(window_labels)
+        print(f"Unique labels in this file: {unique_labels}")
+        
+        print("=" * 60)
 
 
 def process_data(args):
