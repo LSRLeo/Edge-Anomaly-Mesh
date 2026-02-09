@@ -286,7 +286,8 @@ def save_features(features, labels, output_path):
         - Use np.savez(output_path, features=features, labels=labels)
         - This creates a compressed file that can be loaded with np.load()
     """
-    pass  # TODO: Implement
+    # Save the features and labels as a compressed .npz file
+    np.savez(output_path, features=features, labels=labels)
 
 
 # ============================================================================
@@ -310,7 +311,7 @@ def demo(args):
     
     Use this to verify your implementation works correctly.
     Running our example program:
-    python -m ml.data_pipeline --data-dir data/examples/raw_sensor_data --window-size 100 --overlap 0.0
+    python -m ml.data_pipeline --data-dir data/examples/raw_sensor_data --output-dir ml --window-size 100 --overlap 0.0 --save
     """
     
     # Step 1: Load data from the files in the data directory
@@ -348,6 +349,11 @@ def demo(args):
         # Step 7: Check for the unique motion labels in this file
         unique_labels = np.unique(window_labels)
         print(f"Unique labels in this file: {unique_labels}")
+
+        # Save features and labels if the --save flag is set
+        if args.save:
+            output_path = Path(args.output_dir) / f"{filepath.stem}_features.npz"
+            save_features(features, window_labels, output_path)
         
         print("=" * 60)
 
