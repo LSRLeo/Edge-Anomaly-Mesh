@@ -7,17 +7,20 @@ New to Redis? Start with the [Skills Building](#skills-building) exercise.
 ## About These Instructions
 
 All commands shown in code blocks are **terminal/shell that works in terminal application:
-- macOS: Terminal application
-- Windows: Command Prompt, PowerShell, Git Bash
+
+- macOS: Terminal application (zsh / bash)
+- Windows: Command Prompt, PowerShell, Git Bash, Windows Subsystem for Linux (WSL)
 - Linx: Any terminal emulator
 
-There are **not** VS Code-Specific commands so if you utalize them within VS Code you will need different commands
+There are **not** VS Code-Specific commands but you should be able to run them from within a VS Code terminal (bash or zsh if available).
 
 ## REDIS Server Setup
 
 This project uses [Redis](https://redis.io/) as middleware for inter-module communication.
 
 ### Local Redis Server via Docker
+
+*Note:* you will need to have Docker installed on your computer first.
 
 ```bash
 # Pull the official Redis image
@@ -126,6 +129,8 @@ pip install -r scripts/redis_requirements.txt
 ```
 
 ### Step 2: Install and Start Redis
+
+*Note:* You will need to have Docker installed and running on your system for these to work.
 
 ```bash
 # Pull the Redis Docker image (one-time)
