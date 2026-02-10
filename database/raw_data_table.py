@@ -75,7 +75,9 @@ class RawDataManager:
     """
 
     def __init__(self, db_path: str = DEFAULT_DB_PATH):
-        self.engine = create_engine(f"sqlite:///{db_path}", echo=False)
+        abs_db_path = str(Path(db_path).resolve())
+        print(f"[RawDataManager] Using database at: {abs_db_path}")
+        self.engine = create_engine(f"sqlite:///{abs_db_path}", echo=False)
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
 
@@ -161,7 +163,8 @@ def ingest_raw_data(manager: RawDataManager, messages: list[dict]):
     Parse and insert raw messages into the database
     """
     for msg in messages:
-        if msg.get("m_type") != "raw-data":
+        # Allow records with no 'm_type' or with 'm_type' == 'raw-data'
+        if "m_type" in msg and msg["m_type"] != "raw-data":
             continue
 
         record = parse_raw_message(msg)
