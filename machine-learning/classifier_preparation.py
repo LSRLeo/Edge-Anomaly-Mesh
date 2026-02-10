@@ -72,6 +72,8 @@ class MotionDataset(Dataset):
         Returns:
             int: Number of samples in dataset
         """
+        return self.features.shape[0]
+
         pass  # TODO: Implement
     
     def __getitem__(self, idx):
@@ -85,6 +87,12 @@ class MotionDataset(Dataset):
         Returns:
             tuple: (features_tensor, label_tensor) for sample at idx
         """
+        if torch.is_tensor(idx):
+            idx = idx.item()
+
+        return self.features[idx], self.labels[idx]
+
+        
         pass  # TODO: Implement
 
 # ============================================================================
