@@ -30,6 +30,8 @@ class MotionDataset(Dataset):
         - Load data in parallel
     """
     
+    
+
     def __init__(self, features, labels):
 
         """
@@ -45,6 +47,22 @@ class MotionDataset(Dataset):
             - features → torch.FloatTensor (32-bit float)
             - labels → torch.LongTensor (64-bit integer, required for CrossEntropyLoss)
         """
+        # Accept lists or arrays
+        features = np.asarray(features, dtype=np.float32)
+        labels = np.asarray(labels, dtype=np.int64)
+
+        # Basic shape validation
+        if features.ndim != 2:
+            raise ValueError(f"features must be 2D (n_samples, n_features). Got {features.shape}")
+        if labels.ndim != 1:
+            raise ValueError(f"labels must be 1D (n_samples,). Got {labels.shape}")
+        if features.shape[0] != labels.shape[0]:
+            raise ValueError(f"mismatch: features has {features.shape[0]} rows, labels has {labels.shape[0]}")
+
+        self.features = torch.from_numpy(features)  # float32
+        self.labels = torch.from_numpy(labels)      # int64 (LongTensor)
+
+
         pass  # TODO: Implement
     
     def __len__(self):
