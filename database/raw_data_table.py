@@ -11,16 +11,12 @@ Responsibilities:
 Uses SQLAlchemy ORM.
 """
 
-# ======================
 # Standard library
-# ======================
 import json
 from pathlib import Path
 from datetime import datetime
 
-# ======================
 # Third-party
-# ======================
 from sqlalchemy import (
     create_engine,
     Column,
@@ -36,7 +32,6 @@ from sqlalchemy.exc import IntegrityError
 # SQLAlchemy setup
 # ======================
 Base = declarative_base()
-
 DEFAULT_DB_PATH = "sensor_data.db"
 
 
@@ -132,13 +127,13 @@ def parse_raw_message(msg: dict) -> RawSensorData:
         node_id=msg["node_id"],
         timestamp=iso_to_unix(msg["timestamp"]),
 
-        accel_x=msg["accel_mss"]["x"],
-        accel_y=msg["accel_mss"]["y"],
-        accel_z=msg["accel_mss"]["z"],
+        accel_x=msg["accel"]["x"],
+        accel_y=msg["accel"]["y"],
+        accel_z=msg["accel"]["z"],
 
-        gyro_x=msg["gyro_rads"]["x"],
-        gyro_y=msg["gyro_rads"]["y"],
-        gyro_z=msg["gyro_rads"]["z"],
+        gyro_x=msg["gyro"]["x"],
+        gyro_y=msg["gyro"]["y"],
+        gyro_z=msg["gyro"]["z"],
     )
 
 
@@ -205,12 +200,12 @@ def debug_print_table(manager: RawDataManager):
 def main():
     """
     Example usage:
-    python raw_data_table.py data.json
+    python raw_data_table.py sample_raw_data.json
     """
     import sys
 
     if len(sys.argv) < 2:
-        print("Usage: python raw_data_table.py <raw_data.json>")
+        print("Usage: python raw_data_table.py <sample_raw_data.json>")
         return
 
     file_path = Path(sys.argv[1])
