@@ -20,6 +20,8 @@ from tkinter import ttk
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 import os
 import json
+from datetime import datetime
+from datetime import timedelta
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
 #    ANOMALY_BORDER_COLOR, ANOMALY_BORDER_WIDTH,
@@ -35,6 +37,7 @@ import json
 # MOCK DATA - Replace with database queries
 # =============================================================================
 
+
 MOCK_NODES = [
     {'node_id': 'node_001', 'x': 150, 'y': 150, 'motion_class': 'IDLE', 'anomaly': False},
     {'node_id': 'node_002', 'x': 300, 'y': 200, 'motion_class': 'TERRESTRIAL', 'anomaly': False},
@@ -43,7 +46,7 @@ MOCK_NODES = [
     {'node_id': 'node_005', 'x': 400, 'y': 300, 'motion_class': 'IDLE', 'anomaly': True},
     {'node_id': 'node_006', 'x': 550, 'y': 350, 'motion_class': 'TERRESTRIAL', 'anomaly': False},
 ]
-
+# confidence list is [IDLE, GROUND, MARITIME, LIFT, IDLE_ANOMALY, TERRESTRIAL_ANOMALY, MARITIME_ANOMALY, LIFT_ANOMALY]
 
 class NetworkTab(ttk.Frame):
     """
@@ -75,6 +78,19 @@ class NetworkTab(ttk.Frame):
         # Currently selected node
         self.selected_node: Optional[str] = None
         
+        #Dict of colors
+        self.MOTION_COLORS = {
+        'IDLE' : 'gray',
+        'TERRESTRIAL' : 'blue',
+        'MARITIME' : 'green',
+        'LIFT' : 'red',
+        'Anomaly indicator' : 'red'
+        }
+        self.ANOMALY_BORDER_COLOR = 'red'
+        # Border width for node
+        self.ANOMALY_BORDER_WIDTH = 3
+        self.NODE_BORDER_WIDTH = 3
+
         # Build UI
         self._setup_ui()
     
@@ -120,19 +136,14 @@ class NetworkTab(ttk.Frame):
         - Anomaly indicator (red border)
         """
 
-        MOTION_COLORS = {
-        'IDLE' : 'gray',
-        'TERRESTRIAL' : 'blue',
-        'MARITIME' : 'green',
-        'LIFT' : 'red',
-        'Anomaly indicator' : 'red'
-        }
+
+
 
         legend_frame = ttk.Frame(self)
         legend_frame.grid(row=0, column=0,sticky='ew',padx=10,pady=5)
 
         # Mini canvas for each key/value pair
-        for i, (motion,color) in enumerate(MOTION_COLORS.items()):
+        for i, (motion,color) in enumerate(self.MOTION_COLORS.items()):
             if motion == 'UNKNOWN':
                 continue
 
@@ -245,6 +256,11 @@ class NetworkTab(ttk.Frame):
                    - motion_class: str
                    - anomaly: bool
         """
+
+        self.canvas.delete('node')
+        self.node_items.clear()
+        for node in nodes:
+            self._draw_single_node(node)
         # TODO: Implement
         #
         # # Clear existing nodes
@@ -262,11 +278,38 @@ class NetworkTab(ttk.Frame):
         Args:
             node: Node dictionary with position and state info
         """
-        node_id = node['node_id']
+        node_id = node.get('node_id', 'unknown')
         x = node['x']
         y = node['y']
-        motion_class = node.get['motion_class','UNKNOWN']
-        is_anomaly = node.get['anomaly', 'FALSE']
+        motion_class = node.get('motion_class','UNKNOWN')
+        is_anomaly = node.get('anomaly', False)
+        
+        fill_color = self.get_motion_color(motion_class)
+
+        if is_anomaly:
+            outline_col = 'red'
+            outline_width = self.ANOMALY_BORDER_WIDTH
+        else:
+            outline_col = 'black'
+            outline_width = self.NODE_BORDER_WIDTH
+
+        # Draw circle
+        r = 10
+        item_id = self.canvas.create_oval(
+            x - r, y - r, x + r, y + r,
+            fill=fill_color,
+            outline=outline_col,
+            width=outline_width,
+            tags=('node', node_id)
+        )
+        # Draw label below node
+        self.canvas.create_text(
+            x, y + r + 10,
+            text=node_id,
+            font=('Arial', 8),
+            tags=('node', f'{node_id}_label -- anomaly: {is_anomaly} motion_class: {motion_class}')
+        )
+        self.node_items[node_id] = item_id
         # TODO: implement color and legend
         # TODO: Implement
         #
@@ -318,6 +361,7 @@ class NetworkTab(ttk.Frame):
         if node_id in self.node_items:
             item_id = self.node_items[node_id]
             color = self.get_motion_color(motion_class)
+            self._draw_single_node(self.node_items)
         # TODO: Implement
         #
         # if node_id in self.node_items:
@@ -326,15 +370,8 @@ class NetworkTab(ttk.Frame):
         #     self.canvas.itemconfig(item_id, fill=color)
         pass
 
-    def get_motion_color(motion_class):
-        MOTION_COLORS = {
-        'IDLE' : 'gray',
-        'TERRESTRIAL' : 'blue',
-        'MARITIME' : 'green',
-        'LIFT' : 'red',
-        'Anomaly indicator' : 'red'
-        }
-        return MOTION_COLORS[motion_class]
+    def get_motion_color(self, motion_class):
+        return self.MOTION_COLORS.get(motion_class, 'gray')
     
     def highlight_anomaly(self, node_id: str, is_anomaly: bool):
         """
@@ -344,6 +381,16 @@ class NetworkTab(ttk.Frame):
             node_id: ID of the node
             is_anomaly: True to highlight, False to remove highlight
         """
+        if node_id in self.node_items:
+            item_id = self.node_items[node_id]
+            if is_anomaly:
+                self.canvas.itemconfig(item_id, 
+                                       outline=self.ANOMALY_BORDER_COLOR,
+                                       width=self.ANOMALY_BORDER_WIDTH)
+            else:
+                self.canvas.itemconfig(item_id,
+                                       outline='black',
+                                       width=self.NODE_BORDER_WIDTH)
         # TODO: Implement
         #
         # if node_id in self.node_items:
@@ -441,7 +488,7 @@ class NetworkTab(ttk.Frame):
             self.node_items[node_id] = i
             self.test_nodes[node_id] = node_data #insert dict with key str node_id and value dict node_data into self.test_nodes
 
-        self.draw_nodes(self.test_nodes)
+        self.draw_nodes(list(self.test_nodes.values()))
 
     def refresh(self):
         
