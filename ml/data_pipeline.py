@@ -281,10 +281,6 @@ def save_features(features, labels, output_path):
         features: numpy array of shape (n_samples, n_features)
         labels: numpy array of shape (n_samples,)
         output_path: path to save the file (e.g., .npz format)
-    
-    Implementation hints:
-        - Use np.savez(output_path, features=features, labels=labels)
-        - This creates a compressed file that can be loaded with np.load()
     """
     # Save the features and labels as a compressed .npz file
     np.savez(output_path, features=features, labels=labels)
