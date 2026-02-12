@@ -1,9 +1,11 @@
 from hub import Hub
+from section import Section
 import json
 
 class Route:
     def __init__(self, hubs: list[Hub], jason_file): #route is a array of hubs in order
        self.hubs = hubs
+       self.sections = []
        self.jason_file = jason_file
     
 
@@ -22,7 +24,16 @@ class Route:
                     mode=hub_data['mode'],
                     lift_time=hub_data['lift_time']
                 )
+
+
                 self.hubs.append(hub)
+
+
+            for i in range(len(self.hubs) - 1):
+                section = Section(self.hubs[i], self.hubs[i + 1], self.hubs[i].mode)
+                self.sections.append(section)
+            
+            
         except FileNotFoundError:
             raise FileNotFoundError(f"JSON file {self.jason_file} not found")
         except json.JSONDecodeError:
@@ -30,7 +41,7 @@ class Route:
         except KeyError as e:
             raise ValueError(f"Missing key {e} in JSON file {self.jason_file}")
 
-    #maybe should add a method to insert a hub at a specific index in the route, but for now we can just add to the end and then reorder the route if needed??
+   
 
 
  
