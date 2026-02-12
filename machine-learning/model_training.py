@@ -16,7 +16,6 @@ from ml.data_pipeline import load_json_data, create_windows
 # ============================================================================
 
 class MotionClassifier(nn.Module):
-
     """
     Simple feedforward neural network for motion classification.
     
@@ -121,7 +120,44 @@ def evaluate(model, dataloader, criterion, device):
     Important:
         - Save all predictions and labels for confusion matrix later
     """
-    pass  # TODO: Implement
+    
+    model.eval()  # disables dropout / batchnorm updates
+
+    total_loss = 0.0
+    correct = 0
+    total = 0
+
+    all_predictions = []
+    all_labels = []
+
+    with torch.no_grad():  # no gradient computation during evaluation
+
+        for inputs, labels in dataloader:
+
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+
+            total_loss += loss.item() * inputs.size(0)
+
+            _, preds = torch.max(outputs, dim=1)
+
+            correct += (preds == labels).sum().item()
+            total += labels.size(0)
+
+            all_predictions.append(preds.cpu())
+            all_labels.append(labels.cpu())
+
+    avg_loss = total_loss / total
+    accuracy = correct / total
+
+    predictions = torch.cat(all_predictions).numpy()
+    labels = torch.cat(all_labels).numpy()
+
+    return avg_loss, accuracy, predictions, labels
+
 
 def compute_confusion_matrix(predictions, labels, num_classes=4):
 
