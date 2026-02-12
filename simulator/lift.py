@@ -34,6 +34,88 @@ class Lift:
             if not self.is_within_hub_radius(gps_lat, gps_lon):
                 print(f"Warning: Package outside hub radius! Lat: {gps_lat}, Lon: {gps_lon}")
             # Optionally, handle violation (log, alert, etc.)
+
+    #margins of error: ACCEL X+-0.17, Y+-0.13, Z+-0.20
+    # GRYO X+-0.08, Y+-0.032, Z+-0.023
+
+
+# Forklift motion generator implementation
+class LiftMotionGenerator(BaseMotionGenerator):
+    """
+    Simulates cargo being lifted and moved by a forklift.
+    Implements the lift cycle phases and generates sensor readings.
+    """
+    def __init__(self, sample_rate: int = 50, cycle_duration: float = 8.0):
+        super().__init__()
+        self.sample_rate = sample_rate
+        self.cycle_duration = cycle_duration
+        self.lift_acceleration = 3.5  # m/s²
+        self.gravity = 9.81  # m/s²
+        self.phase_boundaries = {
+            "LIFT_UP": (0.0, 0.15),
+            "HOLD_MOVE": (0.15, 0.50),
+            "LOWER_DOWN": (0.50, 0.65),
+            "REST": (0.65, 1.0)
+        }
+        self.horizontal_amplitude = 0.2  # meters (forklift vibration)
+        self.accel_error = {"x": 0.17, "y": 0.13, "z": 0.20}
+        self.gyro_error = {"x": 0.08, "y": 0.032, "z": 0.023}
+
+    def get_phase(self, cycle_fraction: float) -> str:
+        for phase, (start, end) in self.phase_boundaries.items():
+            if start <= cycle_fraction < end:
+                return phase
+        return "REST"
+
+    def generate_reading(self, t: float) -> SensorReading:
+        import math, random
+        cycle_pos = (t % self.cycle_duration) / self.cycle_duration
+        phase = self.get_phase(cycle_pos)
+
+        accel_x = 0.0
+        accel_y = 0.0
+        accel_z = self.gravity
+        gyro_x = 0.0
+        gyro_y = 0.0
+        gyro_z = 0.0
+
+        if phase == "LIFT_UP":
+            # LIFT_UP: vertical lift, no horizontal movement
+            accel_z = self.gravity + self.lift_acceleration
+            accel_x = 0.0
+            accel_y = 0.0
+        elif phase == "HOLD_MOVE":
+            # HOLD_MOVE: still at constant height, no horizontal movement
+            accel_z = self.gravity
+            accel_x = 0.0
+            accel_y = 0.0
+        elif phase == "LOWER_DOWN":
+            # LOWER_DOWN:  vertical lowering, no horizontal movement
+            accel_z = self.gravity - self.lift_acceleration
+            accel_x = 0.0
+            accel_y = 0.0
+        elif phase == "REST":
+            # REST: Stationary, only gravity, no horizontal movement
+            accel_z = self.gravity
+            accel_x = 0.0
+            accel_y = 0.0
+
+        # Add random error later - noise
+        # accel_x += random.uniform(-self.accel_error["x"], self.accel_error["x"])
+        # accel_y += random.uniform(-self.accel_error["y"], self.accel_error["y"])
+        # accel_z += random.uniform(-self.accel_error["z"], self.accel_error["z"])
+        # gyro_x += random.uniform(-self.gyro_error["x"], self.gyro_error["x"])
+        # gyro_y += random.uniform(-self.gyro_error["y"], self.gyro_error["y"])
+        # gyro_z += random.uniform(-self.gyro_error["z"], self.gyro_error["z"])
+
+        return SensorReading(accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z)
+
+    def generate_cycle(self) -> List[SensorReading]:
+        readings = []
+        for i in range(int(self.cycle_duration * self.sample_rate)):
+            t = i / self.sample_rate
+            readings.append(self.generate_reading(t))
+        return readings
 """
 LIFT Motion Generator
 
@@ -90,7 +172,7 @@ class LiftPhase(Enum):
         }
         # Set horizontal movement amplitude during hold
         self.horizontal_amplitude = 0.2  # meters (example value for forklift vibration)
-        # Initialize time counter
+        # Initialize time counterx
         self.time_counter = 0.0
         pass
 
