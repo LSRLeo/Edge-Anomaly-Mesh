@@ -6,6 +6,7 @@ def run_simulation(node_file, route_file):
     route = Route(route_file)
     node = Node(node_file, route)
     node.generate()
+    node.publish()
 
 def main():
     parser = argparse.ArgumentParser(description='Run simulation')
