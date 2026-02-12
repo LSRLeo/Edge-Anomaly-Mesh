@@ -2,8 +2,8 @@ from hub import Hub
 import json
 
 class Route:
-    def __init__(self, hubs: list[Hub], jason_file): #route is a array of hubs in order
-       self.hubs = hubs
+    def __init__(self, jason_file): #route is a array of hubs in order
+       self.hubs = []
        self.sections = []
        self.jason_file = jason_file
     
