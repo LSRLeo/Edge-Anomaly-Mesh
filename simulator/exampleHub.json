@@ -6,7 +6,7 @@
       "gps_lon": -104.9903,
       "alt": 1609.3,
       "time_at_hub": 120,
-      "mode": "truck",
+      "mode": "terrestrial",
       "lift_time": 0
     },
     {
@@ -24,7 +24,7 @@
       "gps_lon": -104.9879,
       "alt": 1607.0,
       "time_at_hub": 180,
-      "mode": "walk",
+      "mode": "terrestrial",
       "lift_time": 0
     }
   ]
