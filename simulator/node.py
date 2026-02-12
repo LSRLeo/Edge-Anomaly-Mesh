@@ -1,6 +1,10 @@
-from generators import Idle, Lift, Maritime, Terrestrial
 import time
 import json
+
+from lift import Lift
+from maritime import Maritime
+from terrestrial import Terrestrial
+from idle import Idle
 
 class Node:
     def __init__(self, node_file, route, sample_rate_hz = 50, node_id = "node_001"):
@@ -16,15 +20,15 @@ class Node:
                 current_hub = self.route.hubs[i]
                 next_hub = self.route.hubs[i + 1]
 
-                self.messages.append(Idle.generate_reading(current_hub, self.sample_rate_hz))
+                self.messages += Idle.generate_reading(current_hub, self.sample_rate_hz)
                 
                 switch (current_hub.mode):
                     case "LIFT":
-                        self.messages.append(Lift.generate_reading(current_hub, next_hub, self.sample_rate_hz))
+                        self.messages += Lift.generate_reading(current_hub, next_hub, self.sample_rate_hz)
                     case "MARITIME":
-                        self.messages.append(Maritime.generate_reading(current_hub, next_hub, self.sample_rate_hz))
+                        self.messages += Maritime.generate_reading(current_hub, next_hub, self.sample_rate_hz)
                     case "TERRESTRIAL":
-                        self.messages.append(Terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz))
+                        self.messages += Terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
                     case _:
                         raise ValueError(f"Invalid mode: {current_hub.mode}")
 
