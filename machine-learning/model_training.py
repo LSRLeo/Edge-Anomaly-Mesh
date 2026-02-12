@@ -232,4 +232,33 @@ def print_classification_report(matrix, class_names):
         - FP for class i: sum of column i minus TP
         - FN for class i: sum of row i minus TP
     """
-    pass  # TODO: Implement
+
+    print("\nClassification Report")
+    print("-" * 40)
+
+    for i in range(len(class_names)):
+
+        TP = matrix[i, i]
+        FP = matrix[:, i].sum() - TP
+        FN = matrix[i, :].sum() - TP
+
+        if TP + FP > 0:
+            precision = TP / (TP + FP)
+        else:
+            precision = 0.0
+
+        if TP + FN > 0:
+            recall = TP / (TP + FN)
+        else:
+            recall = 0.0
+
+        if precision + recall > 0:
+            f1 = 2 * precision * recall / (precision + recall)
+        else:
+            f1 = 0.0
+
+        print(class_names[i])
+        print("  Precision:", round(precision, 4))
+        print("  Recall:   ", round(recall, 4))
+        print("  F1 Score: ", round(f1, 4))
+        print()
