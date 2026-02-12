@@ -1,5 +1,4 @@
 from hub import Hub
-from section import Section
 import json
 
 class Route:
@@ -28,12 +27,6 @@ class Route:
 
                 self.hubs.append(hub)
 
-
-            for i in range(len(self.hubs) - 1):
-                section = Section(self.hubs[i], self.hubs[i + 1], self.hubs[i].mode)
-                self.sections.append(section)
-            
-            
         except FileNotFoundError:
             raise FileNotFoundError(f"JSON file {self.jason_file} not found")
         except json.JSONDecodeError:
