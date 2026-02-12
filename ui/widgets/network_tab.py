@@ -80,11 +80,15 @@ class NetworkTab(ttk.Frame):
         
         #Dict of colors
         self.MOTION_COLORS = {
-        'IDLE' : 'gray',
-        'TERRESTRIAL' : 'blue',
-        'MARITIME' : 'green',
-        'LIFT' : 'red',
-        'Anomaly indicator' : 'red'
+        'IDLE' : ('gray', False),
+        'TERRESTRIAL' : ('blue', False),
+        'MARITIME' : ('green', False),
+        'LIFT' : ('red', False),
+        'ANOMALOUS IDLE' : ('gray', True),
+        'ANOMALOUS TERRESTRIAL' : ('blue', True),
+        'ANOMALOUS MARITIME' : ('green', True),
+        'ANOMALOUS LIFT' : ('red', True)
+        #'Anomaly indicator' : 'red'
         }
         self.ANOMALY_BORDER_COLOR = 'red'
         # Border width for node
@@ -140,23 +144,21 @@ class NetworkTab(ttk.Frame):
 
 
         legend_frame = ttk.Frame(self)
-        legend_frame.grid(row=0, column=0,sticky='ew',padx=10,pady=5)
+        legend_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=5)
 
-        # Mini canvas for each key/value pair
-        for i, (motion,color) in enumerate(self.MOTION_COLORS.items()):
-            if motion == 'UNKNOWN':
-                continue
-
-            # Reusable mini canvas
-            mini_canvas = tk.Canvas(legend_frame, width=20, height=20, 
-                                    highlightthickness=0)
-            if motion != 'Anomaly indicator':
+        # Arrange legend items in two rows
+        items_per_row = 4
+        filtered_items = [(motion, color, is_anomalous) for motion, (color, is_anomalous) in self.MOTION_COLORS.items() if motion != 'UNKNOWN']
+        for idx, (motion, color, is_anomalous) in enumerate(filtered_items):
+            row = idx // items_per_row
+            col = (idx % items_per_row) * 2
+            mini_canvas = tk.Canvas(legend_frame, width=20, height=20, highlightthickness=0)
+            if not is_anomalous:
                 mini_canvas.create_oval(2, 2, 18, 18, fill=color, outline='black')
-            elif motion == 'Anomaly indicator':
-                mini_canvas.create_oval(2, 2, 18, 18, fill = color, outline='red')
-            mini_canvas.grid(row=0,column=i*2,padx=(10,2))
-            
-            ttk.Label(legend_frame, text=motion).grid(row=0,column=i*2+1,padx=(0, 10))
+            else:
+                mini_canvas.create_oval(2, 2, 18, 18, fill=color, outline='red')
+            mini_canvas.grid(row=row, column=col, padx=(10, 2), pady=2)
+            ttk.Label(legend_frame, text=motion).grid(row=row, column=col+1, padx=(0, 10), pady=2)
 
         # TODO: Implement legend
         #
@@ -371,7 +373,9 @@ class NetworkTab(ttk.Frame):
         pass
 
     def get_motion_color(self, motion_class):
-        return self.MOTION_COLORS.get(motion_class, 'gray')
+        color_tuple = self.MOTION_COLORS.get(motion_class, ('gray', False))
+        # Always return just the color string
+        return color_tuple[0]
     
     def highlight_anomaly(self, node_id: str, is_anomaly: bool):
         """
@@ -436,41 +440,28 @@ class NetworkTab(ttk.Frame):
     def _on_canvas_click(self, event):
         """
         Handle click events on the canvas.
-        
-        Finds the clicked node and triggers navigation to Node Details.
-        
-        Args:
-            event: Tkinter event object with x, y coordinates
+        Toggle anomaly status visually for the clicked node.
         """
-        # TODO: Implement
-        #
-        # # Find item at click location
-        # items = self.canvas.find_closest(event.x, event.y)
-        # if not items:
-        #     return
-        #
-        # # Get tags of clicked item
-        # tags = self.canvas.gettags(items[0])
-        # if 'node' not in tags:
-        #     return
-        #
-        # # Find node_id from tags
-        # for tag in tags:
-        #     if tag.startswith('node_') and not tag.endswith('_label'):
-        #         node_id = tag
-        #         break
-        #     elif tag not in ('node', 'current'):
-        #         node_id = tag
-        #         break
-        # else:
-        #     return
-        #
-        # # Select the node
-        # self.select_node(node_id)
-        #
-        # # Navigate to details
-        # self.dashboard.show_node_details(node_id)
-        pass
+        # Find item at click location
+        items = self.canvas.find_closest(event.x, event.y)
+        if not items:
+            return
+        # Get tags of clicked item
+        tags = self.canvas.gettags(items[0])
+        # Find node_id from tags (skip 'node' and 'current')
+        node_id = None
+        for tag in tags:
+            if tag not in ('node', 'current') and not tag.endswith('_label'):
+                node_id = tag
+                break
+        if not node_id:
+            return
+        # Toggle anomaly status in self.test_nodes
+        node = self.test_nodes.get(node_id)
+        if node is not None:
+            node['anomaly'] = not node.get('anomaly', False)
+            # Redraw just this node
+            self._draw_single_node(node)
     
 
     def load_json(self, filename):
