@@ -39,18 +39,13 @@ from scipy import fft
 from pathlib import Path
 import csv
 
-
 # ============================================================================
 # ARGUMENT PARSING
 # ============================================================================
 
-
-
 # ============================================================================
 # WINDOWING
 # ============================================================================
-
-
 
 # ============================================================================
 # FEATURE EXTRACTOR CLASS
@@ -152,7 +147,7 @@ class FeatureExtractor:
         # 3. Cross-axis features
         features.extend(self._cross_axis_features(window))
 
-        # 4. Concatenate all into one vector
+        # 4. Concatenate all into one numpy vector
         return np.array(features)
     
     def extract_batch(self, windows):
@@ -209,8 +204,10 @@ class FeatureExtractor:
 
         #standard deviation
         std = np.std(signal)
+
         #root mean square
         rms = np.sqrt(np.mean(signal ** 2))
+        
         #peak to peak
         peak_to_peak = np.max(signal) - np.min(signal)
 
@@ -248,6 +245,7 @@ class FeatureExtractor:
             - Only use positive frequencies (first half of FFT output)
             - Skip index 0 when finding dominant frequency (that's DC)
         """
+
         # Remove DC component
         signal_centered = signal - np.mean(signal)
         n = len(signal_centered)
@@ -323,7 +321,6 @@ def main():
     Main entry point.
     """
     print("Feature extraction module loaded. No CLI or demo available.")
-
 
 if __name__ == '__main__':
     main()
