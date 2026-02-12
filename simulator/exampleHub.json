@@ -1,0 +1,31 @@
+{
+  "hubs": [
+    {
+      "name": "Hub A",
+      "gps_lat": 39.7392,
+      "gps_lon": -104.9903,
+      "alt": 1609.3,
+      "time_at_hub": 120,
+      "mode": "truck",
+      "lift_time": 0
+    },
+    {
+      "name": "Hub B",
+      "gps_lat": 39.7420,
+      "gps_lon": -104.9915,
+      "alt": 1612.8,
+      "time_at_hub": 300,
+      "mode": "lift",
+      "lift_time": 45
+    },
+    {
+      "name": "Hub C",
+      "gps_lat": 39.7451,
+      "gps_lon": -104.9879,
+      "alt": 1607.0,
+      "time_at_hub": 180,
+      "mode": "walk",
+      "lift_time": 0
+    }
+  ]
+}
