@@ -2,17 +2,17 @@
 from typing import List, Tuple
 from enum import Enum
 
-from .base import BaseMotionGenerator, SensorReading
+from base import BaseMotionGenerator, SensorReading
 from typing import List, Tuple
 
 
 class Lift:
-        def set_hub(self, hub_lat, hub_lon, radius_m):
+        def set_hub(self, hub, radius_m):
             """
             Set hub location and radius for package constraint.
             """
-            self.hub_lat = hub_lat
-            self.hub_lon = hub_lon
+            self.hub_lat = hub.lat
+            self.hub_lon = hub.lon
             self.hub_radius_m = radius_m
 
         def is_within_hub_radius(self, gps_lat, gps_lon):
