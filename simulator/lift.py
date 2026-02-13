@@ -67,9 +67,9 @@ class LiftMotionGenerator(BaseMotionGenerator):
                 return phase
         return "REST"
 
-    def generate_reading(self, t: float) -> SensorReading:
+    def generate_reading(self, time: int) -> SensorReading:
         import math, random
-        cycle_pos = (t % self.cycle_duration) / self.cycle_duration
+        cycle_pos = (time % self.cycle_duration) / self.cycle_duration
         phase = self.get_phase(cycle_pos)
 
         accel_x = 0.0
