@@ -3,7 +3,10 @@ from node import Node
 from route import Route
 
 def run_simulation(node_file, route_file):
+    
     route = Route(route_file)
+    route.load_route()
+
     node = Node(node_file, route)
     node.generate()
     node.publish()

@@ -1,7 +1,10 @@
 class Idle:
-    def generate_reading(current_hub, sample_rate_hz):
+    def __init__(self,sample_rate_hz):
+        self.sample_rate_hz = sample_rate_hz
+
+    def generate_reading(self,current_hub):
         messages = []
-        for i in range(sample_rate_hz*current_hub.time_at_hub):
+        for i in range(self.sample_rate_hz*current_hub.time_at_hub):
             messages.append({
                 "accel_x": 0,
                 "accel_y": 0,
