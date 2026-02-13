@@ -39,7 +39,7 @@ if TYPE_CHECKING:
 #confidence_list is [IDLE, GROUND, MARITIME, LIFT, IDLE_ANOMALY, GROUND_ANOMALY, MARITIME_ANOMALY, LIFT_ANOMALY]
 MOCK_ANOMALIES = [
     {
-        'id': 1,
+        
         'timestamp': datetime.now() - timedelta(minutes=5),
         'node_id': 'node_003',
         'motion_class': 'MARITIME_ANOMALY',
@@ -47,21 +47,21 @@ MOCK_ANOMALIES = [
     },
     
     {
-        'id': 2,
+        
         'timestamp': datetime.now() - timedelta(minutes=12),
         'node_id': 'node_007',
         'motion_class': 'IDLE_ANOMALY',
         'confidence_list': [0.07, 0.01, 0.01, 0.01, 0.88, 0.01, 0.01, 0.00],  # max=0.88 (IDLE), anomaly label chosen by model rule
     },
     {
-        'id': 3,
+        
         'timestamp': datetime.now() - timedelta(minutes=18),
         'node_id': 'node_011',
         'motion_class': 'TERRESTRIAL_ANOMALY',
         'confidence_list': [0.02, 0.05, 0.02, 0.01, 0.02, 0.02, 0.84, 0.02],  # max=0.84
     },
     {
-        'id': 4,
+        
         'timestamp': datetime.now() - timedelta(minutes=27),
         'node_id': 'node_015',
         'motion_class': 'LIFT_ANOMALY',
@@ -116,10 +116,10 @@ class AnomalySection(ttk.Frame):
         self._inner.bind("<Configure>", self._on_inner_configure)
         self._canvas.bind("<Configure>", self._on_canvas_configure)
 
-        # (Optional) Placeholder content to show the area is scrollable
-        # Remove this later when you add real content
-        placeholder = ttk.Label(self._inner, text="Scrollable content area (skeleton)")
-        placeholder.pack(pady=16)
+        
+
+        # Build initial rows with mock data
+        self._build_rows(MOCK_ANOMALIES)
     def _on_inner_configure(self, event):
         # Update scroll region to encompass the inner frame
         if self._canvas:
@@ -132,6 +132,76 @@ class AnomalySection(ttk.Frame):
         return
     def _on_refresh_clicked(self):
         pass
+    def _build_rows(self, anomalies: List[Dict[str, Any]]):
+        # Clear existing rows
+        for row in self._rows:
+            row['frame'].destroy()
+        self._rows.clear()
+
+        # Build new rows
+        for anomaly in anomalies:
+            self._build_single_row(anomaly)
+    def _build_single_row(self, anomaly: Dict[str, Any]):
+        
+        container = ttk.Frame(self._inner, padding=(10, 8))
+        container.pack(fill="x", pady=4)
+
+        # Optional subtle border style
+        try:
+            style = ttk.Style(container)
+            style.configure("AnomRow.TFrame", relief="groove", borderwidth=1)
+            container.configure(style="AnomRow.TFrame")
+        except Exception:
+            pass
+        
+
+    # Top line: node_id (bold) left, timestamp right
+        top = ttk.Frame(container)
+        top.pack(fill="x")
+        node_lbl = ttk.Label(top, text=anomaly["node_id"])
+        try:
+            node_lbl.configure(font=("TkDefaultFont", 10, "bold"))
+        except Exception:
+            pass
+        node_lbl.pack(side="left")
+        ttk.Label(top, text=self._fmt_ts(anomaly["timestamp"])).pack(side="right")
+
+
+        # Second line: anomaly type
+        mid = ttk.Frame(container)
+        mid.pack(fill="x", pady=(4, 0))
+        ttk.Label(mid, text=f"Type: {anomaly['motion_class']}").pack(side="left")
+
+        # Actions
+        actions = ttk.Frame(container)
+        actions.pack(fill="x", pady=(6, 0))
+        ttk.Button(actions, text="Open node", command=lambda r=anomaly: self._open_node(r)).pack(side="left")
+
+        # Make row clickable to open node
+        container.bind("<Button-1>", lambda _e, r=anomaly: self._open_node(r))
+        top.bind("<Button-1>", lambda _e, r=anomaly: self._open_node(r))
+        mid.bind("<Button-1>", lambda _e, r=anomaly: self._open_node(r))
+
+    def _fmt_ts(self, iso_str: str) -> str:
+        """Return a compact UTC display string."""
+        from datetime import datetime, timezone
+        try:
+            v = iso_str
+            if v.endswith("Z"):
+                v = v[:-1] + "+00:00"
+            dt = datetime.fromisoformat(v)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            dt = dt.astimezone(timezone.utc)
+            return dt.strftime("%Y-%m-%d %H:%M:%S UTC")
+        except Exception:
+            return iso_str
+    def _open_node(self, anomaly: Dict[str, Any]):
+        """Callback when an anomaly row is clicked to open node details."""
+        #does nothing right now, will be linked to Node Details tab in future sprint
+        pass
+
+
 
 
 
