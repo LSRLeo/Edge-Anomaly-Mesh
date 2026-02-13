@@ -108,7 +108,17 @@ class LiftMotionGenerator(BaseMotionGenerator):
         # gyro_y += random.uniform(-self.gyro_error["y"], self.gyro_error["y"])
         # gyro_z += random.uniform(-self.gyro_error["z"], self.gyro_error["z"])
 
-        return SensorReading(accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z)
+            messages = []
+            for i in range(self.sample_rate * self.cycle_duration):
+                messages.append({
+                    "accel_x": accel_x,
+                    "accel_y": accel_y,
+                    "accel_z": accel_z,
+                    "gyro_x": gyro_x,
+                    "gyro_y": gyro_y,
+                    "gyro_z": gyro_z,
+                })
+            return messages
 
     def generate_cycle(self) -> List[SensorReading]:
         readings = []
