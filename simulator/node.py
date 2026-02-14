@@ -2,19 +2,29 @@ import time
 import json
 
 from lift import Lift
-# from maritime import Maritime
+from maritime import Maritime
 # from terrestrial import Terrestrial
 from idle import Idle
 
 class Node:
-    def __init__(self, node_file, route, sample_rate_hz = 50, node_id = "node_001"):
+    def __init__(self, node_file, route):
         self.route = route
         self.messages = []
-        self.node_id = node_id
-        self.sample_rate_hz = sample_rate_hz
-        self.seq = 0
-        self.idle = Idle(self.sample_rate_hz)
-        self.lift = Lift()
+
+        try:
+            with open(node_file, 'r') as f:
+                node_config = json.load(f)
+
+            self.node_id = node_config['node_id']
+            self.sample_rate_hz = node_config['sample_rate_hz']
+            self.seq = 0
+            self.idle = Idle(self.sample_rate_hz)
+            self.lift = Lift()
+            self.maritime = Maritime(self.sample_rate_hz)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Node configuration file {node_file} not found")
+        except json.JSONDecodeError:
+            raise ValueError(f"Error decoding node configuration file {node_file}")
     
     def generate(self):
         for i in range(len(self.route.hubs)):
@@ -28,8 +38,7 @@ class Node:
                     self.lift.set_hub(current_hub, 20)
                     self.messages += self.lift.generate_reading(current_hub.lift_time)
                 elif current_hub.mode == "maritime":
-                    pass
-                #     self.messages += Maritime.generate_reading(current_hub, next_hub, self.sample_rate_hz)
+                    self.messages += self.maritime.generate_reading(current_hub, next_hub)
                 elif current_hub.mode == "terrestrial":
                     pass
                 #     self.messages += Terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
