@@ -3,7 +3,11 @@ Docstring for database.db_message_manager
 m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'Error'
 '''
 import logging
+import json
+import sys
 
+#logging for debugging purposes
+logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class DBMessageManager:
     '''
@@ -28,7 +32,24 @@ class DBMessageManager:
             'get-datum-response': self.handle_get_datum_response,
             'error': self.handle_error
         }
-        
+    def handle_raw_data(self):
+        pass
+    def handle_inference_output(self):
+        pass
+    def handle_get_nodes(self):
+        pass
+    def handle_get_nodes_response(self):
+        pass
+    def handle_get_node_data_ids(self):
+        pass
+    def handle_get_node_data_ids_response(self):
+        pass
+    def handle_get_datum(self):
+        pass
+    def handle_get_datum_response(self):
+        pass
+    def handle_error(self):
+        pass
 
 if __name__ == "__main__":
     db_message_manager = DBMessageManager()
