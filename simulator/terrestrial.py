@@ -10,8 +10,7 @@ class Terrestrial:
         self.dec = 1.5 # m/s^2
         self.max_speed = 125/9 # m/s, which is 50 km/h
         
-
-    
+        
     def generate_reading(self, current_hub:Hub, next_hub:Hub, sample_rate_hz:int = 50, ):
        
 
