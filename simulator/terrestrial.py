@@ -6,24 +6,25 @@ class Terrestrial:
 
     def __init__(self, sample_rate: int = 50):
         self.sample_rate = sample_rate  
+        self.acc = 1.5 # m/s^2
+        self.dec = 1.5 # m/s^2
+        self.max_speed = 125/9 # m/s, which is 50 km/h
         
 
     
     def generate_reading(self, current_hub:Hub, next_hub:Hub, sample_rate_hz:int = 50, ):
-       # 50 km/h = 50 * (1000/3600) m/s = 50000/3600 = 125/9 m/s
-        max_speed = 125/9
-        acc = 1.5 # m/s^2
+       
 
         # calculate distance between two hubs
         distance_between_hubs = Terrestrial.calculate_distance(current_hub, next_hub)
 
         #velocity = acceleration * time
         #time to reach max speed
-        t_acc = max_speed / acc
+        t_acc = self.max_speed / self.acc
 
         #distance covered during acceleration (from rest to max speed)
         #dist_acc = (1/2) * acceleration * (max_spped/a)^2 
-        d_acc = (max_speed**2) / (2 * acc)
+        d_acc = (self.max_speed**2) / (2 * self.acc)
 
 
 
@@ -48,11 +49,11 @@ class Terrestrial:
                 new_max_speed = 0.0
 
             else:
-                new_max_speed = math.sqrt(distance_between_hubs * acc)
+                new_max_speed = math.sqrt(distance_between_hubs * self.acc)
 
 
             #velocity = acceleration * time
-            time_to_new_max_speed = new_max_speed / acc
+            time_to_new_max_speed = new_max_speed / self.acc
 
             p1_time = time_to_new_max_speed  # time for acceleration phase
             p3_time = time_to_new_max_speed  # time for deceleration phase
@@ -67,7 +68,7 @@ class Terrestrial:
             #distance covered cruise
             #distance of cruise
             d_cruise = distance_between_hubs - 2 * d_acc
-            p2_time = d_cruise / max_speed  # time for constant speed phase
+            p2_time = d_cruise / self.max_speed  # time for constant speed phase
 
         
         total_travel_time = p1_time + p2_time + p3_time
@@ -86,11 +87,11 @@ class Terrestrial:
             #To-Do: Add y  and maybe z acceleartion changes
 
             if t < p1_time:
-                x_acc = acc
+                x_acc = self.acc
             elif t < p1_time + p2_time:
                 x_acc = 0
             else:
-                x_acc = -acc 
+                x_acc = -self.acc 
 
             messages.append({
                 "accel_x": x_acc,
@@ -100,7 +101,7 @@ class Terrestrial:
                 "gyro_y": 0.0,
                 "gyro_z": 0.0,
             })
-                
+        return messages
     def calculate_time(self, hub1:Hub, hub2:Hub):
         R = 6371000  # meters
 
