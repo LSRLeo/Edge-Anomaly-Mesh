@@ -211,8 +211,8 @@ class NetworkTab(ttk.Frame):
         # Draw Nodes
 
         # Bind click event
+        self.canvas.bind('<Button-2>', self._on_canvas_click)
         self.canvas.bind('<Button-1>', self._on_canvas_click)
-
         self.populate_test_nodes()
 
 
@@ -412,36 +412,31 @@ class NetworkTab(ttk.Frame):
     def select_node(self, node_id: str):
         """
         Visually select a node (e.g., with a highlight ring).
-        
         Args:
             node_id: ID of the node to select
         """
-        # TODO: Implement
-        #
-        # # Deselect previous
-        # if self.selected_node and self.selected_node in self.node_items:
-        #     # Remove selection indicator
-        #     self.canvas.delete(f'{self.selected_node}_selection')
-        #
-        # # Select new
-        # self.selected_node = node_id
-        # if node_id in self.node_items:
-        #     item_id = self.node_items[node_id]
-        #     coords = self.canvas.coords(item_id)
-        #     # Draw selection ring
-        #     self.canvas.create_oval(
-        #         coords[0] - 3, coords[1] - 3,
-        #         coords[2] + 3, coords[3] + 3,
-        #         outline='#3498db', width=2,
-        #         tags=(f'{node_id}_selection',)
-        #     )
-        pass
+        # Deselect previous
+        if self.selected_node and self.selected_node in self.node_items:
+            self.canvas.delete(f'{self.selected_node}_selection')
+
+        self.selected_node = node_id
+        if node_id in self.node_items:
+            item_id = self.node_items[node_id]
+            coords = self.canvas.coords(item_id)
+            if len(coords) == 4:
+                self.canvas.create_oval(
+                    coords[0] - 1, coords[1] - 1,
+                    coords[2] + 2, coords[3] + 3,
+                    outline='#3498db', width=4,
+                    tags=(f'{node_id}_selection',)
+                )
     
     def _on_canvas_click(self, event):
         """
         Handle click events on the canvas.
         Toggle anomaly status visually for the clicked node.
         """
+        
         # Find item at click location
         items = self.canvas.find_closest(event.x, event.y)
         if not items:
@@ -456,12 +451,19 @@ class NetworkTab(ttk.Frame):
                 break
         if not node_id:
             return
-        # Toggle anomaly status in self.test_nodes
+        # Toggle anomaly status in self.test_nodes only if right clicked
+
         node = self.test_nodes.get(node_id)
-        if node is not None:
+
+        if node is not None and event.num == 1:
+            self.select_node(node_id)
+            self.dashboard.show_node_details(node_id)
+
+        elif node is not None and event.num == 2:
             node['anomaly'] = not node.get('anomaly', False)
             # Redraw just this node
             self._draw_single_node(node)
+        
     
 
     def load_json(self, filename):
@@ -518,20 +520,64 @@ def demo():
     
     # Create a mock dashboard
     class MockDashboard:
+        def __init__(self, network_tab):
+            self.network_tab = network_tab
         def show_node_details(self, node_id):
             print(f"Show details for: {node_id}")
+            # Create popout window with node details
+            node_data = self.network_tab.test_nodes.get(node_id)
+            if node_data is None:
+                print(f"Node {node_id} not found")
+                return
+            
+            # Create popout window with node details
+            details_window = tk.Toplevel(root)
+            details_window.title(f"Node Details - {node_id}")
+            details_window.geometry("400x500")
+            
+            # Create a frame with padding
+            frame = ttk.Frame(details_window, padding=20)
+            frame.pack(fill='both', expand=True)
+            
+            # Add a title
+            title_label = ttk.Label(frame, text=f"Details for {node_id}", 
+                                   font=('Arial', 14, 'bold'))
+            title_label.pack(pady=(0, 15))
+            
+            # Display each field from node_data
+            for key, value in node_data.items():
+                # Create a frame for each key-value pair
+                row_frame = ttk.Frame(frame)
+                row_frame.pack(fill='x', pady=3, anchor='w')
+                
+                # Key label (bold)
+                key_label = ttk.Label(row_frame, text=f"{key}:", 
+                                     font=('Arial', 10, 'bold'), width=20, anchor='w')
+                key_label.pack(side='left')
+                
+                # Value label
+                value_str = str(value)
+                # Truncate long values
+                if len(value_str) > 50:
+                    value_str = value_str[:47] + "..."
+                value_label = ttk.Label(row_frame, text=value_str, anchor='w')
+                value_label.pack(side='left', padx=(5, 0))
+            
     
     notebook = ttk.Notebook(root)
     notebook.pack(fill='both', expand=True)
     
-    tab = NetworkTab(notebook, dashboard=MockDashboard())
+    # Create the tab first, then create dashboard with reference to it
+    tab = NetworkTab(notebook, dashboard=None)
+    dashboard = MockDashboard(tab)
+    tab.dashboard = dashboard  # Set the dashboard reference
     notebook.add(tab, text='Network')
-    
     # Draw mock nodes
     # tab.draw_nodes(MOCK_NODES)
     
     root.mainloop()
 
+    # TODO Named Tuple node class
 
 if __name__ == '__main__':
     demo()
