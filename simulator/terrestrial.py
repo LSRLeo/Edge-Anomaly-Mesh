@@ -101,15 +101,23 @@ class Terrestrial:
                 "gyro_z": 0.0,
             })
                 
-    def calculate_time(self, hub1, hub2):
-        #calculate distance between two hubs
-        #calculate time it takes for truck when it's moving within radius of hub1
-        #calculate time it takes for truck when it's moving within radius of hub2
-        #calculate time it takes for truck when it's moving between the two hubs (excluding radius)
-        
+    def calculate_time(self, hub1:Hub, hub2:Hub):
+        R = 6371000  # meters
+
+        lat1 = math.radians(hub1.lat)
+        lon1 = math.radians(hub1.lon)
+        lat2 = math.radians(hub2.lat)
+        lon2 = math.radians(hub2.lon)
+
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+
+        a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        return R * c
 
        
-        pass
         
     # class SensorReading:
     #     def __init__(self, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z):
