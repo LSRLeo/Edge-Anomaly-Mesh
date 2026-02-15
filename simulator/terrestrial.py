@@ -85,9 +85,14 @@ class Terrestrial:
             #Right now we only have changing  in the acceleration of x
 
             
-            #To-Do: Add y  and maybe z acceleartion changes
-            #add jitters
+            
+            
+            '''
+            Sean can modify for this for jitter or delete if it's not needed,
+            added her for more realistic data
+            '''
     
+
             x_bound = uniform(0.03, 0.07)
             y_bound = uniform(0.06, 0.14)
             z_bound = uniform(0.12, 0.20)
