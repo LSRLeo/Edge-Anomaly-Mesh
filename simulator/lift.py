@@ -1,12 +1,12 @@
-# from .base import BaseMotionGenerator, SensorReading
+# from .base import SensorReading
 from typing import List, Tuple
 from enum import Enum
 
-from base import BaseMotionGenerator, SensorReading
+from base import SensorReading
 from typing import List, Tuple
 
 
-class Lift(BaseMotionGenerator):
+class Lift():
     """
     Simulates cargo being lifted and moved by a forklift.
     Implements the lift cycle phases and generates sensor readings.
