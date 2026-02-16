@@ -150,6 +150,18 @@ class NodeManager:
         else:
             logging.warning(f"Node {node_id} not found for deletion")
 
+    def get_node_status(self, node_id=None):
+        '''Get the status of a node by its ID'''
+        if node_id is None:
+            #return a list of dict
+            return [{'node_id': node.node_id, 'status': node.status} for node in self.get_all_nodes()]
+        else:
+            node = self.get_node_by_id(node_id)
+            if node:
+                return {'node_id': node.node_id, 'status': node.status}
+            else:
+                debug_print(f"Node {node_id} not found for status retrieval")
+                return None
 
 
 '''Loading and processing raw data'''
