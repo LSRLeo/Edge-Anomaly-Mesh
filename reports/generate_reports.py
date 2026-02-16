@@ -16,6 +16,23 @@ SPRINT1_BRANCHES = [
 ]
 BRANCH_SPEC = ' '.join(SPRINT1_BRANCHES)
 
+# Team assignments (contributor name -> team name)
+TEAMS = {
+    'Sean Osman': 'DE',
+    'Aldo Rios': 'DE',
+    'Leo Liu': 'DE',
+    'Ty Esmond': 'UI',
+    'Owen Conlon': 'UI',
+    'George Rumsey': 'UI',
+    'Kailar Hayes': 'DB',
+    'Hannah Caldini': 'DB',
+    'Diego Ramirez': 'DB',
+    'Daniel Kaplan': 'ML',
+    'Tristian Bradley': 'ML',
+    'Truman Davis': 'ML',
+    'Alyssa Bulai': 'ML',
+}
+
 def run_cmd(cmd):
     """Run a shell command and return output."""
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -329,8 +346,12 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
         # Contributions = commits + issues created + PRs created + PRs closed + PRs reviewed
         contributions = total_commits + issues_created + prs_created + prs_closed + prs_reviewed
 
+        # Team assignment
+        team = TEAMS.get(name, '?')
+
         rows.append({
             'name': name,
+            'team': team,
             'gh': gh_usernames[0] if gh_usernames else '',
             'commits': total_commits,
             'merge_commits': total_merge_commits,
@@ -343,6 +364,24 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
             'prs_merged': prs_merged,
             'contributions': contributions,
         })
+
+    # Calculate team totals and normalized commits
+    team_stats = {}
+    for r in rows:
+        team = r['team']
+        if team not in team_stats:
+            team_stats[team] = {'total_commits': 0, 'members': 0}
+        team_stats[team]['total_commits'] += r['commits']
+        team_stats[team]['members'] += 1
+
+    # Add normalized commit score to each row
+    for r in rows:
+        team = r['team']
+        team_total = team_stats[team]['total_commits']
+        team_size = team_stats[team]['members']
+        expected_pct = 100.0 / team_size if team_size > 0 else 0
+        actual_pct = (r['commits'] / team_total * 100) if team_total > 0 else 0
+        r['commit_diff'] = actual_pct - expected_pct  # +/- from expected
 
     # Sort by contributions (descending)
     rows.sort(key=lambda x: x['contributions'], reverse=True)
@@ -357,12 +396,13 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
 
 ## Overview
 
-| Contributor | GitHub | Contributions | Commits | Merges | Files | Issues Created | PRs Created | PRs Closed | PRs Reviewed |
-|-------------|--------|---------------|---------|--------|-------|----------------|-------------|------------|--------------|
+| Contributor | Team | Contributions | Commits | Commit +/- | Merges | Files | Issues | PRs Created | PRs Reviewed |
+|-------------|------|---------------|---------|------------|--------|-------|--------|-------------|--------------|
 """
 
     for r in rows:
-        summary += f"| {r['name']} | @{r['gh']} | {r['contributions']} | {r['commits']} | {r['merge_commits']} | {r['files_changed']} | {r['issues_created']} | {r['prs_created']} | {r['prs_closed']} | {r['prs_reviewed']} |\n"
+        diff_str = f"{r['commit_diff']:+.0f}%" if r['commits'] > 0 else "—"
+        summary += f"| {r['name']} | {r['team']} | {r['contributions']} | {r['commits']} | {diff_str} | {r['merge_commits']} | {r['files_changed']} | {r['issues_created']} | {r['prs_created']} | {r['prs_reviewed']} |\n"
 
     # Totals
     total_contributions = sum(r['contributions'] for r in rows)
@@ -371,10 +411,23 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
     total_files = sum(r['files_changed'] for r in rows)
     total_issues_created = sum(r['issues_created'] for r in rows)
     total_prs_created = sum(r['prs_created'] for r in rows)
-    total_prs_closed = sum(r['prs_closed'] for r in rows)
     total_prs_reviewed = sum(r['prs_reviewed'] for r in rows)
 
-    summary += f"| **TOTAL** | | **{total_contributions}** | **{total_commits}** | **{total_merge_commits}** | **{total_files}** | **{total_issues_created}** | **{total_prs_created}** | **{total_prs_closed}** | **{total_prs_reviewed}** |\n"
+    summary += f"| **TOTAL** | | **{total_contributions}** | **{total_commits}** | | **{total_merge_commits}** | **{total_files}** | **{total_issues_created}** | **{total_prs_created}** | **{total_prs_reviewed}** |\n"
+
+    # Add team summary
+    summary += """
+---
+
+## Team Summary
+
+| Team | Members | Total Commits | Expected/Person |
+|------|---------|---------------|-----------------|
+"""
+    for team in sorted(team_stats.keys()):
+        stats = team_stats[team]
+        expected = stats['total_commits'] / stats['members'] if stats['members'] > 0 else 0
+        summary += f"| {team} | {stats['members']} | {stats['total_commits']} | {expected:.1f} |\n"
 
     summary += """
 ---
