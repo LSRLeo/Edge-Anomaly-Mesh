@@ -40,20 +40,20 @@ class Node:
 
                 # Generate idle readings and apply noise
                 idleResults = self.idle.generate_reading(current_hub)
-                idleResults_noisy = [apply_idle_node_noise() for _ in idleResults]
+                idleResults_noisy = [apply_idle_node_noise(current_hub) for _ in idleResults]
                 self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
 
                 if current_hub.mode == "lift":
                     self.lift.set_hub(current_hub, 20)
                     liftResults = self.lift.generate_reading(current_hub.lift_time)
-                    liftResults_noisy = [apply_lift_node_noise() for _ in liftResults]
+                    liftResults_noisy = [apply_lift_node_noise(current_hub) for _ in liftResults]
                     self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_hub, next_hub)
                 elif current_hub.mode == "maritime":
                     maritimeResults = self.maritime.generate_reading(current_hub, next_hub)
-                    maritimeResults_noisy = [apply_maritime_node_noise() for _ in maritimeResults]
+                    maritimeResults_noisy = [apply_maritime_node_noise(current_hub) for _ in maritimeResults]
                     self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_hub, next_hub)
                 elif current_hub.mode == "terrestrial":
-                    
+
                     pass
                 else:
                     raise ValueError(f"Invalid mode: {current_hub.mode}")
