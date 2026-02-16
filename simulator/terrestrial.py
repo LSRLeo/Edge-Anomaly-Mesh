@@ -18,7 +18,7 @@ class Terrestrial:
        
 
         # calculate distance between two hubs
-        distance_between_hubs = Terrestrial.calculate_distance(current_hub, next_hub)
+        distance_between_hubs = self.calculate_time(current_hub, next_hub)
 
         #velocity = acceleration * time
         #time to reach max speed
@@ -95,7 +95,7 @@ class Terrestrial:
 
             x_bound = uniform(0.03, 0.07)
             y_bound = uniform(0.06, 0.14)
-            z_bound = uniform(0.12, 0.20)
+            z_bound = uniform(0.04, 0.95)
 
             x_jitter = uniform(-x_bound, x_bound)
             y_jitter = uniform(-y_bound, y_bound)

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from lift import Lift
 from maritime import Maritime
-# from terrestrial import Terrestrial
+from terrestrial import Terrestrial
 from idle import Idle
 
 class Node:
@@ -26,6 +26,7 @@ class Node:
             self.idle = Idle(self.sample_rate_hz)
             self.lift = Lift(self.sample_rate_hz)
             self.maritime = Maritime(self.sample_rate_hz)
+            self.terrestrial = Terrestrial(self.sample_rate_hz)
         except FileNotFoundError:
             raise FileNotFoundError(f"Node configuration file {node_file} not found")
         except json.JSONDecodeError:
@@ -48,8 +49,8 @@ class Node:
                     maritimeResults = self.maritime.generate_reading(current_hub, next_hub)
                     self.messages += self.add_metadata(maritimeResults, "MARITIME", current_hub, next_hub)
                 elif current_hub.mode == "terrestrial":
-                    pass
-                #     self.messages += Terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
+                    
+                    self.messages += self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
                 else:
                     raise ValueError(f"Invalid mode: {current_hub.mode}")
             else:
