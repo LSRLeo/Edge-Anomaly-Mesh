@@ -24,7 +24,7 @@ class Node:
             self.seq = 0
             self.timestamp = datetime.now()
             self.idle = Idle(self.sample_rate_hz)
-            self.lift = Lift()
+            self.lift = Lift(self.sample_rate_hz)
             self.maritime = Maritime(self.sample_rate_hz)
         except FileNotFoundError:
             raise FileNotFoundError(f"Node configuration file {node_file} not found")
@@ -41,7 +41,7 @@ class Node:
                 self.messages += self.add_metadata(idleResults, "IDLE", current_hub, current_hub)
                 
                 if current_hub.mode == "lift":
-                    self.lift.set_hub(current_hub, 20)
+                    self.lift.set_hub(current_hub.lat, current_hub.lon, 20)
                     liftResults = self.lift.generate_reading(current_hub.lift_time)
                     self.messages += self.add_metadata(liftResults, "LIFT", current_hub, next_hub)
                 elif current_hub.mode == "maritime":
