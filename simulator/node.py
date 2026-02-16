@@ -38,7 +38,7 @@ class Node:
                 current_hub = self.route.hubs[i]
                 next_hub = self.route.hubs[i + 1]
 
-                # Generate idle readings and apply noise
+                # Generate idle readings and apply noise 
                 idleResults = self.idle.generate_reading(current_hub)
                 idleResults_noisy = [apply_idle_node_noise(current_hub) for _ in idleResults]
                 self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
