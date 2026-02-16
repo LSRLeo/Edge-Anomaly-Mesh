@@ -18,7 +18,7 @@ class Terrestrial:
        
 
         # calculate distance between two hubs
-        distance_between_hubs = Terrestrial.calculate_distance(current_hub, next_hub)
+        distance_between_hubs = self.calculate_time(current_hub, next_hub)
 
         #velocity = acceleration * time
         #time to reach max speed
