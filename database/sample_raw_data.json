@@ -1,0 +1,176 @@
+[
+    {
+      "node_id": "node_002",
+      "timestamp": "2026-01-22T18:52:12.818400",
+      "seq": 0,
+      "gps": {
+        "lat": 40.7128,
+        "lon": -74.006,
+        "altitude_m": 50.0
+      },
+      "accel": {
+        "x": -0.0071,
+        "y": 0.1012,
+        "z": 10.0357
+      },
+      "gyro": {
+        "x": 0.0111,
+        "y": -0.0012,
+        "z": 0.0294
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 100,
+        "mode": "TRANSIT"
+      }
+    },
+    {
+      "node_id": "node_002",
+      "timestamp": "2026-01-22T18:52:12.838400",
+      "seq": 1,
+      "gps": {
+        "lat": 40.713174,
+        "lon": -74.005588,
+        "altitude_m": 50.0
+      },
+      "accel": {
+        "x": 0.1389,
+        "y": 0.2147,
+        "z": 9.9201
+      },
+      "gyro": {
+        "x": 0.0938,
+        "y": 0.075,
+        "z": 0.0251
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 100,
+        "mode": "TRANSIT"
+      }
+    },
+    {
+      "node_id": "node_002",
+      "timestamp": "2026-01-22T18:52:12.858400",
+      "seq": 2,
+      "gps": {
+        "lat": 40.713549,
+        "lon": -74.005176,
+        "altitude_m": 50.0
+      },
+      "accel": {
+        "x": 0.079,
+        "y": 0.265,
+        "z": 9.8607
+      },
+      "gyro": {
+        "x": 0.0834,
+        "y": 0.1154,
+        "z": -0.05
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 100,
+        "mode": "TRANSIT"
+      }
+    },
+    {
+      "node_id": "node_002",
+      "timestamp": "2026-01-22T18:52:12.878400",
+      "seq": 3,
+      "gps": {
+        "lat": 40.713923,
+        "lon": -74.004764,
+        "altitude_m": 50.1
+      },
+      "accel": {
+        "x": 0.3353,
+        "y": 0.283,
+        "z": 10.0556
+      },
+      "gyro": {
+        "x": 0.152,
+        "y": 0.1083,
+        "z": 0.107
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 100,
+        "mode": "TRANSIT"
+      }
+    },
+    {
+      "node_id": "node_002",
+      "timestamp": "2026-01-22T18:52:12.898400",
+      "seq": 4,
+      "gps": {
+        "lat": 40.714298,
+        "lon": -74.004352,
+        "altitude_m": 50.1
+      },
+      "accel": {
+        "x": 0.4572,
+        "y": 0.1972,
+        "z": 9.9153
+      },
+      "gyro": {
+        "x": 0.1294,
+        "y": 0.138,
+        "z": 0.0439
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 100,
+        "mode": "TRANSIT"
+      }
+    },
+    {
+      "node_id": "node_002",
+      "timestamp": "2026-01-22T18:52:12.918400",
+      "seq": 5,
+      "gps": {
+        "lat": 40.714672,
+        "lon": -74.00394,
+        "altitude_m": 50.1
+      },
+      "accel": {
+        "x": 0.3503,
+        "y": 0.1262,
+        "z": 9.8972
+      },
+      "gyro": {
+        "x": 0.1254,
+        "y": 0.1396,
+        "z": 0.0913
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 100,
+        "mode": "TRANSIT"
+      }
+    },
+    {
+      "node_id": "node_002",
+      "timestamp": "2026-01-22T18:52:12.938400",
+      "seq": 6,
+      "gps": {
+        "lat": 40.715046,
+        "lon": -74.003528,
+        "altitude_m": 50.1
+      },
+      "accel": {
+        "x": 0.2488,
+        "y": -0.0085,
+        "z": 9.9527
+      },
+      "gyro": {
+        "x": 0.2404,
+        "y": 0.2159,
+        "z": 0.0408
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 100,
+        "mode": "TRANSIT"
+      }
+    }]
