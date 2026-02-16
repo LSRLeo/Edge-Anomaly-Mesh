@@ -2,6 +2,7 @@
 Docstring for database.db_message_manager
 m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'Error'
 '''
+from asyncio.log import logger
 import logging
 import json
 import sys
@@ -50,6 +51,23 @@ class DBMessageManager:
         else:
             logging.warning("No handler found for m_type: %s, message with m_id: %s cannot be processed", m_type, recieved_m_id)
 
+    def validate_message(self, message: dict) -> bool:
+        """Validates structure is a dictionary and contains required fields 'm_type' and 'm_id'"""
+
+        if not isinstance(message, dict):
+            logging.error("Message is not a dictionary")
+            return False
+            
+        if 'm_type' not in message:
+            logging.error("Message missing 'm_type' field")
+            return False
+        
+        if 'm_id' not in message:
+            logging.error("Message missing 'm_id' field")
+            return False
+        
+        return True
+    
 
     def handle_raw_data(self):
         pass
@@ -95,3 +113,14 @@ if __name__ == "__main__":
         "m_id": "ui_00001"
     }
     test_message_json = json.loads(test_message)
+    
+    logging.info("Testing message validation with invalid message")
+    test_message = "message without proper structure"
+    db_message_manager.validate_message(test_message)
+    invalid_message = {"m_type": "raw-data"}
+    db_message_manager.validate_message(invalid_message)
+    invalid_message2 = {"m_id": "12345"}
+    db_message_manager.validate_message(invalid_message2)
+    valid_message = {"m_type": "raw-data", "m_id": "12345"}
+    is_valid = db_message_manager.validate_message(valid_message)
+    logging.info("Valid message validation result: %s", is_valid)
