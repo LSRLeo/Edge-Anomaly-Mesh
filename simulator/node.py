@@ -54,8 +54,9 @@ class Node:
                     maritimeResults_noisy = [apply_maritime_node_noise(current_hub) for _ in maritimeResults]
                     self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_hub, next_hub)
                 elif current_hub.mode == "terrestrial":
-
-                    pass
+                    terrestrialResults = self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
+                    terrestrialResults_noisy = [apply_terrestrial_node_noise(current_hub) for _ in  terrestrialResults]
+                    self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_hub, next_hub)
                 else:
                     raise ValueError(f"Invalid mode: {current_hub.mode}")
             else:
