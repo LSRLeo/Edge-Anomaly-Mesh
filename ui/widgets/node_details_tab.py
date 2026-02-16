@@ -16,6 +16,8 @@ Features:
 - Called from other tabs when user clicks a node
 """
 
+import json
+import os
 import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List, Optional, Any, Tuple, TYPE_CHECKING
@@ -54,25 +56,50 @@ MOCK_NODE_INFO = {
     'total_inferences': 8452,
     'total_anomalies': 12,
 }
+class Node:
+    def __init__(self, node_id: str, lat: float, lon: float, timestamp: datetime, motion_class: int, confidence: float):
+        self.node_id = node_id
+        self.lat = lat
+        self.lon = lon
+        self.timestamp = timestamp
+        self.motion_class = motion_class
+        self.confidence = confidence
+        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+    def updateTimestamp(self):
+        self.timestamp = datetime.now()
+    def updateMotion(self, motion_class, confidence: float):
+        if isinstance(motion_class, int):
+            self.motion_class = motion_class
+        if isinstance(motion_class, str):
+            if motion_class in self.motion_states:
+                self.motion_class = self.motion_states.index(motion_class)
+            else:                raise ValueError(f"Invalid motion class string: {motion_class}")
+        self.confidence = confidence
+    def __str__(self):
+        return f"Node({self.node_id}, {self.lat}, {self.lon}, {self.timestamp}, {self.motion_class}, {self.confidence})"
+    def getNodeID(self):
+        return self.node_id
+    def getCoords(self):
+        return (self.lat, self.lon)
+    def getTimestamp(self):
+        return self.timestamp
+    def getMotion(self):
+        return (self.motion_class, self.confidence)
+    def toDict(self): #returns a dictionary representation of the node for easy access
+        return {
+            'node_id': self.node_id,
+            'lat': self.lat,
+            'lon': self.lon,
+            'timestamp': self.timestamp,
+            'motion_class': self.motion_class,
+            'confidence': self.confidence
+        }
+    def motionString(self): #returns the motion class as a string for the user
+        return self.motion_states[self.motion_class]
 
-MOCK_HISTORY = [
-    {'timestamp': datetime.now() - timedelta(minutes=1), 'motion_class': 'MARITIME', 'confidence': 0.92, 'anomaly_score': 0.15},
-    {'timestamp': datetime.now() - timedelta(minutes=3), 'motion_class': 'MARITIME', 'confidence': 0.88, 'anomaly_score': 0.12},
-    {'timestamp': datetime.now() - timedelta(minutes=5), 'motion_class': 'LIFT', 'confidence': 0.95, 'anomaly_score': 0.08},
-    {'timestamp': datetime.now() - timedelta(minutes=7), 'motion_class': 'IDLE', 'confidence': 0.97, 'anomaly_score': 0.05},
-    {'timestamp': datetime.now() - timedelta(minutes=9), 'motion_class': 'IDLE', 'confidence': 0.96, 'anomaly_score': 0.04},
-    {'timestamp': datetime.now() - timedelta(minutes=11), 'motion_class': 'TERRESTRIAL', 'confidence': 0.91, 'anomaly_score': 0.11},
-]
 
-MOCK_ANOMALY_TREND = [
-    (datetime.now() - timedelta(hours=6), 0.08),
-    (datetime.now() - timedelta(hours=5), 0.12),
-    (datetime.now() - timedelta(hours=4), 0.45),  # Spike
-    (datetime.now() - timedelta(hours=3), 0.15),
-    (datetime.now() - timedelta(hours=2), 0.09),
-    (datetime.now() - timedelta(hours=1), 0.11),
-    (datetime.now(), 0.15),
-]
+
+
 
 
 class NodeDetailsTab(ttk.Frame):
@@ -132,19 +159,14 @@ class NodeDetailsTab(ttk.Frame):
         │  [═══════ Line Chart ═══════]       │
         └─────────────────────────────────────┘
         """
-        # Configure grid
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(2, weight=1)  # History table expands
-        self.rowconfigure(3, weight=1)  # Chart expands
         
-        # TODO: Create all sections
-        # self._setup_node_selector()
-        # self._setup_info_panel()
+        
+        self._setup_node_selector()
+        self._setup_info_panel()
         # self._setup_history_table()
         # self._setup_anomaly_trend_chart()
         
-        # TEMPORARY: Placeholder
-        ttk.Label(self, text="Node Details Tab - TODO: Implement").pack(pady=20)
+
     
     def _setup_node_selector(self):
         """
@@ -153,21 +175,21 @@ class NodeDetailsTab(ttk.Frame):
         Shows all available nodes in a combobox.
         When selection changes, loads that node's data.
         """
-        # TODO: Implement
-        #
-        # selector_frame = ttk.Frame(self)
-        # selector_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
-        #
-        # ttk.Label(selector_frame, text="Node:", font=('Arial', 12)).pack(side='left', padx=(0, 10))
-        #
-        # self.node_selector = ttk.Combobox(selector_frame, values=MOCK_NODES,
-        #                                    state='readonly', width=20, font=('Arial', 12))
-        # self.node_selector.pack(side='left')
-        # self.node_selector.bind('<<ComboboxSelected>>', self._on_node_select)
-        #
-        # # Refresh button
-        # ttk.Button(selector_frame, text="Refresh",
-        #            command=self.refresh).pack(side='right', padx=10)
+
+        selector_frame = ttk.Frame(self)
+        selector_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
+        
+        ttk.Label(selector_frame, text="Node:", font=('Arial', 12)).pack(side='left', padx=(0, 10))
+        
+        self.node_selector = ttk.Combobox(selector_frame, values=MOCK_NODES,
+                                           state='readonly', width=20, font=('Arial', 12))
+        self.node_selector.pack(side='left')
+        self.node_selector.bind('<<ComboboxSelected>>', self._on_node_select)
+        
+        # Refresh button
+        ttk.Button(selector_frame, text="Refresh",
+                   command=self.refresh).pack(side='right', padx=10)
+        
         pass
     
     def _setup_info_panel(self):
@@ -183,51 +205,67 @@ class NodeDetailsTab(ttk.Frame):
         - Total inferences
         - Total anomalies
         """
-        # TODO: Implement
-        #
-        # info_frame = ttk.LabelFrame(self, text="Node Information")
-        # info_frame.grid(row=1, column=0, sticky='ew', padx=10, pady=5)
-        #
-        # # Configure 2-column layout
-        # info_frame.columnconfigure(0, weight=1)
-        # info_frame.columnconfigure(1, weight=1)
-        #
-        # # Left column
-        # left_frame = ttk.Frame(info_frame)
-        # left_frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=5)
-        #
-        # info_items_left = [
-        #     ('status', 'Status:'),
-        #     ('location', 'Location:'),
-        #     ('first_seen', 'First Seen:'),
-        #     ('total_inferences', 'Total Inferences:'),
-        # ]
-        #
-        # for i, (key, label_text) in enumerate(info_items_left):
-        #     ttk.Label(left_frame, text=label_text).grid(row=i, column=0, sticky='w', pady=2)
-        #     value_label = ttk.Label(left_frame, text='--', font=('Arial', 10, 'bold'))
-        #     value_label.grid(row=i, column=1, sticky='w', padx=10, pady=2)
-        #     self.info_labels[key] = value_label
-        #
-        # # Right column
-        # right_frame = ttk.Frame(info_frame)
-        # right_frame.grid(row=0, column=1, sticky='nsew', padx=10, pady=5)
-        #
-        # info_items_right = [
-        #     ('current_motion', 'Current Motion:'),
-        #     ('node_id', 'Node ID:'),
-        #     ('last_seen', 'Last Seen:'),
-        #     ('total_anomalies', 'Total Anomalies:'),
-        # ]
-        #
-        # for i, (key, label_text) in enumerate(info_items_right):
-        #     ttk.Label(right_frame, text=label_text).grid(row=i, column=0, sticky='w', pady=2)
-        #     value_label = ttk.Label(right_frame, text='--', font=('Arial', 10, 'bold'))
-        #     value_label.grid(row=i, column=1, sticky='w', padx=10, pady=2)
-        #     self.info_labels[key] = value_label
-        pass
+
+        # Ensure main grid stretches properly
+        self.columnconfigure(0, weight=1)
+        # Row 0 is the header; row 1 is content
+        self.rowconfigure(1, weight=1)
+
+        # Outer content container
+        content_outer = ttk.Frame(self)
+        content_outer.grid(row=1, column=0, sticky="nsew", padx=12, pady=(0, 12))
+        content_outer.columnconfigure(0, weight=1)
+        content_outer.rowconfigure(0, weight=1)
+
+        # Inner grouped frame
+        content = ttk.Frame(content_outer, padding=(14, 12))
+        try:
+            style = ttk.Style(content)
+            style.configure("Group.TFrame", relief="groove", borderwidth=1)
+            content.configure(style="Group.TFrame")
+        except Exception:
+            pass
+        content.grid(row=0, column=0, sticky="nsew")
+        content.columnconfigure(0, weight=0)
+        content.columnconfigure(1, weight=1)
+
+        # Title
+        ttk.Label(content, text="Node Details", font=("TkDefaultFont", 11, "bold")).grid(
+            row=0, column=0, columnspan=2, sticky="w", pady=(0, 8)
+        )
+
+        # Placeholder StringVars
+        self.vars = {
+            "node_id": tk.StringVar(value="—"),
+            "lat": tk.StringVar(value="—"),
+            "lon": tk.StringVar(value="—"),
+            "timestamp": tk.StringVar(value="—"),
+            "motion_class": tk.StringVar(value="—"),
+            "confidence": tk.StringVar(value="—"),
+        }
+
+        # Helper to add a labeled row
+        def add_row(r, label_text, var):
+            lbl = ttk.Label(content, text=f"{label_text}:", anchor="w")
+            val = ttk.Label(content, textvariable=var, anchor="w")
+            lbl.grid(row=r, column=0, sticky="w", padx=(0, 12), pady=6)
+            val.grid(row=r, column=1, sticky="w", pady=6)
+
+        r = 1
+        add_row(r, "Node ID", self.vars["node_id"]); r += 1
+        add_row(r, "Latitude", self.vars["lat"]); r += 1
+        add_row(r, "Longitude", self.vars["lon"]); r += 1
+        add_row(r, "Timestamp", self.vars["timestamp"]); r += 1
+        add_row(r, "Motion Class", self.vars["motion_class"]); r += 1
+        add_row(r, "Confidence", self.vars["confidence"]); r += 1
+
+        # Spacer to keep bottom tidy
+        content.rowconfigure(r, weight=1)
+
+
+
     
-    def _setup_history_table(self):
+    # def _setup_history_table(self):
         """
         Create the motion history treeview table.
         
@@ -272,7 +310,7 @@ class NodeDetailsTab(ttk.Frame):
         #     self.history_tree.tag_configure(motion_class, foreground=color)
         pass
     
-    def _setup_anomaly_trend_chart(self):
+    # def _setup_anomaly_trend_chart(self):
         """
         Create the anomaly score trend line chart.
         
@@ -290,6 +328,12 @@ class NodeDetailsTab(ttk.Frame):
         # self.trend_canvas.get_tk_widget().pack(fill='both', expand=True, padx=5, pady=5)
         pass
     
+    def load_json(self, filename):
+        if not os.path.exists(filename):
+            raise FileNotFoundError
+        with open(filename, 'r') as file:
+            return json.load(file)
+        
     def load_node(self, node_id: str):
         """
         Load and display data for a specific node.
@@ -339,7 +383,7 @@ class NodeDetailsTab(ttk.Frame):
         # self.info_labels['total_anomalies'].config(text=str(node_info['total_anomalies']))
         pass
     
-    def _load_history(self, node_id: str):
+    # def _load_history(self, node_id: str):
         """
         Load and display motion classification history.
         
@@ -367,7 +411,7 @@ class NodeDetailsTab(ttk.Frame):
         #                              tags=(record['motion_class'],))
         pass
     
-    def _load_anomaly_trend(self, node_id: str):
+    # def _load_anomaly_trend(self, node_id: str):
         """
         Load and display anomaly score trend chart.
         
