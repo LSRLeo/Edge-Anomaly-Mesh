@@ -36,6 +36,30 @@ class DBMessageManager:
             'error': self.handle_error
         }
 
+    def process_message(self, message:dict):
+        """Processes incoming message and routes it to the appropriate handler after calling validation"""
+
+        if self.validate_message(message):
+            m_type = message.get('m_type')
+            recieved_m_id = message.get('m_id')
+            handler = self.handlers.get(m_type)
+
+            if handler:
+                logging.info("Found handler for m_type: %s, processing message with m_id: %s", m_type, recieved_m_id)
+                #call handler function
+                handler()
+
+            else:
+                logging.error("No handler found for m_type: %s, message with m_id: %s cannot be processed", m_type, recieved_m_id)
+                return
+
+        else:
+            #Handle error and send error response
+            logging.error("Message failed validation and will not be processed")
+            return
+        
+        
+
     def validate_message(self, message: dict) -> bool:
         """Validates structure is a dictionary and contains required fields 'm_type' and 'm_id'"""
 
@@ -92,15 +116,21 @@ class DBMessageManager:
 
 if __name__ == "__main__":
     db_message_manager = DBMessageManager()
-    logging.info("DBMessageManager instance created: %s", db_message_manager)
-    
-    logging.info("Testing message validation with invalid message")
-    test_message = "message without proper structure"
-    db_message_manager.validate_message(test_message)
-    invalid_message = {"m_type": "raw-data"}
-    db_message_manager.validate_message(invalid_message)
-    invalid_message2 = {"m_id": "12345"}
-    db_message_manager.validate_message(invalid_message2)
-    valid_message = {"m_type": "raw-data", "m_id": "12345"}
-    is_valid = db_message_manager.validate_message(valid_message)
-    logging.info("Valid message validation result: %s", is_valid)
+    # logging.info("DBMessageManager instance created: %s", db_message_manager)
+    test_message = '''{
+        "m_type": "get-nodes",
+        "m_id": "ui_00001"
+    }'''
+    test_message_json = json.loads(test_message)
+    testing_result = db_message_manager.process_message(test_message_json)
+
+    # logging.info("Testing message validation with invalid message")
+    # test_message = "message without proper structure"
+    # db_message_manager.validate_message(test_message)
+    # invalid_message = {"m_type": "raw-data"}
+    # db_message_manager.validate_message(invalid_message)
+    # invalid_message2 = {"m_id": "12345"}
+    # db_message_manager.validate_message(invalid_message2)
+    # valid_message = {"m_type": "raw-data", "m_id": "12345"}
+    # is_valid = db_message_manager.validate_message(valid_message)
+    # logging.info("Valid message validation result: %s", is_valid)
