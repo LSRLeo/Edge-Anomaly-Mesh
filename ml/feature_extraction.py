@@ -31,7 +31,7 @@ Usage:
 
 Requirements:
     pip install numpy scipy
-"""
+""" 
 
 import argparse
 import numpy as np
@@ -39,94 +39,13 @@ from scipy import fft
 from pathlib import Path
 import csv
 
-
 # ============================================================================
 # ARGUMENT PARSING
 # ============================================================================
 
-def parse_args():
-    """
-    Parse command-line arguments.
-    
-    This allows users to customize behavior without editing code.
-    
-    Returns:
-        argparse.Namespace with all arguments as attributes
-        Access like: args.window_size, args.overlap, etc.
-    """
-    parser = argparse.ArgumentParser(
-        description='Extract features from motion sensor data',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter  # Shows defaults in --help
-    )
-    
-    # Data arguments
-    parser.add_argument('--data-dir', type=str, default='data/generated_data',
-                        help='Directory containing sensor data CSV files')
-    
-    parser.add_argument('--output-dir', type=str, default='data/features',
-                        help='Directory to save extracted features')
-    
-    # Windowing arguments
-    parser.add_argument('--window-size', type=int, default=100,
-                        help='Number of samples per window (100 = 2 sec at 50Hz)')
-    
-    parser.add_argument('--overlap', type=float, default=0.5,
-                        help='Fraction of overlap between windows (0.0 to 0.99)')
-    
-    parser.add_argument('--sample-rate', type=int, default=50,
-                        help='Sensor sample rate in Hz')
-    
-    # Output options
-    parser.add_argument('--save', action='store_true',
-                        help='Save extracted features to files')
-    
-    parser.add_argument('--verbose', action='store_true',
-                        help='Print detailed progress information')
-    
-    return parser.parse_args()
-
-
 # ============================================================================
 # WINDOWING
 # ============================================================================
-
-def create_windows(data, window_size=100, overlap=0.5):
-    """
-    Create sliding windows from continuous sensor data.
-    
-    This is how we convert streaming sensor data into discrete chunks
-    that can be classified individually.
-    
-    Args:
-        data: dict with keys 'accel_x', 'accel_y', 'accel_z', 
-              'gyro_x', 'gyro_y', 'gyro_z'
-              Each value is a 1D numpy array of sensor readings.
-        
-        window_size: number of samples per window
-                     At 50Hz: 100 samples = 2 seconds
-                              250 samples = 5 seconds
-        
-        overlap: fraction of overlap between consecutive windows (0.0 to 0.99)
-                 0.5 = 50% overlap (recommended)
-                 0.0 = no overlap (windows are adjacent)
-    
-    Returns:
-        numpy array of shape (n_windows, window_size, 6)
-        The 6 channels are: [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z]
-    
-    Example:
-        If data has 500 samples, window_size=100, overlap=0.5:
-        - Step size = 100 * (1 - 0.5) = 50 samples
-        - Windows start at: 0, 50, 100, 150, 200, 250, 300, 350, 400
-        - That's 9 windows
-    
-    Implementation hints:
-        - Calculate step size: step = int(window_size * (1 - overlap))
-        - Loop: for start in range(0, n_samples - window_size + 1, step)
-        - Use np.column_stack() to combine the 6 axes
-    """
-    pass  # TODO: Implement
-
 
 # ============================================================================
 # FEATURE EXTRACTOR CLASS
@@ -169,7 +88,26 @@ class FeatureExtractor:
         Example output:
             ['accel_x_mean', 'accel_x_std', 'accel_x_rms', ...]
         """
-        pass  # TODO: Implement
+        feature_names = []
+        axes = ['accel_x', 'accel_y', 'accel_z', 'gyro_x', 'gyro_y', 'gyro_z']
+        time_features = ['mean', 'std', 'rms', 'peak_to_peak', 'zero_crossings']
+        freq_features = ['dominant_freq', 'spectral_energy']
+
+        # Time-domain features for each axis
+        for axis in axes:
+            for feat in time_features:
+                feature_names.append(f"{axis}_{feat}")
+
+        # Frequency-domain features for accelerometer axes
+        for axis in axes[:3]:  # accel_x, accel_y, accel_z
+            for feat in freq_features:
+                feature_names.append(f"{axis}_{feat}")
+
+        # Cross-axis features
+        feature_names.append("accel_magnitude_mean")
+        feature_names.append("gyro_magnitude_mean")
+
+        return feature_names
     
     @property
     def n_features(self):
@@ -196,7 +134,21 @@ class FeatureExtractor:
             3. Extract cross-axis features
             4. Concatenate all into one vector
         """
-        pass  # TODO: Implement
+        features = []
+
+        # 1. Time-domain features for each of the 6 axes
+        for i in range(6):
+            features.extend(self._time_domain_features(window[:, i]))
+
+        # 2. Frequency-domain features for accelerometer axes (columns 0,1,2)
+        for i in range(3):
+            features.extend(self._frequency_domain_features(window[:, i]))
+
+        # 3. Cross-axis features
+        features.extend(self._cross_axis_features(window))
+
+        # 4. Concatenate all into one numpy vector
+        return np.array(features)
     
     def extract_batch(self, windows):
         """
@@ -207,12 +159,8 @@ class FeatureExtractor:
         
         Returns:
             numpy array of shape (n_windows, n_features)
-        
-        Implementation hints:
-            - Simply call extract() on each window
-            - Use list comprehension or np.array([self.extract(w) for w in windows])
         """
-        pass  # TODO: Implement
+        return np.array([self.extract(w) for w in windows])
     
     def _time_domain_features(self, signal):
         """
@@ -251,8 +199,23 @@ class FeatureExtractor:
             - RMS: np.sqrt(np.mean(signal ** 2))
             - Zero crossings: np.sum(np.diff(np.sign(signal)) != 0)
         """
-        pass  # TODO: Implement
-    
+        #mean
+        mean = np.mean(signal)
+
+        #standard deviation
+        std = np.std(signal)
+
+        #root mean square
+        rms = np.sqrt(np.mean(signal ** 2))
+        
+        #peak to peak
+        peak_to_peak = np.max(signal) - np.min(signal)
+
+        #zero crossings
+        zero_crossings = np.sum(np.diff(np.sign(signal)) != 0)
+        
+        return [mean, std, rms, peak_to_peak, zero_crossings]
+
     def _frequency_domain_features(self, signal):
         """
         Extract frequency-domain features using FFT.
@@ -282,7 +245,30 @@ class FeatureExtractor:
             - Only use positive frequencies (first half of FFT output)
             - Skip index 0 when finding dominant frequency (that's DC)
         """
-        pass  # TODO: Implement
+
+        # Remove DC component
+        signal_centered = signal - np.mean(signal)
+        n = len(signal_centered)
+
+        # FFT transform
+        fft_vals = fft.fft(signal_centered)
+        freqs = fft.fftfreq(n, d=1/self.sample_rate)
+
+        # Only positive frequencies
+        pos_mask = freqs > 0
+        fft_mags = np.abs(fft_vals)[pos_mask]
+        pos_freqs = freqs[pos_mask]
+
+        # Spectral energy
+        spectral_energy = np.sum(fft_mags ** 2)
+        
+        # Dominant frequency (skip DC)
+        if len(fft_mags) > 0:
+            dominant_idx = np.argmax(fft_mags)
+            dominant_freq = pos_freqs[dominant_idx]
+        else:
+            dominant_freq = 0.0
+        return [dominant_freq, spectral_energy]
     
     def _cross_axis_features(self, window):
         """
@@ -308,121 +294,33 @@ class FeatureExtractor:
             - accel_magnitude = np.sqrt(window[:,0]**2 + window[:,1]**2 + window[:,2]**2)
             - Take the mean of the magnitude array
         """
-        pass  # TODO: Implement
+        # Accelerometer magnitude mean
+        accel_magnitude = np.sqrt(window[:, 0]**2 + window[:, 1]**2 + window[:, 2]**2)
+        accel_magnitude_mean = np.mean(accel_magnitude)
 
+        # Gyroscope magnitude mean
+        gyro_magnitude = np.sqrt(window[:, 3]**2 + window[:, 4]**2 + window[:, 5]**2)
+        gyro_magnitude_mean = np.mean(gyro_magnitude)
+
+        return [accel_magnitude_mean, gyro_magnitude_mean]
 
 # ============================================================================
 # NORMALIZATION
 # ============================================================================
 
-def normalize_features(features, scaler=None):
-    """
-    Normalize features to zero mean and unit variance.
-    
-    Normalization is important because:
-        - Features have different scales (accel in m/s², gyro in rad/s)
-        - Neural networks train better with normalized inputs
-        - Prevents features with large values from dominating
-    
-    Args:
-        features: numpy array of shape (n_samples, n_features)
-        scaler: optional tuple of (mean, std) from training data
-                If None, compute from the input features.
-                If provided, use these values (for test data).
-    
-    Returns:
-        normalized: numpy array of same shape, normalized
-        scaler: tuple of (mean, std) arrays for reuse
-    
-    Formula:
-        normalized = (features - mean) / std
-    
-    Implementation hints:
-        - Compute mean and std along axis=0 (per feature)
-        - Handle std=0 case: set to 1 to avoid division by zero
-        - Save scaler during training, reuse for inference
-    """
-    pass  # TODO: Implement
-
-
 # ============================================================================
 # UTILITY FUNCTIONS
 # ============================================================================
-
-def load_csv_data(filepath):
-    """
-    Load sensor data from CSV file.
-    
-    Args:
-        filepath: path to CSV file
-    
-    Returns:
-        dict with numpy arrays for each sensor channel
-    """
-    pass  # TODO: Implement
-
-
-def save_features(features, labels, output_path):
-    """
-    Save extracted features to a file.
-    
-    Args:
-        features: numpy array of shape (n_samples, n_features)
-        labels: numpy array of shape (n_samples,)
-        output_path: path to save the file (e.g., .npz format)
-    
-    Implementation hints:
-        - Use np.savez(output_path, features=features, labels=labels)
-        - This creates a compressed file that can be loaded with np.load()
-    """
-    pass  # TODO: Implement
-
 
 # ============================================================================
 # DEMO / MAIN
 # ============================================================================
 
-def demo(args):
-    """
-    Demonstrate feature extraction on generated data.
-    
-    Args:
-        args: parsed command-line arguments
-    
-    This function should:
-        1. Load data from each motion type
-        2. Create windows from the data
-        3. Extract features from windows
-        4. Print shapes and statistics
-        5. Show that features differ between motion types
-        6. Optionally save features if --save flag is set
-    
-    Use this to verify your implementation works correctly.
-    """
-    pass  # TODO: Implement
-
-
 def main():
     """
     Main entry point.
-    
-    Parses arguments and runs the demo.
     """
-    args = parse_args()
-    
-    if args.verbose:
-        print("=" * 60)
-        print("Feature Extraction")
-        print("=" * 60)
-        print(f"  Data directory:  {args.data_dir}")
-        print(f"  Window size:     {args.window_size} samples")
-        print(f"  Overlap:         {args.overlap * 100}%")
-        print(f"  Sample rate:     {args.sample_rate} Hz")
-        print(f"  Save features:   {args.save}")
-        print("=" * 60)
-    
-    demo(args)
-
+    print("Feature extraction module loaded. No CLI or demo available.")
 
 if __name__ == '__main__':
     main()
