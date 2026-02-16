@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from lift import Lift
 from maritime import Maritime
-# from terrestrial import Terrestrial
+from terrestrial import Terrestrial
 from idle import Idle
 from noise import apply_idle_node_noise, apply_lift_node_noise, apply_maritime_node_noise, apply_terrestrial_node_noise
 
@@ -25,8 +25,9 @@ class Node:
             self.seq = 0
             self.timestamp = datetime.now()
             self.idle = Idle(self.sample_rate_hz)
-            self.lift = Lift()
+            self.lift = Lift(self.sample_rate_hz)
             self.maritime = Maritime(self.sample_rate_hz)
+            self.terrestrial = Terrestrial(self.sample_rate_hz)
         except FileNotFoundError:
             raise FileNotFoundError(f"Node configuration file {node_file} not found")
         except json.JSONDecodeError:
