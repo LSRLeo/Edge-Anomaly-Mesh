@@ -186,7 +186,14 @@ def compute_confusion_matrix(predictions, labels, num_classes=4):
         - Loop through predictions and labels
         - Increment matrix[true_label, predicted_label]
     """
-    pass  # TODO: Implement
+    # Initialize confusion matrix with zeros
+    matrix = np.zeros((num_classes, num_classes), dtype=int)
+
+    # Fill the matrix by counting predictions
+    for true_label, predicted_label in zip(labels, predictions):
+        matrix[true_label, predicted_label] += 1
+
+    return matrix
 
 def print_confusion_matrix(matrix, class_names):
     """
@@ -202,7 +209,22 @@ def print_confusion_matrix(matrix, class_names):
         TERRESTRIAL        1          38         3         2
         ...
     """
-    pass  # TODO: Implement
+    print("\nConfusion Matrix")
+    print("=" * 60)
+
+    # Print header row
+    print(f"{'True \\ Pred':<15}", end="")
+    for name in class_names:
+        print(f"{name:>12}", end="")
+    print()
+    print("-" * 60)
+
+    # Print each row
+    for i, true_class in enumerate(class_names):
+        print(f"{true_class:<15}", end="")
+        for j in range(len(class_names)):
+            print(f"{matrix[i, j]:>12}", end="")
+        print()
 
 def print_classification_report(matrix, class_names):
     """
