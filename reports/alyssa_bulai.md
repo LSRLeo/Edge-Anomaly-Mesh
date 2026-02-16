@@ -2,7 +2,7 @@
 
 **GitHub Username(s):** alyssabulai
 **Email(s):** alyssabulai@outlook.com
-**Report Generated:** 2026-02-16 09:13:00
+**Report Generated:** 2026-02-16 16:02:38
 **Branches Analyzed:** main
 
 ---
@@ -11,10 +11,10 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 3 |
-| Lines Added | 106 |
-| Lines Deleted | 106 |
-| Net Lines Changed | +0 |
+| Total Commits | 6 |
+| Lines Added | 186 |
+| Lines Deleted | 110 |
+| Net Lines Changed | +76 |
 | PRs Created | 3 |
 | PRs Assigned | 0 |
 | PRs Reviewed | 0 |
@@ -53,12 +53,12 @@ None
 
 ## Commits
 
-Total non-merge commits in main branch: **3**
+Total non-merge commits in main branch: **6**
 
 ### Code Changes
-- **Lines Added:** 106
-- **Lines Deleted:** 106
-- **Net Change:** +0
+- **Lines Added:** 186
+- **Lines Deleted:** 110
+- **Net Change:** +76
 
 ---
 
