@@ -7,6 +7,7 @@ from lift import Lift
 from maritime import Maritime
 from terrestrial import Terrestrial
 from idle import Idle
+from noise import apply_idle_node_noise, apply_lift_node_noise, apply_maritime_node_noise, apply_terrestrial_node_noise
 
 class Node:
     def __init__(self, node_file, route):
@@ -38,25 +39,30 @@ class Node:
                 current_hub = self.route.hubs[i]
                 next_hub = self.route.hubs[i + 1]
 
+                # Generate idle readings and apply noise 
                 idleResults = self.idle.generate_reading(current_hub)
-                self.messages += self.add_metadata(idleResults, "IDLE", current_hub, current_hub)
-                
+                idleResults_noisy = [apply_idle_node_noise(current_hub) for _ in idleResults]
+                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
+
                 if current_hub.mode == "lift":
-                    self.lift.set_hub(current_hub.lat, current_hub.lon, 20)
-                    liftResults = self.lift.generate_reading(current_hub,current_hub.lift_time)
-                    self.messages += self.add_metadata(liftResults, "LIFT", current_hub, next_hub)
+                    self.lift.set_hub(current_hub, 20)
+                    liftResults = self.lift.generate_reading(current_hub.lift_time)
+                    liftResults_noisy = [apply_lift_node_noise(current_hub) for _ in liftResults]
+                    self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_hub, next_hub)
                 elif current_hub.mode == "maritime":
                     maritimeResults = self.maritime.generate_reading(current_hub, next_hub)
-                    self.messages += self.add_metadata(maritimeResults, "MARITIME", current_hub, next_hub)
+                    maritimeResults_noisy = [apply_maritime_node_noise(current_hub) for _ in maritimeResults]
+                    self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_hub, next_hub)
                 elif current_hub.mode == "terrestrial":
-                    terrestrialResults = self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
-                    self.messages += self.add_metadata(terrestrialResults, "TERRESTRIAL", current_hub, next_hub)
+
+                    pass
                 else:
                     raise ValueError(f"Invalid mode: {current_hub.mode}")
             else:
                 current_hub = self.route.hubs[i]
                 idleResults = self.idle.generate_reading(current_hub)
-                self.messages += self.add_metadata(idleResults, "IDLE", current_hub, current_hub)
+                idleResults_noisy = [apply_idle_node_noise() for _ in idleResults]
+                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
 
     def calculate_gps(self, current_hub, next_hub, mode, message_index, total_messages):
         if mode == "IDLE":
