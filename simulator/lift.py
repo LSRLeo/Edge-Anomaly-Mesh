@@ -6,44 +6,11 @@ from base import BaseMotionGenerator, SensorReading
 from typing import List, Tuple
 
 
-class Lift:
-        def set_hub(self, hub, radius_m):
-            """
-            Set hub location and radius for package constraint.
-            """
-            self.hub_lat = hub.lat
-            self.hub_lon = hub.lon
-            self.hub_radius_m = radius_m
-
-        def is_within_hub_radius(self, gps_lat, gps_lon):
-            """
-            Check if the package is within the hub radius.
-            """
-            from math import radians, sin, cos, sqrt, atan2
-            lat1 = radians(self.hub_lat)
-            lon1 = radians(self.hub_lon)
-            lat2 = radians(gps_lat)
-            lon2 = radians(gps_lon)
-            dlat = lat2 - lat1
-            dlon = lon2 - lon1
-            #make sure to set acceptable radius to be in. Furthermore, look at Lily's test code and see how big of error we can accept.
-            distance = 0
-            return distance <= self.hub_radius_m
-
-        def check_location(self, gps_lat, gps_lon):
-            if not self.is_within_hub_radius(gps_lat, gps_lon):
-                print(f"Warning: Package outside hub radius! Lat: {gps_lat}, Lon: {gps_lon}")
-            # Optionally, handle violation (log, alert, etc.)
-
-    #margins of error: ACCEL X+-0.17, Y+-0.13, Z+-0.20
-    # GRYO X+-0.08, Y+-0.032, Z+-0.023
-
-
-# Forklift motion generator implementation
-class LiftMotionGenerator(BaseMotionGenerator):
+class Lift(BaseMotionGenerator):
     """
     Simulates cargo being lifted and moved by a forklift.
     Implements the lift cycle phases and generates sensor readings.
+    Also handles hub location and radius checks.
     """
     def __init__(self, sample_rate: int = 50, cycle_duration: float = 8.0):
         super().__init__()
@@ -60,6 +27,37 @@ class LiftMotionGenerator(BaseMotionGenerator):
         self.horizontal_amplitude = 0.2  # meters (forklift vibration)
         self.accel_error = {"x": 0.17, "y": 0.13, "z": 0.20}
         self.gyro_error = {"x": 0.08, "y": 0.032, "z": 0.023}
+        self.hub_lat = None
+        self.hub_lon = None
+        self.hub_radius_m = None
+
+    def set_hub(self, hub_lat, hub_lon, radius_m):
+        """
+        Set hub location and radius for package constraint.
+        """
+        self.hub_lat = hub_lat
+        self.hub_lon = hub_lon
+        self.hub_radius_m = radius_m
+
+    def is_within_hub_radius(self, gps_lat, gps_lon):
+        """
+        Check if the package is within the hub radius.
+        """
+        from math import radians, sin, cos, sqrt, atan2
+        lat1 = radians(self.hub_lat)
+        lon1 = radians(self.hub_lon)
+        lat2 = radians(gps_lat)
+        lon2 = radians(gps_lon)
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        #make sure to set acceptable radius to be in. Furthermore, look at Lily's test code and see how big of error we can accept.
+        distance = 0
+        return distance <= self.hub_radius_m
+
+    def check_location(self, gps_lat, gps_lon):
+        if not self.is_within_hub_radius(gps_lat, gps_lon):
+            print(f"Warning: Package outside hub radius! Lat: {gps_lat}, Lon: {gps_lon}")
+        # Optionally, handle violation (log, alert, etc.)
 
     def get_phase(self, cycle_fraction: float) -> str:
         for phase, (start, end) in self.phase_boundaries.items():
@@ -67,9 +65,9 @@ class LiftMotionGenerator(BaseMotionGenerator):
                 return phase
         return "REST"
 
-    def generate_reading(self, time: int) -> SensorReading:
+    def generate_reading(self, t: int) -> SensorReading:
         import math, random
-        cycle_pos = (time % self.cycle_duration) / self.cycle_duration
+        cycle_pos = (t % self.cycle_duration) / self.cycle_duration
         phase = self.get_phase(cycle_pos)
 
         accel_x = 0.0
@@ -108,17 +106,7 @@ class LiftMotionGenerator(BaseMotionGenerator):
         # gyro_y += random.uniform(-self.gyro_error["y"], self.gyro_error["y"])
         # gyro_z += random.uniform(-self.gyro_error["z"], self.gyro_error["z"])
 
-            messages = []
-            for i in range(self.sample_rate * self.cycle_duration):
-                messages.append({
-                    "accel_x": accel_x,
-                    "accel_y": accel_y,
-                    "accel_z": accel_z,
-                    "gyro_x": gyro_x,
-                    "gyro_y": gyro_y,
-                    "gyro_z": gyro_z,
-                })
-            return messages
+        return SensorReading(accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z)
 
     def generate_cycle(self) -> List[SensorReading]:
         readings = []
