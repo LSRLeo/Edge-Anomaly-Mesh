@@ -7,14 +7,16 @@ import os
 from collections import defaultdict
 from datetime import datetime
 
-# Sprint-1 branches to analyze
+# Main branch to analyze
+BRANCH_SPEC = 'origin/main'
+
+# Sprint-1 branches (kept for future reference)
 SPRINT1_BRANCHES = [
     'origin/db-team-sprint-1',
     'origin/de-team-sprint-1',
     'origin/ml-team-sprint-1',
     'origin/ui-team-sprint-1',
 ]
-BRANCH_SPEC = ' '.join(SPRINT1_BRANCHES)
 
 # Team assignments (contributor name -> team name)
 TEAMS = {
@@ -39,7 +41,7 @@ def run_cmd(cmd):
     return result.stdout.strip()
 
 def get_commit_stats():
-    """Get commit counts and lines changed per email from sprint-1 branches."""
+    """Get commit counts and lines changed per email from main branch."""
     stats = {}
     emails = run_cmd(f"git log {BRANCH_SPEC} --format='%ae' | sort | uniq").split('\n')
 
@@ -79,7 +81,7 @@ def get_github_data():
     return prs, issues, comments
 
 def get_files_changed_by_emails(emails):
-    """Get list of files changed by contributor across their emails in sprint-1 branches."""
+    """Get list of files changed by contributor across their emails in main branch."""
     files = set()
     for email in emails:
         output = run_cmd(f"git log {BRANCH_SPEC} --author='{email}' --no-merges --name-only --pretty=format: | sort | uniq")
@@ -214,7 +216,7 @@ def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comme
 **GitHub Username(s):** {', '.join(gh_usernames)}
 **Email(s):** {', '.join(emails)}
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Branches Analyzed:** sprint-1 branches (db-team, de-team, ml-team, ui-team)
+**Branches Analyzed:** main
 
 ---
 
@@ -264,7 +266,7 @@ def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comme
 
 ## Commits
 
-Total non-merge commits in sprint-1 branches: **{total_commits}**
+Total non-merge commits in main branch: **{total_commits}**
 
 ### Code Changes
 - **Lines Added:** {total_added:,}
@@ -280,8 +282,8 @@ Total non-merge commits in sprint-1 branches: **{total_commits}**
     return report
 
 def main():
-    print("Gathering git contributor data from sprint-1 branches...")
-    print(f"  Branches: {', '.join(SPRINT1_BRANCHES)}")
+    print("Gathering git contributor data from main branch...")
+    print(f"  Branch: {BRANCH_SPEC}")
     commit_stats = get_commit_stats()
 
     print("Gathering GitHub PR and issue data...")
@@ -389,7 +391,7 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
     summary = f"""# Contributor Summary Report
 
 **Repository:** edge-anomaly-mesh
-**Branches:** sprint-1 (db-team, de-team, ml-team, ui-team)
+**Branches:** main
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ---
@@ -398,7 +400,7 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
 
 **Column Definitions:**
 - **Contributions** — Aggregate score: Commits + Issues + PRs Created + PRs Closed + PRs Reviewed
-- **Commits** — Non-merge commits authored in sprint-1 branches
+- **Commits** — Non-merge commits authored in main branch
 - **Commit +/-** — Percentage points above/below expected for team (expected = 100% / team size)
 - **Merges** — Merge commits (PRs merged into sprint branch)
 - **Files** — Unique files changed

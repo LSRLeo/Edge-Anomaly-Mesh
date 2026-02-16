@@ -18,7 +18,9 @@ python reports/generate_reports.py
 
 ## Scope
 
-Reports are scoped to the **sprint-1 branches only**:
+Reports are scoped to the **main branch** (`origin/main`).
+
+Previously analyzed sprint-1 branches (kept in script for reference):
 - `origin/db-team-sprint-1`
 - `origin/de-team-sprint-1`
 - `origin/ml-team-sprint-1`
@@ -49,7 +51,7 @@ Note: Merge commits are tracked separately and not included in the contributions
 | Column | Description |
 |--------|-------------|
 | Contributions | Aggregate score (see formula above) |
-| Commits | Non-merge commits in sprint-1 branches |
+| Commits | Non-merge commits in main branch |
 | Merges | Merge commits (not in contributions) |
 | Files | Unique files changed |
 | Issues Created | GitHub issues opened |

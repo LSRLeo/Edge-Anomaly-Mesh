@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** arios123
 **Email(s):** 124832719+arios123@users.noreply.github.com, aldorios369@gmail.com
-**Report Generated:** 2026-02-15 22:24:57
-**Branches Analyzed:** sprint-1 branches (db-team, de-team, ml-team, ui-team)
+**Report Generated:** 2026-02-16 09:13:00
+**Branches Analyzed:** main
 
 ---
 
@@ -11,17 +11,17 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 18 |
-| Lines Added | 995 |
-| Lines Deleted | 5,651 |
-| Net Lines Changed | -4,656 |
+| Total Commits | 22 |
+| Lines Added | 597,685 |
+| Lines Deleted | 602,769 |
+| Net Lines Changed | -5,084 |
 | PRs Created | 6 |
 | PRs Assigned | 2 |
 | PRs Reviewed | 13 |
 | PRs Merged (as merger) | 10 |
 | Issues Created | 30 |
 | Issues Commented | 0 |
-| Files Changed | 18 |
+| Files Changed | 38 |
 
 ---
 
@@ -53,19 +53,22 @@ None
 
 ## Commits
 
-Total non-merge commits in sprint-1 branches: **18**
+Total non-merge commits in main branch: **22**
 
 ### Code Changes
-- **Lines Added:** 995
-- **Lines Deleted:** 5,651
-- **Net Change:** -4,656
+- **Lines Added:** 597,685
+- **Lines Deleted:** 602,769
+- **Net Change:** -5,084
 
 ---
 
-## Files Changed (18)
+## Files Changed (38)
 
+- `simulator/.gitignore`
+- `simulator/README.md`
 - `simulator/base.py`
 - `simulator/cli.py`
+- `simulator/exampleHub.json`
 - `simulator/exampleLift.json`
 - `simulator/exampleMaritime.json`
 - `simulator/exampleTerrestrial.json`
@@ -79,6 +82,23 @@ Total non-merge commits in sprint-1 branches: **18**
 - `simulator/node.py`
 - `simulator/nodeConfig.json`
 - `simulator/node_test.py`
+- `simulator/old/generators.py`
+- `simulator/old/listener_tester.py`
+- `simulator/old/node_test.py`
+- `simulator/old/publisher.py`
 - `simulator/raw_data.json`
 - `simulator/redis_test.py`
+- `simulator/requirements.txt`
+- `simulator/routes/exampleHub.json`
+- `simulator/routes/exampleLift.json`
+- `simulator/routes/exampleMaritime.json`
+- `simulator/routes/exampleTerrestrial.json`
 - `simulator/simulation.py`
+- `simulator/src/hub.py`
+- `simulator/src/idle.py`
+- `simulator/src/lift.py`
+- `simulator/src/maritime.py`
+- `simulator/src/node.py`
+- `simulator/src/noise.py`
+- `simulator/src/route.py`
+- `simulator/src/terrestrial.py`

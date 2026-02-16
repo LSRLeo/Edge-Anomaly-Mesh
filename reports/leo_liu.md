@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** LSRLeo
 **Email(s):** shirui.liu@du.edu, leoliu20041217@gmail.com
-**Report Generated:** 2026-02-15 22:24:57
-**Branches Analyzed:** sprint-1 branches (db-team, de-team, ml-team, ui-team)
+**Report Generated:** 2026-02-16 09:13:00
+**Branches Analyzed:** main
 
 ---
 
@@ -53,7 +53,7 @@ None
 
 ## Commits
 
-Total non-merge commits in sprint-1 branches: **30**
+Total non-merge commits in main branch: **30**
 
 ### Code Changes
 - **Lines Added:** 522

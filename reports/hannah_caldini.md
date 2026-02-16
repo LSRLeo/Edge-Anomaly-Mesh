@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** hcaldini
 **Email(s):** 166074733+hcaldini@users.noreply.github.com, hannah.caldini@du.edu
-**Report Generated:** 2026-02-15 22:24:57
-**Branches Analyzed:** sprint-1 branches (db-team, de-team, ml-team, ui-team)
+**Report Generated:** 2026-02-16 09:13:00
+**Branches Analyzed:** main
 
 ---
 
@@ -53,7 +53,7 @@ None
 
 ## Commits
 
-Total non-merge commits in sprint-1 branches: **16**
+Total non-merge commits in main branch: **16**
 
 ### Code Changes
 - **Lines Added:** 896

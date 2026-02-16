@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** georgerumsey
 **Email(s):** 123426918+georgerumsey@users.noreply.github.com, george.rumsey@du.edu
-**Report Generated:** 2026-02-15 22:24:57
-**Branches Analyzed:** sprint-1 branches (db-team, de-team, ml-team, ui-team)
+**Report Generated:** 2026-02-16 09:13:00
+**Branches Analyzed:** main
 
 ---
 
@@ -16,7 +16,7 @@
 | Lines Deleted | 205 |
 | Net Lines Changed | +25,304 |
 | PRs Created | 0 |
-| PRs Assigned | 5 |
+| PRs Assigned | 6 |
 | PRs Reviewed | 0 |
 | PRs Merged (as merger) | 2 |
 | Issues Created | 6 |
@@ -40,8 +40,8 @@
 ### Created (0)
 None
 
-### Assigned (5)
-#107, #144, #172, #186, #195
+### Assigned (6)
+#107, #144, #172, #186, #195, #199
 
 ### Reviewed (0)
 None
@@ -53,7 +53,7 @@ None
 
 ## Commits
 
-Total non-merge commits in sprint-1 branches: **2**
+Total non-merge commits in main branch: **2**
 
 ### Code Changes
 - **Lines Added:** 25,509
