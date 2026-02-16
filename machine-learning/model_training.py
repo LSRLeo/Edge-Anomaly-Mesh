@@ -89,7 +89,45 @@ def train_epoch(model, dataloader, criterion, optimizer, device):
     Important:
         - Call model.train() at the start (enables dropout)
     """
-    pass  # TODO: Implement
+    model.train()  # Enable dropout and batch normalization training mode
+
+    total_loss = 0.0
+    correct = 0
+    total = 0
+
+    for features, labels in dataloader:
+        # 1. Move data to device
+        features = features.to(device)
+        labels = labels.to(device)
+
+        # 2. Zero gradients from previous iteration
+        optimizer.zero_grad()
+
+        # 3. Forward pass
+        outputs = model(features)
+
+        # 4. Compute loss
+        loss = criterion(outputs, labels)
+
+        # 5. Backward pass (compute gradients)
+        loss.backward()
+
+        # 6. Update weights
+        optimizer.step()
+
+        # 7. Track statistics
+        total_loss += loss.item() * features.size(0)  # Multiply by batch size for weighted average
+
+        # Get predictions (class with highest score)
+        _, predictions = torch.max(outputs, dim=1)
+        correct += (predictions == labels).sum().item()
+        total += labels.size(0)
+
+    # Compute averages
+    avg_loss = total_loss / total
+    accuracy = correct / total
+
+    return avg_loss, accuracy
 
 # ============================================================================
 # EVALUATION METRICS
