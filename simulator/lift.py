@@ -65,48 +65,39 @@ class Lift():
                 return phase
         return "REST"
 
-    def generate_reading(self, t: int) -> SensorReading:
-        import math, random
-        cycle_pos = (t % self.cycle_duration) / self.cycle_duration
-        phase = self.get_phase(cycle_pos)
+    def generate_reading(self, current_hub, time_in_seconds):
+        messages = []
+        total_samples = self.sample_rate * time_in_seconds
+        for i in range(total_samples):
+            t = i
+            cycle_pos = (t % self.cycle_duration) / self.cycle_duration
+            phase = self.get_phase(cycle_pos)
 
-        accel_x = 0.0
-        accel_y = 0.0
-        accel_z = self.gravity
-        gyro_x = 0.0
-        gyro_y = 0.0
-        gyro_z = 0.0
-
-        if phase == "LIFT_UP":
-            # LIFT_UP: vertical lift, no horizontal movement
-            accel_z = self.gravity + self.lift_acceleration
             accel_x = 0.0
             accel_y = 0.0
-        elif phase == "HOLD_MOVE":
-            # HOLD_MOVE: still at constant height, no horizontal movement
             accel_z = self.gravity
-            accel_x = 0.0
-            accel_y = 0.0
-        elif phase == "LOWER_DOWN":
-            # LOWER_DOWN:  vertical lowering, no horizontal movement
-            accel_z = self.gravity - self.lift_acceleration
-            accel_x = 0.0
-            accel_y = 0.0
-        elif phase == "REST":
-            # REST: Stationary, only gravity, no horizontal movement
-            accel_z = self.gravity
-            accel_x = 0.0
-            accel_y = 0.0
+            gyro_x = 0.0
+            gyro_y = 0.0
+            gyro_z = 0.0
 
-        # Add random error later - noise
-        # accel_x += random.uniform(-self.accel_error["x"], self.accel_error["x"])
-        # accel_y += random.uniform(-self.accel_error["y"], self.accel_error["y"])
-        # accel_z += random.uniform(-self.accel_error["z"], self.accel_error["z"])
-        # gyro_x += random.uniform(-self.gyro_error["x"], self.gyro_error["x"])
-        # gyro_y += random.uniform(-self.gyro_error["y"], self.gyro_error["y"])
-        # gyro_z += random.uniform(-self.gyro_error["z"], self.gyro_error["z"])
+            if phase == "LIFT_UP":
+                accel_z = self.gravity + self.lift_acceleration
+            elif phase == "HOLD_MOVE":
+                accel_z = self.gravity
+            elif phase == "LOWER_DOWN":
+                accel_z = self.gravity - self.lift_acceleration
+            elif phase == "REST":
+                accel_z = self.gravity
 
-        return SensorReading(accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z)
+            messages.append({
+                "accel_x": accel_x,
+                "accel_y": accel_y,
+                "accel_z": accel_z,
+                "gyro_x": gyro_x,
+                "gyro_y": gyro_y,
+                "gyro_z": gyro_z,
+            })
+        return messages
 
     def generate_cycle(self) -> List[SensorReading]:
         readings = []
