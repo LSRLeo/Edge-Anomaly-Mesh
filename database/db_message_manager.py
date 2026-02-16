@@ -35,6 +35,21 @@ class DBMessageManager:
             'error': self.handle_error
         }
 
+    def process_message(self,message:dict):
+        m_type = message.get('m_type')
+        recieved_m_id = message.get('m_id')
+        handler = self.handlers.get(m_type)
+
+        logging.info("Processing message with m_id: %s and m_type: %s", recieved_m_id, m_type)
+
+        if handler:
+            logging.info("Found handler for m_type: %s, processing message with m_id: %s", m_type, recieved_m_id)
+            handler()
+            #send to appropriate handler based on m_type and either it gets a dict to respond with or it just processes the message and updates the database accordingly
+        
+        else:
+            logging.warning("No handler found for m_type: %s, message with m_id: %s cannot be processed", m_type, recieved_m_id)
+
 
     def handle_raw_data(self):
         pass
@@ -75,3 +90,8 @@ class DBMessageManager:
 if __name__ == "__main__":
     db_message_manager = DBMessageManager()
     logging.info("DBMessageManager instance created: %s", db_message_manager)
+    test_message = {
+        "m_type": "get-nodes",
+        "m_id": "ui_00001"
+    }
+    test_message_json = json.loads(test_message)
