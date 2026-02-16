@@ -27,15 +27,15 @@ matplotlib.use('TkAgg')
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from ui.ui_utils import (
-    MOTION_COLORS,
-    format_timestamp, format_confidence, format_anomaly_score,
-    get_motion_color
-)
+# from ui.ui_utils import (
+#     MOTION_COLORS,
+#     format_timestamp, format_confidence, format_anomaly_score,
+#     get_motion_color
+# )
 
 # Avoid circular import
 if TYPE_CHECKING:
-    from ui.dashboard_main import DashboardApp
+    from ui.widgets.dashboard_main import DashboardApp
 
 
 # =============================================================================
