@@ -1,0 +1,8 @@
+[
+  {"node_id": "node_001", "lon": 150, "lat": 150, "motion_class": 0, "anomaly": false},
+  {"node_id": "node_002", "lon": 300, "lat": 200, "motion_class": 1, "anomaly": false},
+  {"node_id": "node_003", "lon": 450, "lat": 150, "motion_class": 6, "anomaly": true},
+  {"node_id": "node_004", "lon": 250, "lat": 350, "motion_class": 3, "anomaly": false},
+  {"node_id": "node_005", "lon": 400, "lat": 300, "motion_class": 4, "anomaly": true},
+  {"node_id": "node_006", "lon": 550, "lat": 350, "motion_class": 5, "anomaly": false}
+]
