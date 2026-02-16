@@ -42,7 +42,6 @@ class Node:
                 
                 if current_hub.mode == "lift":
                     self.lift.set_hub(current_hub, 20)
-
                     liftResults = self.lift.generate_reading(current_hub.lift_time)
                     self.messages += self.add_metadata(liftResults, "LIFT", current_hub, next_hub)
                 elif current_hub.mode == "maritime":
