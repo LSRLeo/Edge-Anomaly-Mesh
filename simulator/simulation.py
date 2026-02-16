@@ -1,6 +1,6 @@
 import argparse
-from node import Node
-from route import Route
+from src.node import Node
+from src.route import Route
 
 def run_simulation(node_file, route_file):
     

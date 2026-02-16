@@ -1,8 +1,6 @@
-# from .base import SensorReading
 from typing import List, Tuple
 from enum import Enum
 
-from base import SensorReading
 from typing import List, Tuple
 
 
@@ -99,7 +97,7 @@ class Lift():
             })
         return messages
 
-    def generate_cycle(self) -> List[SensorReading]:
+    def generate_cycle(self):
         readings = []
         for i in range(int(self.cycle_duration * self.sample_rate)):
             t = i / self.sample_rate
@@ -167,13 +165,3 @@ class LiftPhase(Enum):
 
 
     pass
-
-
-class SensorReading:
-    def __init__(self, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z):
-        self.accel_x = accel_x
-        self.accel_y = accel_y
-        self.accel_z = accel_z
-        self.gyro_x = gyro_x
-        self.gyro_y = gyro_y
-        self.gyro_z = gyro_z

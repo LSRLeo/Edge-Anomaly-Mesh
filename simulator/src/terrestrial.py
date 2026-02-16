@@ -1,5 +1,5 @@
 from random import random, uniform
-from hub import Hub
+from src.hub import Hub
 import time
 import math
 
