@@ -43,14 +43,14 @@ class Node:
                 
                 if current_hub.mode == "lift":
                     self.lift.set_hub(current_hub.lat, current_hub.lon, 20)
-                    liftResults = self.lift.generate_reading(current_hub.lift_time)
+                    liftResults = self.lift.generate_reading(current_hub,current_hub.lift_time)
                     self.messages += self.add_metadata(liftResults, "LIFT", current_hub, next_hub)
                 elif current_hub.mode == "maritime":
                     maritimeResults = self.maritime.generate_reading(current_hub, next_hub)
                     self.messages += self.add_metadata(maritimeResults, "MARITIME", current_hub, next_hub)
                 elif current_hub.mode == "terrestrial":
-                    
-                    self.messages += self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
+                    terrestrialResults = self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
+                    self.messages += self.add_metadata(terrestrialResults, "TERRESTRIAL", current_hub, next_hub)
                 else:
                     raise ValueError(f"Invalid mode: {current_hub.mode}")
             else:
