@@ -110,13 +110,3 @@ if __name__ == "__main__":
     test_message_json = json.loads(test_message)
     testing_result = db_message_manager.process_message(test_message_json)
 
-    # logging.info("Testing message validation with invalid message")
-    # test_message = "message without proper structure"
-    # db_message_manager.validate_message(test_message)
-    # invalid_message = {"m_type": "raw-data"}
-    # db_message_manager.validate_message(invalid_message)
-    # invalid_message2 = {"m_id": "12345"}
-    # db_message_manager.validate_message(invalid_message2)
-    # valid_message = {"m_type": "raw-data", "m_id": "12345"}
-    # is_valid = db_message_manager.validate_message(valid_message)
-    # logging.info("Valid message validation result: %s", is_valid)
