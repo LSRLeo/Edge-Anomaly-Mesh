@@ -17,14 +17,13 @@ from sqlalchemy.orm import sessionmaker
 
 
 
-# Constants
 script_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(script_dir, 'sample_raw_data.json')
+# Set up logging
 logging.basicConfig( 
    level=logging.INFO, 
    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s' 
 ) 
-
 #SQL Alchemy setup
 DATABASE_URL = 'sqlite:///database/nodes_test.db'
 engine = sqlalchemy.create_engine(DATABASE_URL)
@@ -50,10 +49,10 @@ class Node(Base):
         return f"<Node(node_id='{self.node_id}', seq={self.seq}, status='{self.status}', first_seen='{self.first_seen}', last_seen='{self.last_seen}', location=({self.location_lat}, {self.location_lon}, {self.location_altitude_m}))>"
 
         
-#set up the database and create the nodes table if it doesn't exist, then create a session for managing node operations using SQLAlchemy ORM
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine) #
-    
+
+
 class NodeManager:
     '''
     NodeManager: Session for managing node operations using SQLAlchemy ORM
@@ -99,8 +98,8 @@ class NodeManager:
             node.location_lon = location_lon
             node.location_altitude_m = location_altitude_m
             self.session.commit()
-
             logging.info(f"Updated node {node_id}")
+
         else:
             logging.warning(f"Node {node_id} not found for update")
 
@@ -113,6 +112,7 @@ class NodeManager:
             node.status = status
             self.session.commit()
             logging.info(f"Updated status for node {node_id} to {status}")
+
         else:
             logging.warning(f"Node {node_id} not found for status update")
 
@@ -143,22 +143,28 @@ class NodeManager:
     def delete_node(self, node_id):
         '''Delete a node from the database'''
         node = self.get_node_by_id(node_id)
+
         if node:
             self.session.delete(node)
             self.session.commit()
             logging.info(f"Deleted node {node_id}")
+
         else:
             logging.warning(f"Node {node_id} not found for deletion")
 
     def get_node_status(self, node_id=None):
         '''Get the status of a node by its ID'''
+
         if node_id is None:
             #return a list of dict
             return [{'node_id': node.node_id, 'status': node.status} for node in self.get_all_nodes()]
+        
         else:
             node = self.get_node_by_id(node_id)
+
             if node:
                 return {'node_id': node.node_id, 'status': node.status}
+            
             else:
                 logging.warning(f"Node {node_id} not found for status retrieval")
                 return None
