@@ -110,13 +110,14 @@ class NodeDetailsTab(ttk.Frame):
     including metadata, motion history, and anomaly trends.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp'):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', selected_node_id: Optional[str] = None):
         """
         Initialize the Node Details tab.
         
         Args:
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
+            selected_node_id: Optional node ID to display on load
         """
         super().__init__(parent)
         
@@ -128,13 +129,18 @@ class NodeDetailsTab(ttk.Frame):
         # UI components
         self.node_selector: Optional[ttk.Combobox] = None
         self.info_labels: Dict[str, ttk.Label] = {}
-        self.history_tree: Optional[ttk.Treeview] = None
+        # self.history_tree: Optional[ttk.Treeview] = None
+        if selected_node_id:
+            self.selected_node_id = selected_node_id
+        else:
+            self.selected_node_id = None
         
-        # Chart components
-        self.trend_fig: Optional[Figure] = None
-        self.trend_ax = None
-        self.trend_canvas: Optional[FigureCanvasTkAgg] = None
-        
+        # # Chart components
+        # self.trend_fig: Optional[Figure] = None
+        # self.trend_ax = None
+        # self.trend_canvas: Optional[FigureCanvasTkAgg] = None
+        self.nodes = {} #dict of node_id to Node object
+        self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
         # Build UI
         self._setup_ui()
     
@@ -181,7 +187,7 @@ class NodeDetailsTab(ttk.Frame):
         
         ttk.Label(selector_frame, text="Node:", font=('Arial', 12)).pack(side='left', padx=(0, 10))
         
-        self.node_selector = ttk.Combobox(selector_frame, values=MOCK_NODES,
+        self.node_selector = ttk.Combobox(selector_frame, values=list(self.nodes.keys()),
                                            state='readonly', width=20, font=('Arial', 12))
         self.node_selector.pack(side='left')
         self.node_selector.bind('<<ComboboxSelected>>', self._on_node_select)
@@ -190,7 +196,7 @@ class NodeDetailsTab(ttk.Frame):
         ttk.Button(selector_frame, text="Refresh",
                    command=self.refresh).pack(side='right', padx=10)
         
-        pass
+
     
     def _setup_info_panel(self):
         """
@@ -261,7 +267,11 @@ class NodeDetailsTab(ttk.Frame):
 
         # Spacer to keep bottom tidy
         content.rowconfigure(r, weight=1)
-
+        if self.selected_node_id is not None:
+            self.display_node(self.selected_node_id)
+        else:
+            self.selected_node_id = list(self.nodes.keys())[0]
+            self.display_node(self.selected_node_id)
 
 
     
@@ -333,8 +343,19 @@ class NodeDetailsTab(ttk.Frame):
             raise FileNotFoundError
         with open(filename, 'r') as file:
             return json.load(file)
+    def populate_test_nodes(self):
+        file = self.load_json('test_nodesV2.json')
         
-    def load_node(self, node_id: str):
+
+        for entry in file:
+            try:
+                self.load_node(entry["node_id"], entry)
+
+            except Exception as e:
+                print(f"[load_nodes] Failed to load entry {entry}: {e}")
+
+  
+    def load_node(self, node_id: str, entry: Dict[str, Any]):
         """
         Load and display data for a specific node.
         
@@ -358,8 +379,46 @@ class NodeDetailsTab(ttk.Frame):
         # self._load_node_info(node_id)
         # self._load_history(node_id)
         # self._load_anomaly_trend(node_id)
-        pass
+        node_id = entry["node_id"]
+        lat = float(entry["lat"])
+        lon = float(entry["lon"])
+        # JSON uses an int for motion_class → convert to string
+        motion_class = entry.get("motion_class", "")
+        # Insert placeholder fields
+        timestamp = datetime.now()
+        confidence = 1.0
+
+        # Build Node object
+        node = Node(
+            node_id=node_id,
+            lat=lat,
+            lon=lon,
+            timestamp=timestamp,
+            motion_class=motion_class,
+            confidence=confidence,
+        )
+
+        # Store it
+        self.nodes[node_id] = node
     
+    def display_node(self, node_id: str):
+        """
+        Update the UI to display the given node's data.
+        
+        Args:
+            node_id: ID of the node to display
+        """
+        if node_id not in self.nodes:
+            print(f"[display_node] Node ID {node_id} not found in loaded nodes.")
+            return
+        
+        node = self.nodes[node_id]
+        self.vars["node_id"].set(node.getNodeID())
+        self.vars["lat"].set(f"{node.lat:.6f}")
+        self.vars["lon"].set(f"{node.lon:.6f}")
+        self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
+        self.vars["motion_class"].set(node.motionString())
+        self.vars["confidence"].set(f"{node.confidence:.2f}")
     def _load_node_info(self, node_id: str):
         """
         Load and display node metadata.
