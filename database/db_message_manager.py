@@ -3,6 +3,7 @@ Docstring for database.db_message_manager
 m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'Error'
 '''
 from asyncio.log import logger
+from email import message
 import logging
 import json
 import sys
@@ -28,12 +29,8 @@ class DBMessageManager:
             'raw-data': self.handle_raw_data,
             'inference-output': self.handle_inference_output,
             'get-nodes': self.handle_get_nodes,
-            'get-nodes-response': self.handle_get_nodes_response,
             'get-node-data-ids': self.handle_get_node_data_ids,
-            'get-node-data-ids-response': self.handle_get_node_data_ids_response,
-            'get-datum': self.handle_get_datum,
-            'get-datum-response': self.handle_get_datum_response,
-            'error': self.handle_error
+            'get-datum': self.handle_get_datum,  
         }
 
     def process_message(self, message:dict):
@@ -47,7 +44,7 @@ class DBMessageManager:
             if handler:
                 logging.info("Found handler for m_type: %s, processing message with m_id: %s", m_type, recieved_m_id)
                 #call handler function
-                handler()
+                handler(message)
 
             else:
                 logging.error("No handler found for m_type: %s, message with m_id: %s cannot be processed", m_type, recieved_m_id)
@@ -78,47 +75,36 @@ class DBMessageManager:
         return True
     
 
-    def handle_raw_data(self):
-        pass
+    def handle_raw_data(self, message: dict):
+        logger.info(f"Handling raw-data message: {message['m_id']} inserts raw data into the databases")
 
 
-    def handle_inference_output(self):
-        pass
+    def handle_inference_output(self, message: dict):
+        logger.info(f"Handling inference-output message: {message['m_id']} inserts inference output into the databases")
 
 
-    def handle_get_nodes(self):
-        pass
+    def handle_get_nodes(self, message: dict):
+        logger.info(f"Handling get-nodes request: {message['m_id']} returns message of type get-nodes-response") 
+        
 
 
-    def handle_get_nodes_response(self):
-        pass
+    def handle_get_node_data_ids(self, message: dict):
+        logger.info(f"Handling get-node-data-ids request: {message['m_id']} returns message of type get-node-data-ids-response")
 
+    def handle_get_datum(self, message: dict):
+        logger.info(f"Handling get-datum request: {message['m_id']} returns message of type get-datum-response")
 
-    def handle_get_node_data_ids(self):
-        pass
-
-
-    def handle_get_node_data_ids_response(self):
-        pass
-
-
-    def handle_get_datum(self):
-        pass
-
-
-    def handle_get_datum_response(self):
-        pass
 
 
     def handle_error(self):
-        pass
+        logger.error(f"sends error response to sender")
 
 
 if __name__ == "__main__":
     db_message_manager = DBMessageManager()
     # logging.info("DBMessageManager instance created: %s", db_message_manager)
     test_message = '''{
-        "m_type": "get-nodes",
+        "m_type": "inference-output",
         "m_id": "ui_00001"
     }'''
     test_message_json = json.loads(test_message)
