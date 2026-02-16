@@ -396,13 +396,24 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
 
 ## Overview
 
+**Column Definitions:**
+- **Contributions** — Aggregate score: Commits + Issues + PRs Created + PRs Closed + PRs Reviewed
+- **Commits** — Non-merge commits authored in sprint-1 branches
+- **Commit +/-** — Percentage points above/below expected for team (expected = 100% / team size)
+- **Merges** — Merge commits (PRs merged into sprint branch)
+- **Files** — Unique files changed
+- **Issues** — GitHub issues created
+- **PRs Created** — Pull requests authored
+- **PRs Reviewed** — Pull requests where contributor submitted a review
+
 | Contributor | Team | Contributions | Commits | Commit +/- | Merges | Files | Issues | PRs Created | PRs Reviewed |
 |-------------|------|---------------|---------|------------|--------|-------|--------|-------------|--------------|
 """
 
     for r in rows:
         diff_str = f"{r['commit_diff']:+.0f}%" if r['commits'] > 0 else "—"
-        summary += f"| {r['name']} | {r['team']} | {r['contributions']} | {r['commits']} | {diff_str} | {r['merge_commits']} | {r['files_changed']} | {r['issues_created']} | {r['prs_created']} | {r['prs_reviewed']} |\n"
+        filename = r['name'].lower().replace(' ', '_') + '.md'
+        summary += f"| [{r['name']}]({filename}) | {r['team']} | {r['contributions']} | {r['commits']} | {diff_str} | {r['merge_commits']} | {r['files_changed']} | {r['issues_created']} | {r['prs_created']} | {r['prs_reviewed']} |\n"
 
     # Totals
     total_contributions = sum(r['contributions'] for r in rows)
@@ -428,16 +439,6 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
         stats = team_stats[team]
         expected = stats['total_commits'] / stats['members'] if stats['members'] > 0 else 0
         summary += f"| {team} | {stats['members']} | {stats['total_commits']} | {expected:.1f} |\n"
-
-    summary += """
----
-
-## Individual Reports
-
-"""
-    for name in sorted(email_groups.keys()):
-        filename = name.lower().replace(' ', '_') + '.md'
-        summary += f"- [{name}]({filename})\n"
 
     summary += """
 ---
