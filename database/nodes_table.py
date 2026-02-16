@@ -160,7 +160,7 @@ class NodeManager:
             if node:
                 return {'node_id': node.node_id, 'status': node.status}
             else:
-                debug_print(f"Node {node_id} not found for status retrieval")
+                logging.warning(f"Node {node_id} not found for status retrieval")
                 return None
 
 
@@ -171,10 +171,7 @@ def load_json(file_path):
     with open(file_path, 'rb') as f:
         data = ijson.items(f, 'item')
         node_data = []
-        for i,node_dict in enumerate(data):
-            # if i>=5:
-            #     #testing with 5 for now
-            #     break
+        for node_dict in data:
             node_data.append(node_dict)
         return node_data
 
@@ -182,8 +179,6 @@ def load_json(file_path):
 def extract_node_data(node_dict):
     '''
     Docstring for extract_node_data
-    
-    :param node_dict: Description
     '''
 
     logging.info(f"Extracting data from node: {node_dict}")
