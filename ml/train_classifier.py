@@ -59,7 +59,8 @@ import json
 from datetime import datetime
 
 # Import from our feature extraction module
-from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
+from feature_extraction import FeatureExtractor, normalize_features
+from data_pipeline import create_windows, load_json_data, windows_to_features
 
 
 # ============================================================================
@@ -694,7 +695,7 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
         3. Stack all features and labels
     """
     from pathlib import Path
-    from ml.data_pipeline import load_json_data, create_windows, windows_to_features
+    from data_pipeline import load_json_data, create_windows, windows_to_features
 
     # Create feature extractor
     extractor = FeatureExtractor(sample_rate=50)

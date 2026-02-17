@@ -37,7 +37,7 @@ import numpy as np
 from pathlib import Path
 import json
 
-from ml.feature_extraction import FeatureExtractor
+from feature_extraction import FeatureExtractor
 
 # ============================================================================
 # ARGUMENT PARSING
