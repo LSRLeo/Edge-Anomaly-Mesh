@@ -20,11 +20,11 @@ We use a simple feedforward neural network (also called MLP - Multi-Layer Percep
          ↓
     ReLU Activation
          ↓
-    Linear Layer (32 → 4 outputs)
+    Linear Layer (32 → 8 outputs)
          ↓
     Softmax (converts to probabilities)
          ↓
-    Output: [P(IDLE), P(TERRESTRIAL), P(MARITIME), P(LIFT)]
+    Output: [P(IDLE), P(TERR), P(MAR), P(LIFT), P(IDLE_A), P(TERR_A), P(MAR_A), P(LIFT_A)]
 
 TRAINING PROCESS:
 =================
@@ -160,7 +160,8 @@ class MotionDataset(Dataset):
         Args:
             features: numpy array of shape (n_samples, n_features)
             labels: numpy array of shape (n_samples,) with integer class labels
-                    0=IDLE, 1=TERRESTRIAL, 2=MARITIME, 3=LIFT
+                    0=IDLE, 1=TERRESTRIAL, 2=MARITIME, 3=LIFT,
+                    4=IDLE_ANOM, 5=TERRESTRIAL_ANOM, 6=MARITIME_ANOM, 7=LIFT_ANOM
         
         Implementation:
             - Convert numpy arrays to PyTorch tensors
@@ -207,13 +208,15 @@ class MotionClassifier(nn.Module):
         - forward: Define how data flows through layers
     """
     
-    def __init__(self, input_dim, num_classes=4, hidden_dims=(64, 32), dropout=0.3):
+    def __init__(self, input_dim, num_classes=8, hidden_dims=(64, 32), dropout=0.3):
         """
         Initialize the model layers.
-        
+
         Args:
             input_dim: Number of input features (e.g., 20)
-            num_classes: Number of output classes (4 for our motion types)
+            num_classes: Number of output classes (8 for terrain type + anomaly status)
+                         Classes 0-3: IDLE, TERRESTRIAL, MARITIME, LIFT (no anomaly)
+                         Classes 4-7: IDLE, TERRESTRIAL, MARITIME, LIFT (with anomaly)
             hidden_dims: Tuple of hidden layer sizes (64, 32)
             dropout: Dropout probability (0.3 = drop 30% of neurons)
         
@@ -234,44 +237,63 @@ class MotionClassifier(nn.Module):
             )
         """
         super().__init__()  # Always call parent __init__
-        pass  # TODO: Implement
-    
+
+        # Build the network architecture
+        self.network = nn.Sequential(
+            nn.Linear(input_dim, hidden_dims[0]),      # Input → 64 neurons
+            nn.ReLU(),                                   # Non-linear activation
+            nn.Dropout(dropout),                         # Regularization (drop 30% of neurons)
+            nn.Linear(hidden_dims[0], hidden_dims[1]),  # 64 → 32 neurons
+            nn.ReLU(),                                   # Non-linear activation
+            nn.Linear(hidden_dims[1], num_classes)      # 32 → 8 output classes
+        )
+
     def forward(self, x):
         """
         Define the forward pass.
-        
+
         Args:
             x: Input tensor of shape (batch_size, input_dim)
-        
+
         Returns:
             Output tensor of shape (batch_size, num_classes)
             These are "logits" (raw scores), not probabilities.
             CrossEntropyLoss applies softmax internally.
-        
+
         Implementation:
             - Simply pass x through self.network
             - return self.network(x)
         """
-        pass  # TODO: Implement
+        return self.network(x)
     
     def predict(self, x):
         """
         Make predictions with confidence scores.
-        
+
         Args:
             x: Input tensor of shape (batch_size, input_dim)
-        
+
         Returns:
             predicted: Tensor of predicted class indices
             confidence: Tensor of confidence scores (0-1)
-        
+
         Implementation:
             - Use torch.no_grad() context (no need to track gradients)
             - Get logits from forward pass
             - Apply softmax to get probabilities
             - Use torch.max to get highest probability and its index
         """
-        pass  # TODO: Implement
+        with torch.no_grad():
+            # Get logits from forward pass
+            logits = self.forward(x)
+
+            # Apply softmax to convert logits to probabilities
+            probabilities = torch.softmax(logits, dim=1)
+
+            # Get the highest probability and its index
+            confidence, predicted = torch.max(probabilities, dim=1)
+
+            return predicted, confidence
 
 
 # ============================================================================
@@ -338,10 +360,112 @@ def evaluate(model, dataloader, criterion, device):
 
 
 # ============================================================================
+# LABEL UTILITIES
+# ============================================================================
+
+def decode_combined_label(label):
+    """
+    Decode a combined label (0-7) into terrain type and anomaly status.
+
+    Args:
+        label: integer from 0-7
+
+    Returns:
+        terrain_type: integer from 0-3 (IDLE, TERRESTRIAL, MARITIME, LIFT)
+        has_anomaly: boolean (True if anomaly, False otherwise)
+
+    Example:
+        decode_combined_label(1) -> (1, False)  # TERRESTRIAL, no anomaly
+        decode_combined_label(5) -> (1, True)   # TERRESTRIAL, with anomaly
+    """
+    terrain_type = label % 4
+    has_anomaly = label >= 4
+    return terrain_type, has_anomaly
+
+
+def encode_combined_label(terrain_type, has_anomaly):
+    """
+    Encode terrain type and anomaly status into a single label (0-7).
+
+    Args:
+        terrain_type: integer from 0-3 (IDLE, TERRESTRIAL, MARITIME, LIFT)
+        has_anomaly: boolean (True if anomaly, False otherwise)
+
+    Returns:
+        label: integer from 0-7
+
+    Example:
+        encode_combined_label(1, False) -> 1  # TERRESTRIAL, no anomaly
+        encode_combined_label(1, True) -> 5   # TERRESTRIAL, with anomaly
+    """
+    return terrain_type + (4 if has_anomaly else 0)
+
+
+def extract_terrain_predictions(predictions):
+    """
+    Extract just the terrain type predictions, ignoring anomaly status.
+
+    Args:
+        predictions: numpy array of combined labels (0-7)
+
+    Returns:
+        terrain_predictions: numpy array of terrain types (0-3)
+    """
+    return predictions % 4
+
+
+def extract_anomaly_predictions(predictions):
+    """
+    Extract just the anomaly predictions, ignoring terrain type.
+
+    Args:
+        predictions: numpy array of combined labels (0-7)
+
+    Returns:
+        anomaly_predictions: numpy array of booleans
+    """
+    return predictions >= 4
+
+
+def compute_separate_accuracies(predictions, labels):
+    """
+    Compute separate accuracies for terrain classification and anomaly detection.
+
+    Args:
+        predictions: numpy array of predicted combined labels (0-7)
+        labels: numpy array of true combined labels (0-7)
+
+    Returns:
+        dict with keys:
+            - 'joint_accuracy': Both terrain AND anomaly correct
+            - 'terrain_accuracy': Terrain type correct (ignoring anomaly)
+            - 'anomaly_accuracy': Anomaly status correct (ignoring terrain)
+    """
+    # Joint accuracy (both must be correct)
+    joint_accuracy = (predictions == labels).mean()
+
+    # Terrain accuracy (ignoring anomaly)
+    pred_terrain = extract_terrain_predictions(predictions)
+    true_terrain = extract_terrain_predictions(labels)
+    terrain_accuracy = (pred_terrain == true_terrain).mean()
+
+    # Anomaly accuracy (ignoring terrain)
+    pred_anomaly = extract_anomaly_predictions(predictions)
+    true_anomaly = extract_anomaly_predictions(labels)
+    anomaly_accuracy = (pred_anomaly == true_anomaly).mean()
+
+    return {
+        'joint_accuracy': joint_accuracy,
+        'terrain_accuracy': terrain_accuracy,
+        'anomaly_accuracy': anomaly_accuracy
+    }
+
+
+# ============================================================================
 # EVALUATION METRICS
 # ============================================================================
 
-def compute_confusion_matrix(predictions, labels, num_classes=4):
+def compute_confusion_matrix(predictions, labels, num_classes=8):
     """
     Compute confusion matrix from predictions and labels.
     
@@ -353,7 +477,7 @@ def compute_confusion_matrix(predictions, labels, num_classes=4):
     Args:
         predictions: numpy array of predicted class indices
         labels: numpy array of true class indices
-        num_classes: number of classes (4)
+        num_classes: number of classes (8)
     
     Returns:
         numpy array of shape (num_classes, num_classes)
@@ -481,8 +605,11 @@ def main():
     else:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    # Class names for reporting
-    CLASS_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT']
+    # Class names for reporting (8 classes: 4 terrain types × 2 anomaly states)
+    CLASS_NAMES = [
+        'IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',           # No anomaly (0-3)
+        'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM'  # With anomaly (4-7)
+    ]
     
     if args.verbose:
         print("=" * 60)
