@@ -56,7 +56,30 @@ class MotionClassifier(nn.Module):
             )
         """
         super().__init__()  # Always call parent __init__
-        pass  # TODO: Implement
+
+        # Build the network architecture
+        self.network = nn.Sequential(
+            nn.Linear(input_dim, hidden_dims[0]),      # Input → 64 neurons
+            nn.ReLU(),                                   # Non-linear activation
+            nn.Dropout(dropout),                         # Regularization (drop 30% of neurons)
+            nn.Linear(hidden_dims[0], hidden_dims[1]),  # 64 → 32 neurons
+            nn.ReLU(),                                   # Non-linear activation
+            nn.Linear(hidden_dims[1], num_classes)      # 32 → 8 output classes
+        )
+
+    def forward(self, x):
+        """
+        Define the forward pass.
+
+        Args:
+            x: Input tensor of shape (batch_size, input_dim)
+
+        Returns:
+            Output tensor of shape (batch_size, num_classes)
+            These are "logits" (raw scores), not probabilities.
+            CrossEntropyLoss applies softmax internally.
+        """
+        return self.network(x)
 
 # ============================================================================
 # TRAINING FUNCTIONS
