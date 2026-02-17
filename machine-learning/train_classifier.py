@@ -20,11 +20,11 @@ We use a simple feedforward neural network (also called MLP - Multi-Layer Percep
          ↓
     ReLU Activation
          ↓
-    Linear Layer (32 → 4 outputs)
+    Linear Layer (32 → 8 outputs)
          ↓
     Softmax (converts to probabilities)
          ↓
-    Output: [P(IDLE), P(TERRESTRIAL), P(MARITIME), P(LIFT)]
+    Output: [P(IDLE), P(TERR), P(MAR), P(LIFT), P(IDLE_A), P(TERR_A), P(MAR_A), P(LIFT_A)]
 
 TRAINING PROCESS:
 =================

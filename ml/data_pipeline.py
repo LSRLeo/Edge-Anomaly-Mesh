@@ -186,7 +186,9 @@ def load_json_data(filepath):
 
     Returns:
         data: dict of numpy arrays (accel_x, ..., gyro_z)
-        label: motion label (sim_mode / mode) or None
+        labels: numpy array of combined terrain+anomaly labels (0-7)
+                Labels 0-3: IDLE, TERRESTRIAL, MARITIME, LIFT (no anomaly)
+                Labels 4-7: IDLE, TERRESTRIAL, MARITIME, LIFT (with anomaly)
     """
     filepath = Path(filepath)
     with open(filepath, "r") as f:
@@ -212,6 +214,15 @@ def load_json_data(filepath):
     gyro_x, gyro_y, gyro_z = [], [], []
     labels = []
 
+    # Mapping from terrain type strings to indices
+    TERRAIN_MAP = {
+        "IDLE": 0,
+        "TERRESTRIAL": 1,
+        "TRANSIT": 1,  # TRANSIT is the same as TERRESTRIAL
+        "MARITIME": 2,
+        "LIFT": 3
+    }
+
     for event in events:
         accel = event.get("accel_mss") or event.get("accel")
         gyro = event.get("gyro_rads") or event.get("gyro")
@@ -227,13 +238,28 @@ def load_json_data(filepath):
         gyro_y.append(gyro["y"])
         gyro_z.append(gyro["z"])
 
+        # Extract terrain type and anomaly status from metadata
         meta = event.get("meta", {})
-        if "sim_mode" in meta:
-            labels.append(meta["sim_mode"])
-        elif "mode" in meta:
-            labels.append(meta["mode"])
+
+        # Get terrain type
+        terrain_str = meta.get("sim_mode") or meta.get("mode")
+        if terrain_str is None:
+            terrain_idx = None
         else:
-            labels.append(None)
+            terrain_idx = TERRAIN_MAP.get(terrain_str.upper())
+            if terrain_idx is None:
+                raise ValueError(f"Unknown terrain type: {terrain_str}")
+
+        # Get anomaly status (default to False if not specified)
+        has_anomaly = meta.get("anomaly", False) or meta.get("has_anomaly", False)
+
+        # Combine terrain and anomaly into single label (0-7)
+        if terrain_idx is not None:
+            combined_label = terrain_idx + (4 if has_anomaly else 0)
+        else:
+            combined_label = None
+
+        labels.append(combined_label)
 
     data = {
         "accel_x": np.array(accel_x, dtype=np.float32),
