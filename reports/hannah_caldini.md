@@ -2,7 +2,7 @@
 
 **GitHub Username(s):** hcaldini
 **Email(s):** 166074733+hcaldini@users.noreply.github.com, hannah.caldini@du.edu
-**Report Generated:** 2026-02-16 16:02:38
+**Report Generated:** 2026-02-17 13:34:38
 **Branches Analyzed:** main
 
 ---
@@ -11,9 +11,9 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 16 |
-| Lines Added | 896 |
-| Lines Deleted | 371 |
+| Total Commits | 20 |
+| Lines Added | 958 |
+| Lines Deleted | 433 |
 | Net Lines Changed | +525 |
 | PRs Created | 4 |
 | PRs Assigned | 2 |
@@ -21,7 +21,7 @@
 | PRs Merged (as merger) | 0 |
 | Issues Created | 12 |
 | Issues Commented | 0 |
-| Files Changed | 7 |
+| Files Changed | 8 |
 
 ---
 
@@ -53,21 +53,22 @@ None
 
 ## Commits
 
-Total non-merge commits in main branch: **16**
+Total non-merge commits in main branch: **20**
 
 ### Code Changes
-- **Lines Added:** 896
-- **Lines Deleted:** 371
+- **Lines Added:** 958
+- **Lines Deleted:** 433
 - **Net Change:** +525
 
 ---
 
-## Files Changed (7)
+## Files Changed (8)
 
 - `database/db_message_manager.py`
 - `database/nodes.db`
 - `database/nodes.db-shm`
 - `database/nodes.db-wal`
 - `database/nodes_table.py`
+- `database/nodes_test.db`
 - `database/requirements.txt`
 - `database/sample_raw_data.json`

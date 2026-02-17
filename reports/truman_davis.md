@@ -1,8 +1,8 @@
 # Contributor Report: Truman Davis
 
 **GitHub Username(s):** TrumanAD
-**Email(s):** truman.davis@du.edu, ty@the3.com
-**Report Generated:** 2026-02-16 16:02:38
+**Email(s):** truman.davis@du.edu
+**Report Generated:** 2026-02-17 13:34:38
 **Branches Analyzed:** main
 
 ---
@@ -11,17 +11,17 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 17 |
-| Lines Added | 1,727 |
-| Lines Deleted | 675 |
-| Net Lines Changed | +1,052 |
+| Total Commits | 11 |
+| Lines Added | 860 |
+| Lines Deleted | 62 |
+| Net Lines Changed | +798 |
 | PRs Created | 0 |
 | PRs Assigned | 0 |
 | PRs Reviewed | 2 |
-| PRs Merged (as merger) | 0 |
+| PRs Merged (as merger) | 1 |
 | Issues Created | 6 |
 | Issues Commented | 0 |
-| Files Changed | 13 |
+| Files Changed | 9 |
 
 ---
 
@@ -46,23 +46,23 @@ None
 ### Reviewed (2)
 #183, #184
 
-### Merged (as merger) (0)
-None
+### Merged (as merger) (1)
+#200
 
 ---
 
 ## Commits
 
-Total non-merge commits in main branch: **17**
+Total non-merge commits in main branch: **11**
 
 ### Code Changes
-- **Lines Added:** 1,727
-- **Lines Deleted:** 675
-- **Net Change:** +1,052
+- **Lines Added:** 860
+- **Lines Deleted:** 62
+- **Net Change:** +798
 
 ---
 
-## Files Changed (13)
+## Files Changed (9)
 
 - `machine-learning/classifier_preparation.py`
 - `machine-learning/model_training.py`
@@ -73,7 +73,3 @@ Total non-merge commits in main branch: **17**
 - `ml/requirements.txt`
 - `ml/train_classifier.py`
 - `requirements.txt`
-- `ui/requirements.txt`
-- `ui/widgets/anomalies_tab.py`
-- `ui/widgets/node_details_tab.py`
-- `ui/widgets/test_nodesV2.json`
