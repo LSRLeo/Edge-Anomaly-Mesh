@@ -59,7 +59,8 @@ import json
 from datetime import datetime
 
 # Import from our feature extraction module
-from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
+from feature_extraction import FeatureExtractor, normalize_features
+from data_pipeline import create_windows, load_json_data, windows_to_features
 
 
 # ============================================================================
