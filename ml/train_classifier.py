@@ -121,6 +121,9 @@ def parse_args():
     
     parser.add_argument('--history-output', type=str, default='models/training_history.json',
                         help='Path to save training history')
+
+    parser.add_argument('--results-output', type=str, default='models/inference_results.json',
+                        help='Path to save inference results JSON for database team')
     
     # Runtime options
     parser.add_argument('--seed', type=int, default=42,
@@ -916,7 +919,54 @@ def main():
     print_classification_report(conf_matrix, CLASS_NAMES)
 
     # =========================================================================
-    # 7. Save training history
+    # 7. Save inference results to JSON (for database team)
+    # =========================================================================
+    print("\nExporting inference results to JSON...")
+
+    model.eval()
+    all_probabilities = []
+
+    with torch.no_grad():
+        for inputs, _ in test_loader:
+            inputs = inputs.to(device)
+            logits = model(inputs)
+            probs = torch.softmax(logits, dim=1)
+            all_probabilities.append(probs.cpu().numpy())
+
+    all_probabilities = np.vstack(all_probabilities)
+
+    inference_results = []
+    for i in range(len(all_probabilities)):
+        probs = all_probabilities[i]
+        predicted_class = int(predictions[i])
+        true_class = int(labels[i])
+
+        inference_results.append({
+            "sample_index": i,
+            "probabilities": {
+                "IDLE": round(float(probs[0]), 6),
+                "TERRESTRIAL": round(float(probs[1]), 6),
+                "MARITIME": round(float(probs[2]), 6),
+                "LIFT": round(float(probs[3]), 6),
+                "IDLE_ANOM": round(float(probs[4]), 6),
+                "TERRESTRIAL_ANOM": round(float(probs[5]), 6),
+                "MARITIME_ANOM": round(float(probs[6]), 6),
+                "LIFT_ANOM": round(float(probs[7]), 6),
+            },
+            "predicted_class": CLASS_NAMES[predicted_class],
+            "true_class": CLASS_NAMES[true_class],
+        })
+
+    results_path = Path(args.results_output)
+    results_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(results_path, 'w') as f:
+        json.dump(inference_results, f, indent=2)
+
+    print(f"  Saved {len(inference_results)} inference results to {args.results_output}")
+
+    # =========================================================================
+    # 8. Save training history
     # =========================================================================
     history_path = Path(args.history_output)
     history_path.parent.mkdir(parents=True, exist_ok=True)
@@ -927,10 +977,11 @@ def main():
     print("\n" + "=" * 60)
     print("Training complete!")
     print("=" * 60)
-    print(f"Best model saved to:     {args.model_output}")
+    print(f"Best model saved to:       {args.model_output}")
     print(f"Training history saved to: {args.history_output}")
-    print(f"Best validation accuracy: {best_val_acc:.4f}")
-    print(f"Test accuracy:            {test_acc:.4f}")
+    print(f"Inference results saved to: {args.results_output}")
+    print(f"Best validation accuracy:  {best_val_acc:.4f}")
+    print(f"Test accuracy:             {test_acc:.4f}")
 
 
 if __name__ == '__main__':
