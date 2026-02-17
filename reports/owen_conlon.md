@@ -2,7 +2,7 @@
 
 **GitHub Username(s):** ohenconlon
 **Email(s):** 167807269+ohenconlon@users.noreply.github.com, owen.conlon@du.edu
-**Report Generated:** 2026-02-17 13:34:38
+**Report Generated:** 2026-02-16 16:02:37
 **Branches Analyzed:** main
 
 ---
@@ -19,7 +19,7 @@
 | PRs Assigned | 8 |
 | PRs Reviewed | 6 |
 | PRs Merged (as merger) | 0 |
-| Issues Created | 12 |
+| Issues Created | 11 |
 | Issues Commented | 1 |
 | Files Changed | 3 |
 
@@ -27,8 +27,8 @@
 
 ## Issues
 
-### Created (12)
-#29, #30, #31, #32, #33, #34, #35, #36, #132, #133, #134, #202
+### Created (11)
+#29, #30, #31, #32, #33, #34, #35, #36, #132, #133, #134
 
 ### Commented (1)
 #33
