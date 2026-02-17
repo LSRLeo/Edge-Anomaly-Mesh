@@ -695,7 +695,7 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
         3. Stack all features and labels
     """
     from pathlib import Path
-    from ml.data_pipeline import load_json_data, create_windows, windows_to_features
+    from data_pipeline import load_json_data, create_windows, windows_to_features
 
     # Create feature extractor
     extractor = FeatureExtractor(sample_rate=50)
