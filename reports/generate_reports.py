@@ -169,6 +169,90 @@ def get_timeline_data(prs, issues, comments):
 
     return dict(timeline)
 
+def get_contributor_timeline(emails, gh_usernames, prs, issues, comments):
+    """Get daily activity timeline for a specific contributor."""
+    from datetime import date as date_class, timedelta
+
+    usernames_lower = [u.lower() for u in gh_usernames]
+    emails_lower = [e.lower() for e in emails]
+
+    timeline = defaultdict(lambda: {
+        'commits': 0,
+        'issues_created': 0,
+        'issues_commented': 0,
+        'prs_created': 0,
+        'prs_merged': 0,
+        'prs_reviewed': 0,
+    })
+
+    # Get commits by date from git (filtered by this contributor's emails)
+    commit_data = run_cmd(f"git log {BRANCH_SPEC} --no-merges --format='%as %ae'")
+    for line in commit_data.split('\n'):
+        if line:
+            parts = line.split(' ', 1)
+            if len(parts) == 2:
+                date, email = parts
+                if email.lower() in emails_lower:
+                    timeline[date]['commits'] += 1
+
+    # Issues created by date
+    for issue in issues:
+        author = issue.get('author', {}).get('login', '').lower()
+        if author in usernames_lower:
+            created_at = issue.get('createdAt', '')
+            if created_at:
+                date = created_at[:10]
+                timeline[date]['issues_created'] += 1
+
+    # Issue comments by date
+    for comment in comments:
+        commenter = comment.get('user', {}).get('login', '').lower()
+        if commenter in usernames_lower:
+            created_at = comment.get('created_at', '')
+            if created_at:
+                date = created_at[:10]
+                timeline[date]['issues_commented'] += 1
+
+    # PRs created by date
+    for pr in prs:
+        author = pr.get('author', {}).get('login', '').lower()
+        if author in usernames_lower:
+            created_at = pr.get('createdAt', '')
+            if created_at:
+                date = created_at[:10]
+                timeline[date]['prs_created'] += 1
+
+        # PRs merged by date
+        merger = pr.get('mergedBy', {})
+        if merger and merger.get('login', '').lower() in usernames_lower:
+            merged_at = pr.get('mergedAt', '')
+            if merged_at:
+                date = merged_at[:10]
+                timeline[date]['prs_merged'] += 1
+
+    # Get PR reviews with dates
+    for pr in prs:
+        if pr.get('reviews'):
+            for review in pr.get('reviews', []):
+                reviewer = review.get('author', {}).get('login', '').lower()
+                if reviewer in usernames_lower:
+                    # Need to fetch actual review date from API
+                    pr_num = pr['number']
+                    reviews_data = run_cmd(f"gh api repos/ComputerScienceUniversityofDenver/edge-anomly-mesh/pulls/{pr_num}/reviews 2>/dev/null")
+                    if reviews_data:
+                        api_reviews = json.loads(reviews_data)
+                        for api_review in api_reviews:
+                            api_reviewer = api_review.get('user', {}).get('login', '').lower()
+                            if api_reviewer in usernames_lower:
+                                submitted_at = api_review.get('submitted_at', '')
+                                if submitted_at:
+                                    date = submitted_at[:10]
+                                    timeline[date]['prs_reviewed'] += 1
+                    break  # Only fetch once per PR
+
+    return dict(timeline)
+
+
 def get_files_changed_by_emails(emails):
     """Get list of files changed by contributor across their emails in main branch."""
     files = set()
@@ -249,8 +333,9 @@ def get_issue_stats(gh_usernames, issues, comments):
 
     return issues_created, issues_commented
 
-def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments):
+def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments, contributor_timeline, global_date_range):
     """Generate a markdown report for a contributor."""
+    from datetime import date as date_class, timedelta
     # Aggregate commit stats across all emails
     total_commits = 0
     total_added = 0
@@ -367,7 +452,58 @@ Total non-merge commits in main branch: **{total_commits}**
 ## Files Changed ({len(files_changed)})
 
 {files_list}
+
+---
+
+## Timeline
+
 """
+
+    # Week calculation helpers (same as summary)
+    week1_start = date_class(2026, 1, 5)
+
+    def get_week_number(date_str):
+        d = date_class.fromisoformat(date_str)
+        if d < week1_start:
+            return 0
+        days_since = (d - week1_start).days
+        return (days_since // 7) + 1
+
+    def get_week_range(week_num):
+        start = week1_start + timedelta(days=(week_num - 1) * 7)
+        end = start + timedelta(days=6)
+        return f"{start.strftime('%b %d')} - {end.strftime('%b %d')}"
+
+    day_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+    report += """| Date | Day | Commits | Issues Created | Issues Commented | PRs Created | PRs Merged | PRs Reviewed |
+|------|-----|---------|----------------|------------------|-------------|------------|--------------|
+"""
+
+    start_date, end_date = global_date_range
+    current_date = start_date
+    current_week = None
+
+    while current_date <= end_date:
+        date_str = current_date.isoformat()
+        week_num = get_week_number(date_str)
+        day_name = day_names[current_date.weekday()]
+
+        # Add week header row
+        if week_num != current_week:
+            date_range = get_week_range(week_num)
+            report += f"| | | | **Week {week_num}:** {date_range} | | | | |\n"
+        current_week = week_num
+
+        # Get activity for this day, or zeros if no activity
+        day = contributor_timeline.get(date_str, {
+            'commits': 0, 'issues_created': 0, 'issues_commented': 0,
+            'prs_created': 0, 'prs_merged': 0, 'prs_reviewed': 0
+        })
+        report += f"| {date_str} | {day_name} | {day['commits']} | {day['issues_created']} | {day['issues_commented']} | {day['prs_created']} | {day['prs_merged']} | {day['prs_reviewed']} |\n"
+
+        current_date += timedelta(days=1)
+
     return report
 
 def main():
@@ -387,13 +523,26 @@ def main():
     email_groups = consolidate_contributors()
     gh_usernames_map = get_github_usernames()
 
+    # Calculate global date range for all timelines
+    from datetime import date as date_class
+    filtered_dates = sorted([d for d in timeline.keys() if d >= '2026-01-05'])
+    if filtered_dates:
+        start_date = date_class.fromisoformat(filtered_dates[0])
+        end_date = max(date_class.fromisoformat(filtered_dates[-1]), date_class.today())
+    else:
+        start_date = date_class(2026, 1, 5)
+        end_date = date_class.today()
+    global_date_range = (start_date, end_date)
+
     # Generate reports
     reports_dir = os.path.dirname(os.path.abspath(__file__))
 
     print("\nGenerating reports...")
     for name, emails in email_groups.items():
         gh_usernames = gh_usernames_map.get(name, [])
-        report = generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments)
+        print(f"  Building timeline for {name}...")
+        contributor_timeline = get_contributor_timeline(emails, gh_usernames, prs, issues, comments)
+        report = generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments, contributor_timeline, global_date_range)
 
         # Create filename from name
         filename = name.lower().replace(' ', '_') + '.md'
@@ -604,7 +753,7 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
         date_range = get_week_range(week_num)
         summary += f"| Week {week_num} | {date_range} | {w['commits']} | {w['issues_created']} | {w['issues_commented']} | {w['prs_created']} | {w['prs_merged']} | {w['prs_reviewed']} |\n"
 
-    # By Day table with week boundaries
+    # By Day table with week boundaries - show ALL days in the range
     summary += """
 ### By Day
 
@@ -613,10 +762,21 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
 """
     day_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     current_week = None
-    for date_str in filtered_dates:
+
+    # Determine the date range: from earliest activity to today (or latest activity)
+    if filtered_dates:
+        start_date = date_class.fromisoformat(filtered_dates[0])
+        end_date = max(date_class.fromisoformat(filtered_dates[-1]), date_class.today())
+    else:
+        start_date = week1_start
+        end_date = date_class.today()
+
+    # Iterate through every day in the range
+    current_date = start_date
+    while current_date <= end_date:
+        date_str = current_date.isoformat()
         week_num = get_week_number(date_str)
-        d = date_class.fromisoformat(date_str)
-        day_name = day_names[d.weekday()]
+        day_name = day_names[current_date.weekday()]
 
         # Add week header row (centered)
         if week_num != current_week:
@@ -624,8 +784,14 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
             summary += f"| | | | **Week {week_num}:** {date_range} | | | | |\n"
         current_week = week_num
 
-        day = timeline[date_str]
+        # Get activity for this day, or zeros if no activity
+        day = timeline.get(date_str, {
+            'commits': 0, 'issues_created': 0, 'issues_commented': 0,
+            'prs_created': 0, 'prs_merged': 0, 'prs_reviewed': 0
+        })
         summary += f"| {date_str} | {day_name} | {day['commits']} | {day['issues_created']} | {day['issues_commented']} | {day['prs_created']} | {day['prs_merged']} | {day['prs_reviewed']} |\n"
+
+        current_date += timedelta(days=1)
 
     summary += """
 ---
