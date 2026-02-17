@@ -29,8 +29,7 @@ class MotionDataset(Dataset):
         - Shuffle data each epoch
         - Load data in parallel
     """
-    
-    
+
 
     def __init__(self, features, labels):
 
@@ -62,8 +61,6 @@ class MotionDataset(Dataset):
         self.features = torch.from_numpy(features)  # float32
         self.labels = torch.from_numpy(labels)      # int64 (LongTensor)
 
-
-        pass  # TODO: Implement
     
     def __len__(self):
         """
@@ -74,7 +71,6 @@ class MotionDataset(Dataset):
         """
         return self.features.shape[0]
 
-        pass  # TODO: Implement
     
     def __getitem__(self, idx):
 
@@ -92,8 +88,6 @@ class MotionDataset(Dataset):
 
         return self.features[idx], self.labels[idx]
 
-        
-        pass  # TODO: Implement
 
 # ============================================================================
 # DATA LOADING
@@ -143,27 +137,3 @@ def normalize_features(features, scaler=None):
 
     # Return normalized features and scaler for future use
     return normalized, (mean, std)
-
-# def load_all_data(data_dir):
-
-#     """
-#     Load and process data from all motion types.
-    
-#     Args:
-#         data_dir: Path to data/generated_data directory
-    
-#     Returns:
-#         X: numpy array of features, shape (n_samples, n_features)
-#         y: numpy array of labels, shape (n_samples,)
-#         extractor: FeatureExtractor instance (for n_features info)
-    
-#     Implementation:
-#         1. Create FeatureExtractor
-#         2. For each motion type (idle, terrestrial, maritime, lift):
-#             a. Load CSV data
-#             b. Create windows
-#             c. Extract features
-#             d. Add to lists with appropriate labels
-#         3. Stack all features and labels
-#     """
-#     pass  # TODO: Implement
