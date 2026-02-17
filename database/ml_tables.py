@@ -31,7 +31,8 @@ from sqlalchemy import (
 
 # setup
 Base = declarative_base()
-DEFAULT_DB_PATH = 'ml.db'
+INFERENCE_DB_PATH = 'inference_results.db'
+ANOMALY_DB_PATH = 'anomaly_events.db'
 
 # SQLAlchemy ORM model for the inference_results table
 class inference_results(Base):
@@ -84,7 +85,7 @@ class InferenceResultsManager:
     Class to manage the inference results database.
     """
 
-    def __init__(self, db_path=DEFAULT_DB_PATH):
+    def __init__(self, db_path=INFERENCE_DB_PATH):
         abs_db_path = Path(db_path).resolve()
         print(f"[InferenceResultsManager] Using database at: {abs_db_path}")
         self.engine = create_engine(f'sqlite+pysqlite:///{abs_db_path}', echo=False)
@@ -153,7 +154,7 @@ class AnomalyEventsManager:
     Class to manage the anomaly events database.
     """
 
-    def __init__(self, db_path=DEFAULT_DB_PATH):
+    def __init__(self, db_path=ANOMALY_DB_PATH):
         abs_db_path = Path(db_path).resolve()
         print(f"[AnomalyEventsManager] Using database at: {abs_db_path}")
         self.engine = create_engine(f'sqlite+pysqlite:///{abs_db_path}', echo=False)
