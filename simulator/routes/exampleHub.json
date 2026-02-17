@@ -1,0 +1,40 @@
+{
+  "hubs": [
+    {
+      "name": "Hub A",
+      "gps_lat": 39.7392,
+      "gps_lon": -104.9903,
+      "alt": 1609.3,
+      "time_at_hub": 5,
+      "mode": "terrestrial",
+      "lift_time": 0
+    },
+    {
+      "name": "Hub B",
+      "gps_lat": 39.7420,
+      "gps_lon": -104.5915,
+      "alt": 1612.8,
+      "time_at_hub": 5,
+      "mode": "lift",
+      "lift_time": 5
+    },
+    {
+      "name": "Hub C",
+      "gps_lat": 39.7420,
+      "gps_lon": -104.5915,
+      "alt": 1612.8,
+      "time_at_hub": 5,
+      "mode": "maritime",
+      "lift_time": 0
+    },
+    {
+      "name": "Hub D",
+      "gps_lat": 39.5420,
+      "gps_lon": -103.5915,
+      "alt": 1612.8,
+      "time_at_hub": 5,
+      "mode": "maritime",
+      "lift_time": 0
+    }
+  ]
+}
