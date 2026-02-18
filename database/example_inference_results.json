@@ -1,0 +1,332 @@
+[
+  {
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:14.818400",
+    "window": {
+      "start": "2026-01-22T18:52:12.818400",
+      "end": "2026-01-22T18:52:14.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.963,
+    "anomaly": {
+      "detected": false,
+      "score": 0.063,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 39.7
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 40
+  },
+  {
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:16.818400",
+    "window": {
+      "start": "2026-01-22T18:52:14.818400",
+      "end": "2026-01-22T18:52:16.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.931,
+    "anomaly": {
+      "detected": false,
+      "score": 0.061,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 27.1
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 56
+  },
+  {
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:18.818400",
+    "window": {
+      "start": "2026-01-22T18:52:16.818400",
+      "end": "2026-01-22T18:52:18.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.995,
+    "anomaly": {
+      "detected": false,
+      "score": 0.064,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 43.1
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 31
+  },
+  {
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:20.818400",
+    "window": {
+      "start": "2026-01-22T18:52:18.818400",
+      "end": "2026-01-22T18:52:20.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.913,
+    "anomaly": {
+      "detected": false,
+      "score": 0.056,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 45.2
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 57
+  },
+  {
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:22.818400",
+    "window": {
+      "start": "2026-01-22T18:52:20.818400",
+      "end": "2026-01-22T18:52:22.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.922,
+    "anomaly": {
+      "detected": false,
+      "score": 0.128,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 15.9
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 49
+  },
+  {
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:14.818400",
+    "window": {
+      "start": "2026-01-22T18:52:12.818400",
+      "end": "2026-01-22T18:52:14.818400",
+      "samples": 100
+    },
+    "location_state": "TRANSIT",
+    "motion_class": "TERRESTRIAL",
+    "confidence": 0.939,
+    "anomaly": {
+      "detected": false,
+      "score": 0.177,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_chicago_01",
+      "distance_m": 15475.5
+    },
+    "features": {
+      "rms_accel": 0.42,
+      "peak_accel": 1.15,
+      "dominant_freq_hz": 3.2,
+      "variance_x": 0.12,
+      "variance_y": 0.08,
+      "variance_z": 0.015
+    },
+    "processing_time_ms": 42
+  },
+  {
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:16.818400",
+    "window": {
+      "start": "2026-01-22T18:52:14.818400",
+      "end": "2026-01-22T18:52:16.818400",
+      "samples": 100
+    },
+    "location_state": "TRANSIT",
+    "motion_class": "TERRESTRIAL",
+    "confidence": 0.853,
+    "anomaly": {
+      "detected": false,
+      "score": 0.163,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_chicago_01",
+      "distance_m": 12301.5
+    },
+    "features": {
+      "rms_accel": 0.42,
+      "peak_accel": 1.15,
+      "dominant_freq_hz": 3.2,
+      "variance_x": 0.12,
+      "variance_y": 0.08,
+      "variance_z": 0.015
+    },
+    "processing_time_ms": 67
+  },
+  {
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:18.818400",
+    "window": {
+      "start": "2026-01-22T18:52:16.818400",
+      "end": "2026-01-22T18:52:18.818400",
+      "samples": 100
+    },
+    "location_state": "TRANSIT",
+    "motion_class": "TERRESTRIAL",
+    "confidence": 0.809,
+    "anomaly": {
+      "detected": false,
+      "score": 0.194,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_chicago_01",
+      "distance_m": 34328.3
+    },
+    "features": {
+      "rms_accel": 0.42,
+      "peak_accel": 1.15,
+      "dominant_freq_hz": 3.2,
+      "variance_x": 0.12,
+      "variance_y": 0.08,
+      "variance_z": 0.015
+    },
+    "processing_time_ms": 57
+  },
+  {
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:20.818400",
+    "window": {
+      "start": "2026-01-22T18:52:18.818400",
+      "end": "2026-01-22T18:52:20.818400",
+      "samples": 100
+    },
+    "location_state": "TRANSIT",
+    "motion_class": "TERRESTRIAL",
+    "confidence": 0.933,
+    "anomaly": {
+      "detected": false,
+      "score": 0.178,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_chicago_01",
+      "distance_m": 12690.2
+    },
+    "features": {
+      "rms_accel": 0.42,
+      "peak_accel": 1.15,
+      "dominant_freq_hz": 3.2,
+      "variance_x": 0.12,
+      "variance_y": 0.08,
+      "variance_z": 0.015
+    },
+    "processing_time_ms": 40
+  },
+  {
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:22.818400",
+    "window": {
+      "start": "2026-01-22T18:52:20.818400",
+      "end": "2026-01-22T18:52:22.818400",
+      "samples": 100
+    },
+    "location_state": "TRANSIT",
+    "motion_class": "TERRESTRIAL",
+    "confidence": 0.947,
+    "anomaly": {
+      "detected": false,
+      "score": 0.115,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_chicago_01",
+      "distance_m": 40085.6
+    },
+    "features": {
+      "rms_accel": 0.42,
+      "peak_accel": 1.15,
+      "dominant_freq_hz": 3.2,
+      "variance_x": 0.12,
+      "variance_y": 0.08,
+      "variance_z": 0.015
+    },
+    "processing_time_ms": 45
+  },
+  {
+    "node_id": "node_003",
+    "timestamp": "2026-01-22T18:52:17.818400",
+    "window": {
+      "start": "2026-01-22T18:52:15.818400",
+      "end": "2026-01-22T18:52:17.818400",
+      "samples": 100
+    },
+    "location_state": "TRANSIT",
+    "motion_class": "TERRESTRIAL",
+    "confidence": 0.72,
+    "anomaly": {
+      "detected": true,
+      "score": 0.85,
+      "type": "IMPACT"
+    },
+    "nearest_hub": {
+      "hub_id": "hub_la_01",
+      "distance_m": 12450.5
+    },
+    "features": {
+      "rms_accel": 2.35,
+      "peak_accel": 5.8,
+      "dominant_freq_hz": 3.1,
+      "variance_x": 1.85,
+      "variance_y": 1.42,
+      "variance_z": 0.95
+    },
+    "processing_time_ms": 52
+  }
+]
