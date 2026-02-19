@@ -1,8 +1,9 @@
-# Issue Report
+# Issue Report: W26-Sprint 2
 
 **Repository:** edge-anomaly-mesh
-**Report Generated:** 2026-02-19 14:26:37
-**Total Issues:** 127 (excluding backlog milestones)
+**Report Generated:** 2026-02-19 14:41:38
+**Target per Person:** 10 issues
+**Total Issues:** 35
 
 ---
 
@@ -10,121 +11,116 @@
 
 | Team | Open | Closed | Total |
 |------|------|--------|-------|
-| ML TEAM | 13 | 25 | 38 |
-| DB TEAM | 1 | 15 | 16 |
-| DE TEAM | 15 | 19 | 34 |
-| UI TEAM | 3 | 13 | 16 |
-| (No Team Label) | 0 | 23 | 23 |
-| **Total** | **32** | **95** | **127** |
+| ML TEAM | 13 | 3 | 16 |
+| DB TEAM | 1 | 0 | 1 |
+| DE TEAM | 15 | 0 | 15 |
+| UI TEAM | 3 | 0 | 3 |
+| (No Team Label) | 0 | 0 | 0 |
+| **Total** | **32** | **3** | **35** |
 
 ---
 
-## ML TEAM
+## ML TEAM (16/40)
 
-**Total Issues:** 38
+### Alyssa Bulai (8/10)
 
-### Alyssa Bulai (5 open)
+- #56: Confidence score of terrain type prediction
+- #208: Fix output of model
+- #232: Implement functionality to save a PyTorch model
+- #233: Update README
+- #234: Fix training data being input to the model
+- ~~#54: Add functionality to load and process data from all motion types~~
+- ~~#55: Predict terrain type~~
+- ~~#58: Initialize neural network with PyTorch~~
 
-- #56: Confidence score of terrain type prediction [W26-Sprint 2]
-- #208: Fix output of model [W26-Sprint 2]
-- #232: Implement functionality to save a PyTorch model [W26-Sprint 2]
-- #233: Update README [W26-Sprint 2]
-- #234: Fix training data being input to the model [W26-Sprint 2]
+### Daniel Kaplan (8/10)
 
-### Daniel Kaplan (8 open)
+- #235: Implement Redis Subscriber for Live Data Ingestion
+- #236: Develop Node Specific Hash Map for Buffer Management
+- #237: Integrate Real Time Sliding Window Queue
+- #238: Apply Stride and Overlap Logic to Stream Handler
+- #239: Refactor Data Pipeline for NumPy Conversion Reusability
+- #240: Implement Handling for Out-of-Order Packets
+- #241: Preserve Ground Truth and Metadata in Stream Context
+- #242: Create Node Cleanup Routine for Memory Management
 
-- #235: Implement Redis Subscriber for Live Data Ingestion [W26-Sprint 2]
-- #236: Develop Node Specific Hash Map for Buffer Management [W26-Sprint 2]
-- #237: Integrate Real Time Sliding Window Queue [W26-Sprint 2]
-- #238: Apply Stride and Overlap Logic to Stream Handler [W26-Sprint 2]
-- #239: Refactor Data Pipeline for NumPy Conversion Reusability [W26-Sprint 2]
-- #240: Implement Handling for Out-of-Order Packets [W26-Sprint 2]
-- #241: Preserve Ground Truth and Metadata in Stream Context [W26-Sprint 2]
-- #242: Create Node Cleanup Routine for Memory Management [W26-Sprint 2]
+### Tristian Bradley (0/10)
 
-### Tristian Bradley (0 open)
+*No issues assigned*
 
-*No open issues assigned*
+### Truman Davis (0/10)
 
-### Truman Davis (0 open)
-
-*No open issues assigned*
-
-
----
-
-## DB TEAM
-
-**Total Issues:** 16
-
-### Diego Ramirez (0 open)
-
-*No open issues assigned*
-
-### Hannah Caldini (1 open)
-
-- #231: DB Message Manager [W26-Sprint 2]
-
-### Kailar Hayes (0 open)
-
-*No open issues assigned*
+*No issues assigned*
 
 
 ---
 
-## DE TEAM
+## DB TEAM (1/30)
 
-**Total Issues:** 34
+### Diego Ramirez (0/10)
 
-### Aldo Rios (2 open)
+*No issues assigned*
 
-- #7: DE - Raw Data Distributor [W26-Sprint 2]
-- #8: DE - Anomalies [W26-Sprint 2]
+### Hannah Caldini (1/10)
 
-### Leo Liu (11 open)
+- #231: DB Message Manager
 
-- #7: DE - Raw Data Distributor [W26-Sprint 2]
-- #8: DE - Anomalies [W26-Sprint 2]
-- #222: Waypoint [W26-Sprint 2]
-- #223: Build Waypoint Abstract/Interface Class [W26-Sprint 2]
-- #224: Refine Route Definitions [W26-Sprint 2]
-- #225: Refine Hub [W26-Sprint 2]
-- #226: Terrestrial Add-on [W26-Sprint 2]
-- #227: Package stuck in Traffic [W26-Sprint 2]
-- #228: Add Stops [W26-Sprint 2]
-- #229: Add vehicle going up/down a hill [W26-Sprint 2]
-- #230: Function for the probability of anomalies appearance [W26-Sprint 2]
+### Kailar Hayes (0/10)
 
-### Sean Osman (2 open)
-
-- #7: DE - Raw Data Distributor [W26-Sprint 2]
-- #8: DE - Anomalies [W26-Sprint 2]
-
-### Unassigned (4 open)
-
-- #20: Anomaly Label [W26-Sprint 2]
-- #25: Redis Channels [W26-Sprint 2]
-- #26: Redis [W26-Sprint 2]
-- #220: Batching messages to channels [W26-Sprint 2]
+*No issues assigned*
 
 
 ---
 
-## UI TEAM
+## DE TEAM (15/30)
 
-**Total Issues:** 16
+### Aldo Rios (2/10)
 
-### George Rumsey (0 open)
+- #7: DE - Raw Data Distributor
+- #8: DE - Anomalies
 
-*No open issues assigned*
+### Leo Liu (11/10)
 
-### Owen Conlon (3 open)
+- #7: DE - Raw Data Distributor
+- #8: DE - Anomalies
+- #222: Waypoint
+- #223: Build Waypoint Abstract/Interface Class
+- #224: Refine Route Definitions
+- #225: Refine Hub
+- #226: Terrestrial Add-on
+- #227: Package stuck in Traffic
+- #228: Add Stops
+- #229: Add vehicle going up/down a hill
+- #230: Function for the probability of anomalies appearance
 
-- #36: Issue: Integrate Network Tab with Database to Load Node Data [W26-Sprint 2]
-- #202: Change visuals [W26-Sprint 2]
-- #217: Dynamic Sizing Windows [W26-Sprint 2]
+### Sean Osman (2/10)
 
-### Ty Esmond (0 open)
+- #7: DE - Raw Data Distributor
+- #8: DE - Anomalies
 
-*No open issues assigned*
+### Unassigned (4)
+
+- #20: Anomaly Label
+- #25: Redis Channels
+- #26: Redis
+- #220: Batching messages to channels
+
+
+---
+
+## UI TEAM (3/30)
+
+### George Rumsey (0/10)
+
+*No issues assigned*
+
+### Owen Conlon (3/10)
+
+- #36: Issue: Integrate Network Tab with Database to Load Node Data
+- #202: Change visuals
+- #217: Dynamic Sizing Windows
+
+### Ty Esmond (0/10)
+
+*No issues assigned*
 

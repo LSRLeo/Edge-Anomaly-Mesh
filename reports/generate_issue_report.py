@@ -6,6 +6,12 @@ import subprocess
 from collections import defaultdict
 from datetime import datetime
 
+# Target milestone
+TARGET_MILESTONE = 'W26-Sprint 2'
+
+# Target issues per person
+TARGET_PER_PERSON = 10
+
 # Team labels to group by
 TEAM_LABELS = ['ML TEAM', 'DB TEAM', 'DE TEAM', 'UI TEAM']
 
@@ -55,12 +61,11 @@ def get_issues():
     return json.loads(issues_data) if issues_data else []
 
 
-def is_backlog_milestone(milestone):
-    """Check if milestone is a backlog milestone."""
+def is_target_milestone(milestone):
+    """Check if milestone matches target milestone."""
     if not milestone:
         return False
-    name = milestone.get('title', '').lower()
-    return 'backlog' in name
+    return milestone.get('title', '') == TARGET_MILESTONE
 
 
 def get_team_label(labels):
@@ -79,12 +84,11 @@ def get_assignee_name(login):
 
 def generate_report(issues):
     """Generate the markdown report."""
-    # Filter out backlog issues and instructor-only issues
+    # Filter to only include target milestone issues
     filtered_issues = []
     for issue in issues:
-        if is_backlog_milestone(issue.get('milestone')):
-            continue
-        filtered_issues.append(issue)
+        if is_target_milestone(issue.get('milestone')):
+            filtered_issues.append(issue)
 
     # Group by team label
     by_team = defaultdict(list)
@@ -114,11 +118,12 @@ def generate_report(issues):
         return by_assignee, unassigned
 
     # Build report
-    report = f"""# Issue Report
+    report = f"""# Issue Report: {TARGET_MILESTONE}
 
 **Repository:** edge-anomaly-mesh
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Total Issues:** {len(filtered_issues)} (excluding backlog milestones)
+**Target per Person:** {TARGET_PER_PERSON} issues
+**Total Issues:** {len(filtered_issues)}
 
 ---
 
@@ -136,9 +141,9 @@ def generate_report(issues):
         report += f"| {team} | {open_count} | {closed_count} | {len(team_issues)} |\n"
 
     # No team label
-    open_no_team = sum(1 for i in no_team if i.get('state') == 'OPEN')
-    closed_no_team = sum(1 for i in no_team if i.get('state') == 'CLOSED')
-    report += f"| (No Team Label) | {open_no_team} | {closed_no_team} | {len(no_team)} |\n"
+    open_no_team_count = sum(1 for i in no_team if i.get('state') == 'OPEN')
+    closed_no_team_count = sum(1 for i in no_team if i.get('state') == 'CLOSED')
+    report += f"| (No Team Label) | {open_no_team_count} | {closed_no_team_count} | {len(no_team)} |\n"
 
     # Totals
     total_open = sum(1 for i in filtered_issues if i.get('state') == 'OPEN')
@@ -150,17 +155,14 @@ def generate_report(issues):
         team_issues = by_team.get(team, [])
         by_assignee, unassigned = group_by_assignee(team_issues)
 
-        report += f"\n---\n\n## {team}\n\n"
-        report += f"**Total Issues:** {len(team_issues)}\n\n"
-
-        if not team_issues:
-            report += "*No issues with this label*\n"
-            continue
-
         # Get all team members for this team
         team_members = TEAM_MEMBERS.get(team, [])
+        team_goal = len(team_members) * TARGET_PER_PERSON
+        team_total = len(team_issues)
 
-        # List all team members (even those with no open issues)
+        report += f"\n---\n\n## {team} ({team_total}/{team_goal})\n\n"
+
+        # List all team members
         for login in sorted(team_members, key=lambda x: get_assignee_name(x)):
             name = get_assignee_name(login)
             # Find issues for this user (case-insensitive match)
@@ -171,41 +173,47 @@ def generate_report(issues):
                     if key.lower() == login.lower():
                         assignee_issues = by_assignee[key]
                         break
+
             open_issues = [i for i in assignee_issues if i.get('state') == 'OPEN']
-            count = len(open_issues)
+            closed_issues = [i for i in assignee_issues if i.get('state') == 'CLOSED']
+            total = len(assignee_issues)
 
-            report += f"### {name} ({count} open)\n\n"
+            report += f"### {name} ({total}/{TARGET_PER_PERSON})\n\n"
 
-            if open_issues:
+            if not assignee_issues:
+                report += "*No issues assigned*\n"
+            else:
+                # List open issues first, then closed with strikethrough
                 for issue in sorted(open_issues, key=lambda x: x['number']):
                     title = issue['title']
                     num = issue['number']
-                    milestone = issue.get('milestone')
-                    milestone_str = f" [{milestone.get('title')}]" if milestone else ""
-                    report += f"- #{num}: {title}{milestone_str}\n"
-            else:
-                report += "*No open issues assigned*\n"
+                    report += f"- #{num}: {title}\n"
+                for issue in sorted(closed_issues, key=lambda x: x['number']):
+                    title = issue['title']
+                    num = issue['number']
+                    report += f"- ~~#{num}: {title}~~\n"
             report += "\n"
 
-        # Unassigned issues (open only)
-        open_unassigned = [i for i in unassigned if i.get('state') == 'OPEN']
-        if open_unassigned:
-            report += f"### Unassigned ({len(open_unassigned)} open)\n\n"
+        # Unassigned issues
+        if unassigned:
+            open_unassigned = [i for i in unassigned if i.get('state') == 'OPEN']
+            closed_unassigned = [i for i in unassigned if i.get('state') == 'CLOSED']
+            report += f"### Unassigned ({len(unassigned)})\n\n"
             for issue in sorted(open_unassigned, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                milestone = issue.get('milestone')
-                milestone_str = f" [{milestone.get('title')}]" if milestone else ""
-                report += f"- #{num}: {title}{milestone_str}\n"
+                report += f"- #{num}: {title}\n"
+            for issue in sorted(closed_unassigned, key=lambda x: x['number']):
+                title = issue['title']
+                num = issue['number']
+                report += f"- ~~#{num}: {title}~~\n"
             report += "\n"
 
-    # No team label section (open issues only)
-    open_no_team = [i for i in no_team if i.get('state') == 'OPEN']
-    if open_no_team:
+    # No team label section
+    if no_team:
         report += "\n---\n\n## Issues Without Team Label\n\n"
-        report += f"**Open Issues:** {len(open_no_team)}\n\n"
 
-        by_assignee, unassigned = group_by_assignee(open_no_team)
+        by_assignee, unassigned = group_by_assignee(no_team)
 
         for login in sorted(by_assignee.keys(), key=lambda x: get_assignee_name(x)):
             name = get_assignee_name(login)
@@ -214,24 +222,33 @@ def generate_report(issues):
             if not assignee_issues:
                 continue
 
-            report += f"### {name} ({len(assignee_issues)} open)\n\n"
+            open_issues = [i for i in assignee_issues if i.get('state') == 'OPEN']
+            closed_issues = [i for i in assignee_issues if i.get('state') == 'CLOSED']
 
-            for issue in sorted(assignee_issues, key=lambda x: x['number']):
+            report += f"### {name} ({len(assignee_issues)})\n\n"
+
+            for issue in sorted(open_issues, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                milestone = issue.get('milestone')
-                milestone_str = f" [{milestone.get('title')}]" if milestone else ""
-                report += f"- #{num}: {title}{milestone_str}\n"
+                report += f"- #{num}: {title}\n"
+            for issue in sorted(closed_issues, key=lambda x: x['number']):
+                title = issue['title']
+                num = issue['number']
+                report += f"- ~~#{num}: {title}~~\n"
             report += "\n"
 
         if unassigned:
-            report += f"### Unassigned ({len(unassigned)} open)\n\n"
-            for issue in sorted(unassigned, key=lambda x: x['number']):
+            open_unassigned = [i for i in unassigned if i.get('state') == 'OPEN']
+            closed_unassigned = [i for i in unassigned if i.get('state') == 'CLOSED']
+            report += f"### Unassigned ({len(unassigned)})\n\n"
+            for issue in sorted(open_unassigned, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                milestone = issue.get('milestone')
-                milestone_str = f" [{milestone.get('title')}]" if milestone else ""
-                report += f"- #{num}: {title}{milestone_str}\n"
+                report += f"- #{num}: {title}\n"
+            for issue in sorted(closed_unassigned, key=lambda x: x['number']):
+                title = issue['title']
+                num = issue['number']
+                report += f"- ~~#{num}: {title}~~\n"
             report += "\n"
 
     return report
@@ -242,9 +259,9 @@ def main():
     issues = get_issues()
     print(f"  Found {len(issues)} total issues")
 
-    # Count backlog issues
-    backlog_count = sum(1 for i in issues if is_backlog_milestone(i.get('milestone')))
-    print(f"  Excluding {backlog_count} backlog issues")
+    # Count target milestone issues
+    target_count = sum(1 for i in issues if is_target_milestone(i.get('milestone')))
+    print(f"  Found {target_count} issues in {TARGET_MILESTONE}")
 
     print("Generating report...")
     report = generate_report(issues)
