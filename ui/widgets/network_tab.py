@@ -22,6 +22,7 @@ import os
 import json
 from datetime import datetime
 from datetime import timedelta
+from PIL import Image, ImageTk
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
 #    ANOMALY_BORDER_COLOR, ANOMALY_BORDER_WIDTH,
@@ -207,7 +208,12 @@ class NetworkTab(ttk.Frame):
         h_scroll.grid(row=1, column=0, sticky='ew')
         self.canvas.configure(yscrollcommand=v_scroll.set,
                               xscrollcommand=h_scroll.set)
-        
+        # Implement Background
+        # Load Map
+        map_image = Image.open("widgetextras/mercator.jpg")
+        self.map_photo = ImageTk.PhotoImage(map_image)
+        self.canvas.create_image(0,0,image=self.map_photo, anchor='nw')
+
         # Draw Nodes
 
         # Bind click event
@@ -321,7 +327,8 @@ class NetworkTab(ttk.Frame):
             x, y + r + 10,
             text=node_id,
             font=('Arial', 8),
-            tags=('node', f'{node_id}_label -- anomaly: {is_anomaly} motion_class: {motion_class}')
+            tags=('node', f'{node_id}_label -- anomaly: {is_anomaly} motion_class: {motion_class}'),
+            fill='white'
         )
         self.node_items[node_id] = item_id
         # TODO: implement color and legend
@@ -554,7 +561,7 @@ def demo():
     """Demonstrate the NetworkTab independently."""
     root = tk.Tk()
     root.title("Network Tab Demo")
-    root.geometry("800x600")
+    root.geometry("800x1000")
     
     # Create a mock dashboard
     class MockDashboard:
