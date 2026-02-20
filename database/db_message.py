@@ -55,3 +55,12 @@ class Message(ABC):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(m_id='{self.m_id}', m_type='{self.m_type}')"
     
+class MessageResponse(Message):
+    """
+    Message Response Class
+    Message Response does not have a fixed M_TYPE, (it can be either get-nodes-response or get-datum-response or others)
+    """
+    def __init__(self, m_id: int, m_type: str, m_content: Dict[str, Any] = None):
+        self.M_TYPE = m_type #override M_TYPE in constructor
+        super().__init__(m_id, m_content)
+        
