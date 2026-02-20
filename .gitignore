@@ -149,10 +149,10 @@ venv.bak/
 
 # Database miscellaneous files
 *.db
-*.db-shm
-*.db-wal
 /database/*.db*
-/database/*.sqlite*
+*.db-wal
+*.db-shm
+
 
 
 # Spyder project settings
