@@ -31,6 +31,7 @@ from sqlalchemy import (
 # setup
 Base = declarative_base()
 DEFAULT_DB_PATH = 'edge_anomaly_mesh.db'
+engine = create_engine(f'sqlite+pysqlite:///{DEFAULT_DB_PATH}', echo=True)
 
 class RawSensorData(Base):
     """
@@ -41,6 +42,7 @@ class RawSensorData(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String, nullable=False)
     timestamp = Column(Float, nullable=False)  # Unix timestamp
+    seq = Column(Integer, nullable=False)  # Sequence number for ordering
 
     accel_x = Column(Float, nullable=False)
     accel_y = Column(Float, nullable=False)
@@ -49,6 +51,10 @@ class RawSensorData(Base):
     gyro_x = Column(Float, nullable=False)
     gyro_y = Column(Float, nullable=False)
     gyro_z = Column(Float, nullable=False)
+
+    gps_lat = Column(Float, nullable=False)
+    gps_lon = Column(Float, nullable=False)
+    gps_altitude_m = Column(Float, nullable=False)
 
     ingested_at = Column(
         Float,
@@ -62,7 +68,6 @@ class RawSensorData(Base):
 class Node(Base):
     __tablename__ = 'nodes'
     node_id = Column(String, primary_key=True, nullable=False)
-    seq = Column(Integer, nullable=False)
     status = Column(String, CheckConstraint("status IN ('active', 'inactive')", name='status_check'), default='active', nullable=False)
     first_seen = Column(DateTime, nullable=False)
     last_seen = Column(DateTime, nullable=False)
@@ -107,6 +112,9 @@ class anomaly_events(Base):
     SQLAlchemy ORM model for the anomaly_events table
     """
     __tablename__ = 'anomaly_events'
+
+    inference_id = Column(Integer, nullable=False)  # Foreign key to inference_results.id
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String, nullable=False)
     start_timestamp = Column(Float, nullable=False)
@@ -117,4 +125,14 @@ class anomaly_events(Base):
     acknowledged_by = Column(String)
     acknowledged_at = Column(Float)
 
-    __table_args__ = (ForeignKeyConstraint(['node_id'], ['nodes.node_id'], name='fk_anomaly_node'),)
+    __table_args__ = (ForeignKeyConstraint(['node_id'], ['nodes.node_id'], name='fk_anomaly_node'),
+                      ForeignKeyConstraint(['inference_id'], ['inference_results.id'], name='fk_anomaly_inference'),)
+    
+def create_schema():
+    """
+    Creates the database schema by creating all tables defined in the ORM models.
+    """
+    Base.metadata.create_all(engine)
+
+if __name__ == "__main__":
+    create_schema()
