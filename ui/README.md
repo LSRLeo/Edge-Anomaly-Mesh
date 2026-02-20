@@ -8,3 +8,22 @@ Netowork - Visual map showing all nodes; color-coded by motion state (IDLE=gray,
 Anomalies - Live feed of detected anomalies with timestamp, node, severity, status; filter by node/severity/time
 Analytics - Motion class pie chart, anomaly rate trend line, top anomalous nodes bar chart, processing statistics
 Node Detials - Drill-down view: select node, see motion history table, anomaly score trend, feature heatmap
+
+
+## Sprint 1:
+    network_tab.py
+        json/node parsing
+        implemented node drawing on a blank canvas
+        anomaly toggling with right click
+        node highlighting (blue outline when left clicked) and displaying details in a popout window
+        legend integration
+        different node outline for anomalous and non anomalous
+
+        to run starting from edge-anomaly-mesh folder
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 network_tab.py
+
+        (note that there is an issue that broke anomaly toggling but thats been fixed in sprint 2 already)
