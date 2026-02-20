@@ -23,6 +23,12 @@ import json
 from datetime import datetime
 from datetime import timedelta
 from PIL import Image, ImageTk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+import numpy as np
+import math
+
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
 #    ANOMALY_BORDER_COLOR, ANOMALY_BORDER_WIDTH,
@@ -40,14 +46,38 @@ from PIL import Image, ImageTk
 
 
 MOCK_NODES = [
-    {'node_id': 'node_001', 'x': 150, 'y': 150, 'motion_class': 'IDLE', 'anomaly': False},
-    {'node_id': 'node_002', 'x': 300, 'y': 200, 'motion_class': 'TERRESTRIAL', 'anomaly': False},
-    {'node_id': 'node_003', 'x': 450, 'y': 150, 'motion_class': 'MARITIME', 'anomaly': True},
-    {'node_id': 'node_004', 'x': 250, 'y': 350, 'motion_class': 'LIFT', 'anomaly': False},
-    {'node_id': 'node_005', 'x': 400, 'y': 300, 'motion_class': 'IDLE', 'anomaly': True},
-    {'node_id': 'node_006', 'x': 550, 'y': 350, 'motion_class': 'TERRESTRIAL', 'anomaly': False},
+
+  {"node_id": "node_001", "lat": 40.2548, "lon": 105.6161, "motion_class": "IDLE", "anomaly": False},
+  {"node_id": "node_002", "lat": 51.5074, "lon": -0.1278, "motion_class": "TERRESTRIAL", "anomaly": False},
+  {"node_id": "node_003", "lat": 35.6762, "lon": 139.6503, "motion_class": "MARITIME", "anomaly": True},
+  {"node_id": "node_004", "lat": -33.8688, "lon": 151.2093, "motion_class": "LIFT", "anomaly": False},
+  {"node_id": "node_005", "lat": 48.8566, "lon": 2.3522, "motion_class": "IDLE", "anomaly": False},
+  {"node_id": "node_006", "lat": -23.5505, "lon": -46.6333, "motion_class": "TERRESTRIAL", "anomaly": False}
 ]
 # confidence list is [IDLE, GROUND, MARITIME, LIFT, IDLE_ANOMALY, TERRESTRIAL_ANOMALY, MARITIME_ANOMALY, LIFT_ANOMALY]
+
+class MercatorProjection:
+    """Convert Lat/Lon to pixel coords so Mercator map image can be displayed"""
+
+    def __init__(self, img_width, img_height, lat_min=-80.05, long_min=-180.0, long_max=180, lat_max=80.05):
+        self.img_width = img_width
+        self.img_height = img_height
+        self.long_min = long_min
+        self.long_max = long_max
+        self.merc_y_min = self._mercator_y(lat_min)
+        self.merc_y_max = self._mercator_y(lat_max)
+    
+    @staticmethod
+    def _mercator_y(lat_deg):
+        lat_deg = max(-85.05, min(85.05, lat_deg))
+        lat_rad = math.radians(lat_deg)
+        return math.log(math.tan(math.pi / 4 + lat_rad / 2))
+
+    def latlong_to_pixel(self, lat,long):
+        x = (long - self.long_min) / (self.long_max - self.long_min) * self.img_width
+        merc_y = self._mercator_y(lat)
+        y = (1 - (merc_y - self.merc_y_min) / (self.merc_y_max - self.merc_y_min)) * self.img_height
+        return x,y
 
 class NetworkTab(ttk.Frame):
     """
@@ -212,6 +242,7 @@ class NetworkTab(ttk.Frame):
         # Load Map
         map_image = Image.open("widgetextras/mercator.jpg")
         self.map_photo = ImageTk.PhotoImage(map_image)
+        self.projection = MercatorProjection(map_image.width, map_image.height)
         self.canvas.create_image(0,0,image=self.map_photo, anchor='nw')
 
         # Draw Nodes
@@ -293,8 +324,7 @@ class NetworkTab(ttk.Frame):
         if old_item:
             self.canvas.delete(old_item)
             self.canvas.delete(f'{node_id}_label')
-        x = node['x']
-        y = node['y']
+        px, py = self.projection.latlong_to_pixel(node['lat'], node['lon'])
         motion_class = node.get('motion_class','UNKNOWN')
         is_anomaly = node.get('anomaly', False)
         
@@ -304,7 +334,7 @@ class NetworkTab(ttk.Frame):
         if is_anomaly:
             outline_col = 'red'
             outline_width = self.ANOMALY_BORDER_WIDTH
-            item_id = self.canvas.create_polygon(x,y+10,x-10,y-10,x+10,y-10,
+            item_id = self.canvas.create_polygon(px,py+10,px-10,py-10,px+10,py-10,
             fill=fill_color,
             outline=outline_col,
             width=outline_width,
@@ -314,7 +344,7 @@ class NetworkTab(ttk.Frame):
             outline_col = 'black'
             outline_width = self.NODE_BORDER_WIDTH
             item_id = self.canvas.create_oval(
-            x - r, y - r, x + r, y + r,
+            px - r, py - r, px + r, py + r,
             fill=fill_color,
             outline=outline_col,
             width=outline_width,
@@ -324,7 +354,7 @@ class NetworkTab(ttk.Frame):
 
         # Draw label below node
         self.canvas.create_text(
-            x, y + r + 10,
+            px, py + r + 10,
             text=node_id,
             font=('Arial', 8),
             tags=('node', f'{node_id}_label -- anomaly: {is_anomaly} motion_class: {motion_class}'),
@@ -561,7 +591,7 @@ def demo():
     """Demonstrate the NetworkTab independently."""
     root = tk.Tk()
     root.title("Network Tab Demo")
-    root.geometry("800x1000")
+    root.geometry("1020x1600")
     
     # Create a mock dashboard
     class MockDashboard:
