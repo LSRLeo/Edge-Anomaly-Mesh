@@ -27,3 +27,27 @@ Node Detials - Drill-down view: select node, see motion history table, anomaly s
         python3 network_tab.py
 
         (note that there is an issue that broke anomaly toggling but thats been fixed in sprint 2 already)
+    anomalies_tab.py
+        json/node parsing with example hardcoded nodes
+        implemented a scrollable field that displays all active anamolous nodes.
+        divided into a wrapper widget which contains the scrollable area, will be used to divide different sections in future sprints.
+        Will allow for navigation directly to the node viewer tab to view a specific node
+
+        to run starting from edge-anomaly-mesh folder
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 anomalies_tab.py
+    node_details_tab.py
+        parses hardcoded node data
+        displays relevant data associated with node
+        can be opened in future sprints from home dashboard, network tab, or anomalies tab.
+        will allow in future sprints to change anomaly status
+
+        to run startig from edge-anomaly-mesh folder:
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 node_details_tab.py
