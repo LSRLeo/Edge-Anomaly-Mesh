@@ -45,9 +45,20 @@ Node Detials - Drill-down view: select node, see motion history table, anomaly s
         can be opened in future sprints from home dashboard, network tab, or anomalies tab.
         will allow in future sprints to change anomaly status
 
-        to run startig from edge-anomaly-mesh folder:
+        to run starting from edge-anomaly-mesh folder:
         source venv/bin/activate
         cd ui
         pip3 install -r requirements.txt
         cd widgets
         python3 node_details_tab.py
+    analytics_tab.py
+        parses generated sample data
+        shows 4 types of analytics(state pie chart, anomaly rate line graph, anomaly count bar graph, numerical stats)
+        in future can be open through main dashboard
+
+        to run starting from edge-anomaly-mesh folder
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 analytics_tab.py
