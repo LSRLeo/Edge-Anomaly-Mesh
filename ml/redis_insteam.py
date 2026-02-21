@@ -13,6 +13,7 @@ Usage:
 import redis
 import logging
 import json
+from collections import deque
 
 # ============================================================================
 # CONSTANTS
@@ -68,6 +69,7 @@ class RedisSubscriber:
             socket_connect_timeout=REDIS_TIMEOUT,
             socket_timeout=REDIS_TIMEOUT
         )
+        self.node_states = {}  # Maps node_id to buffer and state
         try:
             self.redis_client.ping()
             logger.info(f"Connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
@@ -102,7 +104,24 @@ class RedisSubscriber:
                 message = message.decode('utf-8')
 
             data = json.loads(message)
-            logger.info(f"Received message: {data}")
+
+            node_id = data.get('node_id')
+            if not node_id:
+                logger.warning("Missing node_id in message")
+                return
+
+            # Initialize buffer for new node_id
+            if node_id not in self.node_states:
+                self.node_states[node_id] = {
+                    'buffer': deque(),
+                    'stride_count': 0,
+                    'last_seq': -1
+                }
+
+            # Append new sample to node's buffer
+            self.node_states[node_id]['buffer'].append(data)
+
+            logger.info(f"Received message for node {node_id}: {data}")
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
 
