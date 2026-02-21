@@ -3,6 +3,11 @@
 redis_insteam.py
 
 Redis subscriber for live sensor data ingestion.
+
+Listens to the sensor:raw:* channel and logs incoming messages.
+
+Usage:
+    python redis_insteam.py
 """
 
 import redis
@@ -83,3 +88,28 @@ class RedisSubscriber:
         for message in pubsub.listen():
             if message['type'] == 'pmessage':
                 self.process_data(message['data'])
+
+    def process_data(self, message):
+        """
+        Process incoming messages, handle bytes or str.
+
+        Args:
+            message (str or bytes): The message payload.
+        """
+        try:
+            # Decode bytes if needed
+            if isinstance(message, bytes):
+                message = message.decode('utf-8')
+
+            data = json.loads(message)
+            logger.info(f"Received message: {data}")
+        except json.JSONDecodeError:
+            logger.warning(f"Received invalid JSON: {message}")
+
+# ============================================================================
+# MAIN ENTRY POINT
+# ============================================================================
+
+if __name__ == "__main__":
+    subscriber = RedisSubscriber(channel="sensor:raw:*")
+    subscriber.listen()
