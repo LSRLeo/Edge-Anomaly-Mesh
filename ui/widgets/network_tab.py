@@ -150,14 +150,7 @@ class NetworkTab(ttk.Frame):
         self._setup_legend()
         self._setup_canvas()
         ttk.Label(self, text="Network Tab - TODO: Implement canvas and legend").grid(row=2, column=0, pady=20)
-        # TODO: Create legend frame at top
-        # self._setup_legend()
-        
-        # TODO: Create main canvas
-        # self._setup_canvas()
-        
-        # TEMPORARY: Placeholder
-        #ttk.Label(self, text="Network Tab - TODO: Implement canvas and legend").pack(pady=20)
+     
     
     def _setup_legend(self):
         """
@@ -191,26 +184,7 @@ class NetworkTab(ttk.Frame):
             mini_canvas.grid(row=row, column=col, padx=(10, 2), pady=2)
             ttk.Label(legend_frame, text=motion).grid(row=row, column=col+1, padx=(0, 10), pady=2)
 
-        # TODO: Implement legend
-        #
-        # legend_frame = ttk.Frame(self)
-        # legend_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=5)
-        #
-        # # Create a small canvas for each legend item
-        # for i, (motion, color) in enumerate(MOTION_COLORS.items()):
-        #     if motion == 'UNKNOWN':
-        #         continue
-        #     
-        #     # Small canvas for the colored circle
-        #     mini_canvas = tk.Canvas(legend_frame, width=20, height=20, 
-        #                             highlightthickness=0)
-        #     mini_canvas.create_oval(2, 2, 18, 18, fill=color, outline='black')
-        #     mini_canvas.grid(row=0, column=i*2, padx=(10, 2))
-        #     
-        #     # Label
-        #     ttk.Label(legend_frame, text=motion).grid(row=0, column=i*2+1, padx=(0, 10))
-        pass
-    
+
     def _setup_canvas(self):
         """
         Create the main canvas for node visualization.
@@ -255,35 +229,6 @@ class NetworkTab(ttk.Frame):
         self.populate_test_nodes()
 
 
-        #
-        
-        # TODO: Implement canvas
-        #
-        # # Frame to hold canvas and scrollbars
-        # canvas_frame = ttk.Frame(self)
-        # canvas_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
-        # canvas_frame.columnconfigure(0, weight=1)
-        # canvas_frame.rowconfigure(0, weight=1)
-        #
-        # # Create canvas
-        # self.canvas = tk.Canvas(canvas_frame, bg='white', highlightthickness=1,
-        #                         highlightbackground='gray')
-        # self.canvas.grid(row=0, column=0, sticky='nsew')
-        #
-        # # Scrollbars (optional)
-        # v_scroll = ttk.Scrollbar(canvas_frame, orient='vertical', 
-        #                          command=self.canvas.yview)
-        # v_scroll.grid(row=0, column=1, sticky='ns')
-        # h_scroll = ttk.Scrollbar(canvas_frame, orient='horizontal',
-        #                          command=self.canvas.xview)
-        # h_scroll.grid(row=1, column=0, sticky='ew')
-        #
-        # self.canvas.configure(yscrollcommand=v_scroll.set,
-        #                       xscrollcommand=h_scroll.set)
-        #
-        # # Bind click event
-        # self.canvas.bind('<Button-1>', self._on_canvas_click)
-        pass
     
     def draw_nodes(self, nodes: List[Dict[str, Any]]):
         """
@@ -361,45 +306,7 @@ class NetworkTab(ttk.Frame):
             fill='white'
         )
         self.node_items[node_id] = item_id
-        # TODO: implement color and legend
-        # TODO: Implement
-        #
-        # node_id = node['node_id']
-        # x, y = node['x'], node['y']
-        # motion_class = node.get('motion_class', 'UNKNOWN')
-        # is_anomaly = node.get('anomaly', False)
-        #
-        # # Get color based on motion class
-        # fill_color = get_motion_color(motion_class)
-        #
-        # # Determine border
-        # if is_anomaly:
-        #     outline_color = ANOMALY_BORDER_COLOR
-        #     outline_width = ANOMALY_BORDER_WIDTH
-        # else:
-        #     outline_color = 'black'
-        #     outline_width = NODE_BORDER_WIDTH
-        #
-        # # Draw circle
-        # r = NODE_RADIUS
-        # item_id = self.canvas.create_oval(
-        #     x - r, y - r, x + r, y + r,
-        #     fill=fill_color,
-        #     outline=outline_color,
-        #     width=outline_width,
-        #     tags=('node', node_id)
-        # )
-        #
-        # # Draw label below node
-        # self.canvas.create_text(
-        #     x, y + r + 10,
-        #     text=node_id,
-        #     font=('Arial', 8),
-        #     tags=('node', f'{node_id}_label')
-        # )
-        #
-        # self.node_items[node_id] = item_id
-        pass
+
     
     def update_node_color(self, node_id: str, motion_class: str):
         """
@@ -413,13 +320,7 @@ class NetworkTab(ttk.Frame):
             item_id = self.node_items[node_id]
             color = self.get_motion_color(motion_class)
             self._draw_single_node(self.node_items)
-        # TODO: Implement
-        #
-        # if node_id in self.node_items:
-        #     item_id = self.node_items[node_id]
-        #     color = get_motion_color(motion_class)
-        #     self.canvas.itemconfig(item_id, fill=color)
-        pass
+        
 
     def get_motion_color(self, motion_class):
         color_tuple = self.MOTION_COLORS.get(motion_class, ('gray', False))
@@ -444,19 +345,7 @@ class NetworkTab(ttk.Frame):
                 self.canvas.itemconfig(item_id,
                                        outline='black',
                                        width=self.NODE_BORDER_WIDTH)
-        # TODO: Implement
-        #
-        # if node_id in self.node_items:
-        #     item_id = self.node_items[node_id]
-        #     if is_anomaly:
-        #         self.canvas.itemconfig(item_id, 
-        #                                outline=ANOMALY_BORDER_COLOR,
-        #                                width=ANOMALY_BORDER_WIDTH)
-        #     else:
-        #         self.canvas.itemconfig(item_id,
-        #                                outline='black',
-        #                                width=NODE_BORDER_WIDTH)
-        pass
+       
     
     def select_node(self, node_id: str):
         """
