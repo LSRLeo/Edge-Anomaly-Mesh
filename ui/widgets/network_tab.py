@@ -22,6 +22,13 @@ import os
 import json
 from datetime import datetime
 from datetime import timedelta
+from PIL import Image, ImageTk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+import numpy as np
+import math
+
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
 #    ANOMALY_BORDER_COLOR, ANOMALY_BORDER_WIDTH,
@@ -39,14 +46,38 @@ from datetime import timedelta
 
 
 MOCK_NODES = [
-    {'node_id': 'node_001', 'x': 150, 'y': 150, 'motion_class': 'IDLE', 'anomaly': False},
-    {'node_id': 'node_002', 'x': 300, 'y': 200, 'motion_class': 'TERRESTRIAL', 'anomaly': False},
-    {'node_id': 'node_003', 'x': 450, 'y': 150, 'motion_class': 'MARITIME', 'anomaly': True},
-    {'node_id': 'node_004', 'x': 250, 'y': 350, 'motion_class': 'LIFT', 'anomaly': False},
-    {'node_id': 'node_005', 'x': 400, 'y': 300, 'motion_class': 'IDLE', 'anomaly': True},
-    {'node_id': 'node_006', 'x': 550, 'y': 350, 'motion_class': 'TERRESTRIAL', 'anomaly': False},
+
+  {"node_id": "node_001", "lat": 40.2548, "lon": 105.6161, "motion_class": "IDLE", "anomaly": False},
+  {"node_id": "node_002", "lat": 51.5074, "lon": -0.1278, "motion_class": "TERRESTRIAL", "anomaly": False},
+  {"node_id": "node_003", "lat": 35.6762, "lon": 139.6503, "motion_class": "MARITIME", "anomaly": True},
+  {"node_id": "node_004", "lat": -33.8688, "lon": 151.2093, "motion_class": "LIFT", "anomaly": False},
+  {"node_id": "node_005", "lat": 48.8566, "lon": 2.3522, "motion_class": "IDLE", "anomaly": False},
+  {"node_id": "node_006", "lat": -23.5505, "lon": -46.6333, "motion_class": "TERRESTRIAL", "anomaly": False}
 ]
 # confidence list is [IDLE, GROUND, MARITIME, LIFT, IDLE_ANOMALY, TERRESTRIAL_ANOMALY, MARITIME_ANOMALY, LIFT_ANOMALY]
+
+class MercatorProjection:
+    """Convert Lat/Lon to pixel coords so Mercator map image can be displayed"""
+
+    def __init__(self, img_width, img_height, lat_min=-80.05, long_min=-180.0, long_max=180, lat_max=80.05):
+        self.img_width = img_width
+        self.img_height = img_height
+        self.long_min = long_min
+        self.long_max = long_max
+        self.merc_y_min = self._mercator_y(lat_min)
+        self.merc_y_max = self._mercator_y(lat_max)
+    
+    @staticmethod
+    def _mercator_y(lat_deg):
+        lat_deg = max(-85.05, min(85.05, lat_deg))
+        lat_rad = math.radians(lat_deg)
+        return math.log(math.tan(math.pi / 4 + lat_rad / 2))
+
+    def latlong_to_pixel(self, lat,long):
+        x = (long - self.long_min) / (self.long_max - self.long_min) * self.img_width
+        merc_y = self._mercator_y(lat)
+        y = (1 - (merc_y - self.merc_y_min) / (self.merc_y_max - self.merc_y_min)) * self.img_height
+        return x,y
 
 class NetworkTab(ttk.Frame):
     """
@@ -81,12 +112,12 @@ class NetworkTab(ttk.Frame):
         #Dict of colors
         self.MOTION_COLORS = {
         'IDLE' : ('gray', False),
-        'TERRESTRIAL' : ('blue', False),
-        'MARITIME' : ('green', False),
+        'TERRESTRIAL' : ('green', False),
+        'MARITIME' : ('blue', False),
         'LIFT' : ('red', False),
         'ANOMALOUS IDLE' : ('gray', True),
-        'ANOMALOUS TERRESTRIAL' : ('blue', True),
-        'ANOMALOUS MARITIME' : ('green', True),
+        'ANOMALOUS TERRESTRIAL' : ('green', True),
+        'ANOMALOUS MARITIME' : ('blue', True),
         'ANOMALOUS LIFT' : ('red', True)
         #'Anomaly indicator' : 'red'
         }
@@ -207,11 +238,19 @@ class NetworkTab(ttk.Frame):
         h_scroll.grid(row=1, column=0, sticky='ew')
         self.canvas.configure(yscrollcommand=v_scroll.set,
                               xscrollcommand=h_scroll.set)
-        
+        # Implement Background
+        # Load Map
+        map_image = Image.open("widgetextras/mercator.jpg")
+        self.map_photo = ImageTk.PhotoImage(map_image)
+        self.projection = MercatorProjection(map_image.width, map_image.height)
+        self.canvas.create_image(0,0,image=self.map_photo, anchor='nw')
+
         # Draw Nodes
 
         # Bind click event
         self.canvas.bind('<Button-2>', self._on_canvas_click)
+        self.canvas.bind('<Button-3>', self._on_canvas_click)
+
         self.canvas.bind('<Button-1>', self._on_canvas_click)
         self.populate_test_nodes()
 
@@ -281,35 +320,45 @@ class NetworkTab(ttk.Frame):
             node: Node dictionary with position and state info
         """
         node_id = node.get('node_id', 'unknown')
-        x = node['x']
-        y = node['y']
+        old_item = self.node_items.get(node_id)
+        if old_item:
+            self.canvas.delete(old_item)
+            self.canvas.delete(f'{node_id}_label')
+        px, py = self.projection.latlong_to_pixel(node['lat'], node['lon'])
         motion_class = node.get('motion_class','UNKNOWN')
         is_anomaly = node.get('anomaly', False)
         
         fill_color = self.get_motion_color(motion_class)
+        r = 10
 
         if is_anomaly:
             outline_col = 'red'
             outline_width = self.ANOMALY_BORDER_WIDTH
+            item_id = self.canvas.create_polygon(px,py+10,px-10,py-10,px+10,py-10,
+            fill=fill_color,
+            outline=outline_col,
+            width=outline_width,
+            tags=('node', node_id))
+            
         else:
             outline_col = 'black'
             outline_width = self.NODE_BORDER_WIDTH
-
-        # Draw circle
-        r = 10
-        item_id = self.canvas.create_oval(
-            x - r, y - r, x + r, y + r,
+            item_id = self.canvas.create_oval(
+            px - r, py - r, px + r, py + r,
             fill=fill_color,
             outline=outline_col,
             width=outline_width,
             tags=('node', node_id)
         )
+        # Draw circle
+
         # Draw label below node
         self.canvas.create_text(
-            x, y + r + 10,
+            px, py + r + 10,
             text=node_id,
             font=('Arial', 8),
-            tags=('node', f'{node_id}_label -- anomaly: {is_anomaly} motion_class: {motion_class}')
+            tags=('node', f'{node_id}_label -- anomaly: {is_anomaly} motion_class: {motion_class}'),
+            fill='white'
         )
         self.node_items[node_id] = item_id
         # TODO: implement color and legend
@@ -422,15 +471,43 @@ class NetworkTab(ttk.Frame):
         self.selected_node = node_id
         if node_id in self.node_items:
             item_id = self.node_items[node_id]
+            item_type = self.canvas.type(item_id)
             coords = self.canvas.coords(item_id)
-            if len(coords) == 4:
-                self.canvas.create_oval(
-                    coords[0] - 1, coords[1] - 1,
-                    coords[2] + 2, coords[3] + 3,
-                    outline='#3498db', width=4,
-                    tags=(f'{node_id}_selection',)
-                )
-    
+            xs = coords[0::2]
+            ys = coords[1::2]
+        if item_type == 'oval':
+            pad = 4  # spacing around the shape
+            self.canvas.create_oval(
+                coords[0] - pad, coords[1] - pad,
+                coords[2] + pad, coords[3] + pad,
+                outline='blue',
+                width=4,
+                tags=(f'{node_id}_selection',)
+            )
+        elif item_type == 'polygon':
+            # Scale polygon outward from its centroid
+            xs = coords[0::2]
+            ys = coords[1::2]
+
+            cx = sum(xs) / len(xs)
+            cy = sum(ys) / len(ys)
+            # How much bigger the highlight is
+            scale = 1.25  
+            scaled_coords = []
+
+            for x, y in zip(xs, ys):
+                sx = cx + (x - cx) * scale
+                sy = cy + (y - cy) * scale
+                scaled_coords.extend([sx, sy])
+
+            self.canvas.create_polygon(
+                scaled_coords,
+                outline='#3498db',
+                fill='',
+                width=4,
+                joinstyle='round',
+                tags=(f'{node_id}_selection',)
+            )
     def _on_canvas_click(self, event):
         """
         Handle click events on the canvas.
@@ -459,8 +536,8 @@ class NetworkTab(ttk.Frame):
             self.select_node(node_id)
             self.dashboard.show_node_details(node_id)
 
-        elif node is not None and event.num == 2:
-            node['anomaly'] = not node.get('anomaly', False)
+        elif node is not None and event.num == 2 or event.num==3:
+            node['anomaly'] = not node.get('anomaly')
             # Redraw just this node
             self._draw_single_node(node)
         
@@ -473,13 +550,11 @@ class NetworkTab(ttk.Frame):
             return json.load(file)
     def populate_test_nodes(self):
         file = self.load_json('test_nodes.json')
-        
-        # TODO: Populate self.node_items{} with file['node_id'], i
 
-        for i, node_data in enumerate(file):
+        self.test_nodes.clear()
+        for node_data in file:
             node_id = node_data['node_id']
-            self.node_items[node_id] = i
-            self.test_nodes[node_id] = node_data #insert dict with key str node_id and value dict node_data into self.test_nodes
+            self.test_nodes[node_id] = node_data
 
         self.draw_nodes(list(self.test_nodes.values()))
 
@@ -516,7 +591,7 @@ def demo():
     """Demonstrate the NetworkTab independently."""
     root = tk.Tk()
     root.title("Network Tab Demo")
-    root.geometry("800x600")
+    root.geometry("1020x1600")
     
     # Create a mock dashboard
     class MockDashboard:
