@@ -42,7 +42,7 @@ the node class will take in sample rate and create the motion class objects. It 
 
 
 
-## Example Input File (Route) -> You can find more example files in routes foulder
+## Example Input File (Route) -> You can find more example files in routes folder
 
 {
     "hubs": [
