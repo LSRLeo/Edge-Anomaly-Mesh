@@ -125,8 +125,9 @@ class ErrorResponse(MessageResponse):
 
 
 class MessageRequest(Message):
-
-
+    '''
+    Abstract class for message requests.
+    '''   
     @abstractmethod
     def execute(self) -> MessageResponse:
         """
@@ -137,9 +138,11 @@ class MessageRequest(Message):
         """
         pass
 
+
 class MessageData(Message):
-
-
+    '''
+    Abstract class for message data.
+    '''   
     @abstractmethod
     def execute(self):
         """
