@@ -89,5 +89,11 @@ class MessageResponse(Message):
 
 class MessageRequest(Message):
     def execute(self):
-        #Note: Needs DB Manager instance
+        #Note: Needs DB Manager instance, run query
         pass
+
+class MessageData(Message):
+    def execute(self):
+        #Note: Needs DB Manager instance, insert into DB
+        pass
+
