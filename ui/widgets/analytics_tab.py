@@ -18,6 +18,8 @@ from tkinter import ttk
 from typing import Dict, List, Optional, Any, Tuple, TYPE_CHECKING
 from datetime import datetime, timedelta
 
+from abc import ABC, abstractmethod
+
 import json
 from collections import Counter, defaultdict
 
@@ -56,6 +58,34 @@ STATE_INDEX = {
     7: ("LIFT", True),
 }
 
+
+
+class AnalyticsComponent(ABC):
+    """
+    Abstract base class for analytics components.
+    
+    Defines interface for updating with new data.
+    """
+    
+    def __init__(self, parent: ttk.Frame, title: str, row: int, col: int):
+        self.parent = parent
+        self.frame = ttk.LabelFrame(parent, text=title)
+        self.frame.grid(row=row, column=col, sticky='nsew', padx=5, pady=5)
+        self.setup()
+        
+    @abstractmethod
+    def parse(self, records: List[Dict]) -> Any:
+        """Extract the data needed for this component from the raw records."""
+    
+    @abstractmethod
+    def setup(self) -> None:
+        """Create the initial UI elements for this component."""
+        
+    @abstractmethod
+    def update(self, data: Any) -> None:
+        """Update the component with the parsed data."""
+        
+        
 
 def load_ml_json(path: str) -> List[Dict]:
     with open(path, "r") as f:
