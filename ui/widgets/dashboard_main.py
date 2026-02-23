@@ -272,7 +272,7 @@ def main():
     pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
     sub = pub.pubsub()
     sub.subscribe(CHANNELNAME)
-    redis_reader.connect(sub,pub)
+    redis_reader.connect(sub, pub)
 
     RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
     RedisThread.start
