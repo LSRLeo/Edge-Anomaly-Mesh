@@ -92,6 +92,19 @@ def load_ml_json(path: str) -> List[Dict]:
         return json.load(f)["data"]
 
 
+
+
+class PieChartComponent(AnalyticsComponent):
+    """Pie chart motion class distribution"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Motion Distribution", row, col)
+        
+
+
 def parse_motion_distribution(records):
     counts = Counter()
 
