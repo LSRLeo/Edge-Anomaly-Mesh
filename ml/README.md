@@ -27,3 +27,11 @@ Key Constraints:
 motion_class must be one of: IDLE, TERRESTRIAL, MARITIME, LIFT, UNKNOWN
 anomaly_score must be in [0, 1]
 Handle out-of-order messages gracefully
+
+Redis Channel
+Channel: sensor:raw:*
+Publisher: Node-simulator
+Subscriber: ML
+
+Channel: inference:results:{node_id}
+Puglisher: ML
