@@ -103,7 +103,16 @@ class PieChartComponent(AnalyticsComponent):
         self.canvas: Optional[FigureCanvasTkAgg]
         super().__init__(parent, "Motion Distribution", row, col)
         
-
+    def parse(self, records: List[Dict]) -> Dict[str, float]:
+        counts = Counter()
+        
+        for r in records:
+            dominant_idx = max(range(8), key=lambda i: r["state_confidence"][i])
+            motion, _ = STATE_INDEX[dominant_idx]
+            counts[motion] += 1
+            
+        total = max(sum(counts.values()), 1)
+        return {k: round((v / total) * 100, 1) for k, v in counts.items()}
 
 def parse_motion_distribution(records):
     counts = Counter()
