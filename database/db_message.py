@@ -86,3 +86,8 @@ class MessageResponse(Message):
             **self.results
         }
     
+
+class MessageRequest(Message):
+    def execute(self):
+        #Note: Needs DB Manager instance
+        pass
