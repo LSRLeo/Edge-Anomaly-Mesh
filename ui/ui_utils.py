@@ -5,6 +5,13 @@ Contains color schemes, sizing constants, and helper functions
 used across the UI components.
 """
 
+# Window sizing constants
+WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 800
+
+# Refresh Rate
+REFRESH_INTERVAL_MS = 10000
+
 # Motion class color scheme for charts
 MOTION_COLORS = {
     'IDLE': '#3498db',        # Blue
