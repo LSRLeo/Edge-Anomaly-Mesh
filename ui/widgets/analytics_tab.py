@@ -92,6 +92,55 @@ def load_ml_json(path: str) -> List[Dict]:
         return json.load(f)["data"]
 
 
+
+
+class PieChartComponent(AnalyticsComponent):
+    """Pie chart motion class distribution"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Motion Distribution", row, col)
+        
+    def parse(self, records: List[Dict]) -> Dict[str, float]:
+        counts = Counter()
+        
+        for r in records:
+            dominant_idx = max(range(8), key=lambda i: r["state_confidence"][i])
+            motion, _ = STATE_INDEX[dominant_idx]
+            counts[motion] += 1
+            
+        total = max(sum(counts.values()), 1)
+        return {k: round((v / total) * 100, 1) for k, v in counts.items()}
+    
+    def setup(self) -> None:
+        self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
+        self.ax = self.fig.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+        
+    def update(self, records: List[Dict]) -> None:
+        distribution = self.parse(records)
+        if not self.ax:
+            return
+        
+        self.ax.clear()
+        labels = list(distribution.keys())
+        sizes = list(distribution.values())
+        colors = [MOTION_COLORS.get(label, "#808080") for label in labels]
+        
+        self.ax.pie(
+            sizes,
+            labels=labels,
+            colors=colors,
+            autopct="%1.1f%%",
+            startangle=90,
+        )
+        self.ax.axis("equal")
+        self.fig.tight_layout()
+        self.canvas.draw()
+
 def parse_motion_distribution(records):
     counts = Counter()
 
