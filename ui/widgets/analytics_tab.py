@@ -113,6 +113,12 @@ class PieChartComponent(AnalyticsComponent):
             
         total = max(sum(counts.values()), 1)
         return {k: round((v / total) * 100, 1) for k, v in counts.items()}
+    
+    def setup(self) -> None:
+        self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
+        self.ax = self.fig.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
 
 def parse_motion_distribution(records):
     counts = Counter()
