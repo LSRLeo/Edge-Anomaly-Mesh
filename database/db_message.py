@@ -28,15 +28,7 @@ class Message(ABC):
     def m_type(self) -> str:
         """Get the m_type of the message.""" 
         return self._m_type
-    @abstractmethod
-    def execute(self) -> Optional[Dict[str, Any]]:
-        """
-        Execute the message and return the result.
-        
-        Returns:
-            Dict for message requests and None for message responses. 
-        """
-        pass
+    
     def to_dict(self) -> Dict[str, Any]:
         """
         Convert the message to a dictionary.
@@ -73,9 +65,6 @@ class MessageResponse(Message):
         self.M_TYPE = m_type #override M_TYPE in constructor
         super().__init__(m_id, m_content)
 
-    def execute(self):
-        #Message Response does not execute
-        return None
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert response to dictionary for publishing"""
@@ -88,6 +77,24 @@ class MessageResponse(Message):
     
 
 class MessageRequest(Message):
-    def execute(self):
-        #Note: Needs DB Manager instance
+    @abstractmethod
+    def execute(self) -> MessageResponse:
+        """
+        Execute the message and return the result.
+        
+        Returns:
+            Dict for message requests and None for message responses. 
+        """
         pass
+
+class MessageData(Message):
+    @abstractmethod
+    def execute(self):
+        """
+        Execute the message and return the result.
+        
+        Returns:
+            ErrorResponse if execution fails, otherwise None. 
+        """
+        pass
+
