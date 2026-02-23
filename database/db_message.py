@@ -59,11 +59,12 @@ class MessageResponse(Message):
         
     Message Response does not have a fixed M_TYPE, (it can be either get-nodes-response or get-datum-response or others)
     """
-    def __init__(self, m_id: str, responding_to: str, m_type: str, results: Dict[str, Any], m_content: Dict[str, Any] = None):
+    def __init__(self, m_id: str, responding_to: str, m_type: str, results: Dict[str, Any]):
         self.responding_to = responding_to 
         self.results = results
         self.M_TYPE = m_type #override M_TYPE in constructor
-        super().__init__(m_id, m_content)
+        self.m_content = self.to_dict() #generate content for parent constructor
+        super().__init__(m_id, self.m_content)
 
     
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +75,41 @@ class MessageResponse(Message):
             "responding_to": self.responding_to,
             **self.results
         }
-    
+
+
+class ErrorResponse(MessageResponse):
+    M_TYPE = "Error"  # Fixed type for all errors
+    ERROR_CODES = {"NOT_FOUND", "INVALID_REQUEST", "INTERNAL_ERROR"}
+
+
+    def __init__(self, m_id: str, responding_to: str, original_request: str, error_message: str, error_code: str = "INTERNAL_ERROR"):
+        """
+        Initialize error response.
+        m_type is automatically set to "error" and cannot be changed.
+        
+        Args:
+            m_id: Error message ID
+            responding_to: Original message ID that caused error
+            original_request: The original m-type that caused the error
+            error_code: Error code (NOT_FOUND, INVALID_REQUEST, INTERNAL_ERROR)
+            error_message: Human-readable error description
+        """
+
+        if error_code not in self.ERROR_CODES:
+            logging.warning(f"Invalid error code '{error_code}' provided. Defaulting to 'INTERNAL_ERROR'.")
+            error_code = "INTERNAL_ERROR"
+
+        results = {
+            "original_request": responding_to,
+            "error_code": error_code,
+            "error_message": error_message
+        }
+        
+        super().__init__(m_id, self.M_TYPE, responding_to, results)
+        self.original_request = original_request
+        self.error_code = error_code
+        self.error_message = error_message
+
 
 class MessageRequest(Message):
     @abstractmethod
