@@ -102,6 +102,8 @@ class NetworkTab(ttk.Frame):
         self.dashboard = dashboard
         # Dict[node_id: str, node_data: dict]
         self.test_nodes: Dict[str, dict] = {} 
+
+        self.node_dict: Dict[str, dict] = {}
         # Canvas for drawing nodes
         self.canvas: Optional[tk.Canvas] = None
         
@@ -442,7 +444,7 @@ class NetworkTab(ttk.Frame):
                         node_data['timestamp'],
                         node_data=['motion)class'], 
                         node_data=['confidence'])
-            self.node_items[node_data['node_id']] = node
+            self.node_dict[node_data['node_id']] = node
             node_id = node_data['node_id']
             self.test_nodes[node_id] = node_data
 
