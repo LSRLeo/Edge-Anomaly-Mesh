@@ -21,7 +21,8 @@ class Route:
                         alt=hub_data['alt'],
                         time_at_hub=hub_data['time_at_hub'],
                         mode=hub_data['mode'],
-                        lift_time=hub_data['lift_time']
+                        lift_time=hub_data['lift_time'],
+                        label=hub_data['label']
                     )
 
 
@@ -35,13 +36,6 @@ class Route:
             raise ValueError(f"Missing key {e} in JSON file {self.jason_file}")
 
    
-
-    def get_hubs(self):
-        pass
-
-    def get_points(self):
-        pass
- 
     
 
 
