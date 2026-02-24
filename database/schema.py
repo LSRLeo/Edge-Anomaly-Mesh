@@ -8,12 +8,9 @@ Responsibilities:
 - Ensure the schema is optimized for efficient storage and retrieval of inference results and anomaly events.
 """
 # Standard library imports
-import json
-from pathlib import Path
 from datetime import datetime
 
 #third party imports
-import pysqlite3
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import (
     DateTime,
@@ -31,7 +28,7 @@ from sqlalchemy import (
 # setup
 Base = declarative_base()
 DEFAULT_DB_PATH = 'mesh.db'
-engine = create_engine(f'sqlite+pysqlite:///{DEFAULT_DB_PATH}', echo=True)
+engine = create_engine(f'sqlite+pysqlite:///database/{DEFAULT_DB_PATH}', echo=True)
 
 class RawSensorData(Base):
     """
