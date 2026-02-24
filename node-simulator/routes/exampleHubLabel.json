@@ -8,7 +8,8 @@
       "alt": 1609.3,
       "time_at_hub": 1,
       "mode": "terrestrial",
-      "lift_time": 0
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "type": "waypoint",
@@ -17,7 +18,8 @@
       "gps_lon": -104.9935,
       "alt": 1609.3,
       "time_at_hub": 0,
-      "lift_time": 0
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "type": "waypoint",
@@ -26,7 +28,8 @@
       "gps_lon": -104.9968,
       "alt": 1609.3,
       "time_at_hub": 0,
-      "lift_time": 0
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "type": "hub",
@@ -36,7 +39,8 @@
       "alt": 1609.3,
       "time_at_hub": 0,
       "mode": "idle",
-      "lift_time": 0
+      "lift_time": 0,
+      "label": "normal"
     }
   ]
 }
