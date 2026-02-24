@@ -7,16 +7,25 @@ import os
 from collections import defaultdict
 from datetime import datetime
 
-# Main branch to analyze
-BRANCH_SPEC = 'origin/main'
+# Sprint-2 branches to analyze
+SPRINT2_BRANCHES = [
+    'origin/db-team-sprint-2',
+    'origin/de-team-sprint-2',
+    'origin/ml-team-sprint-2',
+    'origin/ui-team-sprint-2',
+]
 
-# Sprint-1 branches (kept for future reference)
+# Join branches for git log commands
+BRANCH_SPEC = ' '.join(SPRINT2_BRANCHES)
+
+# Previous branches (kept for future reference)
 SPRINT1_BRANCHES = [
     'origin/db-team-sprint-1',
     'origin/de-team-sprint-1',
     'origin/ml-team-sprint-1',
     'origin/ui-team-sprint-1',
 ]
+MAIN_BRANCH = 'origin/main'
 
 # Team assignments (contributor name -> team name)
 TEAMS = {
@@ -41,7 +50,7 @@ def run_cmd(cmd):
     return result.stdout.strip()
 
 def get_commit_stats():
-    """Get commit counts and lines changed per email from main branch."""
+    """Get commit counts and lines changed per email from sprint-2 branches."""
     stats = {}
     emails = run_cmd(f"git log {BRANCH_SPEC} --format='%ae' | sort | uniq").split('\n')
 
@@ -312,7 +321,7 @@ def get_contributor_timeline(emails, gh_usernames, prs, issues, comments, pr_com
 
 
 def get_files_changed_by_emails(emails):
-    """Get list of files changed by contributor across their emails in main branch."""
+    """Get list of files changed by contributor across their emails in sprint-2 branches."""
     files = set()
     for email in emails:
         output = run_cmd(f"git log {BRANCH_SPEC} --author='{email}' --no-merges --name-only --pretty=format: | sort | uniq")
@@ -473,7 +482,7 @@ def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comme
 **GitHub Username(s):** {', '.join(gh_usernames)}
 **Email(s):** {', '.join(emails)}
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Branches Analyzed:** main
+**Branches Analyzed:** {', '.join(SPRINT2_BRANCHES)}
 
 ---
 
@@ -527,7 +536,7 @@ def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comme
 
 ## Commits
 
-Total non-merge commits in main branch: **{total_commits}**
+Total non-merge commits in sprint-2 branches: **{total_commits}**
 
 ### Code Changes
 - **Lines Added:** {total_added:,}
@@ -594,8 +603,8 @@ Total non-merge commits in main branch: **{total_commits}**
     return report
 
 def main():
-    print("Gathering git contributor data from main branch...")
-    print(f"  Branch: {BRANCH_SPEC}")
+    print("Gathering git contributor data from sprint-2 branches...")
+    print(f"  Branches: {', '.join(SPRINT2_BRANCHES)}")
     commit_stats = get_commit_stats()
 
     print("Gathering GitHub PR and issue data...")
@@ -742,7 +751,7 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
     summary = f"""# Contributor Summary Report
 
 **Repository:** edge-anomaly-mesh
-**Branches:** main
+**Branches:** {', '.join(SPRINT2_BRANCHES)}
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ---
@@ -765,7 +774,7 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
 
 **Column Definitions:**
 - **Contributions** — Weighted score: (Commits × 50%) + (Issues × 25%) + (PRs × 25%)
-- **Commits** — Non-merge commits authored in main branch
+- **Commits** — Non-merge commits authored in sprint-2 branches
 - **Commit +/-** — Percentage points above/below expected for team (expected = 100% / team size)
 - **Files** — Unique files changed
 - **Issues** — GitHub issues created

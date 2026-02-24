@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** alyssabulai
 **Email(s):** alyssabulai@outlook.com
-**Report Generated:** 2026-02-18 15:05:07
-**Branches Analyzed:** main
+**Report Generated:** 2026-02-24 14:11:29
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
 
@@ -11,35 +11,35 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 6 |
-| Lines Added | 186 |
-| Lines Deleted | 110 |
-| Net Lines Changed | +76 |
-| PRs Created | 5 |
+| Total Commits | 13 |
+| Lines Added | 1,240 |
+| Lines Deleted | 1,079 |
+| Net Lines Changed | +161 |
+| PRs Created | 6 |
 | PRs Assigned | 1 |
 | PRs Reviewed | 0 |
 | PRs Commented | 0 |
 | PRs Merged (as merger) | 1 |
-| Issues Created | 11 |
-| Issues Commented | 0 |
-| Files Changed | 2 |
+| Issues Created | 17 |
+| Issues Commented | 3 |
+| Files Changed | 7 |
 
 ---
 
 ## Issues
 
-### Created (11)
-#45, #53, #54, #55, #56, #57, #58, #59, #60, #193, #208
+### Created (17)
+#45, #53, #54, #55, #56, #57, #58, #59, #60, #193, #208, #232, #233, #234, #255, #256, #257
 
-### Commented (0)
-None
+### Commented (3)
+#233, #338, #340
 
 ---
 
 ## Pull Requests
 
-### Created (5)
-#183, #184, #194, #200, #201
+### Created (6)
+#183, #184, #194, #200, #201, #357
 
 ### Assigned (1)
 #207
@@ -57,19 +57,24 @@ None
 
 ## Commits
 
-Total non-merge commits in main branch: **6**
+Total non-merge commits in sprint-2 branches: **13**
 
 ### Code Changes
-- **Lines Added:** 186
-- **Lines Deleted:** 110
-- **Net Change:** +76
+- **Lines Added:** 1,240
+- **Lines Deleted:** 1,079
+- **Net Change:** +161
 
 ---
 
-## Files Changed (2)
+## Files Changed (7)
 
 - `machine-learning/classifier_preparation.py`
 - `machine-learning/model_training.py`
+- `machine-learning/test_model.py`
+- `machine-learning/train_classifier.py`
+- `ml/README.md`
+- `ml/data_pipeline.py`
+- `ml/train_classifier.py`
 
 ---
 
@@ -106,6 +111,13 @@ Total non-merge commits in main branch: **6**
 | 2026-02-14 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-15 | Sun | 3 | 0 | 0 | 2 | 0 | 0 | 0 |
 | | | | **Week 7:** Feb 16 - Feb 22 | | | | | |
-| 2026-02-16 | Mon | 0 | 1 | 0 | 1 | 0 | 0 | 0 |
-| 2026-02-17 | Tue | 0 | 0 | 0 | 2 | 1 | 0 | 0 |
+| 2026-02-16 | Mon | 2 | 1 | 0 | 1 | 0 | 0 | 0 |
+| 2026-02-17 | Tue | 4 | 0 | 0 | 2 | 1 | 0 | 0 |
 | 2026-02-18 | Wed | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 0 | 6 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-21 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-24 | Tue | 0 | 0 | 3 | 1 | 0 | 0 | 0 |

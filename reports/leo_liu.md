@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** LSRLeo
 **Email(s):** shirui.liu@du.edu, leoliu20041217@gmail.com
-**Report Generated:** 2026-02-18 15:04:56
-**Branches Analyzed:** main
+**Report Generated:** 2026-02-24 14:11:10
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
 
@@ -11,35 +11,35 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 30 |
-| Lines Added | 522 |
-| Lines Deleted | 195 |
-| Net Lines Changed | +327 |
-| PRs Created | 6 |
+| Total Commits | 38 |
+| Lines Added | 762 |
+| Lines Deleted | 346 |
+| Net Lines Changed | +416 |
+| PRs Created | 11 |
 | PRs Assigned | 0 |
 | PRs Reviewed | 0 |
 | PRs Commented | 0 |
 | PRs Merged (as merger) | 4 |
-| Issues Created | 20 |
-| Issues Commented | 4 |
-| Files Changed | 9 |
+| Issues Created | 26 |
+| Issues Commented | 11 |
+| Files Changed | 45 |
 
 ---
 
 ## Issues
 
-### Created (20)
-#122, #124, #129, #131, #153, #154, #176, #181, #182, #187, #190, #222, #223, #224, #225, #226, #227, #228, #229, #230
+### Created (26)
+#122, #124, #129, #131, #153, #154, #176, #181, #182, #187, #190, #222, #223, #224, #225, #226, #227, #228, #229, #230, #298, #299, #300, #301, #302, #354
 
-### Commented (4)
-#27, #122, #153, #154
+### Commented (11)
+#8, #27, #122, #153, #154, #223, #225, #227, #228, #343, #354
 
 ---
 
 ## Pull Requests
 
-### Created (6)
-#163, #164, #177, #179, #180, #191
+### Created (11)
+#163, #164, #177, #179, #180, #191, #349, #351, #352, #355, #365
 
 ### Assigned (0)
 None
@@ -57,18 +57,54 @@ None
 
 ## Commits
 
-Total non-merge commits in main branch: **30**
+Total non-merge commits in sprint-2 branches: **38**
 
 ### Code Changes
-- **Lines Added:** 522
-- **Lines Deleted:** 195
-- **Net Change:** +327
+- **Lines Added:** 762
+- **Lines Deleted:** 346
+- **Net Change:** +416
 
 ---
 
-## Files Changed (9)
+## Files Changed (45)
 
+- `node-simulator/.gitignore`
+- `node-simulator/README.md`
+- `node-simulator/example_files/README.md`
+- `node-simulator/example_files/__init__.py`
+- `node-simulator/example_files/hub_manager.py`
+- `node-simulator/example_files/motion_generators/__init__.py`
+- `node-simulator/example_files/motion_generators/base.py`
+- `node-simulator/example_files/motion_generators/idle.py`
+- `node-simulator/example_files/motion_generators/lift.py`
+- `node-simulator/example_files/motion_generators/maritime.py`
+- `node-simulator/example_files/motion_generators/terrestrial.py`
+- `node-simulator/example_files/node_simulator.py`
+- `node-simulator/example_files/redis_publisher.py`
+- `node-simulator/example_files/run_simulator.py`
+- `node-simulator/example_files/training_data_generator.py`
+- `node-simulator/nodeConfig.json`
+- `node-simulator/old/generators.py`
+- `node-simulator/old/listener_tester.py`
+- `node-simulator/old/node_test.py`
+- `node-simulator/old/publisher.py`
+- `node-simulator/requirements.txt`
+- `node-simulator/routes/exampleHub.json`
+- `node-simulator/routes/exampleLift.json`
+- `node-simulator/routes/exampleMaritime.json`
+- `node-simulator/routes/exampleTerrestrial.json`
+- `node-simulator/simulation.py`
+- `node-simulator/src/hub.py`
+- `node-simulator/src/idle.py`
+- `node-simulator/src/lift.py`
+- `node-simulator/src/maritime.py`
+- `node-simulator/src/node.py`
+- `node-simulator/src/noise.py`
+- `node-simulator/src/route.py`
+- `node-simulator/src/terrestrial.py`
+- `node-simulator/src/waypoint.py`
 - `redis_test.py`
+- `simulator/README.md`
 - `simulator/exampleHub.json`
 - `simulator/exampleTerrestrial.json`
 - `simulator/node.py`
@@ -116,3 +152,10 @@ Total non-merge commits in main branch: **30**
 | 2026-02-16 | Mon | 0 | 2 | 0 | 1 | 1 | 0 | 0 |
 | 2026-02-17 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-18 | Wed | 0 | 9 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 0 | 5 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-21 | Sat | 3 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-22 | Sun | 1 | 0 | 1 | 1 | 0 | 0 | 0 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 3 | 1 | 2 | 3 | 0 | 0 | 0 |
+| 2026-02-24 | Tue | 1 | 0 | 4 | 1 | 0 | 0 | 0 |

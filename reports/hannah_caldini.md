@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** hcaldini
 **Email(s):** 166074733+hcaldini@users.noreply.github.com, hannah.caldini@du.edu
-**Report Generated:** 2026-02-18 15:05:04
-**Branches Analyzed:** main
+**Report Generated:** 2026-02-24 14:11:25
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
 
@@ -20,19 +20,19 @@
 | PRs Reviewed | 2 |
 | PRs Commented | 1 |
 | PRs Merged (as merger) | 0 |
-| Issues Created | 12 |
-| Issues Commented | 0 |
+| Issues Created | 22 |
+| Issues Commented | 3 |
 | Files Changed | 8 |
 
 ---
 
 ## Issues
 
-### Created (12)
-#90, #104, #105, #121, #135, #136, #146, #147, #148, #149, #161, #170
+### Created (22)
+#90, #104, #105, #121, #135, #136, #146, #147, #148, #149, #161, #170, #231, #322, #324, #325, #326, #327, #328, #329, #330, #331
 
-### Commented (0)
-None
+### Commented (3)
+#231, #322, #324
 
 ---
 
@@ -57,7 +57,7 @@ None
 
 ## Commits
 
-Total non-merge commits in main branch: **20**
+Total non-merge commits in sprint-2 branches: **20**
 
 ### Code Changes
 - **Lines Added:** 958
@@ -114,4 +114,11 @@ Total non-merge commits in main branch: **20**
 | | | | **Week 7:** Feb 16 - Feb 22 | | | | | |
 | 2026-02-16 | Mon | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
 | 2026-02-17 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-18 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-18 | Wed | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 0 | 9 | 4 | 0 | 0 | 0 | 0 |
+| 2026-02-21 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 0 | 0 | 2 | 0 | 0 | 0 | 0 |
+| 2026-02-24 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |

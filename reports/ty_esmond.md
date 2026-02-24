@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** TyEsmond, Troo4
 **Email(s):** 165939755+TyEsmond@users.noreply.github.com, ty@the3.com
-**Report Generated:** 2026-02-18 15:04:57
-**Branches Analyzed:** main
+**Report Generated:** 2026-02-24 14:11:14
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
 
@@ -11,63 +11,65 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 6 |
-| Lines Added | 867 |
-| Lines Deleted | 613 |
-| Net Lines Changed | +254 |
-| PRs Created | 6 |
-| PRs Assigned | 1 |
-| PRs Reviewed | 2 |
-| PRs Commented | 2 |
-| PRs Merged (as merger) | 7 |
-| Issues Created | 10 |
-| Issues Commented | 0 |
-| Files Changed | 4 |
+| Total Commits | 10 |
+| Lines Added | 952 |
+| Lines Deleted | 622 |
+| Net Lines Changed | +330 |
+| PRs Created | 7 |
+| PRs Assigned | 4 |
+| PRs Reviewed | 7 |
+| PRs Commented | 6 |
+| PRs Merged (as merger) | 9 |
+| Issues Created | 18 |
+| Issues Commented | 3 |
+| Files Changed | 6 |
 
 ---
 
 ## Issues
 
-### Created (10)
-#37, #38, #39, #40, #41, #42, #43, #44, #81, #213
+### Created (18)
+#37, #38, #39, #40, #41, #42, #43, #44, #81, #213, #246, #249, #250, #253, #294, #295, #306, #345
 
-### Commented (0)
-None
+### Commented (3)
+#221, #313, #358
 
 ---
 
 ## Pull Requests
 
-### Created (6)
-#107, #144, #172, #186, #195, #199
+### Created (7)
+#107, #144, #172, #186, #195, #199, #358
 
-### Assigned (1)
-#107
+### Assigned (4)
+#107, #336, #337, #350
 
-### Reviewed (2)
-#145, #173
+### Reviewed (7)
+#145, #173, #336, #337, #347, #350, #353
 
-### Commented (2)
-#145, #173
+### Commented (6)
+#145, #173, #336, #337, #347, #350
 
-### Merged (as merger) (7)
-#107, #144, #145, #172, #186, #195, #199
+### Merged (as merger) (9)
+#107, #144, #145, #172, #186, #195, #199, #347, #358
 
 ---
 
 ## Commits
 
-Total non-merge commits in main branch: **6**
+Total non-merge commits in sprint-2 branches: **10**
 
 ### Code Changes
-- **Lines Added:** 867
-- **Lines Deleted:** 613
-- **Net Change:** +254
+- **Lines Added:** 952
+- **Lines Deleted:** 622
+- **Net Change:** +330
 
 ---
 
-## Files Changed (4)
+## Files Changed (6)
 
+- `ui/README.md`
+- `ui/redis_reader.py`
 - `ui/requirements.txt`
 - `ui/widgets/anomalies_tab.py`
 - `ui/widgets/node_details_tab.py`
@@ -111,3 +113,10 @@ Total non-merge commits in main branch: **6**
 | 2026-02-16 | Mon | 0 | 0 | 0 | 3 | 3 | 0 | 0 |
 | 2026-02-17 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-18 | Wed | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 0 | 7 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-21 | Sat | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 1 | 4 | 4 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 2 | 0 | 0 | 0 | 0 | 1 | 0 |
+| 2026-02-24 | Tue | 0 | 0 | 3 | 1 | 1 | 0 | 0 |

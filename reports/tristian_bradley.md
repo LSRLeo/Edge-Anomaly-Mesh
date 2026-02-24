@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** TBradley06
 **Email(s):** tristian.bradley@du.edu
-**Report Generated:** 2026-02-18 15:05:05
-**Branches Analyzed:** main
+**Report Generated:** 2026-02-24 14:11:28
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
 
@@ -16,11 +16,11 @@
 | Lines Deleted | 20 |
 | Net Lines Changed | +69 |
 | PRs Created | 2 |
-| PRs Assigned | 1 |
-| PRs Reviewed | 0 |
-| PRs Commented | 0 |
-| PRs Merged (as merger) | 1 |
-| Issues Created | 9 |
+| PRs Assigned | 4 |
+| PRs Reviewed | 3 |
+| PRs Commented | 1 |
+| PRs Merged (as merger) | 4 |
+| Issues Created | 19 |
 | Issues Commented | 0 |
 | Files Changed | 1 |
 
@@ -28,8 +28,8 @@
 
 ## Issues
 
-### Created (9)
-#52, #80, #83, #85, #87, #89, #91, #92, #166
+### Created (19)
+#52, #80, #83, #85, #87, #89, #91, #92, #166, #259, #262, #265, #266, #269, #270, #271, #307, #311, #312
 
 ### Commented (0)
 None
@@ -41,23 +41,23 @@ None
 ### Created (2)
 #139, #167
 
-### Assigned (1)
-#139
+### Assigned (4)
+#139, #346, #348, #364
 
-### Reviewed (0)
-None
+### Reviewed (3)
+#346, #348, #364
 
-### Commented (0)
-None
+### Commented (1)
+#346
 
-### Merged (as merger) (1)
-#168
+### Merged (as merger) (4)
+#168, #346, #348, #364
 
 ---
 
 ## Commits
 
-Total non-merge commits in main branch: **3**
+Total non-merge commits in sprint-2 branches: **3**
 
 ### Code Changes
 - **Lines Added:** 89
@@ -108,3 +108,10 @@ Total non-merge commits in main branch: **3**
 | 2026-02-16 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-17 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-18 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 0 | 10 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-21 | Sat | 0 | 0 | 0 | 0 | 1 | 1 | 1 |
+| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-24 | Tue | 0 | 0 | 0 | 0 | 2 | 2 | 0 |
