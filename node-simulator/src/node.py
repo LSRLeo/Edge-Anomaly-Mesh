@@ -56,24 +56,26 @@ class Node:
             if i < len(self.route.hubs) - 1:
                 current_hub = self.route.hubs[i]
                 next_hub = self.route.hubs[i + 1]
+                
+                #To-Do what to do with labels - indicate anomalies and different types of normal behavior? 
                 label = current_hub.label
 
                 # Generate idle readings and apply noise 
-                idleResults = self.idle.generate_reading(current_hub, label)
+                idleResults = self.idle.generate_reading(current_hub)
                 idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
                 self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
 
                 if current_hub.mode == "lift":
                     self.lift.set_hub(current_hub.lat, current_hub.lon, 20)
-                    liftResults = self.lift.generate_reading(current_hub, current_hub.lift_time, label)
+                    liftResults = self.lift.generate_reading(current_hub, current_hub.lift_time)
                     liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
                     self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_hub, next_hub)
                 elif current_hub.mode == "maritime":
-                    maritimeResults = self.maritime.generate_reading(current_hub, next_hub, label)
+                    maritimeResults = self.maritime.generate_reading(current_hub, next_hub)
                     maritimeResults_noisy = [apply_maritime_node_noise(message) for message in maritimeResults]
                     self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_hub, next_hub)
                 elif current_hub.mode == "terrestrial":
-                    terrestrialResults = self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz, label)
+                    terrestrialResults = self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
                     terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in terrestrialResults]
                     self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_hub, next_hub)
                 else:
