@@ -16,3 +16,11 @@ def apply_package_stolen(node):
     node["gyro_y"] += direction[1] * gyro_magnitude + np.random.uniform(-0.05, 0.05)
     node["gyro_z"] += np.random.uniform(-0.05, 0.05)
     return node
+
+def crane_stops_working(node):
+    node = node.copy()
+    # Set all acceleration values to zero to simulate sudden stop
+    node["accel_x"] = 0.0
+    node["accel_y"] = 0.0
+    node["accel_z"] = 0.0
+    return node
