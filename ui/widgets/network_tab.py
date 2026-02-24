@@ -28,6 +28,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np
 import math
+from parent_classes import Node
+
 
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
@@ -247,15 +249,7 @@ class NetworkTab(ttk.Frame):
         self.node_items.clear()
         for node in nodes:
             self._draw_single_node(node)
-        # TODO: Implement
-        #
-        # # Clear existing nodes
-        # self.canvas.delete('node')
-        # self.node_items.clear()
-        #
-        # for node in nodes:
-        #     self._draw_single_node(node)
-        pass
+
     
     def _draw_single_node(self, node: Dict[str, Any]):
         """
@@ -442,10 +436,18 @@ class NetworkTab(ttk.Frame):
 
         self.test_nodes.clear()
         for node_data in file:
+            node = Node(node_data['node_id'],
+                        node_data['lat'],
+                        node_data['lon'],
+                        node_data['timestamp'],
+                        node_data=['motion)class'], 
+                        node_data=['confidence'])
+            self.node_items[node_data['node_id']] = node
             node_id = node_data['node_id']
             self.test_nodes[node_id] = node_data
 
         self.draw_nodes(list(self.test_nodes.values()))
+    
 
     def refresh(self):
         
