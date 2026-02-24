@@ -12,6 +12,9 @@ TARGET_MILESTONE = 'W26-Sprint 2'
 # Target issues per person
 TARGET_PER_PERSON = 10
 
+# GitHub repo URL for issue links
+REPO_URL = 'https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh'
+
 # Team labels to group by
 TEAM_LABELS = ['ML TEAM', 'DB TEAM', 'DE TEAM', 'UI TEAM']
 
@@ -178,7 +181,16 @@ def generate_report(issues):
             closed_issues = [i for i in assignee_issues if i.get('state') == 'CLOSED']
             total = len(assignee_issues)
 
-            report += f"### {name} ({total}/{TARGET_PER_PERSON})\n\n"
+            # Count shared issues (issues with multiple assignees)
+            shared_count = sum(1 for i in assignee_issues if len(i.get('assignees', [])) > 1)
+            individual_count = total - shared_count
+
+            if shared_count > 0:
+                count_str = f"({individual_count} individual, {shared_count} shared)"
+            else:
+                count_str = f"({total})"
+
+            report += f"### {name} {count_str}\n\n"
 
             if not assignee_issues:
                 report += "*No issues assigned*\n"
@@ -187,11 +199,11 @@ def generate_report(issues):
                 for issue in sorted(open_issues, key=lambda x: x['number']):
                     title = issue['title']
                     num = issue['number']
-                    report += f"- #{num}: {title}\n"
+                    report += f"- [#{num}]({REPO_URL}/issues/{num}): {title}\n"
                 for issue in sorted(closed_issues, key=lambda x: x['number']):
                     title = issue['title']
                     num = issue['number']
-                    report += f"- ~~#{num}: {title}~~\n"
+                    report += f"- ~~[#{num}]({REPO_URL}/issues/{num}): {title}~~\n"
             report += "\n"
 
         # Unassigned issues
@@ -202,11 +214,11 @@ def generate_report(issues):
             for issue in sorted(open_unassigned, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                report += f"- #{num}: {title}\n"
+                report += f"- [#{num}]({REPO_URL}/issues/{num}): {title}\n"
             for issue in sorted(closed_unassigned, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                report += f"- ~~#{num}: {title}~~\n"
+                report += f"- ~~[#{num}]({REPO_URL}/issues/{num}): {title}~~\n"
             report += "\n"
 
     # No team label section
@@ -230,11 +242,11 @@ def generate_report(issues):
             for issue in sorted(open_issues, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                report += f"- #{num}: {title}\n"
+                report += f"- [#{num}]({REPO_URL}/issues/{num}): {title}\n"
             for issue in sorted(closed_issues, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                report += f"- ~~#{num}: {title}~~\n"
+                report += f"- ~~[#{num}]({REPO_URL}/issues/{num}): {title}~~\n"
             report += "\n"
 
         if unassigned:
@@ -244,11 +256,11 @@ def generate_report(issues):
             for issue in sorted(open_unassigned, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                report += f"- #{num}: {title}\n"
+                report += f"- [#{num}]({REPO_URL}/issues/{num}): {title}\n"
             for issue in sorted(closed_unassigned, key=lambda x: x['number']):
                 title = issue['title']
                 num = issue['number']
-                report += f"- ~~#{num}: {title}~~\n"
+                report += f"- ~~[#{num}]({REPO_URL}/issues/{num}): {title}~~\n"
             report += "\n"
 
     return report
