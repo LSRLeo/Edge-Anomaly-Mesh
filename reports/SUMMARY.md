@@ -2,7 +2,7 @@
 
 **Repository:** edge-anomaly-mesh
 **Branches:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
-**Report Generated:** 2026-02-24 14:11:29
+**Report Generated:** 2026-02-24 15:40:50
 
 ---
 
@@ -12,9 +12,9 @@
 
 | Team | Members | Commits | Issues | Comments | PRs Created | PRs Reviewed | PRs Commented | PRs Merged | Commits/Person |
 |------|---------|---------|--------|----------|-------------|--------------|---------------|------------|----------------|
-| DB | 3 | 29 | 69 | 6 | 15 | 9 | 7 | 20 | 9.7 |
+| DB | 3 | 29 | 69 | 7 | 15 | 10 | 8 | 20 | 9.7 |
 | DE | 3 | 75 | 72 | 23 | 31 | 17 | 5 | 28 | 25.0 |
-| ML | 4 | 48 | 71 | 5 | 20 | 5 | 1 | 12 | 12.0 |
+| ML | 4 | 48 | 71 | 5 | 24 | 8 | 2 | 12 | 12.0 |
 | UI | 3 | 33 | 59 | 9 | 17 | 18 | 15 | 15 | 11.0 |
 
 ### By Individual
@@ -37,16 +37,16 @@
 | [Aldo Rios](aldo_rios.md) | DE | 29.2 | 22 | -4% | 38 | 31 | 0 | 6 | 15 | 3 | 12 |
 | [Owen Conlon](owen_conlon.md) | UI | 26.0 | 20 | +27% | 7 | 26 | 5 | 6 | 10 | 9 | 3 |
 | [Sean Osman](sean_osman.md) | DE | 23.5 | 15 | -13% | 8 | 15 | 12 | 14 | 2 | 2 | 8 |
-| [Daniel Kaplan](daniel_kaplan.md) | ML | 19.8 | 16 | +8% | 7 | 18 | 1 | 10 | 0 | 0 | 8 |
+| [Daniel Kaplan](daniel_kaplan.md) | ML | 21.5 | 16 | +8% | 7 | 18 | 1 | 12 | 1 | 1 | 8 |
 | [Ty Esmond](ty_esmond.md) | UI | 19.2 | 10 | -3% | 6 | 18 | 3 | 7 | 7 | 6 | 10 |
 | [Hannah Caldini](hannah_caldini.md) | DB | 19.0 | 20 | +36% | 8 | 22 | 3 | 4 | 2 | 1 | 8 |
-| [Diego Ramirez](diego_ramirez.md) | DB | 16.0 | 4 | -20% | 22 | 31 | 2 | 9 | 2 | 2 | 5 |
-| [Alyssa Bulai](alyssa_bulai.md) | ML | 14.5 | 13 | +2% | 7 | 17 | 3 | 6 | 0 | 0 | 0 |
+| [Diego Ramirez](diego_ramirez.md) | DB | 16.8 | 4 | -20% | 22 | 31 | 3 | 9 | 3 | 3 | 5 |
+| [Alyssa Bulai](alyssa_bulai.md) | ML | 14.8 | 13 | +2% | 7 | 17 | 3 | 7 | 0 | 0 | 0 |
 | [Truman Davis](truman_davis.md) | ML | 14.5 | 16 | +8% | 14 | 17 | 1 | 2 | 2 | 0 | 0 |
 | [Kailar Hayes](kailar_hayes.md) | DB | 11.2 | 5 | -16% | 11 | 16 | 1 | 2 | 5 | 4 | 7 |
-| [Tristian Bradley](tristian_bradley.md) | ML | 9.2 | 3 | -19% | 1 | 19 | 0 | 2 | 3 | 1 | 4 |
+| [Tristian Bradley](tristian_bradley.md) | ML | 10.8 | 3 | -19% | 1 | 19 | 0 | 3 | 5 | 1 | 4 |
 | [George Rumsey](george_rumsey.md) | UI | 8.5 | 3 | -24% | 5 | 15 | 1 | 4 | 1 | 0 | 2 |
-| **TOTAL** | | **245.2** | **185** | | **179** | **271** | **43** | **83** | **49** | **28** | **75** |
+| **TOTAL** | | **249.5** | **185** | | **179** | **271** | **44** | **87** | **53** | **30** | **75** |
 
 ---
 
@@ -61,7 +61,7 @@
 | Week 5 | Feb 02 - Feb 08 | 30 | 77 | 1 | 12 | 9 | 5 | 4 |
 | Week 6 | Feb 09 - Feb 15 | 86 | 17 | 11 | 26 | 22 | 17 | 9 |
 | Week 7 | Feb 16 - Feb 22 | 31 | 129 | 22 | 31 | 21 | 23 | 11 |
-| Week 8 | Feb 23 - Mar 01 | 16 | 1 | 15 | 14 | 9 | 8 | 4 |
+| Week 8 | Feb 23 - Mar 01 | 16 | 1 | 16 | 18 | 12 | 12 | 6 |
 
 ### By Day
 
@@ -105,7 +105,7 @@
 | 2026-02-22 | Sun | 1 | 0 | 2 | 2 | 3 | 5 | 4 |
 | | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
 | 2026-02-23 | Mon | 11 | 1 | 5 | 4 | 5 | 4 | 2 |
-| 2026-02-24 | Tue | 5 | 0 | 10 | 10 | 4 | 4 | 2 |
+| 2026-02-24 | Tue | 5 | 0 | 11 | 14 | 7 | 8 | 4 |
 
 ---
 

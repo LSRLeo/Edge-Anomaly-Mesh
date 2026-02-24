@@ -2,7 +2,7 @@
 
 **GitHub Username(s):** danielkaplan32
 **Email(s):** daniel.kaplan32@du.edu
-**Report Generated:** 2026-02-24 14:11:26
+**Report Generated:** 2026-02-24 15:40:46
 **Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
@@ -15,11 +15,11 @@
 | Lines Added | 622 |
 | Lines Deleted | 167 |
 | Net Lines Changed | +455 |
-| PRs Created | 10 |
+| PRs Created | 12 |
 | PRs Assigned | 6 |
-| PRs Reviewed | 0 |
-| PRs Commented | 0 |
-| PRs Merged (as merger) | 8 |
+| PRs Reviewed | 1 |
+| PRs Commented | 1 |
+| PRs Merged (as merger) | 9 |
 | Issues Created | 18 |
 | Issues Commented | 1 |
 | Files Changed | 7 |
@@ -38,20 +38,20 @@
 
 ## Pull Requests
 
-### Created (10)
-#106, #108, #109, #110, #142, #143, #168, #346, #348, #364
+### Created (12)
+#106, #108, #109, #110, #142, #143, #168, #346, #348, #364, #367, #368
 
 ### Assigned (6)
 #106, #108, #109, #110, #142, #143
 
-### Reviewed (0)
-None
+### Reviewed (1)
+#369
 
-### Commented (0)
-None
+### Commented (1)
+#369
 
-### Merged (as merger) (8)
-#106, #108, #109, #110, #139, #142, #143, #167
+### Merged (as merger) (9)
+#106, #108, #109, #110, #139, #142, #143, #167, #369
 
 ---
 
@@ -120,4 +120,4 @@ Total non-merge commits in sprint-2 branches: **16**
 | 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
 | 2026-02-23 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-24 | Tue | 4 | 0 | 0 | 1 | 0 | 0 | 0 |
+| 2026-02-24 | Tue | 4 | 0 | 0 | 3 | 1 | 1 | 1 |

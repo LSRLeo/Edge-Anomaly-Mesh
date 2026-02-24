@@ -2,7 +2,7 @@
 
 **GitHub Username(s):** alyssabulai
 **Email(s):** alyssabulai@outlook.com
-**Report Generated:** 2026-02-24 14:11:29
+**Report Generated:** 2026-02-24 15:40:50
 **Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
@@ -15,7 +15,7 @@
 | Lines Added | 1,240 |
 | Lines Deleted | 1,079 |
 | Net Lines Changed | +161 |
-| PRs Created | 6 |
+| PRs Created | 7 |
 | PRs Assigned | 1 |
 | PRs Reviewed | 0 |
 | PRs Commented | 0 |
@@ -38,8 +38,8 @@
 
 ## Pull Requests
 
-### Created (6)
-#183, #184, #194, #200, #201, #357
+### Created (7)
+#183, #184, #194, #200, #201, #357, #366
 
 ### Assigned (1)
 #207
@@ -120,4 +120,4 @@ Total non-merge commits in sprint-2 branches: **13**
 | 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
 | 2026-02-23 | Mon | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-24 | Tue | 0 | 0 | 3 | 1 | 0 | 0 | 0 |
+| 2026-02-24 | Tue | 0 | 0 | 3 | 2 | 0 | 0 | 0 |

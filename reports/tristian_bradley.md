@@ -2,7 +2,7 @@
 
 **GitHub Username(s):** TBradley06
 **Email(s):** tristian.bradley@du.edu
-**Report Generated:** 2026-02-24 14:11:28
+**Report Generated:** 2026-02-24 15:40:49
 **Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
@@ -15,11 +15,11 @@
 | Lines Added | 89 |
 | Lines Deleted | 20 |
 | Net Lines Changed | +69 |
-| PRs Created | 2 |
-| PRs Assigned | 4 |
-| PRs Reviewed | 3 |
+| PRs Created | 3 |
+| PRs Assigned | 6 |
+| PRs Reviewed | 5 |
 | PRs Commented | 1 |
-| PRs Merged (as merger) | 4 |
+| PRs Merged (as merger) | 6 |
 | Issues Created | 19 |
 | Issues Commented | 0 |
 | Files Changed | 1 |
@@ -38,20 +38,20 @@ None
 
 ## Pull Requests
 
-### Created (2)
-#139, #167
+### Created (3)
+#139, #167, #369
 
-### Assigned (4)
-#139, #346, #348, #364
+### Assigned (6)
+#139, #346, #348, #364, #367, #368
 
-### Reviewed (3)
-#346, #348, #364
+### Reviewed (5)
+#346, #348, #364, #367, #368
 
 ### Commented (1)
 #346
 
-### Merged (as merger) (4)
-#168, #346, #348, #364
+### Merged (as merger) (6)
+#168, #346, #348, #364, #367, #368
 
 ---
 
@@ -114,4 +114,4 @@ Total non-merge commits in sprint-2 branches: **3**
 | 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
 | 2026-02-23 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-24 | Tue | 0 | 0 | 0 | 0 | 2 | 2 | 0 |
+| 2026-02-24 | Tue | 0 | 0 | 0 | 1 | 4 | 4 | 0 |
