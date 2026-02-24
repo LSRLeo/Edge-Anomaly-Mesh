@@ -22,6 +22,22 @@ REDIS_PORT = 6379
 REDIS_DB = 0
 CHANNEL_PREFIX = "inference:results:"
 
+"""
+Inference Output Schema (ml → database → ui):
+
+{
+    "m_type": "inference-output",           # string, required
+    "m_id": "ml_{seq}",                     # string, required, unique per message
+    "event_id": "{node_id}_{timestamp}",    # string, required
+    "node_id": "node_{number}",             # string, required
+    "timestamp": "YYYY-MM-DDTHH:MM:SS.ffffff", # ISO 8601, required
+    "classification": "IDLE|TERRESTRIAL|MARITIME|LIFT|UNKNOWN", # string, required, uppercase
+    "confidence": float,                    # required, range [0.0, 1.0]
+    "is_anomaly": bool,                     # required
+    "anomaly_score": float                  # required, range [0.0, 1.0]
+}
+"""
+
 # ============================================================================
 # STANDARDIZED OUTPUT FORMAT (CLAUDE.md)
 # ============================================================================
