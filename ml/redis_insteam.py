@@ -55,6 +55,10 @@ logger = logging.getLogger(__name__)
 # REDIS SUBSCRIBER CLASS
 # ============================================================================
 
+# ============================================================================
+# REDIS SUBSCRIBER CLASS
+# ============================================================================
+
 class RedisSubscriber:
     """
     Redis subscriber for live data ingestion.
@@ -89,6 +93,7 @@ class RedisSubscriber:
             socket_timeout=REDIS_TIMEOUT
         )
         self.node_states = {}  # Maps node_id to buffer and state
+        self.seen_seqs = {}    # Maps node_id to set of seen seq numbers
         try:
             self.redis_client.ping()
             logger.info(f"Connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
@@ -125,9 +130,18 @@ class RedisSubscriber:
             data = json.loads(message)
 
             node_id = data.get('node_id')
+            seq = data.get('seq')
             if not node_id:
                 logger.warning("Missing node_id in message")
                 return
+
+            # Duplicate filtering
+            if node_id not in self.seen_seqs:
+                self.seen_seqs[node_id] = set()
+            if seq in self.seen_seqs[node_id]:
+                logger.info(f"Duplicate packet detected for node {node_id} seq {seq}, skipping.")
+                return
+            self.seen_seqs[node_id].add(seq)
 
             # Initialize buffer for new node_id
             if node_id not in self.node_states:
