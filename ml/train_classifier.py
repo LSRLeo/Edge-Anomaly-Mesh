@@ -883,8 +883,21 @@ def main():
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             patience_counter = 0
-            # Save best model
-            torch.save(model.state_dict(), args.model_output)
+            # Save full checkpoint bundle: weights + scaler + architecture config
+            checkpoint = {
+                'model_state_dict': model.state_dict(),
+                'scaler': scaler,
+                'model_config': {
+                    'input_dim': extractor.n_features,
+                    'hidden_dims': tuple(args.hidden_dims),
+                    'dropout': args.dropout,
+                    'num_classes': 8,
+                },
+                'class_names': CLASS_NAMES,
+                'best_val_acc': val_acc,
+                'trained_at': datetime.now().isoformat(),
+            }
+            torch.save(checkpoint, args.model_output)
             print(f"  ✓ New best model saved (val_acc: {val_acc:.4f})")
         else:
             patience_counter += 1
@@ -901,7 +914,8 @@ def main():
     print("Evaluating best model on test set...")
     print("=" * 60)
 
-    model.load_state_dict(torch.load(args.model_output))
+    checkpoint = torch.load(args.model_output, weights_only=False)
+    model.load_state_dict(checkpoint['model_state_dict'])
     test_loss, test_acc, predictions, labels = evaluate(model, test_loader, criterion, device)
 
     print(f"\nTest Loss: {test_loss:.4f}")
