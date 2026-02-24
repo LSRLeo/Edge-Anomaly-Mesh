@@ -154,10 +154,30 @@ class RedisSubscriber:
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
 
+    def trigger_inference(self, node_id):
+        """
+        Extract features from the buffer and run classifier inference.
+        """
+        buffer = list(self.node_states[node_id]['buffer'])
+        features = stream_window_to_features(buffer, self.window_size, sample_rate=50)
+        features_tensor = torch.FloatTensor(features)
+        predicted, confidence = self.classifier.predict(features_tensor)
+        logger.info(f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}")
+
 # ============================================================================
 # MAIN ENTRY POINT
 # ============================================================================
 
 if __name__ == "__main__":
-    subscriber = RedisSubscriber(channel="sensor:raw:*")
+    args = parse_args()
+    classifier = MotionClassifier(input_dim=38)  # Adjust input_dim as needed
+    classifier.load_state_dict(torch.load(args.model_path))
+    classifier.eval()
+
+    subscriber = RedisSubscriber(
+        channel="sensor:raw:*",
+        window_size=args.window_size,
+        stride=args.stride,
+        classifier=classifier
+    )
     subscriber.listen()
