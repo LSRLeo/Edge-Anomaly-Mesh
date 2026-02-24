@@ -1,10 +1,10 @@
 from src.hub import Hub
+from src.waypoint import Waypoint
 import json
 
 class Route:
     def __init__(self, jason_file): #route is a array of hubs in order
        self.hubs = []
-       self.sections = []
        self.jason_file = jason_file
     
 
