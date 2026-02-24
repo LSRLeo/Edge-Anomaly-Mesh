@@ -3,7 +3,7 @@ import json
 
 class Route:
     def __init__(self, jason_file): #route is a array of hubs in order
-       self.waypoints = [] #ordered list of hubs and waypoints in the route
+       self.hubs = [] #ordered list of hubs and waypoints in the route
        self.jason_file = jason_file
     
 
@@ -12,7 +12,7 @@ class Route:
             with open(self.jason_file, 'r') as f:
                 data = json.load(f)
 
-            for hub_data in data['points']:
+            for hub_data in data['hubs']:
 
                 hub = Hub(
                     name=hub_data['name'],

@@ -1,5 +1,5 @@
 {
-  "Hub": [
+  "hubs": [
     {
       "name": "Hub A",
       "gps_lat": 39.7392,
