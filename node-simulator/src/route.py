@@ -4,7 +4,7 @@ import json
 
 class Route:
     def __init__(self, jason_file): #route is a array of hubs in order
-       self.hubs = []
+       self.waypoints = [] #ordered list of hubs and waypoints in the route
        self.jason_file = jason_file
     
 
@@ -36,7 +36,11 @@ class Route:
 
    
 
+    def get_hubs(self):
+        pass
 
+    def get_points(self):
+        pass
  
     
 
