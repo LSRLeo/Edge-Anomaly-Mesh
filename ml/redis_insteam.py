@@ -13,6 +13,7 @@ Usage:
 import redis
 import logging
 import json
+import argparse
 from collections import deque
 import torch
 
@@ -28,6 +29,17 @@ REDIS_PORT = 6379
 REDIS_DB = 0
 REDIS_TIMEOUT = 5
 CHANNEL_INTERNAL = "internal_msgs"
+
+# ============================================================================
+# ARGPARSE
+# ============================================================================
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Redis subscriber for live sensor data ingestion")
+    parser.add_argument('--window-size', type=int, default=100, help='Sliding window size')
+    parser.add_argument('--stride', type=int, default=0, help='Stride for overlapping windows')
+    parser.add_argument('--model-path', type=str, default='models/motion_classifier.pt', help='Path to trained model')
+    return parser.parse_args()
 
 # ============================================================================
 # LOGGING CONFIGURATION
