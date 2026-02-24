@@ -1,5 +1,4 @@
 from src.hub import Hub
-from src.waypoint import Waypoint
 import json
 
 class Route:
@@ -14,8 +13,6 @@ class Route:
                 data = json.load(f)
 
             for hub_data in data['points']:
-                    #json file route always start with hub point
-                    recent_mode = hub_data['mode']
 
                     hub = Hub(
                         name=hub_data['name'],
