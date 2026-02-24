@@ -14,7 +14,6 @@ import redis
 import logging
 import json
 import argparse
-from collections import deque
 import torch
 
 from data_pipeline import stream_window_to_features
@@ -50,10 +49,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
-
-# ============================================================================
-# REDIS SUBSCRIBER CLASS
-# ============================================================================
 
 # ============================================================================
 # REDIS SUBSCRIBER CLASS
@@ -115,6 +110,21 @@ class RedisSubscriber:
             if message['type'] == 'pmessage':
                 self.process_data(message['data'])
 
+    def insert_event_in_order(self, buffer, event):
+        seq = event.get("seq")
+        if seq is None:
+            buffer.append(event)
+            return
+        # Skip duplicates (already handled by seen_seqs, but double check)
+        if any(e.get("seq") == seq for e in buffer):
+            return
+        # Insert in order
+        for i, existing in enumerate(buffer):
+            if existing.get("seq", -1) > seq:
+                buffer.insert(i, event)
+                return
+        buffer.append(event)
+
     def process_data(self, message):
         """
         Process incoming messages, handle bytes or str.
@@ -146,34 +156,33 @@ class RedisSubscriber:
             # Initialize buffer for new node_id
             if node_id not in self.node_states:
                 self.node_states[node_id] = {
-                    'buffer': deque(),
+                    'buffer': [],  # Use a list
                     'stride_count': 0,
                     'last_seq': -1
                 }
 
             # Append new sample to node's buffer
             node_state = self.node_states[node_id]
-            node_state['buffer'].append(data)
+            self.insert_event_in_order(node_state['buffer'], data)
             node_state['stride_count'] += 1
 
             logger.info(f"Received message for node {node_id}: {data}")
 
             # Trigger inference when window and stride conditions are met
             if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
-                self.trigger_inference(node_id)
-                for _ in range(self.stride):
-                    node_state['buffer'].popleft()
+                window = node_state['buffer'][:self.window_size]
+                self.trigger_inference(node_id, window)
+                node_state['buffer'] = node_state['buffer'][self.stride:]
                 node_state['stride_count'] = 0
 
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
 
-    def trigger_inference(self, node_id):
+    def trigger_inference(self, node_id, window):
         """
         Extract features from the buffer and run classifier inference.
         """
-        buffer = list(self.node_states[node_id]['buffer'])
-        features = stream_window_to_features(buffer, self.window_size, sample_rate=50)
+        features = stream_window_to_features(window, self.window_size, sample_rate=50)
         features_tensor = torch.FloatTensor(features)
         predicted, confidence = self.classifier.predict(features_tensor)
         logger.info(f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}")
