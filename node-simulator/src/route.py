@@ -14,19 +14,19 @@ class Route:
 
             for hub_data in data['points']:
 
-                    hub = Hub(
-                        name=hub_data['name'],
-                        lat=hub_data['gps_lat'],
-                        lon=hub_data['gps_lon'],
-                        alt=hub_data['alt'],
-                        time_at_hub=hub_data['time_at_hub'],
-                        mode=hub_data['mode'],
-                        lift_time=hub_data['lift_time'],
-                        label=hub_data['label']
-                    )
+                hub = Hub(
+                    name=hub_data['name'],
+                    lat=hub_data['gps_lat'],
+                    lon=hub_data['gps_lon'],
+                    alt=hub_data['alt'],
+                    time_at_hub=hub_data['time_at_hub'],
+                    mode=hub_data['mode'],
+                    lift_time=hub_data['lift_time'],
+                    label=hub_data['label']
+                )
 
 
-                    self.hubs.append(hub)
+                self.hubs.append(hub)
 
         except FileNotFoundError:
             raise FileNotFoundError(f"JSON file {self.jason_file} not found")
