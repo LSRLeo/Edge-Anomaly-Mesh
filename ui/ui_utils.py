@@ -5,9 +5,18 @@ Contains color schemes, sizing constants, and helper functions
 used across the UI components.
 """
 
+import tkinter as tk
+from tkinter import ttk
+
+# Configures treeview style
+def configure_treeview_style():
+    style = ttk.Style()
+    style.configure("Treeview", font=("Arial", 24), rowheight=24)
+    style.configure("Treeview.Heading", font=("Arial", 24, "bold"))
+    
 # Window sizing constants
-WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 800
+WINDOW_WIDTH = 1100
+WINDOW_HEIGHT = 1000
 
 # Refresh Rate
 REFRESH_INTERVAL_MS = 10000

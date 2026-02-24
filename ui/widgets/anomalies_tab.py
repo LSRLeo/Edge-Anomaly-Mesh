@@ -532,7 +532,7 @@ class AnomaliesTab(ttk.Frame):
     # #     #         self.node_filter.current(0)
     #     pass
     
-    # def refresh(self):
+    def refresh(self):
     #     """
     #     Refresh the anomalies table with latest data.
         
@@ -552,7 +552,7 @@ class AnomaliesTab(ttk.Frame):
     #     #     
     #     # except Exception as e:
     #     #     print(f"Error refreshing anomalies tab: {e}")
-    #     pass
+        pass
 
 
 # =============================================================================
