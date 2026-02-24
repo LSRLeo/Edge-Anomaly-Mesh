@@ -14,7 +14,7 @@ from datetime import datetime
 
 #third party imports
 import pysqlite3
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import declarative_base
 from sqlalchemy import (
     DateTime,
     ForeignKeyConstraint,
@@ -30,7 +30,7 @@ from sqlalchemy import (
 
 # setup
 Base = declarative_base()
-DEFAULT_DB_PATH = 'edge_anomaly_mesh.db'
+DEFAULT_DB_PATH = 'mesh.db'
 engine = create_engine(f'sqlite+pysqlite:///{DEFAULT_DB_PATH}', echo=True)
 
 class RawSensorData(Base):
