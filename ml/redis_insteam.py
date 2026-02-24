@@ -14,6 +14,10 @@ import redis
 import logging
 import json
 from collections import deque
+import torch
+
+from data_pipeline import stream_window_to_features
+from train_classifier import MotionClassifier
 
 # ============================================================================
 # CONSTANTS
@@ -53,7 +57,7 @@ class RedisSubscriber:
         redis_client (redis.Redis): Redis client instance.
     """
 
-    def __init__(self, channel="sensor:raw:*"):
+    def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None):
         """
         Initialize the Redis subscriber.
 
@@ -61,6 +65,9 @@ class RedisSubscriber:
             channel (str): Redis channel pattern.
         """
         self.channel = channel
+        self.window_size = window_size
+        self.stride = stride
+        self.classifier = classifier
         self.redis_client = redis.Redis(
             host=REDIS_HOST,
             port=REDIS_PORT,
@@ -119,9 +126,19 @@ class RedisSubscriber:
                 }
 
             # Append new sample to node's buffer
-            self.node_states[node_id]['buffer'].append(data)
+            node_state = self.node_states[node_id]
+            node_state['buffer'].append(data)
+            node_state['stride_count'] += 1
 
             logger.info(f"Received message for node {node_id}: {data}")
+
+            # Trigger inference when window and stride conditions are met
+            if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
+                self.trigger_inference(node_id)
+                for _ in range(self.stride):
+                    node_state['buffer'].popleft()
+                node_state['stride_count'] = 0
+
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
 
