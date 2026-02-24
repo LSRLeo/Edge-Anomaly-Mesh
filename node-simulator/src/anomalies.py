@@ -36,4 +36,3 @@ def car_caught_in_traffic(node):
     node["accel_y"] += np.random.uniform(-0.02, 0.02)
     node["accel_z"] += np.random.uniform(-0.02, 0.02)
     return node
-import numpy as np
