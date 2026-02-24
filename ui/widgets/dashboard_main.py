@@ -16,8 +16,15 @@ from tkinter import ttk
 from typing import Optional
 import sys
 import os
-
+import redis
+import threading
+from redis_reader import RedisReader
+# TODO setup redis sub and pub, redis.redis (host=39r2, port=9198, decoderesponses=True)
+# within main loop
+# redis reader object, sub and pub on a thread
+# redis reader connect
 # Add parent directory to path for imports
+CHANNELNAME = "Test"
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ui.ui_utils import (
@@ -260,6 +267,15 @@ def main():
     
     Creates the root window and starts the dashboard.
     """
+
+    redis_reader = RedisReader(CHANNELNAME)
+    pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
+    sub = pub.pubsub()
+    sub.subscribe(CHANNELNAME)
+    redis_reader.connect(sub, pub)
+
+    RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
+    RedisThread.start
     root = tk.Tk()
     
     # Optional: Set application icon
@@ -267,10 +283,21 @@ def main():
     
     # Create dashboard
     app = DashboardApp(root)
+    # Create Thread for main DashBoard
+
+
+    # Create listener and pub on RedisThread
+    
+
     
     # Start the Tkinter event loop
-    root.mainloop()
+    #root.mainloop()
+    DashboardThread = threading.Thread(target=root.mainloop)
+    DashboardThread.start()
 
+    # close redis conn
+
+    
 
 if __name__ == '__main__':
     main()
