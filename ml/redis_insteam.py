@@ -13,7 +13,12 @@ Usage:
 import redis
 import logging
 import json
+import argparse
 from collections import deque
+import torch
+
+from data_pipeline import stream_window_to_features
+from train_classifier import MotionClassifier
 
 # ============================================================================
 # CONSTANTS
@@ -24,6 +29,17 @@ REDIS_PORT = 6379
 REDIS_DB = 0
 REDIS_TIMEOUT = 5
 CHANNEL_INTERNAL = "internal_msgs"
+
+# ============================================================================
+# ARGPARSE
+# ============================================================================
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Redis subscriber for live sensor data ingestion")
+    parser.add_argument('--window-size', type=int, default=100, help='Sliding window size')
+    parser.add_argument('--stride', type=int, default=0, help='Stride for overlapping windows')
+    parser.add_argument('--model-path', type=str, default='models/motion_classifier.pt', help='Path to trained model')
+    return parser.parse_args()
 
 # ============================================================================
 # LOGGING CONFIGURATION
@@ -53,7 +69,7 @@ class RedisSubscriber:
         redis_client (redis.Redis): Redis client instance.
     """
 
-    def __init__(self, channel="sensor:raw:*"):
+    def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None):
         """
         Initialize the Redis subscriber.
 
@@ -61,6 +77,9 @@ class RedisSubscriber:
             channel (str): Redis channel pattern.
         """
         self.channel = channel
+        self.window_size = window_size
+        self.stride = stride
+        self.classifier = classifier
         self.redis_client = redis.Redis(
             host=REDIS_HOST,
             port=REDIS_PORT,
@@ -119,16 +138,46 @@ class RedisSubscriber:
                 }
 
             # Append new sample to node's buffer
-            self.node_states[node_id]['buffer'].append(data)
+            node_state = self.node_states[node_id]
+            node_state['buffer'].append(data)
+            node_state['stride_count'] += 1
 
             logger.info(f"Received message for node {node_id}: {data}")
+
+            # Trigger inference when window and stride conditions are met
+            if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
+                self.trigger_inference(node_id)
+                for _ in range(self.stride):
+                    node_state['buffer'].popleft()
+                node_state['stride_count'] = 0
+
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
+
+    def trigger_inference(self, node_id):
+        """
+        Extract features from the buffer and run classifier inference.
+        """
+        buffer = list(self.node_states[node_id]['buffer'])
+        features = stream_window_to_features(buffer, self.window_size, sample_rate=50)
+        features_tensor = torch.FloatTensor(features)
+        predicted, confidence = self.classifier.predict(features_tensor)
+        logger.info(f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}")
 
 # ============================================================================
 # MAIN ENTRY POINT
 # ============================================================================
 
 if __name__ == "__main__":
-    subscriber = RedisSubscriber(channel="sensor:raw:*")
+    args = parse_args()
+    classifier = MotionClassifier(input_dim=38)  # Adjust input_dim as needed
+    classifier.load_state_dict(torch.load(args.model_path))
+    classifier.eval()
+
+    subscriber = RedisSubscriber(
+        channel="sensor:raw:*",
+        window_size=args.window_size,
+        stride=args.stride,
+        classifier=classifier
+    )
     subscriber.listen()

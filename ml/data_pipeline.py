@@ -174,6 +174,26 @@ def windows_to_features(windows, sample_rate=50):
     features = extractor.extract_batch(windows)
     return features
 
+def stream_window_to_features(buffer, window_size, sample_rate=50):
+    """
+    Given a list of sensor dicts, extract a window and return features.
+    Handles both 'accel'/'accel_mss' and 'gyro'/'gyro_rads' keys.
+    """
+    def get_accel(sample):
+        return sample.get('accel_mss') or sample.get('accel') or {'x': 0, 'y': 0, 'z': 0}
+
+    def get_gyro(sample):
+        return sample.get('gyro_rads') or sample.get('gyro') or {'x': 0, 'y': 0, 'z': 0}
+
+    window = np.array([
+        [
+            get_accel(sample).get('x', 0), get_accel(sample).get('y', 0), get_accel(sample).get('z', 0),
+            get_gyro(sample).get('x', 0), get_gyro(sample).get('y', 0), get_gyro(sample).get('z', 0)
+        ] for sample in buffer[-window_size:]
+    ])
+    window = window.reshape(1, window_size, 6)
+    features = windows_to_features(window, sample_rate=sample_rate)
+    return features
 
 # ============================================================================
 # DATA LOADING
