@@ -107,14 +107,18 @@ class PieChartComponent(AnalyticsComponent):
         counts = Counter()
         
         for r in records:
+            # Pick the single most likely state (normal or anomalous variant).
             dominant_idx = max(range(8), key=lambda i: r["state_confidence"][i])
+            # Collapse the 8-state model into the 4 motion classes for display.
             motion, _ = STATE_INDEX[dominant_idx]
             counts[motion] += 1
             
+        # Guard against division by zero when no records are available.
         total = max(sum(counts.values()), 1)
         return {k: round((v / total) * 100, 1) for k, v in counts.items()}
     
     def setup(self) -> None:
+        # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
@@ -125,6 +129,7 @@ class PieChartComponent(AnalyticsComponent):
         if not self.ax:
             return
         
+        # Clear and fully redraw the pie chart on each refresh.
         self.ax.clear()
         labels = list(distribution.keys())
         sizes = list(distribution.values())
@@ -137,6 +142,7 @@ class PieChartComponent(AnalyticsComponent):
             autopct="%1.1f%%",
             startangle=90,
         )
+        # Keep the plot circular instead of stretching with the frame size.
         self.ax.axis("equal")
         self.fig.tight_layout()
         self.canvas.draw()
