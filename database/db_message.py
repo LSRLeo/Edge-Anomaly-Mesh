@@ -7,7 +7,7 @@ import logging
 
 
 ERROR_CODES = ["NOT_FOUND", "INVALID_REQUEST", "INTERNAL_ERROR"]
-
+M_ID_DB = "db_message_id" #temp id for DB messages, to be replaced by actual message ID generation logic
 
 class Message(ABC):
     """
@@ -186,7 +186,7 @@ class RawDataMessage(MessageData):
         
         except Exception as e:
             return ErrorResponse(
-                m_id=self.m_id,
+                m_id=M_ID_DB,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -198,8 +198,8 @@ class InferenceOutputData(MessageData):
     M_TYPE = "inference-output"
 
     def __init__(self, m_id: str, inference_output: Dict[str, Any]):
-        self.data = inference_output
-        super().__init__(m_id, self.data)
+        
+        super().__init__(m_id, inference_output)
         #Try to get event_id and node_id
         self.event_id = inference_output.get("event_id", None)
         self.node_id = inference_output.get("node_id", None)
@@ -226,10 +226,80 @@ class InferenceOutputData(MessageData):
         
         except Exception as e:
             return ErrorResponse(
-                m_id=self.m_id,
+                m_id=M_ID_DB,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
                 error_code="INVALID_REQUEST"
             )
         
+class GetNodesRequest(MessageRequest):
+    M_TYPE = "get-nodes"
+    
+    def execute(self, db_manager) -> MessageResponse:
+        """
+        Execute the get-nodes request and return the result.
+        
+        Args:
+            db_manager: The database manager instance to interact with the database.
+        
+        Returns:
+            MessageResponse containing the list of nodes or an ErrorResponse if execution fails.
+        """
+        #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+        logging.info("Executing get-nodes request")
+
+        try: 
+            #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+            logging.info("Executing get-nodes request")
+            return MessageResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                m_type="get-nodes-response",
+                results={"nodes": []}  # Placeholder for actual nodes data
+                )
+        
+        except Exception as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INTERNAL_ERROR"
+            )
+
+"""
+{
+  "m_type": "get-node-data-ids-response",
+  "m_id": "ui_00002",
+  "node_id": "node_001",
+  "data_ids": [
+    "node_001_2026-01-22T18:52:14.818400",
+    "node_001_2026-01-22T18:52:14.838400",
+    "node_001_2026-01-22T18:52:14.858400"
+  ]
+}
+"""
+class GetNodeDataIdsRequest(MessageRequest):
+    M_TYPE = "get-node-data-ids"
+
+    def __init__(self, m_id: str, m_contents: Dict[str,Any]):
+        super().__init__(m_id,m_contents)
+        self.node_id = m_contents.get("node_id", None)
+
+    def execute(self, db_manager):
+        #TODO: 
+        pass
+
+class GetDatumRequest(MessageRequest):
+    M_TYPE = "get-datum"
+
+    def __init__(self, m_id: str, m_contents: Dict[str,Any]):
+        super().__init__(m_id,m_contents)
+        self.event_id = self.m_content.get("event_id")
+
+    def execute(self, db_manager):
+        #TODO: execute datum query, handle errors, respond
+        pass
+
+
