@@ -140,6 +140,16 @@ class PieChartComponent(AnalyticsComponent):
         self.ax.axis("equal")
         self.fig.tight_layout()
         self.canvas.draw()
+        
+        
+class LineChartComponent(AnalyticsComponent):
+    """Line chart for anomaly rate trend"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Anomaly Rate Trend (24h)", row, col)
 
 def parse_motion_distribution(records):
     counts = Counter()
