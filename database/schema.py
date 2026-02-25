@@ -77,7 +77,7 @@ class Node(Base):
         return f"<Node(node_id='{self.node_id}', seq={self.seq}, status='{self.status}', first_seen='{self.first_seen}', last_seen='{self.last_seen}', location=({self.location_lat}, {self.location_lon}, {self.location_altitude_m}))>"
 
 # SQLAlchemy ORM model for the inference_results table
-class inference_results(Base):
+class InferenceResults(Base):
     """
     SQLAlchemy ORM model for the inference_results table.
     """
@@ -104,7 +104,7 @@ class inference_results(Base):
     ingested_at = Column(Float, default=lambda: datetime.utcnow().timestamp(), nullable=False)
     __table_args__ = (UniqueConstraint('node_id', 'window_start', 'window_end', name='uq_node_window'),)  # Ensure no duplicate entries for the same node and time window
 
-class anomaly_events(Base):
+class AnomalyEvents(Base):
     """
     SQLAlchemy ORM model for the anomaly_events table
     """
