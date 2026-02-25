@@ -129,7 +129,7 @@ class MessageRequest(Message):
     Abstract class for message requests.
     '''   
     @abstractmethod
-    def execute(self) -> MessageResponse:
+    def execute(self, db_manager) -> MessageResponse:
         """
         Execute the message and return the result.
         
@@ -144,7 +144,7 @@ class MessageData(Message):
     Abstract class for message data.
     '''   
     @abstractmethod
-    def execute(self):
+    def execute(self, db_manager):
         """
         Execute the message and return the result.
         
@@ -152,6 +152,7 @@ class MessageData(Message):
             ErrorResponse if execution fails, otherwise None. 
         """
         pass
+
 
 class RawDataMessage(MessageData):
     M_TYPE = "raw-data"
@@ -162,6 +163,7 @@ class RawDataMessage(MessageData):
         #Try to get event_id and node_id
         self.event_id = raw_data.get("event_id", None)
         self.node_id = raw_data.get("node_id", None)
+
     def execute(self, db_manager):
         """
         Process the raw data and store it in the database.
@@ -171,6 +173,7 @@ class RawDataMessage(MessageData):
         """
         logging.info(f"Executing raw-data storage for event: {self.event_id}")
         logging.info(f"Executing node storage for node: {self.node_id}")
+
         try:
             if not self.event_id or not self.node_id:
                 logging.error("Missing event_id or node_id in raw data")
@@ -178,7 +181,9 @@ class RawDataMessage(MessageData):
             # Store the processed data in the database
             #call correct methods to store in Node Table and RawData Table
             #TODO: Implement the actual storage logic in the db_manager
+            logging.info(f"Successfully stored raw data for event: {self.event_id} and node: {self.node_id}")
             return None  # Indicate successful execution
+        
         except Exception as e:
             return ErrorResponse(
                 m_id=self.m_id,
@@ -208,6 +213,7 @@ class InferenceOutputData(MessageData):
         """
         logging.info(f"Executing inference-output storage for event: {self.event_id}")
         logging.info(f"Executing node storage for node: {self.node_id}")
+
         try:
             if not self.event_id or not self.node_id:
                 logging.error("Missing event_id or node_id in inference output data")
@@ -215,7 +221,9 @@ class InferenceOutputData(MessageData):
             # Store the processed data in the database
             #call correct methods to store in Anomaly Table and InferenceOutput Table
             #TODO: Implement the actual storage logic in the db_manager
+            logging.info(f"Successfully stored inference output for event: {self.event_id} and node: {self.node_id}")
             return None  # Indicate successful execution
+        
         except Exception as e:
             return ErrorResponse(
                 m_id=self.m_id,
