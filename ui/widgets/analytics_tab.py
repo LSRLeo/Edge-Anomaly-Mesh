@@ -162,21 +162,25 @@ class LineChartComponent(AnalyticsComponent):
         buckets = defaultdict(list)
         
         for r in records:
+            # Normalize timestamps into fixed-size buckets for a smoother trend line.
             ts = datetime.fromisoformat(r["timestamp"].replace("Z", ""))
             bucket = ts.replace(
                 minute=(ts.minute // bucket_minutes) * bucket_minutes,
                 second=0,
                 microsecond=0
             )
+            # Treat the anomalous-state confidence mass as the anomaly score.
             anomaly_score = sum(r["state_confidence"][4:])
             buckets[bucket].append(anomaly_score)
         
+        # Average anomaly score per bucket and return points in time order.
         return sorted(
             [(t, round(sum(v) / len(v), 3)) for t, v in buckets.items()],
             key=lambda x: x[0]
         )
         
     def setup(self) -> None:
+        # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
@@ -187,16 +191,19 @@ class LineChartComponent(AnalyticsComponent):
         if not self.ax:
             return
         
+        # Clear and fully redraw the chart on each refresh.
         self.ax.clear()
         times = [t[0] for t in trend_data]
         rates = [t[1] for t in trend_data]
         
         self.ax.plot(times, rates, "b-", linewidth=2, marker="o", markersize=4)
         if times and rates:
+            # Shade under the curve to make trend magnitude easier to read.
             self.ax.fill_between(times, rates, alpha=0.3)
             
         self.ax.set_xlabel("Time")
         self.ax.set_ylabel("Anomaly Rate")
+        # Rotate/align datetime tick labels so they fit in the embedded canvas.
         self.fig.autofmt_xdate()
         self.ax.grid(True, linestyle="--", alpha=0.7)
         self.fig.tight_layout()
