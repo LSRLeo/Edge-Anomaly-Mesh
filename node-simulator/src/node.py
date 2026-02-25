@@ -56,6 +56,9 @@ class Node:
             if i < len(self.route.hubs) - 1:
                 current_hub = self.route.hubs[i]
                 next_hub = self.route.hubs[i + 1]
+                
+                #To-Do what to do with labels - indicate anomalies and different types of normal behavior? 
+                label = current_hub.label
 
                 # Generate idle readings and apply noise 
                 idleResults = self.idle.generate_reading(current_hub)

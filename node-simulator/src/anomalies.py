@@ -28,3 +28,22 @@ def package_dropped(node):
     node["gyro_y"] += np.random.uniform(-2.0, 2.0)
     node["gyro_z"] += np.random.uniform(-2.0, 2.0)
     return node
+def crane_stops_working(node):
+    node = node.copy()
+    # Set all acceleration values to zero to simulate sudden stop
+    node["accel_x"] = 0.0
+    node["accel_y"] = 0.0
+    node["accel_z"] = 0.0
+    return node
+
+def car_caught_in_traffic(node):
+    node = node.copy()
+    # Reduce acceleration values to simulate slow movement (traffic)
+    node["accel_x"] *= 0.2
+    node["accel_y"] *= 0.2
+    node["accel_z"] *= 0.2
+    # Optionally, add small random noise
+    node["accel_x"] += np.random.uniform(-0.02, 0.02)
+    node["accel_y"] += np.random.uniform(-0.02, 0.02)
+    node["accel_z"] += np.random.uniform(-0.02, 0.02)
+    return node
