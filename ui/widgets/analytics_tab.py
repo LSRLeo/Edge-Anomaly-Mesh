@@ -150,6 +150,26 @@ class LineChartComponent(AnalyticsComponent):
         self.ax = None
         self.canvas: Optional[FigureCanvasTkAgg]
         super().__init__(parent, "Anomaly Rate Trend (24h)", row, col)
+        
+    def parse(self, records: List[Dict]) -> List[Tuple[datetime, float]]:
+        bucket_minutes = 3
+        buckets = defaultdict(list)
+        
+        for r in records:
+            ts = datetime.fromisoformat(r["timestamp"].replace("Z", ""))
+            bucket = ts.replace(
+                minute=(ts.minute // bucket_minutes) * bucket_minutes,
+                second=0,
+                microsecond=0
+            )
+            anomaly_score = sum(r["state_confidence"][4:])
+            buckets[bucket].append(anomaly_score)
+        
+        return sorted(
+            [(t, round(sum(v) / len(v), 3)) for t, v in buckets.items()],
+            key=lambda x: x[0]
+        )
+    
 
 def parse_motion_distribution(records):
     counts = Counter()
