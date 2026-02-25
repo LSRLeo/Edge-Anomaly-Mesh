@@ -187,4 +187,42 @@ class RawDataMessage(MessageData):
                 error_message=str(e),
                 error_code="INVALID_REQUEST"
             )
-    
+
+
+class InferenceOutputData(MessageData):
+    M_TYPE = "inference-output"
+
+    def __init__(self, m_id: str, inference_output: Dict[str, Any]):
+        self.data = inference_output
+        super().__init__(m_id, self.data)
+        #Try to get event_id and node_id
+        self.event_id = inference_output.get("event_id", None)
+        self.node_id = inference_output.get("node_id", None)
+
+    def execute(self, db_manager):
+        """
+        Process the inference output data and store it in the database.
+        
+        Args:
+            db_manager: The database manager instance to interact with the database.
+        """
+        logging.info(f"Executing inference-output storage for event: {self.event_id}")
+        logging.info(f"Executing node storage for node: {self.node_id}")
+        try:
+            if not self.event_id or not self.node_id:
+                logging.error("Missing event_id or node_id in inference output data")
+                raise ValueError("Missing event_id or node_id in inference output data")
+            # Store the processed data in the database
+            #call correct methods to store in Node Table and InferenceOutput Table
+            #TODO: Implement the actual storage logic in the db_manager
+            return None  # Indicate successful execution
+        except Exception as e:
+            return ErrorResponse(
+                m_id=self.m_id,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST"
+            )
+        
+        
