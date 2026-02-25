@@ -1,8 +1,7 @@
 import argparse
 from src.node import Node
 from src.route import Route
-import redisFiles.redis_setup
-import redisFiles.redis_pub
+from redisFiles import redis_setup, redis_pub
 
 def run_simulation(node_file, route_file):
     route = Route(route_file)
