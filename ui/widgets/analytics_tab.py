@@ -176,6 +176,25 @@ class LineChartComponent(AnalyticsComponent):
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
     
+    def update(self, records: List[Dict]) -> None:
+        trend_data = self.parse(records)
+        if not self.ax:
+            return
+        
+        self.ax.clear()
+        times = [t[0] for t in trend_data]
+        rates = [t[1] for t in trend_data]
+        
+        self.ax.plot(times, rates, "b-", linewidth=2, marker="o", markersize=4)
+        if times and rates:
+            self.ax.fill_between(times, rates, alpha=0.3)
+            
+        self.ax.set_xlabel("Time")
+        self.ax.set_ylabel("Anomaly Rate")
+        self.fig.autofmt_xdate()
+        self.ax.grid(True, linestyle="--", alpha=0.7)
+        self.fig.tight_layout()
+        self.canvas.draw()
 
 def parse_motion_distribution(records):
     counts = Counter()
