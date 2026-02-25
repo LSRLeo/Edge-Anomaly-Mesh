@@ -171,21 +171,49 @@ class RedisSubscriber:
             # Trigger inference when window and stride conditions are met
             if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
                 window = node_state['buffer'][:self.window_size]
-                self.trigger_inference(node_id, window)
+                # Extract metadata for the window and reconstruct ground truth
+                terrain_map = {"IDLE": 0, "TERRESTRIAL": 1, "TRANSIT": 1, "MARITIME": 2, "LIFT": 3}
+                window_metadata = []
+                for event in window:
+                    meta = event.get("meta", {})
+                    terrain_str = meta.get("sim_mode") or meta.get("mode") or event.get("mode")
+                    anomaly = meta.get("anomaly", False) or meta.get("has_anomaly", False) or event.get("anomaly", False)
+                    terrain_idx = terrain_map.get(terrain_str.upper()) if terrain_str else None
+                    ground_truth = terrain_idx + (4 if anomaly else 0) if terrain_idx is not None else None
+                    window_metadata.append({
+                        "node_id": event.get("node_id"),
+                        "seq": event.get("seq"),
+                        "timestamp": event.get("timestamp"),
+                        "terrain_type": terrain_str,
+                        "is_anomaly": anomaly,
+                        "ground_truth": ground_truth
+                    })
+                self.trigger_inference(node_id, window, window_metadata)
                 node_state['buffer'] = node_state['buffer'][self.stride:]
                 node_state['stride_count'] = 0
 
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
 
-    def trigger_inference(self, node_id, window):
+    def trigger_inference(self, node_id, window, window_metadata):
         """
         Extract features from the buffer and run classifier inference.
         """
         features = stream_window_to_features(window, self.window_size, sample_rate=50)
         features_tensor = torch.FloatTensor(features)
         predicted, confidence = self.classifier.predict(features_tensor)
-        logger.info(f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}")
+        result = {
+            "node_id": node_id,
+            "predicted": predicted.item(),
+            "confidence": confidence.item(),
+            "window_metadata": window_metadata
+        }
+        logger.info(
+            f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}, "
+            f"window_metadata={window_metadata}"
+        )
+        # Pass window_metadata to outstream for decoding terrain/anomaly as needed
+        return result
 
 # ============================================================================
 # MAIN ENTRY POINT
