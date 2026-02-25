@@ -1,7 +1,8 @@
 import argparse
 from src.node import Node
 from src.route import Route
-import redis.redis_setup
+import redisFiles.redis_setup
+import redisFiles.redis_pub
 
 def run_simulation(node_file, route_file):
     route = Route(route_file)
@@ -12,9 +13,8 @@ def run_simulation(node_file, route_file):
     node.publish()
 
 
-def run_redis(rdis, host, port, channel_name):
-    # Placeholder for Redis-based flow
-    pass
+def run_redis(rdis, channel_name):
+    redis_pub.publish(rdis, channel_name)
 
 
 def main():
@@ -58,7 +58,7 @@ def main():
         run_simulation(args.node, args.route)
     elif args.command == "redis":
         rdis = redis_setup.connect(args.host, args.port)
-        run_redis(rdis, args.host, args.port, args.channel_name)
+        run_redis(rdis, args.channel_name)
 
 
 if __name__ == "__main__":
