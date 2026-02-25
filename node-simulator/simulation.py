@@ -1,7 +1,7 @@
 import argparse
 from src.node import Node
 from src.route import Route
-
+import redis.redis_setup
 
 def run_simulation(node_file, route_file):
     route = Route(route_file)
@@ -12,7 +12,7 @@ def run_simulation(node_file, route_file):
     node.publish()
 
 
-def run_redis():
+def run_redis(rdis, host, port, channel_name):
     # Placeholder for Redis-based flow
     pass
 
@@ -35,14 +35,30 @@ def main():
         help="JSON file name for route configuration",
     )
 
-    subparsers.add_parser("redis", help="Run with Redis (placeholder)")
+    redis_parser = subparsers.add_parser("redis", help="Run with Redis (placeholder)")
+    redis_parser.add_argument(
+        "--host",
+        default="localhost",
+        help="REDIS server hostname (default: localhost)",
+    )
+    redis_parser.add_argument(
+        "--port",
+        type=int,
+        default=6379,
+        help="REDIS server port number (default: 6379)",
+    )
+    redis_parser.add_argument(
+        "channel_name",
+        help="name of channel to monitor",
+    )
 
     args = parser.parse_args()
 
     if args.command == "sim":
         run_simulation(args.node, args.route)
     elif args.command == "redis":
-        run_redis()
+        rdis = redis_setup.connect(args.host, args.port)
+        run_redis(rdis, args.host, args.port, args.channel_name)
 
 
 if __name__ == "__main__":
