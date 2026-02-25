@@ -35,6 +35,7 @@ def crane_stops_working(node):
     node["accel_y"] = 0.0
     node["accel_z"] = 0.0
     return node
+    return node
 
 def car_caught_in_traffic(node):
     node = node.copy()
