@@ -213,7 +213,7 @@ class InferenceOutputData(MessageData):
                 logging.error("Missing event_id or node_id in inference output data")
                 raise ValueError("Missing event_id or node_id in inference output data")
             # Store the processed data in the database
-            #call correct methods to store in Node Table and InferenceOutput Table
+            #call correct methods to store in Anomaly Table and InferenceOutput Table
             #TODO: Implement the actual storage logic in the db_manager
             return None  # Indicate successful execution
         except Exception as e:
@@ -224,5 +224,4 @@ class InferenceOutputData(MessageData):
                 error_message=str(e),
                 error_code="INVALID_REQUEST"
             )
-        
         
