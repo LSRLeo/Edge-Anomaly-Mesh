@@ -153,3 +153,38 @@ class MessageData(Message):
         """
         pass
 
+class RawDataMessage(MessageData):
+    M_TYPE = "raw-data"
+
+    def __init__(self, m_id: str, raw_data: Dict[str, Any]):
+        self.data = raw_data
+        super().__init__(m_id, self.data)
+        #Try to get event_id and node_id
+        self.event_id = raw_data.get("event_id", None)
+        self.node_id = raw_data.get("node_id", None)
+    def execute(self, db_manager):
+        """
+        Process the raw data and store it in the database.
+        
+        Args:
+            db_manager: The database manager instance to interact with the database.
+        """
+        logging.info(f"Executing raw-data storage for event: {self.event_id}")
+        logging.info(f"Executing node storage for node: {self.node_id}")
+        try:
+            if not self.event_id or not self.node_id:
+                logging.error("Missing event_id or node_id in raw data")
+                raise ValueError("Missing event_id or node_id in raw data")
+            # Store the processed data in the database
+            #call correct methods to store in Node Table and RawData Table
+            #TODO: Implement the actual storage logic in the db_manager
+            return None  # Indicate successful execution
+        except Exception as e:
+            return ErrorResponse(
+                m_id=self.m_id,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST"
+            )
+    
