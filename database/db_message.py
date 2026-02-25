@@ -233,3 +233,40 @@ class InferenceOutputData(MessageData):
                 error_code="INVALID_REQUEST"
             )
         
+class getNodesRequest(MessageRequest):
+    M_TYPE = "get-nodes-request"
+    
+    def execute(self, db_manager) -> MessageResponse:
+        """
+        Execute the get-nodes request and return the result.
+        
+        Args:
+            db_manager: The database manager instance to interact with the database.
+        
+        Returns:
+            MessageResponse containing the list of nodes or an ErrorResponse if execution fails.
+        """
+        #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+        logging.info("Executing get-nodes request")
+
+        try: 
+            #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+            logging.info("Executing get-nodes request")
+            return MessageResponse(
+                m_id=self.m_id,
+                responding_to=self.m_id,
+                m_type="get-nodes-response",
+                results={"nodes": []}  # Placeholder for actual nodes data
+                )
+        
+        except Exception as e:
+            return ErrorResponse(
+                m_id=self.m_id,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INTERNAL_ERROR"
+            )
+        
+        
+        
