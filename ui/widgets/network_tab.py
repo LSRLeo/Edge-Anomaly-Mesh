@@ -29,6 +29,7 @@ from matplotlib.figure import Figure
 import numpy as np
 import math
 from parent_classes import Node
+from parent_classes import DashboardParents
 
 
 #from ui.ui_utils import (
@@ -81,7 +82,7 @@ class MercatorProjection:
         y = (1 - (merc_y - self.merc_y_min) / (self.merc_y_max - self.merc_y_min)) * self.img_height
         return x,y
 
-class NetworkTab(ttk.Frame):
+class NetworkTab(ttk.Frame, DashboardParents):
     """
     Network visualization tab.
     
@@ -485,22 +486,14 @@ class NetworkTab(ttk.Frame):
         
         Fetches current node states from database and redraws.
         """
-        # TODO: Implement with real database queries
-        #
-        # try:
-        #     # Fetch nodes from database
-        #     # nodes = db.get_all_nodes()
-        #     
-        #     # For now, use mock data
-        #     nodes = MOCK_NODES
-        #     
-        #     # Redraw all nodes
-        #     self.draw_nodes(nodes)
-        #     
-        # except Exception as e:
-        #     print(f"Error refreshing network tab: {e}")
-        pass
+        try:
+            self._setup_canvas()
+        except:
+            print(f'Error refreshing UI and Data, Exception:{Exception}')
 
+
+
+       
 
 # =============================================================================
 # DEMO / TEST
