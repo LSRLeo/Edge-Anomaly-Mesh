@@ -129,5 +129,32 @@ def publish_inference_result(node_id: str, inference_data: dict):
     publisher = InferenceRedisPublisher()
     publisher.publish(node_id, inference_data)
 
+# ============================================================================
+# SCHEMA VALIDATION
+# ============================================================================
+def validate_inference_output(data: dict):
+    required_fields = [
+        "m_type", "m_id", "event_id", "node_id", "timestamp",
+        "classification", "confidence", "is_anomaly", "anomaly_score"
+    ]
+    for field in required_fields:
+        if field not in data:
+            raise ValueError(f"Missing required field: {field}")
+    if data["m_type"] != "inference-output":
+        raise ValueError("m_type must be 'inference-output'")
+    if not isinstance(data["confidence"], float):
+        raise ValueError("confidence must be a float")
+    if not (0.0 <= data["confidence"] <= 1.0):
+        raise ValueError("confidence must be in [0.0, 1.0]")
+    if not isinstance(data["anomaly_score"], float):
+        raise ValueError("anomaly_score must be a float")
+    if not (0.0 <= data["anomaly_score"] <= 1.0):
+        raise ValueError("anomaly_score must be in [0.0, 1.0]")
+    if not isinstance(data["is_anomaly"], bool):
+        raise ValueError("is_anomaly must be a bool")
+    allowed_classes = {"IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "UNKNOWN"}
+    if data["classification"] not in allowed_classes:
+        raise ValueError(f"classification must be one of {allowed_classes}")
+
 if __name__ == "__main__":
     main()
