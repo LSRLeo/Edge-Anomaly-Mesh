@@ -19,6 +19,8 @@ class MessageFactory:
     def validate_message_dict(cls, data: Dict[str, Any]) -> Tuple[bool, str]:
         """Validate that the dictionary has required fields for message creation."""
         required_fields = {"m_id", "m_type"}
+        if not isinstance(data, dict):
+            return False, "Input data is not a dictionary"
         if not all(field in data for field in required_fields):
             missing_fields = required_fields - data.keys()
             logging.error(f"Message dictionary missing required fields: {missing_fields}")

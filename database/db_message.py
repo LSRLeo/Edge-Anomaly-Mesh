@@ -200,6 +200,7 @@ class InferenceOutputMessage(MessageData):
         #Try to get event_id and node_id
         self.event_id = inference_output.get("event_id", None)
         self.node_id = inference_output.get("node_id", None)
+        self.classification = inference_output.get("classification", None)
 
     def execute(self, db_manager):
         """
