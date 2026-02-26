@@ -90,7 +90,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
     Highlights anomalous nodes and allows clicking to view details.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp'):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader=None):
         """
         Initialize the Network tab.
         
@@ -98,8 +98,12 @@ class NetworkTab(ttk.Frame, DashboardParents):
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
         """
-        super().__init__(parent)
-        
+
+        #super().__init__(parent)
+        # Replace super with individual inheritance since it now has two parents
+        ttk.Frame.__init__(self, parent)
+        DashboardParents.__init__(self, redis_reader, parent, dashboard)
+
         self.dashboard = dashboard
         # Dict[node_id: str, node_data: dict]
         self.test_nodes: Dict[str, dict] = {} 
@@ -154,9 +158,15 @@ class NetworkTab(ttk.Frame, DashboardParents):
         
         self._setup_legend()
         self._setup_canvas()
-        ttk.Label(self, text="Network Tab - TODO: Implement canvas and legend").grid(row=2, column=0, pady=20)
+        self._setup_controls()
+       
      
-    
+    def _setup_controls(self):
+        controls_frame = ttk.Frame(self)
+        controls_frame.grid(row=2, column=0, sticky='ew', padx=10, pady=5)
+
+        # Button
+        ttk.Button(controls_frame, text="Refresh", command=self.refresh).pack(side='left', padx=5)
     def _setup_legend(self):
         """
         Create the legend showing motion state colors.
