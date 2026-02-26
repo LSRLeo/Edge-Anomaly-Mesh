@@ -209,6 +209,64 @@ class LineChartComponent(AnalyticsComponent):
         self.fig.tight_layout()
         self.canvas.draw()
 
+
+
+class BarChartComponent(AnalyticsComponent):
+    """Bar chart for top anomalous nodes"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Top Anomalous Nodes", row, col)
+    
+    def parse(self, records: List[Dict]) -> List[Tuple[str, int]]:
+        threshold = 0.5
+        node_counts = Counter()
+        
+        for r in records:
+            # Sum anomalous-state confidence to score how anomalous this record is.
+            anomaly_score = sum(r["state_confidence"][4:])
+            if anomaly_score >= threshold:
+                # Count only records that cross the anomaly threshold.
+                node_counts[r["node_id"]] += 1
+        
+        # Keep only the highest-frequency anomalous nodes for a compact chart.
+        return node_counts.most_common(5)
+    
+    def setup(self) -> None:
+        # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
+        self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
+        self.ax = self.fig.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+        
+    def update(self, records: List[Dict]) -> None:
+        node_data = self.parse(records)
+        if not self.ax:
+            return
+        
+        # Clear and fully redraw the bar chart on each refresh.
+        self.ax.clear()
+        nodes = [d[0] for d in node_data]
+        counts = [d[1] for d in node_data]
+        
+        bars = self.ax.barh(nodes, counts, color="#e74c3c")
+        for bar, count in zip(bars, counts):
+            # Label each bar with its exact count for quick scanning.
+            self.ax.text(
+                bar.get_width() + 0.3,
+                bar.get_y() + bar.get_height() / 2,
+                str(count),
+                va="center"
+            )
+        
+        self.ax.set_xlabel("Anomaly Count")
+        # Show the highest-count node at the top of the chart.
+        self.ax.invert_yaxis()
+        self.fig.tight_layout()
+        self.canvas.draw()
+
 def parse_motion_distribution(records):
     counts = Counter()
 
