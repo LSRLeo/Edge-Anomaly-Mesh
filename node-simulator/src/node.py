@@ -94,8 +94,8 @@ class Node:
     def calculate_gps(self, current_point, next_point, mode, message_index, total_messages, accel_x=0.0, accel_y=0.0, accel_z=0.0):
         if mode == "IDLE":
             return {
-                "lat_deg": current_point.lat,
-                "lon_deg": current_point.lon,
+                "lat": current_point.lat,
+                "lon": current_point.lon,
                 "altitude_m": current_point.alt
             }
         elif mode == "LIFT":
@@ -109,8 +109,8 @@ class Node:
             return self._calculate_gps_from_accel_maritime(current_point, next_point, accel_x, accel_y, accel_z)
         else:
             return {
-                "lat_deg": current_point.lat,
-                "lon_deg": current_point.lon,
+                "lat": current_point.lat,
+                "lon": current_point.lon,
                 "altitude_m": current_point.alt
             }
     
@@ -309,38 +309,25 @@ class Node:
                 gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
             
             polished_message = {
-                "m_type": "raw-data",
-                "m_id": f"{self.node_id}_{self.seq}",
-                "event_id": f"{self.node_id}_{self.timestamp.isoformat()}",
                 "node_id": self.node_id,
                 "timestamp": self.timestamp.isoformat(),
                 "seq": self.seq,
                 "gps": gps,
-                "accel_mss": {
+                "accel": {
                     "x": message['accel_x'],
                     "y": message['accel_y'],
                     "z": message['accel_z']
                 },
-                "gyro_rads": {
+                "gyro": {
                     "x": message['gyro_x'],
                     "y": message['gyro_y'],
                     "z": message['gyro_z']
                 },
-                "meta": {
-                    "sample_rate_hz": self.sample_rate_hz,
-                    "battery_pct": 95,
-                    "sim_mode": mode,
-                    "sim_anomaly": False
-                },
-                "origin": {
-                    "lat_deg": self.origin.lat,
-                    "lon_deg": self.origin.lon,
-                    "altitude_m": self.origin.alt
-                },
-                "dest": {
-                    "lat_deg": self.destination.lat,
-                    "lon_deg": self.destination.lon,
-                    "altitude_m": self.destination.alt
+                "label": {
+                    "motion_type": mode,
+                    "is_anomaly": False,
+                    "anomaly_type": "",
+                    "location": "hub_denver_01"
                 }
             }
             self.seq += 1
