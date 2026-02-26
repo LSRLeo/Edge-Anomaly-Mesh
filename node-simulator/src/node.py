@@ -52,36 +52,40 @@ class Node:
             raise ValueError(f"Error decoding node configuration file {node_file}")
     
     def generate(self):
+        recent_hub_mode = None
         for i in range(len(self.route.points)):
             if i < len(self.route.points) - 1:
                 current_point = self.route.points[i]
                 next_point = self.route.points[i + 1]
-                
+                #route always start with hub and waypoint take the mode that the most recent hub has
+                if hasattr(current_point, "mode"):
+                    recent_hub_mode = current_point.mode.lower()
                 #To-Do what to do with labels - indicate anomalies and different types of normal behavior? 
                 # label = current.label
-
+                if recent_hub_mode == "idle":
                 # Generate idle readings and apply noise 
-                idleResults = self.idle.generate_reading(current_point)
-                idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
-                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
-
-                if current_point.mode == "lift":
+                    idleResults = self.idle.generate_reading(current_point)
+                    idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
+                    self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
+            
+                elif recent_hub_mode == "lift":
+                    #To-do waypoints has no lift_time
                     self.lift.set_hub(current_point.lat, current_point.lon, 20)
                     liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
                     liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
                     self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
-                elif current_point.mode == "maritime":
+                elif recent_hub_mode == "maritime":
                     maritimeResults = self.maritime.generate_reading(current_point, next_point)
                     maritimeResults_noisy = [apply_maritime_node_noise(message) for message in maritimeResults]
                     self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_point, next_point)
-                elif current_point.mode == "terrestrial":
+                elif recent_hub_mode == "terrestrial":
                     terrestrialResults = self.terrestrial.generate_reading(current_point, next_point, self.sample_rate_hz)
                     terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in terrestrialResults]
                     self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_point, next_point)
                 else:
-                    raise ValueError(f"Invalid mode: {current_point.mode}")
+                    raise ValueError(f"Invalid mode: {recent_hub_mode}")
             else:
-                current_point = self.route.hubs[i]
+                current_point = self.route.points[i]
                 idleResults = self.idle.generate_reading(current_point)
                 idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
                 self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)

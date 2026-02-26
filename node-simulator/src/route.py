@@ -73,7 +73,7 @@ class Route:
             end = hubs[i + 1]
 
             self.waypointMaker.num_waypoints = randint(3, 10)
-            route_type = (start.mode or "").upper()
+            route_type = start.mode.lower()
 
             """
             since idle means the package is not moving, we will not produce waypoints for idle
@@ -81,6 +81,8 @@ class Route:
             if route_type != "idle":
                 wps = self.waypointMaker.make(start, end, route_type)
                 self.points.extend(wps)
+                self.points.append(end)
+            else:
                 self.points.append(end)
 
         return self.points
