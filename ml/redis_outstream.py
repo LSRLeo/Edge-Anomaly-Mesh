@@ -67,11 +67,23 @@ def build_inference_output(
 # REDIS PUBLISHER
 # ============================================================================
 class InferenceRedisPublisher:
-    def __init__(self, host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB):
+    """
+    Publishes standardized inference-output messages to Redis.
+    Channel: inference:results:{node_id}
+    """
+    def __init__(self, host="localhost", port=6379, db=0):
         self.redis_client = redis.Redis(host=host, port=port, db=db, decode_responses=True)
 
     def publish(self, node_id: str, inference_msg: dict):
-        channel = f"{CHANNEL_PREFIX}{node_id}"
+        """
+        Publishes the inference-output message to the correct Redis channel.
+        Args:
+            node_id: Node identifier (e.g., 'node_001')
+            inference_msg: Dict matching the inference-output schema
+        Returns:
+            channel: The Redis channel used
+        """
+        channel = f"inference:results:{node_id}"
         self.redis_client.publish(channel, json.dumps(inference_msg))
         return channel
 
