@@ -32,20 +32,10 @@ class Route:
                     # label=hub_data['label'] 
                 )
 
-                return self.generate_waypoints(hub_list)
+                hub_list.append(hub)
 
 
-             # If 0 hubs: return []
-            if len(hub_list) == 0:
-                return self.points
-
-            # If 1 hub: return [that hub]
-            if len(hub_list) == 1:
-                self.points.append(hub_list[0])
-                return self.points
-                
-            
-            self.generate_waypoints(hub_list)
+            return self.generate_waypoints(hub_list)
 
 
 
