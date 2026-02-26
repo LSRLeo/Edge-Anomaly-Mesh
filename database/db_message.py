@@ -7,7 +7,7 @@ import logging
 
 
 ERROR_CODES = ["NOT_FOUND", "INVALID_REQUEST", "INTERNAL_ERROR"]
-
+M_ID_DB = "db_message_id" #temp id for DB messages, to be replaced by actual message ID generation logic
 
 class Message(ABC):
     """
@@ -129,7 +129,7 @@ class MessageRequest(Message):
     Abstract class for message requests.
     '''   
     @abstractmethod
-    def execute(self) -> MessageResponse:
+    def execute(self, db_manager) -> MessageResponse:
         """
         Execute the message and return the result.
         
@@ -144,7 +144,7 @@ class MessageData(Message):
     Abstract class for message data.
     '''   
     @abstractmethod
-    def execute(self):
+    def execute(self, db_manager):
         """
         Execute the message and return the result.
         
@@ -152,4 +152,154 @@ class MessageData(Message):
             ErrorResponse if execution fails, otherwise None. 
         """
         pass
+
+
+class RawDataMessage(MessageData):
+    M_TYPE = "raw-data"
+
+    def __init__(self, m_id: str, raw_data: Dict[str, Any]):
+        self.data = raw_data
+        super().__init__(m_id, self.data)
+        #Try to get event_id and node_id
+        self.event_id = raw_data.get("event_id", None)
+        self.node_id = raw_data.get("node_id", None)
+
+    def execute(self, db_manager):
+        """
+        Process the raw data and store it in the database.
+        
+        Args:
+            db_manager: The database manager instance to interact with the database.
+        """
+        logging.info(f"Executing raw-data storage for event: {self.event_id}")
+        logging.info(f"Executing node storage for node: {self.node_id}")
+
+        try:
+            if not self.event_id or not self.node_id:
+                logging.error("Missing event_id or node_id in raw data")
+                raise ValueError("Missing event_id or node_id in raw data")
+            # Store the processed data in the database
+            #call correct methods to store in Node Table and RawData Table
+            #TODO: Implement the actual storage logic in the db_manager
+            logging.info(f"Successfully stored raw data for event: {self.event_id} and node: {self.node_id}")
+            return None  # Indicate successful execution
+        
+        except Exception as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST"
+            )
+
+
+class InferenceOutputData(MessageData):
+    M_TYPE = "inference-output"
+
+    def __init__(self, m_id: str, inference_output: Dict[str, Any]):
+        
+        super().__init__(m_id, inference_output)
+        #Try to get event_id and node_id
+        self.event_id = inference_output.get("event_id", None)
+        self.node_id = inference_output.get("node_id", None)
+
+    def execute(self, db_manager):
+        """
+        Process the inference output data and store it in the database.
+        
+        Args:
+            db_manager: The database manager instance to interact with the database.
+        """
+        logging.info(f"Executing inference-output storage for event: {self.event_id}")
+        logging.info(f"Executing node storage for node: {self.node_id}")
+
+        try:
+            if not self.event_id or not self.node_id:
+                logging.error("Missing event_id or node_id in inference output data")
+                raise ValueError("Missing event_id or node_id in inference output data")
+            # Store the processed data in the database
+            #call correct methods to store in Anomaly Table and InferenceOutput Table
+            #TODO: Implement the actual storage logic in the db_manager
+            logging.info(f"Successfully stored inference output for event: {self.event_id} and node: {self.node_id}")
+            return None  # Indicate successful execution
+        
+        except Exception as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST"
+            )
+        
+class GetNodesRequest(MessageRequest):
+    M_TYPE = "get-nodes"
+    
+    def execute(self, db_manager) -> MessageResponse:
+        """
+        Execute the get-nodes request and return the result.
+        
+        Args:
+            db_manager: The database manager instance to interact with the database.
+        
+        Returns:
+            MessageResponse containing the list of nodes or an ErrorResponse if execution fails.
+        """
+        #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+        logging.info("Executing get-nodes request")
+
+        try: 
+            #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+            logging.info("Executing get-nodes request")
+            return MessageResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                m_type="get-nodes-response",
+                results={"nodes": []}  # Placeholder for actual nodes data
+                )
+        
+        except Exception as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INTERNAL_ERROR"
+            )
+
+"""
+{
+  "m_type": "get-node-data-ids-response",
+  "m_id": "ui_00002",
+  "node_id": "node_001",
+  "data_ids": [
+    "node_001_2026-01-22T18:52:14.818400",
+    "node_001_2026-01-22T18:52:14.838400",
+    "node_001_2026-01-22T18:52:14.858400"
+  ]
+}
+"""
+class GetNodeDataIdsRequest(MessageRequest):
+    M_TYPE = "get-node-data-ids"
+
+    def __init__(self, m_id: str, m_contents: Dict[str,Any]):
+        super().__init__(m_id,m_contents)
+        self.node_id = m_contents.get("node_id", None)
+
+    def execute(self, db_manager):
+        #TODO: 
+        pass
+
+class GetDatumRequest(MessageRequest):
+    M_TYPE = "get-datum"
+
+    def __init__(self, m_id: str, m_contents: Dict[str,Any]):
+        super().__init__(m_id,m_contents)
+        self.event_id = self.m_content.get("event_id")
+
+    def execute(self, db_manager):
+        #TODO: execute datum query, handle errors, respond
+        pass
+
 
