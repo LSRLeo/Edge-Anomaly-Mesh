@@ -1,21 +1,40 @@
-Team 3: Databases
+## Team 3: Databases
 
-Goal:Store all inferences durably and provide query access for Team 4.
+## Goal:Store data from DE and ML teams as well as provide functional queries for ML and UI teams
 
-To Build: 
-SQLite Schema - 3 tables: inference_results, nodes, anomaly_events
+## To Build: 
 REDIS Listener - Subscribe to inference:results:*, write to database
 Query Functions - 6 Python functions for Team 4 to call
 Aggregations - Compute motion distributions, anomaly rates, statistics
 Error Handling - Batch inserts, transaction management, graceful failures
 
-Database Schema Example:
+## How to run
 
-inference_results: node_id, timestamp, motion_class, confidence, anomaly_flag, anomaly_score
-nodes: node_id, location, status, first_seen, last_seen
-anomaly_events: node_id, start/end timestamp, severity, description, acknowledged
+# Instantiate empty database
+-In edge-anomaly-mesh directory, run
+```bash
+python database/schema.py
+```
+-This instantiates the empty mesh.db file
 
-Key Constraints:
+## Database Schema:
+
+raw_sensor_data: id, node_id, timestamp, seq, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, gps_lat, gps_lon, gps_altitude_m, ingested_at
+
+nodes: node_id, status, first_seen, last_seen, location_lat, location_lon, location_altitude_m
+
+inference_results: id, node_id, timestamp, window_start, window_end, window_samples, location_state, motion_class, confidence, anomaly_detected, anomaly_score, anomaly_type, nearest_hub_id, nearest_hub_distance, feature_vector, processing_time_ms, ingested_at
+
+anomaly_events: inference_id, id, node_id, start_timestamp, end_timestamp, severity, description, acknowledged, acknowledged_by, acknowledged_at
+
+## Sprint 1
+
+-implemented db using pysqlite and sqlalchemy
+-Created tables and table managers
+-created db file for each table
+-began work on managing REDIS messages
+
+## Key Constraints:
 
 Queries respond in < 500ms
 Handle duplicate messages idempotently
