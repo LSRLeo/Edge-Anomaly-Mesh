@@ -13,10 +13,10 @@ class Route:
             with open(self.jason_file, 'r') as f:
                 data = json.load(f)
 
-            hubs = data['hub']  
+            hubs = data['hubs']  
             hub_list = []
 
-            for hub_data in data['hubs']:
+            for hub_data in hubs:
 
                 hub = Hub(
                     name=hub_data['name'],
@@ -26,12 +26,13 @@ class Route:
                     time_at_hub=hub_data['time_at_hub'],
                     mode=hub_data['mode'],
                     lift_time=hub_data['lift_time'],
-                    label=hub_data['label']
+                    #dont have label yet
+                    # label=hub_data['label'] 
                 )
 
                 hub_list.append(hub)
                 
-            if len(hub) >= 2:
+            if len(hub_list) >= 2:
                 self.generate_waypoints(hub_list)
 
 
