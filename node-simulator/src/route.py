@@ -29,7 +29,7 @@ class Route:
                     mode=hub_data['mode'],
                     lift_time=hub_data['lift_time'],
                     #dont have label yet
-                    # label=hub_data['label'] 
+                    #label=hub_data['label'] 
                 )
 
                 hub_list.append(hub)
@@ -73,11 +73,18 @@ class Route:
             end = hubs[i + 1]
 
             self.waypointMaker.num_waypoints = randint(3, 10)
-            route_type = (start.mode or "").upper()
+            route_type = start.mode.lower()
 
-            wps = self.waypointMaker.make(start, end, route_type)
-            self.points.extend(wps)
-            self.points.append(end)
+            """
+            since idle means the package is not moving, we will not produce waypoints for idle. the same 
+            goes for lift.
+            """
+            if route_type != "idle" or route_type != "lift":
+                wps = self.waypointMaker.make(start, end, route_type)
+                self.points.extend(wps)
+                self.points.append(end)
+            else:
+                self.points.append(end)
 
         return self.points
 

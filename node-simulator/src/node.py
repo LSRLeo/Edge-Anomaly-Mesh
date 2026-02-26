@@ -12,8 +12,8 @@ from src.noise import apply_idle_node_noise, apply_lift_node_noise, apply_mariti
 class Node:
     def __init__(self, node_file, route):
         self.route = route
-        self.origin = route.hubs[0]
-        self.destination = route.hubs[-1]
+        self.origin = route.points[0]
+        self.destination = route.points[-1]
         self.messages = []
 
         try:
@@ -52,61 +52,66 @@ class Node:
             raise ValueError(f"Error decoding node configuration file {node_file}")
     
     def generate(self):
-        for i in range(len(self.route.hubs)):
-            if i < len(self.route.hubs) - 1:
-                current_hub = self.route.hubs[i]
-                next_hub = self.route.hubs[i + 1]
-                
+        recent_hub_mode = None
+        for i in range(len(self.route.points)):
+            if i < len(self.route.points) - 1:
+                current_point = self.route.points[i]
+                next_point = self.route.points[i + 1]
+                #route always start with hub and waypoint take the mode that the most recent hub has
+                if hasattr(current_point, "mode"):
+                    recent_hub_mode = current_point.mode.lower()
                 #To-Do what to do with labels - indicate anomalies and different types of normal behavior? 
-                label = current_hub.label
-
+                # label = current.label
+                if recent_hub_mode == "idle":
                 # Generate idle readings and apply noise 
-                idleResults = self.idle.generate_reading(current_hub)
-                idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
-                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
-
-                if current_hub.mode == "lift":
-                    self.lift.set_hub(current_hub.lat, current_hub.lon, 20)
-                    liftResults = self.lift.generate_reading(current_hub, current_hub.lift_time)
-                    liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
-                    self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_hub, next_hub)
-                elif current_hub.mode == "maritime":
-                    maritimeResults = self.maritime.generate_reading(current_hub, next_hub)
+                    idleResults = self.idle.generate_reading(current_point)
+                    idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
+                    self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
+            
+                elif recent_hub_mode == "lift":
+                    #To-do waypoints has no lift_time what do we do with it?
+                    if hasattr(current_point, "mode"):
+                        self.lift.set_hub(current_point.lat, current_point.lon, 20)
+                        liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
+                        liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
+                        self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
+                elif recent_hub_mode == "maritime":
+                    maritimeResults = self.maritime.generate_reading(current_point, next_point)
                     maritimeResults_noisy = [apply_maritime_node_noise(message) for message in maritimeResults]
-                    self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_hub, next_hub)
-                elif current_hub.mode == "terrestrial":
-                    terrestrialResults = self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
+                    self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_point, next_point)
+                elif recent_hub_mode == "terrestrial":
+                    terrestrialResults = self.terrestrial.generate_reading(current_point, next_point, self.sample_rate_hz)
                     terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in terrestrialResults]
-                    self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_hub, next_hub)
+                    self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_point, next_point)
                 else:
-                    raise ValueError(f"Invalid mode: {current_hub.mode}")
+                    raise ValueError(f"Invalid mode: {recent_hub_mode}")
             else:
-                current_hub = self.route.hubs[i]
-                idleResults = self.idle.generate_reading(current_hub)
+                current_point = self.route.points[i]
+                idleResults = self.idle.generate_reading(current_point)
                 idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
-                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
+                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
 
-    def calculate_gps(self, current_hub, next_hub, mode, message_index, total_messages, accel_x=0.0, accel_y=0.0, accel_z=0.0):
+    def calculate_gps(self, current_point, next_point, mode, message_index, total_messages, accel_x=0.0, accel_y=0.0, accel_z=0.0):
         if mode == "IDLE":
             return {
-                "lat_deg": current_hub.lat,
-                "lon_deg": current_hub.lon,
-                "altitude_m": current_hub.alt
+                "lat_deg": current_point.lat,
+                "lon_deg": current_point.lon,
+                "altitude_m": current_point.alt
             }
         elif mode == "LIFT":
             # Calculate GPS from accelerations for LIFT mode
-            return self._calculate_gps_from_accel_lift(current_hub, accel_x, accel_y, accel_z)
+            return self._calculate_gps_from_accel_lift(current_point, accel_x, accel_y, accel_z)
         elif mode == "TERRESTRIAL":
             # Calculate GPS from accelerations for TERRESTRIAL mode
-            return self._calculate_gps_from_accel_terrestrial(current_hub, next_hub, accel_x, accel_y, accel_z)
+            return self._calculate_gps_from_accel_terrestrial(current_point, next_point, accel_x, accel_y, accel_z)
         elif mode == "MARITIME":
             # Calculate GPS from accelerations for MARITIME mode
-            return self._calculate_gps_from_accel_maritime(current_hub, next_hub, accel_x, accel_y, accel_z)
+            return self._calculate_gps_from_accel_maritime(current_point, next_point, accel_x, accel_y, accel_z)
         else:
             return {
-                "lat_deg": current_hub.lat,
-                "lon_deg": current_hub.lon,
-                "altitude_m": current_hub.alt
+                "lat_deg": current_point.lat,
+                "lon_deg": current_point.lon,
+                "altitude_m": current_point.alt
             }
     
     def _calculate_bearing(self, start_hub, end_hub):
@@ -279,7 +284,7 @@ class Node:
             "altitude_m": new_alt
         }
     
-    def add_metadata(self, messages, mode, current_hub, next_hub):
+    def add_metadata(self, messages, mode, current_point, next_point):
         polished_messages = []
         total_messages = len(messages)
         
@@ -295,13 +300,13 @@ class Node:
             # For LIFT, TERRESTRIAL, and MARITIME modes, pass accelerations to calculate GPS from them
             if mode in ["LIFT", "TERRESTRIAL", "MARITIME"]:
                 gps = self.calculate_gps(
-                    current_hub, next_hub, mode, message_index, total_messages,
+                    current_point, next_point, mode, message_index, total_messages,
                     accel_x=message['accel_x'],
                     accel_y=message['accel_y'],
                     accel_z=message['accel_z']
                 )
             else:
-                gps = self.calculate_gps(current_hub, next_hub, mode, message_index, total_messages)
+                gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
             
             polished_message = {
                 "m_type": "raw-data",
