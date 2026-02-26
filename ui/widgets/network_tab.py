@@ -103,7 +103,7 @@ class NetworkTab(ttk.Frame):
         # Dict[node_id: str, node_data: dict]
         self.test_nodes: Dict[str, dict] = {} 
 
-        self.node_dict: Dict[str, dict] = {}
+        self.node_dict: Dict[str, object] = {}
         # Canvas for drawing nodes
         self.canvas: Optional[tk.Canvas] = None
         
@@ -434,19 +434,45 @@ class NetworkTab(ttk.Frame):
         with open(filename, 'r') as file:
             return json.load(file)
     def populate_test_nodes(self):
-        file = self.load_json('test_nodes.json')
+        #file = self.load_json('test_nodes.json')
+        raw_file = self.load_json('raw_data.json')
+        ml_file = self.load_json('ml_data.json')
 
-        self.test_nodes.clear()
-        for node_data in file:
-            node = Node(node_data['node_id'],
-                        node_data['lat'],
-                        node_data['lon'],
-                        node_data['timestamp'],
-                        node_data=['motion)class'], 
-                        node_data=['confidence'])
-            self.node_dict[node_data['node_id']] = node
-            node_id = node_data['node_id']
-            self.test_nodes[node_id] = node_data
+        # Sort ml dict using node_id as key for quick indexing
+        ml_id_sort = {msg["node_id"]: msg for msg in ml_file} 
+
+        #self.test_nodes.clear()
+        self.node_dict.clear()
+        for node_data in raw_file:
+            node_id = node_data["node_id"]
+            ml = ml_id_sort.get(node_id)
+
+            if ml is None:
+                print(f'No contents in ML {node_id}')
+                continue
+                
+            node = Node(
+                node_id=node_id,
+                lat=node_data.get("gps", {}).get("lat_deg"),
+                lon=node_data.get("gps", {}).get("lon_deg"),
+                timestamp=datetime.fromisoformat(node_data["timestamp"]),
+                motion_class=Node.motion_states.index(ml["motion_class"]),
+                confidence=ml["motion_confidence"],
+                anomalous=ml["anomaly_flag"]
+            )
+            # Append newly created node to dict of nodes, key node_id
+            self.node_dict[node_id] = node
+            
+            #Drawable dict, only what tkinter needs
+            self.test_nodes[node_id] = {
+                "node_id": node_id,
+                "lat": node_data["gps"]["lat_deg"],
+                "lon": node_data["gps"]["lon_deg"],
+                "motion_class": ml["motion_class"],
+                "anomaly": ml["anomaly_flag"]
+            }
+
+            
 
         self.draw_nodes(list(self.test_nodes.values()))
     
