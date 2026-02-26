@@ -15,6 +15,7 @@ import logging
 import json
 import argparse
 import torch
+import time
 
 from data_pipeline import stream_window_to_features
 from train_classifier import MotionClassifier
@@ -67,6 +68,8 @@ class RedisSubscriber:
         channel (str): Channel pattern.
         redis_client (redis.Redis): Redis client instance.
     """
+
+    INACTIVITY_THRESHOLD = 600 # An inactive buffer for 10 minutes is inactive and should be emptied
 
     def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None):
         """
@@ -154,12 +157,17 @@ class RedisSubscriber:
             self.seen_seqs[node_id].add(seq)
 
             # Initialize buffer for new node_id
+            now = time.time()
             if node_id not in self.node_states:
                 self.node_states[node_id] = {
                     'buffer': [],  # Use a list
                     'stride_count': 0,
-                    'last_seq': -1
+                    'last_seq': -1,
+                    'last_active': now
                 }
+            
+            # Update last activity time for node
+            self.node_states[node_id]['last_active'] = now
 
             # Append new sample to node's buffer
             node_state = self.node_states[node_id]
@@ -191,9 +199,28 @@ class RedisSubscriber:
                 self.trigger_inference(node_id, window, window_metadata)
                 node_state['buffer'] = node_state['buffer'][self.stride:]
                 node_state['stride_count'] = 0
+            
+            # Inactivity cleanup
+            self.cleanup_inactive_nodes()
+
 
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
+
+    def cleanup_inactive_nodes(self):
+        """
+        Remove nodes from node_states and seen_seqs if inactive for threshold.
+        """
+
+        now = time.time()
+        inactive = [
+            node_id for node_id, state in self.node_states.items()
+            if now - state.get('last_active', now) > self.INACTIVITY_THRESHOLD
+        ]
+        for node_id in inactive:
+            logger.info(f"Cleaning up inactive node: {node_id}")
+            self.node_states.pop(node_id, None)
+            self.seen_seqs.pop(node_id, None)
 
     def trigger_inference(self, node_id, window, window_metadata):
         """
