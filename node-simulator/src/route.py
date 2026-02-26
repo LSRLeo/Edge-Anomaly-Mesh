@@ -1,11 +1,13 @@
 from src.hub import Hub
 from src.waypoint import Waypoint
 import json
-
+from src.waypointsMaker import WaypointMaker
+from random import randint
 class Route:
     def __init__(self, jason_file): #route is a array of hubs in order
        self.points = [] #ordered list of hubs and waypoints in the route
        self.jason_file = jason_file
+       self.waypointMaker = WaypointMaker(5) #default is 5 waypoints can later modify
     
 
     def load_route(self):
@@ -30,10 +32,20 @@ class Route:
                     # label=hub_data['label'] 
                 )
 
-                hub_list.append(hub)
+                return self.generate_waypoints(hub_list)
+
+
+             # If 0 hubs: return []
+            if len(hub_list) == 0:
+                return self.points
+
+            # If 1 hub: return [that hub]
+            if len(hub_list) == 1:
+                self.points.append(hub_list[0])
+                return self.points
                 
-            if len(hub_list) >= 2:
-                self.generate_waypoints(hub_list)
+            
+            self.generate_waypoints(hub_list)
 
 
 
@@ -53,10 +65,32 @@ class Route:
 
     def generate_waypoints(self, hubs):
         
+        self.points = []
+
+        if len(hubs) == 0:
+            return self.points
+
+        if len(hubs) == 1:
+            self.points.append(hubs[0])
+            return self.points
+
+        # start hub
+        self.points.append(hubs[0])
+
+        # each segment hub[i] -> hub[i+1]
+        for i in range(len(hubs) - 1):
+            start = hubs[i]
+            end = hubs[i + 1]
+
+            self.waypointMaker.num_waypoints = randint(3, 10)
+            route_type = (start.mode or "").upper()
+
+            wps = self.waypointMaker.make(start, end, route_type)
+            self.points.extend(wps)
+            self.points.append(end)
+
+        return self.points
+
+
         
-        for i in range(len(hubs)):
-            pass
-
-
-        pass
 

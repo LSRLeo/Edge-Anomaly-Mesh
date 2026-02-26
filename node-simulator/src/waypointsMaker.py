@@ -5,6 +5,7 @@ from src.hub import Hub
 from src.waypoint import Waypoint
 
 
+
 class BezierCurve:
     def __init__(self, p0: Tuple[float, float], p1: Tuple[float, float],
                  p2: Tuple[float, float], p3: Tuple[float, float]):
@@ -38,7 +39,7 @@ class WaypointMaker:
     Uses a Bezier curve for lat/lon and interpolates altitude.
     """
 
-    def __init__(self, num_waypoints: int = 10):
+    def __init__(self, num_waypoints: int = 10):#default 10 points
         if num_waypoints < 2:
             raise ValueError("num_waypoints must be >= 2")
         self.num_waypoints = num_waypoints
@@ -64,7 +65,7 @@ class WaypointMaker:
 
             base_alt = start_alt + (end_alt - start_alt) * progress
 
-            if route_type == "ROAD":
+            if route_type == "terrestrial":
                 alt_variation = math.sin(progress * math.pi * 3) * 50
                 altitude = base_alt + alt_variation + random.gauss(0, 5)
             else:
@@ -97,9 +98,9 @@ class WaypointMaker:
         perp_x = -dy / length
         perp_y = dx / length
 
-        if route_type == "ROAD":
+        if route_type == "terrestrial":
             offset = length * random.uniform(0.1, 0.2)
-        elif route_type == "SEA":
+        elif route_type == "maritime":
             offset = length * random.uniform(0.03, 0.08)
         else:
             offset = length * random.uniform(0.05, 0.1)
