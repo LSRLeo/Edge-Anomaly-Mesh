@@ -245,7 +245,7 @@ class DashboardApp:
         
         # Load the node data
         if self.node_details_tab:
-            self.node_details_tab.load_node(node_id)
+            self.node_details_tab.display_node(node_id)
         # pass
     
     def _on_close(self):

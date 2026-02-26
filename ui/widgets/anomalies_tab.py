@@ -15,12 +15,15 @@ Features:
 - Status tracking (NEW, ACKNOWLEDGED, RESOLVED)
 """
 
+import json
+import os
 import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 from datetime import datetime, timedelta
 
 from matplotlib import style
+from widgets.parent_classes import Node
 
 # from ui.ui_utils import (
 #     SEVERITY_COLORS, STATUS_COLORS,
@@ -30,7 +33,7 @@ from matplotlib import style
 
 # Avoid circular import
 if TYPE_CHECKING:
-    from ui.widgets.dashboard_main import DashboardApp
+    from widgets.dashboard_main import DashboardApp
 
 
 # =============================================================================
@@ -86,6 +89,9 @@ class AnomalySection(ttk.Frame):
         self._status_var = tk.StringVar(value="Ready")
         self._rows: List[Dict[str, Any]] = []
         self.anomaly_data: List[Dict[str, Any]] = []
+        self.nodes = {} #dict of node_id to Node object for easy access when opening node details from anomaly row
+        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+
         self._build_ui()
     
     def _build_ui(self):
@@ -119,8 +125,8 @@ class AnomalySection(ttk.Frame):
 
         
 
-        # Build initial rows with mock data
-        self._build_rows(MOCK_ANOMALIES)
+        # Build initial rows
+        self._build_rows()
     def _on_inner_configure(self, event):
         # Update scroll region to encompass the inner frame
         if self._canvas:
@@ -133,15 +139,82 @@ class AnomalySection(ttk.Frame):
         return
     def _on_refresh_clicked(self):
         pass
-    def _build_rows(self, anomalies: List[Dict[str, Any]]):
+    def _build_rows(self):
         # Clear existing rows
         for row in self._rows:
             row['frame'].destroy()
         self._rows.clear()
-
+        self.populate_test_nodes()
         # Build new rows
-        for anomaly in anomalies:
-            self._build_single_row(anomaly)
+        for node_id in list(self.nodes.keys()):
+            node = self.nodes[node_id]
+            if node.anomaly:
+                self._build_single_row(node.toDict())
+    def load_json(self, filename):
+        if not os.path.exists(filename):
+            raise FileNotFoundError
+        with open(filename, 'r') as file:
+            return json.load(file)
+    def populate_test_nodes(self):
+        file = self.load_json('widgets/test_nodes.json')
+        
+
+        for entry in file:
+            try:
+                self.load_node(entry["node_id"], entry)
+
+            except Exception as e:
+                print(f"[load_nodes] Failed to load entry {entry}: {e}")
+
+  
+    def load_node(self, node_id: str, entry: Dict[str, Any]):
+        """
+        Load data for a specific node.
+        
+        Called when node list is populated
+        
+        Args:
+            node_id: ID of the node to display
+        """
+        # TODO: Implement
+        #
+        # self.current_node_id = node_id
+        #
+        # # Update selector to show this node
+        # if self.node_selector:
+        #     self.node_selector.set(node_id)
+        #
+        # # Fetch and display data
+        # self._load_node_info(node_id)
+        # self._load_history(node_id)
+        # self._load_anomaly_trend(node_id)
+        node_id = entry["node_id"]
+        lat = float(entry["lat"])
+        lon = float(entry["lon"])
+        # JSON uses an int for motion_class → convert to string
+        motion_class_str = entry.get("motion_class", "")
+        motion_class = self.motion_states.index(motion_class_str) if motion_class_str in self.motion_states else 0
+    
+        anomaly = entry.get("anomaly", False)
+        if anomaly:
+            motion_class += 4 #convert to anomaly motion class index
+        # Insert placeholder fields
+        timestamp = datetime.now()
+        
+
+        # Build Node object
+        node = Node(
+            node_id=node_id,
+            lat=lat,
+            lon=lon,
+            timestamp=timestamp,
+            motion_class=motion_class,
+            anomaly=anomaly,
+            confidence=1.0
+        )
+
+        # Store it
+        self.nodes[node_id] = node    
     def _build_single_row(self, anomaly: Dict[str, Any]):
         
         container = ttk.Frame(self._inner, padding=(10, 8))
@@ -200,7 +273,7 @@ class AnomalySection(ttk.Frame):
     def _open_node(self, node_id: str):
         """Callback when an anomaly row is clicked to open node details."""
         self.dashboard._select_tab(3)  # Switch to Node Details tab
-        self.dashboard.node_details_tab.load_node(node_id)
+        self.dashboard.node_details_tab.display_node(node_id)
 
 
 
@@ -561,32 +634,32 @@ class AnomaliesTab(ttk.Frame):
 # DEMO / TEST
 # =============================================================================
 
-def demo():
-    """Demonstrate the AnomaliesTab independently."""
-    root = tk.Tk()
-    root.title("Anomalies Tab Demo")
-    root.geometry("900x500")
+# def demo():
+#     """Demonstrate the AnomaliesTab independently."""
+#     root = tk.Tk()
+#     root.title("Anomalies Tab Demo")
+#     root.geometry("900x500")
     
-    # Create a mock dashboard
-    class MockDashboard:
-        def show_node_details(self, node_id):
-            print(f"Show details for: {node_id}")
+#     # Create a mock dashboard
+#     class MockDashboard:
+#         def show_node_details(self, node_id):
+#             print(f"Show details for: {node_id}")
     
-    # notebook = ttk.Notebook(root)
-    # notebook.pack(fill='both', expand=True)
+#     # notebook = ttk.Notebook(root)
+#     # notebook.pack(fill='both', expand=True)
     
-    # tab = AnomaliesTab(notebook, dashboard=MockDashboard())
-    # notebook.add(tab, text='Anomalies')
+#     # tab = AnomaliesTab(notebook, dashboard=MockDashboard())
+#     # notebook.add(tab, text='Anomalies')
     
 
-    container = ttk.Frame(root)
-    container.pack(fill="both", expand=True)
+#     container = ttk.Frame(root)
+#     container.pack(fill="both", expand=True)
 
-    anomalies_tab = AnomaliesTab(container, dashboard=MockDashboard())  # your DashboardApp instance
-    anomalies_tab.pack(fill="both", expand=True)
+#     anomalies_tab = AnomaliesTab(container, dashboard=MockDashboard())  # your DashboardApp instance
+#     anomalies_tab.pack(fill="both", expand=True)
 
-    root.mainloop()
+#     root.mainloop()
 
 
-if __name__ == '__main__':
-    demo()
+# if __name__ == '__main__':
+#     demo()
