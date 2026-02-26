@@ -209,6 +209,19 @@ class LineChartComponent(AnalyticsComponent):
         self.fig.tight_layout()
         self.canvas.draw()
 
+
+
+class BarChartComponent(AnalyticsComponent):
+    """Bar chart for top anomalous nodes"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Top Anomalous Nodes", row, col)
+    
+    
+
 def parse_motion_distribution(records):
     counts = Counter()
 
