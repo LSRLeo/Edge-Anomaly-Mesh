@@ -118,5 +118,16 @@ def main():
     channel = publisher.publish(args.node_id, msg)
     print(f"Published to {channel}: {msg}")
 
+def publish_inference_result(node_id: str, inference_data: dict):
+    """
+    Validates, formats, and publishes inference-output in real-time.
+    Should be called immediately after inference.
+    """
+    # Validate schema
+    validate_inference_output(inference_data)
+    # Publish to Redis
+    publisher = InferenceRedisPublisher()
+    publisher.publish(node_id, inference_data)
+
 if __name__ == "__main__":
     main()
