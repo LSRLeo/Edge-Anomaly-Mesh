@@ -48,3 +48,12 @@ def car_caught_in_traffic(node):
     node["accel_y"] += np.random.uniform(-0.02, 0.02)
     node["accel_z"] += np.random.uniform(-0.02, 0.02)
     return node
+
+def rocky_seas(node):
+    node = node.copy()
+    # Simulate much larger gyro vibrations (rocky seas)
+    node["gyro_x"] += np.random.uniform(-1.0, 1.0)
+    node["gyro_y"] += np.random.uniform(-1.0, 1.0)
+    node["gyro_z"] += np.random.uniform(-1.0, 1.0)
+    node["anomalous"] = True
+    return node
