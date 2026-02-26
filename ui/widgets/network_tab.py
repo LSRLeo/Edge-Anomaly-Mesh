@@ -96,7 +96,7 @@ class NetworkTab(ttk.Frame):
             dashboard: Reference to main dashboard for callbacks
         """
         super().__init__(parent)
-        
+        self.parent = parent
         self.dashboard = dashboard
         # Dict[node_id: str, node_data: dict]
         self.test_nodes: Dict[str, dict] = {} 
@@ -423,7 +423,8 @@ class NetworkTab(ttk.Frame):
 
         if node is not None and event.num == 1:
             self.select_node(node_id)
-            self.dashboard.show_node_details(node_id)
+            self.parent.select(3) #switch to node details tab
+            self.dashboard.node_details_tab.display_node(node_id)
 
         elif node is not None and event.num == 2 or event.num==3:
             node['anomaly'] = not node.get('anomaly')

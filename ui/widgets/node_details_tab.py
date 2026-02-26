@@ -480,12 +480,10 @@ class NodeDetailsTab(ttk.Frame):
         Args:
             event: Combobox selection event
         """
-        # TODO: Implement
-        #
-        # node_id = self.node_selector.get()
-        # if node_id:
-        #     self.load_node(node_id)
-        pass
+        if self.node_selector is None:
+            return
+        node_id = self.node_selector.get()
+        self.display_node(node_id)
     
     def update_node_list(self, node_ids: List[str]):
         """
