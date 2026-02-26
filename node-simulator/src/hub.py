@@ -4,6 +4,7 @@ class Hub:
         self.lat = lat
         self.lon = lon
         self.alt = alt
+        #only need for Idle class
         self.time_at_hub = time_at_hub
         self.mode = mode
         self.lift_time = lift_time

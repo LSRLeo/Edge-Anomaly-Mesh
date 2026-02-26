@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 def apply_package_stolen(node):
-    import random
+    node = node.copy()
     # Choose a random direction (2D)
     angle = random.uniform(0, 2 * np.pi)
     direction = np.array([np.cos(angle), np.sin(angle)])
@@ -46,7 +46,6 @@ def car_caught_in_traffic(node):
     node["accel_x"] *= 0.2
     node["accel_y"] *= 0.2
     node["accel_z"] *= 0.2
-    # Optionally, add small random noise
     node["accel_x"] += np.random.uniform(-0.02, 0.02)
     node["accel_y"] += np.random.uniform(-0.02, 0.02)
     node["accel_z"] += np.random.uniform(-0.02, 0.02)
@@ -65,5 +64,14 @@ def car_crash(node):
         node["velocity_y"] = 0.0
     if "velocity_z" in node:
         node["velocity_z"] = 0.0
+def package_falls_off_ship(node):
+    node = node.copy()
+    # Simulate constant sinking: strong negative z velocity, zero x/y velocity, and mark as anomalous
+    node["velocity_x"] = 0.0
+    node["velocity_y"] = 0.0
+    node["velocity_z"] = -1.5  # Sinks at a constant rate (m/s)
+    node["accel_x"] += np.random.uniform(-0.02, 0.02)
+    node["accel_y"] += np.random.uniform(-0.02, 0.02)
+    node["accel_z"] += np.random.uniform(-0.02, 0.02)
     node["anomalous"] = True
     return node
