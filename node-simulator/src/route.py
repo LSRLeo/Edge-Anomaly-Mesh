@@ -1,9 +1,10 @@
 from src.hub import Hub
+from src.waypoint import Waypoint
 import json
 
 class Route:
     def __init__(self, jason_file): #route is a array of hubs in order
-       self.hubs = [] #ordered list of hubs and waypoints in the route
+       self.points = [] #ordered list of hubs and waypoints in the route
        self.jason_file = jason_file
     
 
@@ -11,6 +12,9 @@ class Route:
         try:
             with open(self.jason_file, 'r') as f:
                 data = json.load(f)
+
+            hubs = data['hub']  
+            hub_list = []
 
             for hub_data in data['hubs']:
 
@@ -25,8 +29,16 @@ class Route:
                     label=hub_data['label']
                 )
 
+                hub_list.append(hub)
+                
+            if len(hub) >= 2:
+                self.generate_waypoints(hub_list)
 
-                self.hubs.append(hub)
+
+
+                    
+
+
 
         except FileNotFoundError:
             raise FileNotFoundError(f"JSON file {self.jason_file} not found")
@@ -38,5 +50,12 @@ class Route:
    
     
 
+    def generate_waypoints(self, hubs):
+        
+        
+        for i in range(len(hubs)):
+            pass
 
+
+        pass
 
