@@ -2,25 +2,25 @@ from inspect import isabstract
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime, timedelta
-
+from abc import ABC, abstractmethod
 
 class DashboardParents:
     def __init__(self, redis_reader, parent: ttk.Notebook, dashboard: 'DashboardApp'):
-        super().__init__(parent)
 
         self.redis_reader = redis_reader
         self. dashboard = dashboard
     
-    @isabstract
+    @abstractmethod
     def refresh(self):
         pass
 
-    @isabstract
+    @abstractmethod
     def parse_node(self):
         pass
 
 
 class Node:
+    motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
     def __init__(self, node_id: str, lat: float, lon: float, timestamp: datetime, motion_class: int, anomaly: bool, confidence: float):
         self.node_id = node_id
         self.lat = lat
@@ -29,15 +29,15 @@ class Node:
         self.motion_class = motion_class
         self.anomaly = anomaly
         self.confidence = confidence
-        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+        self.anomalous = anomalous
     def updateTimestamp(self):
         self.timestamp = datetime.now()
     def updateMotion(self, motion_class, confidence: float):
         if isinstance(motion_class, int):
             self.motion_class = motion_class
         if isinstance(motion_class, str):
-            if motion_class in self.motion_states:
-                self.motion_class = self.motion_states.index(motion_class)
+            if motion_class in motion_states:
+                self.motion_class = motion_states.index(motion_class)
             else:                raise ValueError(f"Invalid motion class string: {motion_class}")
         self.confidence = confidence
     def __str__(self):

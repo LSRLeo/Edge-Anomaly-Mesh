@@ -1,0 +1,14 @@
+[
+    {
+  "node_id": "node_001",
+  "timestamp": 1702656000.123456,
+  "window_start": 1702655998.123456,
+  "window_end": 1702656000.123456,
+  "motion_class": "IDLE",
+  "motion_confidence": 0.95,
+  "anomaly_flag": false,
+  "anomaly_score": 0.12,
+  "feature_vector": [0.05, 0.02, 9.81],
+  "processing_time_ms": 45
+}
+]
