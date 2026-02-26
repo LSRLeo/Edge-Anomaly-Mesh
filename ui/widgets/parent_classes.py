@@ -2,20 +2,19 @@ from inspect import isabstract
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime, timedelta
-
+from abc import ABC, abstractmethod
 
 class DashboardParents:
     def __init__(self, redis_reader, parent: ttk.Notebook, dashboard: 'DashboardApp'):
-        super().__init__(parent)
 
         self.redis_reader = redis_reader
         self. dashboard = dashboard
     
-    @isabstract
+    @abstractmethod
     def refresh(self):
         pass
 
-    @isabstract
+    @abstractmethod
     def parse_node(self):
         pass
 
