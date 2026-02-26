@@ -570,11 +570,25 @@ class TrainingDataGenerator:
         samples_per_segment: int = 500,
         include_dwell: bool = True,
         dwell_duration: int = 30,
+        include_lift: bool = False,
+        lift_duration: int = 40,
         anomaly_rate: float = 0.0,
         anomaly_type: Optional[str] = None
     ) -> Tuple[List[Dict], Dict]:
         """
         Generate training data for a journey between two hubs.
+
+        Args:
+            from_hub: Starting hub ID
+            to_hub: Destination hub ID
+            node_id: Node identifier
+            samples_per_segment: Number of transit samples per segment
+            include_dwell: Whether to include IDLE time at hubs
+            dwell_duration: Duration of IDLE time in seconds
+            include_lift: Whether to include LIFT operations at hubs
+            lift_duration: Duration of LIFT operations in seconds
+            anomaly_rate: Rate of anomaly injection (0.0-1.0)
+            anomaly_type: Type of anomaly to inject
 
         Returns:
             (samples, metadata)
@@ -617,6 +631,22 @@ class TrainingDataGenerator:
                 all_samples.extend(dwell_samples)
                 start_time += timedelta(seconds=dwell_duration)
 
+            # Add LIFT at start hub (loading)
+            if include_lift and i == 0:
+                lift_samples, seq = self._generate_lift_samples(
+                    from_hub_obj, node_id, start_time, seq, lift_duration,
+                    anomaly_rate, anomaly_type
+                )
+                all_samples.extend(lift_samples)
+                segments_info.append({
+                    "from_hub": segment_from,
+                    "to_hub": segment_from,
+                    "motion_type": "LIFT",
+                    "num_samples": len(lift_samples),
+                    "operation": "loading"
+                })
+                start_time += timedelta(seconds=lift_duration)
+
             # Generate transit samples
             transit_samples, seq = self._generate_transit_samples(
                 waypoints, motion_type, node_id, start_time, seq,
@@ -632,6 +662,22 @@ class TrainingDataGenerator:
             })
 
             start_time += timedelta(seconds=samples_per_segment)
+
+            # Add LIFT at destination hub (unloading)
+            if include_lift:
+                lift_samples, seq = self._generate_lift_samples(
+                    to_hub_obj, node_id, start_time, seq, lift_duration,
+                    anomaly_rate, anomaly_type
+                )
+                all_samples.extend(lift_samples)
+                segments_info.append({
+                    "from_hub": segment_to,
+                    "to_hub": segment_to,
+                    "motion_type": "LIFT",
+                    "num_samples": len(lift_samples),
+                    "operation": "unloading"
+                })
+                start_time += timedelta(seconds=lift_duration)
 
             # Add dwell at intermediate hubs
             if include_dwell and i < len(path) - 2:
@@ -658,7 +704,8 @@ class TrainingDataGenerator:
             "segments": segments_info,
             "total_samples": len(all_samples),
             "anomaly_rate": anomaly_rate,
-            "anomaly_type": anomaly_type
+            "anomaly_type": anomaly_type,
+            "include_lift": include_lift
         }
 
         return all_samples, metadata
@@ -695,6 +742,63 @@ class TrainingDataGenerator:
                     "motion_type": "IDLE",
                     "is_anomaly": False,
                     "anomaly_type": "none",
+                    "location": hub.hub_id
+                }
+            }
+            samples.append(sample)
+
+        return samples, start_seq + duration
+
+    def _generate_lift_samples(
+        self,
+        hub: Hub,
+        node_id: str,
+        start_time: datetime,
+        start_seq: int,
+        duration: int,
+        anomaly_rate: float = 0.0,
+        anomaly_type: Optional[str] = None
+    ) -> Tuple[List[Dict], int]:
+        """Generate LIFT samples at a hub (forklift loading/unloading)."""
+        samples = []
+
+        for i in range(duration):
+            timestamp = (start_time + timedelta(seconds=i)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            t = i  # Time in seconds
+            accel, gyro = MotionPhysics.lift(t)
+
+            # Maybe inject anomaly
+            is_anomaly = random.random() < anomaly_rate
+            current_anomaly = "none"
+
+            if is_anomaly and anomaly_type:
+                current_anomaly = anomaly_type
+                if anomaly_type == "spike":
+                    accel = AnomalyInjector.inject_spike(accel)
+                elif anomaly_type == "dropout":
+                    accel = AnomalyInjector.inject_dropout(accel)
+                elif anomaly_type == "drift":
+                    accel = AnomalyInjector.inject_drift(accel)
+                elif anomaly_type == "motion_mismatch":
+                    accel, gyro = AnomalyInjector.inject_motion_mismatch(t, "LIFT")
+
+            sample = {
+                "node_id": node_id,
+                "timestamp": timestamp,
+                "seq": start_seq + i,
+                "gps": {
+                    "lat": round(hub.lat + random.gauss(0, 0.000005), 6),
+                    "lon": round(hub.lon + random.gauss(0, 0.000005), 6),
+                    "altitude_m": round(hub.altitude_m + random.gauss(0, 1.0), 1),
+                    "satellites": random.randint(6, 12),
+                    "fix": True
+                },
+                "accel": accel,
+                "gyro": gyro,
+                "label": {
+                    "motion_type": "LIFT",
+                    "is_anomaly": is_anomaly,
+                    "anomaly_type": current_anomaly,
                     "location": hub.hub_id
                 }
             }
@@ -781,7 +885,9 @@ class TrainingDataGenerator:
         self,
         output_dir: str,
         samples_per_segment: int = 500,
-        anomaly_rate: float = 0.1
+        anomaly_rate: float = 0.1,
+        include_lift_variants: bool = True,
+        include_maritime: bool = True
     ) -> Dict[str, Any]:
         """Generate training data for all possible routes between hubs."""
         os.makedirs(output_dir, exist_ok=True)
@@ -796,13 +902,26 @@ class TrainingDataGenerator:
 
         route_count = 0
 
-        # Generate for all hub pairs
-        for from_hub in hub_ids:
-            for to_hub in hub_ids:
+        # Separate hubs by type for different route generation
+        terrestrial_hubs = [h for h in hub_ids if not h.startswith("hub_") or "port" not in h]
+        maritime_hubs = [h for h in hub_ids if "port" in h]
+
+        # Filter to actual hub types based on routes
+        terrestrial_hubs = []
+        maritime_hubs = []
+        for hub_id in hub_ids:
+            hub = self.network.get_hub(hub_id)
+            if hub and hub.hub_type == "seaport":
+                maritime_hubs.append(hub_id)
+            else:
+                terrestrial_hubs.append(hub_id)
+
+        # Generate TERRESTRIAL routes (Colorado hubs)
+        for from_hub in terrestrial_hubs:
+            for to_hub in terrestrial_hubs:
                 if from_hub == to_hub:
                     continue
 
-                # Check if path exists
                 path = self.network.find_path(from_hub, to_hub)
                 if not path:
                     continue
@@ -810,13 +929,14 @@ class TrainingDataGenerator:
                 route_count += 1
                 node_id = f"node_{route_count:03d}"
 
-                # Generate normal samples
+                # Generate normal TERRESTRIAL samples (no LIFT)
                 samples, metadata = self.generate_journey(
                     from_hub=from_hub,
                     to_hub=to_hub,
                     node_id=node_id,
                     samples_per_segment=samples_per_segment,
-                    anomaly_rate=0.0
+                    anomaly_rate=0.0,
+                    include_lift=False
                 )
 
                 filename = f"route_{from_hub}_to_{to_hub}.json"
@@ -839,7 +959,8 @@ class TrainingDataGenerator:
                         node_id=f"{node_id}_anomaly",
                         samples_per_segment=samples_per_segment,
                         anomaly_rate=anomaly_rate,
-                        anomaly_type=anomaly_type
+                        anomaly_type=anomaly_type,
+                        include_lift=False
                     )
 
                     anomaly_filename = f"route_{from_hub}_to_{to_hub}_{anomaly_type}.json"
@@ -853,6 +974,166 @@ class TrainingDataGenerator:
                         **anomaly_metadata
                     })
                     all_metadata["total_samples"] += len(anomaly_samples)
+
+                # Generate TERRESTRIAL + LIFT routes
+                if include_lift_variants:
+                    route_count += 1
+                    lift_node_id = f"node_{route_count:03d}"
+
+                    lift_samples, lift_metadata = self.generate_journey(
+                        from_hub=from_hub,
+                        to_hub=to_hub,
+                        node_id=lift_node_id,
+                        samples_per_segment=samples_per_segment,
+                        anomaly_rate=0.0,
+                        include_lift=True
+                    )
+
+                    lift_filename = f"route_{from_hub}_to_{to_hub}_with_lift.json"
+                    lift_filepath = os.path.join(output_dir, lift_filename)
+
+                    with open(lift_filepath, 'w') as f:
+                        json.dump(lift_samples, f, indent=2)
+
+                    all_metadata["routes"].append({
+                        "file": lift_filename,
+                        **lift_metadata
+                    })
+                    all_metadata["total_samples"] += len(lift_samples)
+
+                    # Anomaly variants for LIFT routes
+                    for anomaly_type in ["spike", "dropout", "drift", "motion_mismatch"]:
+                        anomaly_samples, anomaly_metadata = self.generate_journey(
+                            from_hub=from_hub,
+                            to_hub=to_hub,
+                            node_id=f"{lift_node_id}_anomaly",
+                            samples_per_segment=samples_per_segment,
+                            anomaly_rate=anomaly_rate,
+                            anomaly_type=anomaly_type,
+                            include_lift=True
+                        )
+
+                        anomaly_filename = f"route_{from_hub}_to_{to_hub}_with_lift_{anomaly_type}.json"
+                        anomaly_filepath = os.path.join(output_dir, anomaly_filename)
+
+                        with open(anomaly_filepath, 'w') as f:
+                            json.dump(anomaly_samples, f, indent=2)
+
+                        all_metadata["routes"].append({
+                            "file": anomaly_filename,
+                            **anomaly_metadata
+                        })
+                        all_metadata["total_samples"] += len(anomaly_samples)
+
+        # Generate MARITIME routes (port hubs)
+        if include_maritime and maritime_hubs:
+            for from_hub in maritime_hubs:
+                for to_hub in maritime_hubs:
+                    if from_hub == to_hub:
+                        continue
+
+                    path = self.network.find_path(from_hub, to_hub)
+                    if not path:
+                        continue
+
+                    route_count += 1
+                    node_id = f"node_{route_count:03d}"
+
+                    # Generate MARITIME samples (no LIFT)
+                    samples, metadata = self.generate_journey(
+                        from_hub=from_hub,
+                        to_hub=to_hub,
+                        node_id=node_id,
+                        samples_per_segment=samples_per_segment,
+                        anomaly_rate=0.0,
+                        include_lift=False
+                    )
+
+                    filename = f"route_{from_hub}_to_{to_hub}_maritime.json"
+                    filepath = os.path.join(output_dir, filename)
+
+                    with open(filepath, 'w') as f:
+                        json.dump(samples, f, indent=2)
+
+                    all_metadata["routes"].append({
+                        "file": filename,
+                        **metadata
+                    })
+                    all_metadata["total_samples"] += len(samples)
+
+                    # Generate anomaly samples for MARITIME
+                    for anomaly_type in ["spike", "dropout", "drift", "motion_mismatch"]:
+                        anomaly_samples, anomaly_metadata = self.generate_journey(
+                            from_hub=from_hub,
+                            to_hub=to_hub,
+                            node_id=f"{node_id}_anomaly",
+                            samples_per_segment=samples_per_segment,
+                            anomaly_rate=anomaly_rate,
+                            anomaly_type=anomaly_type,
+                            include_lift=False
+                        )
+
+                        anomaly_filename = f"route_{from_hub}_to_{to_hub}_maritime_{anomaly_type}.json"
+                        anomaly_filepath = os.path.join(output_dir, anomaly_filename)
+
+                        with open(anomaly_filepath, 'w') as f:
+                            json.dump(anomaly_samples, f, indent=2)
+
+                        all_metadata["routes"].append({
+                            "file": anomaly_filename,
+                            **anomaly_metadata
+                        })
+                        all_metadata["total_samples"] += len(anomaly_samples)
+
+                    # Generate MARITIME + LIFT routes
+                    if include_lift_variants:
+                        route_count += 1
+                        lift_node_id = f"node_{route_count:03d}"
+
+                        lift_samples, lift_metadata = self.generate_journey(
+                            from_hub=from_hub,
+                            to_hub=to_hub,
+                            node_id=lift_node_id,
+                            samples_per_segment=samples_per_segment,
+                            anomaly_rate=0.0,
+                            include_lift=True
+                        )
+
+                        lift_filename = f"route_{from_hub}_to_{to_hub}_maritime_with_lift.json"
+                        lift_filepath = os.path.join(output_dir, lift_filename)
+
+                        with open(lift_filepath, 'w') as f:
+                            json.dump(lift_samples, f, indent=2)
+
+                        all_metadata["routes"].append({
+                            "file": lift_filename,
+                            **lift_metadata
+                        })
+                        all_metadata["total_samples"] += len(lift_samples)
+
+                        # Anomaly variants for MARITIME + LIFT
+                        for anomaly_type in ["spike", "dropout", "drift", "motion_mismatch"]:
+                            anomaly_samples, anomaly_metadata = self.generate_journey(
+                                from_hub=from_hub,
+                                to_hub=to_hub,
+                                node_id=f"{lift_node_id}_anomaly",
+                                samples_per_segment=samples_per_segment,
+                                anomaly_rate=anomaly_rate,
+                                anomaly_type=anomaly_type,
+                                include_lift=True
+                            )
+
+                            anomaly_filename = f"route_{from_hub}_to_{to_hub}_maritime_with_lift_{anomaly_type}.json"
+                            anomaly_filepath = os.path.join(output_dir, anomaly_filename)
+
+                            with open(anomaly_filepath, 'w') as f:
+                                json.dump(anomaly_samples, f, indent=2)
+
+                            all_metadata["routes"].append({
+                                "file": anomaly_filename,
+                                **anomaly_metadata
+                            })
+                            all_metadata["total_samples"] += len(anomaly_samples)
 
         # Write metadata
         metadata_path = os.path.join(output_dir, "metadata.json")
