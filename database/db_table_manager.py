@@ -43,7 +43,8 @@ class TableManager:
             print(f"Error inserting raw data: {e}")
             return False
 
-    def insert_node(self, msg) -> bool:
+
+    def insert_node(self, msg):
         if not self.session.query(Node).filter_by(node_id=msg["node_id"]).first():
             record = Node(
                 node_id=msg["node_id"],
@@ -63,20 +64,61 @@ class TableManager:
             node.location_lon = msg["gps"]["lon_deg"]
             node.location_altitude_m = msg["gps"]["altitude_m"]
             self.session.add(node)
-
         return
 
             
-    def insert_inference_results(self, record: InferenceResults) -> bool:
-        pass
+    def insert_inference_results(self, messages: list[dict]) -> bool:
+        for msg in messages:
+            record = InferenceResults(
+                node_id=msg["node_id"],
+                timestamp=self.iso_to_unix_timestamp(msg["timestamp"]),
+                window_start=self.iso_to_unix_timestamp(msg["window"]["start"]),
+                window_end=self.iso_to_unix_timestamp(msg["window"]["end"]),
+                window_samples=msg["window"]["samples"],
+                location_state=msg["location_state"],
+                motion_class=msg["motion_class"],
+                confidence=msg["confidence"],
+                anomaly_detected=msg["anomaly"]["detected"],
+                anomaly_score=msg["anomaly"]["score"],
+                anomaly_type=msg["anomaly"]["type"],
+                nearest_hub_id=msg["nearest_hub"]["hub_id"],
+                nearest_hub_distance=msg["nearest_hub"]["distance_m"],
+                feature_vector=json.dumps(msg["features"]),
+                processing_time_ms=msg["processing_time_ms"]
+            )
+            self.session.add(record)
+            self.session.flush()  # Flush to get the record ID for anomaly event insertion
+            if msg["anomaly"]["detected"]:
+                self.insert_anomaly_event(record)
+        try:
+            self.session.commit()
+            self.session.close()
+            return True
+        except Exception as e:
+            self.session.rollback()
+            self.session.close()
+            print(f"Error inserting inference results: {e}")
+            return False
 
-    def insert_anomaly_event(self, record: AnomalyEvents) -> bool:
-        pass
+
+    def insert_anomaly_event(self, inference_record: InferenceResults) -> bool:
+        anomaly_record = AnomalyEvents(
+            inference_id=inference_record.id,
+            node_id=inference_record.node_id,
+            start_timestamp=inference_record.window_start,
+            end_timestamp=inference_record.window_end,
+            severity='CRITICAL' if inference_record.anomaly_score >= 0.75 else 'HIGH' if inference_record.anomaly_score >= 0.5 else 'MEDIUM' if inference_record.anomaly_score >= 0.25 else 'LOW',
+            description=f"Anomaly detected with score {inference_record.anomaly_score} and type {inference_record.anomaly_type}",
+        )
+        self.session.add(anomaly_record)
+        return
+    
 
     def iso_to_unix_timestamp(self, iso_str: str) -> int:
         dt = datetime.fromisoformat(iso_str)
         return int(dt.timestamp())
     
+
     def clear_tables(self):
         self.session.query(RawSensorData).delete()
         self.session.query(Node).delete()
@@ -103,12 +145,19 @@ def load_json(file_path: Path):
 def main():
     # Example usage
     manager = TableManager()
-    data = load_json(Path("simulator/raw_data.json"))
+    raw_data = load_json(Path("simulator/raw_data.json"))
+    inference_data = load_json(Path("data/examples/inference_results/example_inference_results.json"))
     
     TableManager().clear_tables()
-    # if isinstance(data, list):
-    #     success = manager.insert_raw_data(data)
-    #     print(f"Inserted {len(data)} records: {success}")
+    # if isinstance(raw_data, list):
+    #     success = manager.insert_raw_data(raw_data)
+    #     print(f"Inserted {len(raw_data)} records: {success}")
+    # else:
+    #     print("Invalid JSON format. Expected a list of records.")
+    
+    # if isinstance(inference_data, list):
+    #     success = manager.insert_inference_results(inference_data)
+    #     print(f"Inserted {len(inference_data)} inference records: {success}")
     # else:
     #     print("Invalid JSON format. Expected a list of records.")
 
