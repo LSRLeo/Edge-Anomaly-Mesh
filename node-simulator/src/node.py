@@ -12,8 +12,8 @@ from src.noise import apply_idle_node_noise, apply_lift_node_noise, apply_mariti
 class Node:
     def __init__(self, node_file, route):
         self.route = route
-        self.origin = route.hubs[0]
-        self.destination = route.hubs[-1]
+        self.origin = route.points[0]
+        self.destination = route.points[-1]
         self.messages = []
 
         try:
