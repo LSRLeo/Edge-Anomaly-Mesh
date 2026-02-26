@@ -20,11 +20,11 @@ We use a simple feedforward neural network (also called MLP - Multi-Layer Percep
          ↓
     ReLU Activation
          ↓
-    Linear Layer (32 → 8 outputs)
+    Linear Layer (32 → 4 outputs)
          ↓
     Softmax (converts to probabilities)
          ↓
-    Output: [P(IDLE), P(TERR), P(MAR), P(LIFT), P(IDLE_A), P(TERR_A), P(MAR_A), P(LIFT_A)]
+    Output: [P(IDLE), P(TERRESTRIAL), P(MARITIME), P(LIFT)]
 
 TRAINING PROCESS:
 =================
@@ -59,8 +59,7 @@ import json
 from datetime import datetime
 
 # Import from our feature extraction module
-from feature_extraction import FeatureExtractor, normalize_features
-from data_pipeline import create_windows, load_json_data, windows_to_features
+from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
 
 # Clear model history
 import gc
@@ -170,11 +169,7 @@ def parse_args():
                     default='ml/classifier/normalization_stats.json',
                     help='Path to save normalization mean/std stats as JSON')
     
-    
-    
     return parser.parse_args()
-
-
 
 # ============================================================================
 # DATASET
