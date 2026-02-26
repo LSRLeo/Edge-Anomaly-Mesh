@@ -305,55 +305,6 @@ class FeatureExtractor:
         return [accel_magnitude_mean, gyro_magnitude_mean]
 
 # ============================================================================
-# NORMALIZATION
-# ============================================================================
-
-def normalize_features(features, scaler=None):
-    """
-    Normalize features to zero mean and unit variance.
-    
-    Normalization is important because:
-        - Features have different scales (accel in m/s², gyro in rad/s)
-        - Neural networks train better with normalized inputs
-        - Prevents features with large values from dominating
-    
-    Args:
-        features: numpy array of shape (n_samples, n_features)
-        scaler: optional tuple of (mean, std) from training data
-                If None, compute from the input features.
-                If provided, use these values (for test data).
-    
-    Returns:
-        normalized: numpy array of same shape, normalized
-        scaler: tuple of (mean, std) arrays for reuse
-    
-    Formula:
-        normalized = (features - mean) / std
-    
-    Implementation hints:
-        - Compute mean and std along axis=0 (per feature)
-        - Handle std=0 case: set to 1 to avoid division by zero
-        - Save scaler during training, reuse for inference
-    """
-    # If scaler not provided, compute from the data (training scenario)
-    if scaler is None:
-        mean = np.mean(features, axis=0)
-        std = np.std(features, axis=0)
-    else:
-        # Use provided scaler (test/validation scenario)
-        mean, std = scaler
-
-    # Handle std=0 case to avoid division by zero
-    # If std is 0, the feature is constant, so we don't normalize it
-    std = np.where(std == 0, 1, std)
-
-    # Normalize: (x - mean) / std
-    normalized = (features - mean) / std
-
-    # Return normalized features and scaler for future use
-    return normalized, (mean, std)
-
-# ============================================================================
 # UTILITY FUNCTIONS
 # ============================================================================
 

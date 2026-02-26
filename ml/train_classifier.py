@@ -62,6 +62,36 @@ from datetime import datetime
 from feature_extraction import FeatureExtractor, normalize_features
 from data_pipeline import create_windows, load_json_data, windows_to_features
 
+# Clear model history
+import gc
+def clear_torch_session():
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
+
+clear_torch_session()
+
+def load_json_strict(path):
+    p = Path(path)
+
+    if not p.exists():
+        raise FileNotFoundError(f"JSON file not found: {p}")
+
+    if p.stat().st_size == 0:
+        raise ValueError(f"JSON file is empty: {p}")
+
+    with open(p, "r", encoding="utf-8") as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON format in file: {p}")
+
+    if data is None or (isinstance(data, (dict, list)) and len(data) == 0):
+        raise ValueError(f"JSON file contains no usable data: {p}")
+
+    return data
+
 
 # ============================================================================
 # ARGUMENT PARSING
@@ -133,10 +163,17 @@ def parse_args():
     parser.add_argument('--no-cuda', action='store_true',
                         help='Disable CUDA even if available')
     
-    parser.add_argument('--verbose', action='store_true',
+    parser.add_argument('--verbose', default=True, action='store_true',
                         help='Print detailed training progress')
     
+    parser.add_argument('--norm-stats-output', type=str,
+                    default='ml/classifier/normalization_stats.json',
+                    help='Path to save normalization mean/std stats as JSON')
+    
+    
+    
     return parser.parse_args()
+
 
 
 # ============================================================================
@@ -243,15 +280,22 @@ class MotionClassifier(nn.Module):
         """
         super().__init__()  # Always call parent __init__
 
-        # Build the network architecture
-        self.network = nn.Sequential(
-            nn.Linear(input_dim, hidden_dims[0]),      # Input → 64 neurons
-            nn.ReLU(),                                   # Non-linear activation
-            nn.Dropout(dropout),                         # Regularization (drop 30% of neurons)
-            nn.Linear(hidden_dims[0], hidden_dims[1]),  # 64 → 32 neurons
-            nn.ReLU(),                                   # Non-linear activation
-            nn.Linear(hidden_dims[1], num_classes)      # 32 → 8 output classes
-        )
+        # Build the network architecture (supports any number of hidden layers)
+        hidden_dims = list(hidden_dims)
+        if len(hidden_dims) == 0:
+            raise ValueError("hidden_dims must have at least 1 layer size")
+
+        layers = []
+        prev_dim = input_dim
+
+        for h in hidden_dims:
+            layers.append(nn.Linear(prev_dim, h))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(dropout))
+            prev_dim = h
+
+        layers.append(nn.Linear(prev_dim, num_classes))
+        self.network = nn.Sequential(*layers)
 
     def forward(self, x):
         """
@@ -300,10 +344,25 @@ class MotionClassifier(nn.Module):
 
             return predicted, confidence
 
-
 # ============================================================================
 # TRAINING FUNCTIONS
 # ============================================================================
+
+def save_normalization_stats(scaler, out_path: str):
+    mean, std = scaler  # scaler is (mean, std) from feature_extraction.normalize_features
+
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    stats = {
+        "mean": mean.tolist(),
+        "std": std.tolist(),
+        "std_zero_replaced_with_1": True
+    }
+
+    with open(out_path, "w") as f:
+        json.dump(stats, f, indent=2)
+
 
 def train_epoch(model, dataloader, criterion, optimizer, device):
     """
@@ -807,6 +866,7 @@ def main():
 
     X, y, extractor = load_all_data(args.data_dir, args.window_size, args.overlap)
     X_normalized, scaler = normalize_features(X)
+    save_normalization_stats(scaler, args.norm_stats_output)
 
     # =========================================================================
     # 2. Create dataset and split
