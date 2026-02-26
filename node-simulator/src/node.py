@@ -69,11 +69,12 @@ class Node:
                     self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
             
                 elif recent_hub_mode == "lift":
-                    #To-do waypoints has no lift_time
-                    self.lift.set_hub(current_point.lat, current_point.lon, 20)
-                    liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
-                    liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
-                    self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
+                    #To-do waypoints has no lift_time what do we do with it?
+                    if hasattr(current_point, "mode"):
+                        self.lift.set_hub(current_point.lat, current_point.lon, 20)
+                        liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
+                        liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
+                        self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
                 elif recent_hub_mode == "maritime":
                     maritimeResults = self.maritime.generate_reading(current_point, next_point)
                     maritimeResults_noisy = [apply_maritime_node_noise(message) for message in maritimeResults]
