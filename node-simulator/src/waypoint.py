@@ -3,4 +3,4 @@ class Waypoint:
         self.lat = lat
         self.lon = lon
         self.alt = alt
-        self.progress = progress
+        # self.progress = progress
