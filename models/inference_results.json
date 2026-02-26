@@ -1,0 +1,32 @@
+[
+  {
+    "sample_index": 0,
+    "probabilities": {
+      "IDLE": 0.108327,
+      "TERRESTRIAL": 0.130451,
+      "MARITIME": 0.145621,
+      "LIFT": 0.131521,
+      "IDLE_ANOM": 0.143268,
+      "TERRESTRIAL_ANOM": 0.136015,
+      "MARITIME_ANOM": 0.11012,
+      "LIFT_ANOM": 0.094677
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 1,
+    "probabilities": {
+      "IDLE": 0.110924,
+      "TERRESTRIAL": 0.130792,
+      "MARITIME": 0.147937,
+      "LIFT": 0.130177,
+      "IDLE_ANOM": 0.143097,
+      "TERRESTRIAL_ANOM": 0.126814,
+      "MARITIME_ANOM": 0.115334,
+      "LIFT_ANOM": 0.094926
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "TERRESTRIAL"
+  }
+]

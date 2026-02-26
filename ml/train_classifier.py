@@ -20,11 +20,11 @@ We use a simple feedforward neural network (also called MLP - Multi-Layer Percep
          ↓
     ReLU Activation
          ↓
-    Linear Layer (32 → 4 outputs)
+    Linear Layer (32 → 8 outputs)
          ↓
     Softmax (converts to probabilities)
          ↓
-    Output: [P(IDLE), P(TERRESTRIAL), P(MARITIME), P(LIFT)]
+    Output: [P(IDLE), P(TERR), P(MAR), P(LIFT), P(IDLE_A), P(TERR_A), P(MAR_A), P(LIFT_A)]
 
 TRAINING PROCESS:
 =================
@@ -59,7 +59,8 @@ import json
 from datetime import datetime
 
 # Import from our feature extraction module
-from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
+from feature_extraction import FeatureExtractor, normalize_features
+from data_pipeline import create_windows, load_json_data, windows_to_features
 
 # Clear model history
 import gc
