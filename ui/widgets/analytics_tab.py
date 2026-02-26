@@ -220,7 +220,16 @@ class BarChartComponent(AnalyticsComponent):
         self.canvas: Optional[FigureCanvasTkAgg]
         super().__init__(parent, "Top Anomalous Nodes", row, col)
     
-    
+    def parse(self, records: List[Dict]) -> List[Tuple[str, int]]:
+        threshold = 0.5
+        node_counts = Counter()
+        
+        for r in records:
+            anomaly_score = sum(r["state_confidence"][4:])
+            if anomaly_score >= threshold:
+                node_counts[r["node_id"]] += 1
+        
+        return node_counts.most_common(5)
 
 def parse_motion_distribution(records):
     counts = Counter()
