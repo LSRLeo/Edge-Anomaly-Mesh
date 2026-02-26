@@ -236,6 +236,29 @@ class BarChartComponent(AnalyticsComponent):
         self.ax = self.fig.add_subplot(111)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
+        
+    def update(self, records: List[Dict]) -> None:
+        node_data = self.parse(records)
+        if not self.ax:
+            return
+        
+        self.ax.clear()
+        nodes = [d[0] for d in node_data]
+        counts = [d[1] for d in node_data]
+        
+        bars = self.ax.barh(nodes, counts, color="#e74c3c")
+        for bar, count in zip(bars, counts):
+            self.ax.text(
+                bar.get_width() + 0.3,
+                bar.get_y() + bar.get_height() / 2,
+                str(count),
+                va="center"
+            )
+        
+        self.ax.set_xlabel("Anomaly Count")
+        self.ax.invert_yaxis()
+        self.fig.tight_layout()
+        self.canvas.draw()
 
 def parse_motion_distribution(records):
     counts = Counter()
