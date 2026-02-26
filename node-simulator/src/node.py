@@ -325,8 +325,8 @@ class Node:
                 },
                 "label": {
                     "motion_type": mode,
-                    "is_anomaly": null,
-                    "anomaly_type": null,
+                    "is_anomaly": False,
+                    "anomaly_type": "",
                     "location": "hub_denver_01"
                 }
             }
