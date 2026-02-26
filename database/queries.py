@@ -3,7 +3,7 @@
 # SQLAlchemy query functions for database operations
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import desc
-from .schema import engine, Node, RawSensorData, InferenceResults
+from schema import engine, Node, RawSensorData, InferenceResults
 
 Session = sessionmaker(bind=engine)
 
