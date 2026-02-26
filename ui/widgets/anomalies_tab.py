@@ -74,10 +74,11 @@ class AnomalySection(ttk.Frame):
     Tab subsection for anomaly viewer, will be contained in the AnomaliesTab.
     There will be other tabs implemented in future sprints
     """
-    def __init__(self, parent: ttk.Frame, owner: AnomaliesTab, title= "Anomalies"):
+    def __init__(self, parent, dashboard: 'DashboardApp', title= "Anomalies"):
 
         super().__init__(parent)
-        self.parent = owner
+        self.parent = parent
+        self.dashboard = dashboard
         self.title = title
         # self._on_open_node = on_open_node
         self._canvas: Optional[tk.Canvas] = None
@@ -175,7 +176,7 @@ class AnomalySection(ttk.Frame):
         # Actions
         actions = ttk.Frame(container)
         actions.pack(fill="x", pady=(6, 0))
-        ttk.Button(actions, text="Open node", command=lambda r=anomaly: self._open_node(r)).pack(side="left")
+        ttk.Button(actions, text="Open node", command=lambda r=anomaly["node_id"]: self._open_node(r)).pack(side="left")
 
         # Make row clickable to open node
         container.bind("<Button-1>", lambda _e, r=anomaly: self._open_node(r))
@@ -196,10 +197,11 @@ class AnomalySection(ttk.Frame):
             return dt.strftime("%Y-%m-%d %H:%M:%S UTC")
         except Exception:
             return iso_str
-    def _open_node(self, anomaly: Dict[str, Any]):
+    def _open_node(self, node_id: str):
         """Callback when an anomaly row is clicked to open node details."""
-        #does nothing right now, will be linked to Node Details tab in future sprint
-        pass
+        self.dashboard._select_tab(3)  # Switch to Node Details tab
+        self.dashboard.node_details_tab.load_node(node_id)
+
 
 
 
@@ -240,7 +242,7 @@ class AnomaliesTab(ttk.Frame):
         self._sections_nb.pack(fill="both", expand=True)
         print("Inner notebook style:", self._sections_nb.cget("style"))
         # Create and add the initial anomalies list section
-        self._list_section = AnomalySection(self, self, title="Anomalies")
+        self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
         self._sections_nb.add(self._list_section, text=self._list_section.title)
 
         # Build UI

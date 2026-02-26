@@ -22,7 +22,7 @@ class RedisReader:
         parse the raw data into dictionary format for easy indexing
         for each node pull most recent inference output and store it in the machine learning dataframe
         """
-        time.sleep(10) #sleep for 10 seconds to allow time for subscriber to connect and receive get-nodes response from redis
+        time.sleep(10) #sleep for 10 seconds to allow time for subscriber to connect and receive get-nodes response from redis (also acts as the periodic refresh interval)
         if self.subscriber is None or self.publisher is None:
             raise Exception("Subscriber and Publisher must be connected before refreshing dataframes")
 

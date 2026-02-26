@@ -27,14 +27,14 @@ from redis_reader import RedisReader
 CHANNELNAME = "Test"
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ui.ui_utils import (
+from ui_utils import (
     WINDOW_WIDTH, WINDOW_HEIGHT, REFRESH_INTERVAL_MS,
     configure_treeview_style
 )
-from network_tab import NetworkTab
-from anomalies_tab import AnomaliesTab
-from analytics_tab import AnalyticsTab
-from node_details_tab import NodeDetailsTab
+from widgets.network_tab import NetworkTab
+from widgets.anomalies_tab import AnomaliesTab
+from widgets.analytics_tab import AnalyticsTab
+from widgets.node_details_tab import NodeDetailsTab
 
 
 class DashboardApp:
