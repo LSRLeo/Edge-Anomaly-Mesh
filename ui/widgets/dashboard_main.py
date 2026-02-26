@@ -291,9 +291,9 @@ def main():
 
     
     # Start the Tkinter event loop
-    #root.mainloop()
-    DashboardThread = threading.Thread(target=root.mainloop)
-    DashboardThread.start()
+    root.mainloop()
+    # DashboardThread = threading.Thread(target=root.mainloop)
+    # DashboardThread.start()
 
     # close redis conn
 

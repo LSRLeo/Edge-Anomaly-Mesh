@@ -214,7 +214,7 @@ class NetworkTab(ttk.Frame):
                               xscrollcommand=h_scroll.set)
         # Implement Background
         # Load Map
-        map_image = Image.open("widgetextras/mercator.jpg")
+        map_image = Image.open("widgets/widgetextras/mercator.jpg")
         self.map_photo = ImageTk.PhotoImage(map_image)
         self.projection = MercatorProjection(map_image.width, map_image.height)
         self.canvas.create_image(0,0,image=self.map_photo, anchor='nw')
@@ -438,7 +438,7 @@ class NetworkTab(ttk.Frame):
         with open(filename, 'r') as file:
             return json.load(file)
     def populate_test_nodes(self):
-        file = self.load_json('test_nodes.json')
+        file = self.load_json('widgets/test_nodes.json')
 
         self.test_nodes.clear()
         for node_data in file:

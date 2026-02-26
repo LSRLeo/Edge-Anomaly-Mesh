@@ -25,7 +25,8 @@ class RedisReader:
         time.sleep(10) #sleep for 10 seconds to allow time for subscriber to connect and receive get-nodes response from redis (also acts as the periodic refresh interval)
         if self.subscriber is None or self.publisher is None:
             raise Exception("Subscriber and Publisher must be connected before refreshing dataframes")
-
+        newmldict = {}
+        newrddict = {}
         self.publisher.publish(self.channel_name, "get-nodes") #publish get-nodes message to redis channel
         get_nodes_response = self.subscriber.get_message() #wait for get-nodes response from redis
         if get_nodes_response is not None and get_nodes_response['type'] == 'message':
@@ -37,15 +38,16 @@ class RedisReader:
                 if get_raw_data_response is not None and get_raw_data_response['type'] == 'message':
                     raw_data_message = get_raw_data_response['data']
                     raw_data_dict = ast.literal_eval(raw_data_message) #assuming raw data is sent as a string representation of a dictionary
-                    self.rddict[node] = raw_data_dict #store raw data dict in raw data dictionary with node as key
+                    newrddict[node] = raw_data_dict #store raw data dict in raw data dictionary with node as key
 
                 self.publisher.publish(self.channel_name, f"get-inference-output-{node}") #publish get-inference-output message to redis channel for each node
                 get_inference_output_response = self.subscriber.get_message() #wait for get-inference-output response from redis
                 if get_inference_output_response is not None and get_inference_output_response['type'] == 'message':
                     inference_output_message = get_inference_output_response['data']
                     inference_output_list = ast.literal_eval(inference_output_message) #assuming inference output is sent as a string representation of a list
-                    self.mldict[node] = inference_output_list #store inference output list in machine learning dictionary with node as key
-
+                    newmldict[node] = inference_output_list #store inference output list in machine learning dictionary with node as key
+        self.rddict = newrddict #update raw data dictionary with new data
+        self.mldict = newmldict #update machine learning dictionary with new data
     def getMLDict(self): #returns the machine learning dictionary
         return self.mldict
     def getRDDict(self): #returns the raw data dictionary

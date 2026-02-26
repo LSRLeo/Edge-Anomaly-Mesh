@@ -430,7 +430,7 @@ class AnalyticsTab(ttk.Frame):
         Refresh all charts with latest data from ML JSON.
         """
         try:
-            records = load_ml_json("../sample_data/sample_anomaly_data.json")
+            records = load_ml_json("sample_data/sample_anomaly_data.json")
 
             motion_dist = parse_motion_distribution(records)
             trend = parse_anomaly_trend(records)

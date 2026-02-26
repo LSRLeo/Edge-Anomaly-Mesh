@@ -344,7 +344,7 @@ class NodeDetailsTab(ttk.Frame):
         with open(filename, 'r') as file:
             return json.load(file)
     def populate_test_nodes(self):
-        file = self.load_json('test_nodesV2.json')
+        file = self.load_json('widgets/test_nodesV2.json')
         
 
         for entry in file:
