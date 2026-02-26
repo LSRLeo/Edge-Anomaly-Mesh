@@ -28,6 +28,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np
 import math
+from parent_classes import Node
+from parent_classes import DashboardParents
+
 
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
@@ -79,7 +82,7 @@ class MercatorProjection:
         y = (1 - (merc_y - self.merc_y_min) / (self.merc_y_max - self.merc_y_min)) * self.img_height
         return x,y
 
-class NetworkTab(ttk.Frame):
+class NetworkTab(ttk.Frame, DashboardParents):
     """
     Network visualization tab.
     
@@ -100,6 +103,8 @@ class NetworkTab(ttk.Frame):
         self.dashboard = dashboard
         # Dict[node_id: str, node_data: dict]
         self.test_nodes: Dict[str, dict] = {} 
+
+        self.node_dict: Dict[str, object] = {}
         # Canvas for drawing nodes
         self.canvas: Optional[tk.Canvas] = None
         
@@ -247,15 +252,7 @@ class NetworkTab(ttk.Frame):
         self.node_items.clear()
         for node in nodes:
             self._draw_single_node(node)
-        # TODO: Implement
-        #
-        # # Clear existing nodes
-        # self.canvas.delete('node')
-        # self.node_items.clear()
-        #
-        # for node in nodes:
-        #     self._draw_single_node(node)
-        pass
+
     
     def _draw_single_node(self, node: Dict[str, Any]):
         """
@@ -438,14 +435,48 @@ class NetworkTab(ttk.Frame):
         with open(filename, 'r') as file:
             return json.load(file)
     def populate_test_nodes(self):
-        file = self.load_json('test_nodes.json')
+        #file = self.load_json('test_nodes.json')
+        raw_file = self.load_json('raw_data.json')
+        ml_file = self.load_json('ml_data.json')
 
-        self.test_nodes.clear()
-        for node_data in file:
-            node_id = node_data['node_id']
-            self.test_nodes[node_id] = node_data
+        # Sort ml dict using node_id as key for quick indexing
+        ml_id_sort = {msg["node_id"]: msg for msg in ml_file} 
+
+        #self.test_nodes.clear()
+        self.node_dict.clear()
+        for node_data in raw_file:
+            node_id = node_data["node_id"]
+            ml = ml_id_sort.get(node_id)
+
+            if ml is None:
+                print(f'No contents in ML {node_id}')
+                continue
+                
+            node = Node(
+                node_id=node_id,
+                lat=node_data.get("gps", {}).get("lat_deg"),
+                lon=node_data.get("gps", {}).get("lon_deg"),
+                timestamp=datetime.fromisoformat(node_data["timestamp"]),
+                motion_class=Node.motion_states.index(ml["motion_class"]),
+                confidence=ml["motion_confidence"],
+                anomalous=ml["anomaly_flag"]
+            )
+            # Append newly created node to dict of nodes, key node_id
+            self.node_dict[node_id] = node
+            
+            #Drawable dict, only what tkinter needs
+            self.test_nodes[node_id] = {
+                "node_id": node_id,
+                "lat": node_data["gps"]["lat_deg"],
+                "lon": node_data["gps"]["lon_deg"],
+                "motion_class": ml["motion_class"],
+                "anomaly": ml["anomaly_flag"]
+            }
+
+            
 
         self.draw_nodes(list(self.test_nodes.values()))
+    
 
     def refresh(self):
         
@@ -455,22 +486,14 @@ class NetworkTab(ttk.Frame):
         
         Fetches current node states from database and redraws.
         """
-        # TODO: Implement with real database queries
-        #
-        # try:
-        #     # Fetch nodes from database
-        #     # nodes = db.get_all_nodes()
-        #     
-        #     # For now, use mock data
-        #     nodes = MOCK_NODES
-        #     
-        #     # Redraw all nodes
-        #     self.draw_nodes(nodes)
-        #     
-        # except Exception as e:
-        #     print(f"Error refreshing network tab: {e}")
-        pass
+        try:
+            self._setup_canvas()
+        except:
+            print(f'Error refreshing UI and Data, Exception:{Exception}')
 
+
+
+       
 
 # =============================================================================
 # DEMO / TEST
