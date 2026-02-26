@@ -45,13 +45,10 @@ class Message(ABC):
         Returns:
             A dictionary representation of the message.
         """
-        if self.m_content is None:
-            return {
-                "m_id": self.m_id,
-                "m_type": self.m_type
-            }
         return {
-           **self.m_content 
+            "m_id": self.m_id,
+            "m_type": self.m_type,
+            **self.m_content
         }
     
 
@@ -77,8 +74,8 @@ class MessageResponse(Message):
         self.responding_to = responding_to 
         self.results = results
         self.M_TYPE = m_type #override M_TYPE in constructor
-        self.m_content = self.to_dict() #generate content for parent constructor
-        super().__init__(m_id, self.m_content)
+        
+        super().__init__(m_id, self.results)
 
     
     def to_dict(self) -> Dict[str, Any]:
@@ -108,7 +105,7 @@ class ErrorResponse(MessageResponse):
             error_message: Human-readable error description
         """
 
-        if error_code not in self.ERROR_CODES:
+        if error_code not in ERROR_CODES:
             logging.warning(f"Invalid error code '{error_code}' provided. Defaulting to 'INTERNAL_ERROR'.")
             error_code = "INTERNAL_ERROR"
 
@@ -194,7 +191,7 @@ class RawDataMessage(MessageData):
             )
 
 
-class InferenceOutputData(MessageData):
+class InferenceOutputMessage(MessageData):
     M_TYPE = "inference-output"
 
     def __init__(self, m_id: str, inference_output: Dict[str, Any]):
@@ -283,9 +280,9 @@ class GetNodesRequest(MessageRequest):
 class GetNodeDataIdsRequest(MessageRequest):
     M_TYPE = "get-node-data-ids"
 
-    def __init__(self, m_id: str, m_contents: Dict[str,Any]):
-        super().__init__(m_id,m_contents)
-        self.node_id = m_contents.get("node_id", None)
+    def __init__(self, m_id: str, m_content: Dict[str,Any]):
+        super().__init__(m_id,m_content)
+        self.node_id = m_content.get("node_id", None)
 
     def execute(self, db_manager):
         #TODO: 
@@ -294,8 +291,8 @@ class GetNodeDataIdsRequest(MessageRequest):
 class GetDatumRequest(MessageRequest):
     M_TYPE = "get-datum"
 
-    def __init__(self, m_id: str, m_contents: Dict[str,Any]):
-        super().__init__(m_id,m_contents)
+    def __init__(self, m_id: str, m_content: Dict[str,Any]):
+        super().__init__(m_id,m_content)
         self.event_id = self.m_content.get("event_id")
 
     def execute(self, db_manager):
