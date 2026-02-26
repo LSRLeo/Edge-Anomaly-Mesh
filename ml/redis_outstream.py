@@ -67,11 +67,23 @@ def build_inference_output(
 # REDIS PUBLISHER
 # ============================================================================
 class InferenceRedisPublisher:
-    def __init__(self, host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB):
+    """
+    Publishes standardized inference-output messages to Redis.
+    Channel: inference:results:{node_id}
+    """
+    def __init__(self, host="localhost", port=6379, db=0):
         self.redis_client = redis.Redis(host=host, port=port, db=db, decode_responses=True)
 
     def publish(self, node_id: str, inference_msg: dict):
-        channel = f"{CHANNEL_PREFIX}{node_id}"
+        """
+        Publishes the inference-output message to the correct Redis channel.
+        Args:
+            node_id: Node identifier (e.g., 'node_001')
+            inference_msg: Dict matching the inference-output schema
+        Returns:
+            channel: The Redis channel used
+        """
+        channel = f"inference:results:{node_id}"
         self.redis_client.publish(channel, json.dumps(inference_msg))
         return channel
 
@@ -105,6 +117,43 @@ def main():
     publisher = InferenceRedisPublisher()
     channel = publisher.publish(args.node_id, msg)
     print(f"Published to {channel}: {msg}")
+
+def publish_inference_result(node_id: str, inference_data: dict):
+    """
+    Validates, formats, and publishes inference-output in real-time.
+    Should be called immediately after inference.
+    """
+    # Validate schema
+    validate_inference_output(inference_data)
+    # Publish to Redis
+    publisher = InferenceRedisPublisher()
+    publisher.publish(node_id, inference_data)
+    # ============================================================================
+    # SCHEMA VALIDATION
+    # ============================================================================
+    def validate_inference_output(data: dict):
+        required_fields = [
+            "m_type", "m_id", "event_id", "node_id", "timestamp",
+            "classification", "confidence", "is_anomaly", "anomaly_score"
+        ]
+        for field in required_fields:
+            if field not in data:
+                raise ValueError(f"Missing required field: {field}")
+        if data["m_type"] != "inference-output":
+            raise ValueError("m_type must be 'inference-output'")
+        if not isinstance(data["confidence"], float):
+            raise ValueError("confidence must be a float")
+        if not (0.0 <= data["confidence"] <= 1.0):
+            raise ValueError("confidence must be in [0.0, 1.0]")
+        if not isinstance(data["anomaly_score"], float):
+            raise ValueError("anomaly_score must be a float")
+        if not (0.0 <= data["anomaly_score"] <= 1.0):
+            raise ValueError("anomaly_score must be in [0.0, 1.0]")
+        if not isinstance(data["is_anomaly"], bool):
+            raise ValueError("is_anomaly must be a bool")
+        allowed_classes = {"IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "UNKNOWN"}
+        if data["classification"] not in allowed_classes:
+            raise ValueError(f"classification must be one of {allowed_classes}")
 
 if __name__ == "__main__":
     main()
