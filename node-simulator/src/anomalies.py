@@ -1,6 +1,16 @@
 import random
 import numpy as np
 
+
+
+# Plan for anomalies:
+# In this file, we have functions for each anomaly.
+# We pass in our node to a function, and it applies acceleration
+# and/or gyration to it, depending on the anomaly.
+# We then mark the node as anomalous before passing it back
+# to the rest of the program.
+
+
 def apply_package_stolen(node):
     node = node.copy()
     # Choose a random direction (2D)
@@ -18,6 +28,7 @@ def apply_package_stolen(node):
     node["gyro_z"] += np.random.uniform(-0.05, 0.05)
     node["anomalous"] = True
     return node
+
 
 def package_dropped(node):
     node = node.copy()
@@ -40,6 +51,7 @@ def crane_stops_working(node):
     return node
     return node
 
+
 def car_caught_in_traffic(node):
     node = node.copy()
     # Reduce acceleration values to simulate slow movement (traffic)
@@ -52,6 +64,13 @@ def car_caught_in_traffic(node):
     node["anomalous"] = True
     return node
 
+
+def rocky_seas(node):
+    node = node.copy()
+    # Simulate much larger gyro vibrations (rocky seas)
+    node["gyro_x"] += np.random.uniform(-1.0, 1.0)
+    node["gyro_y"] += np.random.uniform(-1.0, 1.0)
+    node["gyro_z"] += np.random.uniform(-1.0, 1.0)
 def car_crash(node):
     node = node.copy()
     # Set all acceleration and velocity values to zero to simulate abrupt stop
