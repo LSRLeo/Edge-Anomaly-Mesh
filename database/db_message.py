@@ -4,7 +4,7 @@ Message Class
 from typing import Dict, Any, Optional
 from abc import ABC, abstractmethod
 import logging
-
+from db_table_manager import TableManager
 
 ERROR_CODES = ["NOT_FOUND", "INVALID_REQUEST", "INTERNAL_ERROR"]
 M_ID_DB = "db_message_id" #temp id for DB messages, to be replaced by actual message ID generation logic
@@ -126,7 +126,7 @@ class MessageRequest(Message):
     Abstract class for message requests.
     '''   
     @abstractmethod
-    def execute(self, db_manager) -> MessageResponse:
+    def execute(self, db_manager: TableManager) -> MessageResponse:
         """
         Execute the message and return the result.
         
@@ -141,7 +141,7 @@ class MessageData(Message):
     Abstract class for message data.
     '''   
     @abstractmethod
-    def execute(self, db_manager):
+    def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
         Execute the message and return the result.
         
@@ -161,7 +161,7 @@ class RawDataMessage(MessageData):
         self.event_id = raw_data.get("event_id", None)
         self.node_id = raw_data.get("node_id", None)
 
-    def execute(self, db_manager):
+    def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
         Process the raw data and store it in the database.
         
@@ -178,6 +178,7 @@ class RawDataMessage(MessageData):
             # Store the processed data in the database
             #call correct methods to store in Node Table and RawData Table
             #TODO: Implement the actual storage logic in the db_manager
+            db_manager.insert_raw_data([self.data]) 
             logging.info(f"Successfully stored raw data for event: {self.event_id} and node: {self.node_id}")
             return None  # Indicate successful execution
         
@@ -202,7 +203,7 @@ class InferenceOutputMessage(MessageData):
         self.node_id = inference_output.get("node_id", None)
         self.classification = inference_output.get("classification", None)
 
-    def execute(self, db_manager):
+    def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
         Process the inference output data and store it in the database.
         

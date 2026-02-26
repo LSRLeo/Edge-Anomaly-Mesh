@@ -3,6 +3,7 @@ from typing import Dict, Any, Optional, Tuple
 from .db_message import Message, GetNodesRequest, GetNodeDataIdsRequest, GetDatumRequest, RawDataMessage, InferenceOutputMessage, ErrorResponse
 import logging
 
+
 class MessageFactory:
     """Factory for creating message objects - Memory optimized."""
     
