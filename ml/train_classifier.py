@@ -59,7 +59,7 @@ import json
 from datetime import datetime
 
 # Import from our feature extraction module
-from feature_extraction import FeatureExtractor, create_windows, load_csv_data
+from feature_extraction import FeatureExtractor, create_windows, load_csv_data, normalize_features
 
 # Clear model history
 import gc
@@ -169,7 +169,10 @@ def parse_args():
                     default='ml/classifier/normalization_stats.json',
                     help='Path to save normalization mean/std stats as JSON')
     
+    
+    
     return parser.parse_args()
+
 
 
 # ============================================================================
@@ -344,35 +347,20 @@ class MotionClassifier(nn.Module):
 # TRAINING FUNCTIONS
 # ============================================================================
 
-def normalize_features(features, stats_output=None, mean=None, std=None):
-    """
-    Normalize features to zero mean and unit variance.
-    Optionally saves normalization stats to JSON at stats_output.
+def save_normalization_stats(scaler, out_path: str):
+    mean, std = scaler  # scaler is (mean, std) from feature_extraction.normalize_features
 
-    Returns:
-        normalized_features, stats_dict
-    """
-    if mean is None:
-        mean = np.mean(features, axis=0)
-    if std is None:
-        std = np.std(features, axis=0)
-
-    eps = 1e-8
-    normalized_features = (features - mean) / (std + eps)
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
     stats = {
         "mean": mean.tolist(),
         "std": std.tolist(),
-        "eps": eps
+        "std_zero_replaced_with_1": True
     }
 
-    if stats_output is not None:
-        out_path = Path(stats_output)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(out_path, "w") as f:
-            json.dump(stats, f, indent=2)
-
-    return normalized_features, stats
+    with open(out_path, "w") as f:
+        json.dump(stats, f, indent=2)
 
 
 def train_epoch(model, dataloader, criterion, optimizer, device):
@@ -876,7 +864,8 @@ def main():
     print("=" * 60)
 
     X, y, extractor = load_all_data(args.data_dir, args.window_size, args.overlap)
-    X_normalized, norm_stats = normalize_features(X, stats_output=args.norm_stats_output)
+    X_normalized, scaler = normalize_features(X)
+    save_normalization_stats(scaler, args.norm_stats_output)
 
     # =========================================================================
     # 2. Create dataset and split
