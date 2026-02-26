@@ -21,12 +21,13 @@ class DashboardParents:
 
 class Node:
     motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-    def __init__(self, node_id: str, lat: float, lon: float, timestamp: datetime, motion_class: int, confidence: float, anomalous: bool):
+    def __init__(self, node_id: str, lat: float, lon: float, timestamp: datetime, motion_class: int, anomaly: bool, confidence: float):
         self.node_id = node_id
         self.lat = lat
         self.lon = lon
         self.timestamp = timestamp
         self.motion_class = motion_class
+        self.anomaly = anomaly
         self.confidence = confidence
         self.anomalous = anomalous
     def updateTimestamp(self):
@@ -35,8 +36,8 @@ class Node:
         if isinstance(motion_class, int):
             self.motion_class = motion_class
         if isinstance(motion_class, str):
-            if motion_class in self.motion_states:
-                self.motion_class = self.motion_states.index(motion_class)
+            if motion_class in motion_states:
+                self.motion_class = motion_states.index(motion_class)
             else:                raise ValueError(f"Invalid motion class string: {motion_class}")
         self.confidence = confidence
     def __str__(self):
@@ -56,6 +57,7 @@ class Node:
             'lon': self.lon,
             'timestamp': self.timestamp,
             'motion_class': self.motion_class,
+            'anomaly': self.anomaly,
             'confidence': self.confidence
         }
     def motionString(self): #returns the motion class as a string for the user

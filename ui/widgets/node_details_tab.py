@@ -22,6 +22,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List, Optional, Any, Tuple, TYPE_CHECKING
 from datetime import datetime, timedelta
+from widgets.parent_classes import Node
 
 # Matplotlib imports
 import matplotlib
@@ -37,7 +38,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Avoid circular import
 if TYPE_CHECKING:
-    from ui.widgets.dashboard_main import DashboardApp
+    from widgets.dashboard_main import DashboardApp
 
 
 # =============================================================================
@@ -56,51 +57,6 @@ MOCK_NODE_INFO = {
     'total_inferences': 8452,
     'total_anomalies': 12,
 }
-class Node:
-    def __init__(self, node_id: str, lat: float, lon: float, timestamp: datetime, motion_class: int, confidence: float):
-        self.node_id = node_id
-        self.lat = lat
-        self.lon = lon
-        self.timestamp = timestamp
-        self.motion_class = motion_class
-        self.confidence = confidence
-        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-    def updateTimestamp(self):
-        self.timestamp = datetime.now()
-    def updateMotion(self, motion_class, confidence: float):
-        if isinstance(motion_class, int):
-            self.motion_class = motion_class
-        if isinstance(motion_class, str):
-            if motion_class in self.motion_states:
-                self.motion_class = self.motion_states.index(motion_class)
-            else:                raise ValueError(f"Invalid motion class string: {motion_class}")
-        self.confidence = confidence
-    def __str__(self):
-        return f"Node({self.node_id}, {self.lat}, {self.lon}, {self.timestamp}, {self.motion_class}, {self.confidence})"
-    def getNodeID(self):
-        return self.node_id
-    def getCoords(self):
-        return (self.lat, self.lon)
-    def getTimestamp(self):
-        return self.timestamp
-    def getMotion(self):
-        return (self.motion_class, self.confidence)
-    def toDict(self): #returns a dictionary representation of the node for easy access
-        return {
-            'node_id': self.node_id,
-            'lat': self.lat,
-            'lon': self.lon,
-            'timestamp': self.timestamp,
-            'motion_class': self.motion_class,
-            'confidence': self.confidence
-        }
-    def motionString(self): #returns the motion class as a string for the user
-        return self.motion_states[self.motion_class]
-
-
-
-
-
 
 class NodeDetailsTab(ttk.Frame):
     """
@@ -140,9 +96,11 @@ class NodeDetailsTab(ttk.Frame):
         # self.trend_ax = None
         # self.trend_canvas: Optional[FigureCanvasTkAgg] = None
         self.nodes = {} #dict of node_id to Node object
+        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
         self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
         # Build UI
         self._setup_ui()
+        
     
     def _setup_ui(self):
         """
@@ -344,7 +302,7 @@ class NodeDetailsTab(ttk.Frame):
         with open(filename, 'r') as file:
             return json.load(file)
     def populate_test_nodes(self):
-        file = self.load_json('test_nodesV2.json')
+        file = self.load_json('widgets/test_nodes.json')
         
 
         for entry in file:
@@ -357,12 +315,9 @@ class NodeDetailsTab(ttk.Frame):
   
     def load_node(self, node_id: str, entry: Dict[str, Any]):
         """
-        Load and display data for a specific node.
+        Load data for a specific node.
         
-        Called when:
-        - User selects node from dropdown
-        - User clicks node in Network tab
-        - User clicks anomaly row in Anomalies tab
+        Called when node list is populated
         
         Args:
             node_id: ID of the node to display
@@ -383,7 +338,12 @@ class NodeDetailsTab(ttk.Frame):
         lat = float(entry["lat"])
         lon = float(entry["lon"])
         # JSON uses an int for motion_class → convert to string
-        motion_class = entry.get("motion_class", "")
+        motion_class_str = entry.get("motion_class", "")
+        motion_class = self.motion_states.index(motion_class_str) if motion_class_str in self.motion_states else 0
+    
+        anomaly = entry.get("anomaly", False)
+        if anomaly:
+            motion_class += 4 #convert to anomaly motion class index
         # Insert placeholder fields
         timestamp = datetime.now()
         confidence = 1.0
@@ -395,6 +355,7 @@ class NodeDetailsTab(ttk.Frame):
             lon=lon,
             timestamp=timestamp,
             motion_class=motion_class,
+            anomaly= anomaly,
             confidence=confidence,
         )
 
@@ -519,12 +480,10 @@ class NodeDetailsTab(ttk.Frame):
         Args:
             event: Combobox selection event
         """
-        # TODO: Implement
-        #
-        # node_id = self.node_selector.get()
-        # if node_id:
-        #     self.load_node(node_id)
-        pass
+        if self.node_selector is None:
+            return
+        node_id = self.node_selector.get()
+        self.display_node(node_id)
     
     def update_node_list(self, node_ids: List[str]):
         """
@@ -560,27 +519,27 @@ class NodeDetailsTab(ttk.Frame):
 # DEMO / TEST
 # =============================================================================
 
-def demo():
-    """Demonstrate the NodeDetailsTab independently."""
-    root = tk.Tk()
-    root.title("Node Details Tab Demo")
-    root.geometry("800x700")
+# def demo():
+#     """Demonstrate the NodeDetailsTab independently."""
+#     root = tk.Tk()
+#     root.title("Node Details Tab Demo")
+#     root.geometry("800x700")
     
-    # Create a mock dashboard
-    class MockDashboard:
-        pass
+#     # Create a mock dashboard
+#     class MockDashboard:
+#         pass
     
-    notebook = ttk.Notebook(root)
-    notebook.pack(fill='both', expand=True)
+#     notebook = ttk.Notebook(root)
+#     notebook.pack(fill='both', expand=True)
     
-    tab = NodeDetailsTab(notebook, dashboard=MockDashboard())
-    notebook.add(tab, text='Node Details')
+#     tab = NodeDetailsTab(notebook, dashboard=MockDashboard())
+#     notebook.add(tab, text='Node Details')
     
-    # Load a node
-    # tab.load_node('node_003')
+#     # Load a node
+#     # tab.load_node('node_003')
     
-    root.mainloop()
+#     root.mainloop()
 
 
-if __name__ == '__main__':
-    demo()
+# if __name__ == '__main__':
+#     demo()

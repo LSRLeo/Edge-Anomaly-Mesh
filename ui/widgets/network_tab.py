@@ -98,6 +98,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
         """
+        
+        self.parent = parent
 
         #super().__init__(parent)
         # Replace super with individual inheritance since it now has two parents
@@ -229,7 +231,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
                               xscrollcommand=h_scroll.set)
         # Implement Background
         # Load Map
-        map_image = Image.open("widgetextras/mercator.jpg")
+        map_image = Image.open("widgets/widgetextras/mercator.jpg")
         self.map_photo = ImageTk.PhotoImage(map_image)
         self.projection = MercatorProjection(map_image.width, map_image.height)
         self.canvas.create_image(0,0,image=self.map_photo, anchor='nw')
@@ -430,7 +432,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         if node is not None and event.num == 1:
             self.select_node(node_id)
-            self.dashboard.show_node_details(node_id)
+            self.parent.select(3) #switch to node details tab
+            self.dashboard.node_details_tab.display_node(node_id)
 
         elif node is not None and event.num == 2 or event.num==3:
             node['anomaly'] = not node.get('anomaly')
@@ -468,8 +471,9 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 lon=node_data.get("gps", {}).get("lon_deg"),
                 timestamp=datetime.fromisoformat(node_data["timestamp"]),
                 motion_class=Node.motion_states.index(ml["motion_class"]),
-                confidence=ml["motion_confidence"],
-                anomalous=ml["anomaly_flag"]
+                anomaly=ml["anomaly_flag"]
+                confidence=ml["motion_confidence"]
+                
             )
             # Append newly created node to dict of nodes, key node_id
             self.node_dict[node_id] = node
