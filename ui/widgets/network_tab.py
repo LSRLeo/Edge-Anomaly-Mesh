@@ -28,8 +28,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np
 import math
-from parent_classes import Node
-from parent_classes import DashboardParents
+from widgets.parent_classes import Node
+from widgets.parent_classes import DashboardParents
 
 
 #from ui.ui_utils import (
@@ -449,8 +449,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             return json.load(file)
     def populate_test_nodes(self):
         #file = self.load_json('test_nodes.json')
-        raw_file = self.load_json('raw_data.json')
-        ml_file = self.load_json('ml_data.json')
+        raw_file = self.load_json('widgets/raw_data.json')
+        ml_file = self.load_json('widgets/ml_data.json')
 
         # Sort ml dict using node_id as key for quick indexing
         ml_id_sort = {msg["node_id"]: msg for msg in ml_file} 
@@ -471,7 +471,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 lon=node_data.get("gps", {}).get("lon_deg"),
                 timestamp=datetime.fromisoformat(node_data["timestamp"]),
                 motion_class=Node.motion_states.index(ml["motion_class"]),
-                anomaly=ml["anomaly_flag"]
+                anomaly=ml["anomaly_flag"],
                 confidence=ml["motion_confidence"]
                 
             )
