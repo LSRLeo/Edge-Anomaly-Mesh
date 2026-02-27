@@ -3,7 +3,7 @@
 # SQLAlchemy query functions for database operations
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import desc
-from .schema import engine, Node, RawSensorData, InferenceResults
+from schema import engine, Node, RawSensorData, InferenceResults
 
 Session = sessionmaker(bind=engine)
 
@@ -51,7 +51,7 @@ def get_datum(event_id):
 	finally:
 		session.close()
 
-def get_most_recent_raw_data(node_id):
+def get_recent_raw_data(node_id):
 	"""Return the most recent raw_sensor_data row for a node."""
 	session = Session()
 	try:
@@ -60,7 +60,7 @@ def get_most_recent_raw_data(node_id):
 	finally:
 		session.close()
 
-def get_most_recent_inference(node_id):
+def get_recent_inference(node_id):
 	"""Return the most recent inference_results row for a node."""
 	session = Session()
 	try:
