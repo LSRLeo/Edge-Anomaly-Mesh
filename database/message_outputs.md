@@ -195,10 +195,25 @@ Message request/response pairs for DB query functions.
     {
       "event_id": "node_001_2026-01-22T18:52:14.818400",
       "timestamp": "2026-01-22T18:52:14.818400",
-      "classification": "IDLE",
+      "window_start": 1769133132,
+      "window_end": 1769133134,
+      "window_samples": 20,
+      "location_state": HOME,
+      "motion_class": IDLE,
       "confidence": 0.95,
-      "is_anomaly": false,
-      "anomaly_score": 0.12
+      "anomaly_detected": false,
+      "anomaly_score": 0.12,
+      "anomaly_type": IMPACT,
+      "nearest_hub_id": hub_nyc_01,
+      "nearest_hub_distance": 39.7,
+      "feature_vector": {
+            "rms_accel": 0.05,
+            "peak_accel": 0.12,
+            "dominant_freq_hz": 0.0,
+            "variance_x": 0.002,
+            "variance_y": 0.002,
+            "variance_z": 0.003
+      }
     }
   ]
 }
