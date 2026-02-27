@@ -24,6 +24,7 @@ from datetime import datetime, timedelta
 
 from matplotlib import style
 from widgets.parent_classes import Node
+from widgets.parent_classes import DashboardParents
 
 # from ui.ui_utils import (
 #     SEVERITY_COLORS, STATUS_COLORS,
@@ -99,7 +100,7 @@ class AnomalySection(ttk.Frame):
         top = ttk.Frame(self)
         top.pack(fill="x", padx=10, pady=10)
 
-        ttk.Button(top, text="Refresh", command=self._on_refresh_clicked).pack(side="left")
+        ttk.Button(top, text="Refresh", command=self.parent.refresh()).pack(side="left")
 
         # --- Scrollable area ---
         outer = ttk.Frame(self)
@@ -137,19 +138,19 @@ class AnomalySection(ttk.Frame):
         if self._canvas and self._inner_window is not None:
             self._canvas.itemconfig(self._inner_window, width=event.width)
         return
-    def _on_refresh_clicked(self):
-        pass
     def _build_rows(self):
         # Clear existing rows
         for row in self._rows:
             row['frame'].destroy()
         self._rows.clear()
         self.populate_test_nodes()
+        self.redis_refresh()
         # Build new rows
         for node_id in list(self.nodes.keys()):
             node = self.nodes[node_id]
             if node.anomaly:
                 self._build_single_row(node.toDict())
+    
     def load_json(self, filename):
         if not os.path.exists(filename):
             raise FileNotFoundError

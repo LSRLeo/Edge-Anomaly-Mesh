@@ -23,6 +23,8 @@ from tkinter import ttk
 from typing import Dict, List, Optional, Any, Tuple, TYPE_CHECKING
 from datetime import datetime, timedelta
 from widgets.parent_classes import Node
+from widgets.parent_classes import DashboardParents
+from redis_reader import RedisReader
 
 # Matplotlib imports
 import matplotlib
@@ -45,20 +47,20 @@ if TYPE_CHECKING:
 # MOCK DATA - Replace with database queries
 # =============================================================================
 
-MOCK_NODES = ['node_001', 'node_002', 'node_003', 'node_004', 'node_005', 'node_006']
+# MOCK_NODES = ['node_001', 'node_002', 'node_003', 'node_004', 'node_005', 'node_006']
 
-MOCK_NODE_INFO = {
-    'node_id': 'node_003',
-    'status': 'ACTIVE',
-    'current_motion': 'MARITIME',
-    'location': 'Hub B - Dock 4',
-    'first_seen': datetime.now() - timedelta(days=7),
-    'last_seen': datetime.now() - timedelta(seconds=30),
-    'total_inferences': 8452,
-    'total_anomalies': 12,
-}
+# MOCK_NODE_INFO = {
+#     'node_id': 'node_003',
+#     'status': 'ACTIVE',
+#     'current_motion': 'MARITIME',
+#     'location': 'Hub B - Dock 4',
+#     'first_seen': datetime.now() - timedelta(days=7),
+#     'last_seen': datetime.now() - timedelta(seconds=30),
+#     'total_inferences': 8452,
+#     'total_anomalies': 12,
+# }
 
-class NodeDetailsTab(ttk.Frame):
+class NodeDetailsTab(ttk.Frame, DashboardParents):
     """
     Node details drill-down tab.
     
@@ -66,7 +68,7 @@ class NodeDetailsTab(ttk.Frame):
     including metadata, motion history, and anomaly trends.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', selected_node_id: Optional[str] = None):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader, selected_node_id: Optional[str] = None):
         """
         Initialize the Node Details tab.
         
@@ -95,6 +97,8 @@ class NodeDetailsTab(ttk.Frame):
         # self.trend_fig: Optional[Figure] = None
         # self.trend_ax = None
         # self.trend_canvas: Optional[FigureCanvasTkAgg] = None
+        self.mldict = {} #machine learning dictionary
+        self.rddict = {} #raw data dictionary
         self.nodes = {} #dict of node_id to Node object
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
         self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
@@ -127,8 +131,6 @@ class NodeDetailsTab(ttk.Frame):
         
         self._setup_node_selector()
         self._setup_info_panel()
-        # self._setup_history_table()
-        # self._setup_anomaly_trend_chart()
         
 
     
@@ -231,70 +233,6 @@ class NodeDetailsTab(ttk.Frame):
             self.selected_node_id = list(self.nodes.keys())[0]
             self.display_node(self.selected_node_id)
 
-
-    
-    # def _setup_history_table(self):
-        """
-        Create the motion history treeview table.
-        
-        Columns:
-        - Timestamp
-        - Motion Class
-        - Confidence
-        - Anomaly Score
-        """
-        # TODO: Implement
-        #
-        # history_frame = ttk.LabelFrame(self, text="Motion History (Last 24 Hours)")
-        # history_frame.grid(row=2, column=0, sticky='nsew', padx=10, pady=5)
-        # history_frame.columnconfigure(0, weight=1)
-        # history_frame.rowconfigure(0, weight=1)
-        #
-        # columns = ('timestamp', 'motion_class', 'confidence', 'anomaly_score')
-        #
-        # self.history_tree = ttk.Treeview(history_frame, columns=columns,
-        #                                   show='headings', height=8)
-        #
-        # self.history_tree.heading('timestamp', text='Timestamp')
-        # self.history_tree.heading('motion_class', text='Motion Class')
-        # self.history_tree.heading('confidence', text='Confidence')
-        # self.history_tree.heading('anomaly_score', text='Anomaly Score')
-        #
-        # self.history_tree.column('timestamp', width=150, anchor='center')
-        # self.history_tree.column('motion_class', width=120, anchor='center')
-        # self.history_tree.column('confidence', width=100, anchor='center')
-        # self.history_tree.column('anomaly_score', width=100, anchor='center')
-        #
-        # self.history_tree.grid(row=0, column=0, sticky='nsew')
-        #
-        # # Scrollbar
-        # scrollbar = ttk.Scrollbar(history_frame, orient='vertical',
-        #                           command=self.history_tree.yview)
-        # scrollbar.grid(row=0, column=1, sticky='ns')
-        # self.history_tree.configure(yscrollcommand=scrollbar.set)
-        #
-        # # Configure row tags for motion class coloring
-        # for motion_class, color in MOTION_COLORS.items():
-        #     self.history_tree.tag_configure(motion_class, foreground=color)
-        pass
-    
-    # def _setup_anomaly_trend_chart(self):
-        """
-        Create the anomaly score trend line chart.
-        
-        Shows anomaly score over time for the selected node.
-        """
-        # TODO: Implement
-        #
-        # chart_frame = ttk.LabelFrame(self, text="Anomaly Score Trend")
-        # chart_frame.grid(row=3, column=0, sticky='nsew', padx=10, pady=5)
-        #
-        # self.trend_fig = Figure(figsize=(8, 3), dpi=100)
-        # self.trend_ax = self.trend_fig.add_subplot(111)
-        #
-        # self.trend_canvas = FigureCanvasTkAgg(self.trend_fig, master=chart_frame)
-        # self.trend_canvas.get_tk_widget().pack(fill='both', expand=True, padx=5, pady=5)
-        pass
     
     def load_json(self, filename):
         if not os.path.exists(filename):
@@ -313,7 +251,7 @@ class NodeDetailsTab(ttk.Frame):
                 print(f"[load_nodes] Failed to load entry {entry}: {e}")
 
   
-    def load_node(self, node_id: str, entry: Dict[str, Any]):
+    def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry: Dict[str, Any]):
         """
         Load data for a specific node.
         
@@ -334,14 +272,14 @@ class NodeDetailsTab(ttk.Frame):
         # self._load_node_info(node_id)
         # self._load_history(node_id)
         # self._load_anomaly_trend(node_id)
-        node_id = entry["node_id"]
-        lat = float(entry["lat"])
-        lon = float(entry["lon"])
+        node_id = rdentry["node_id"]
+        lat = float(rdentry["lat"])
+        lon = float(rdentry["lon"])
         # JSON uses an int for motion_class → convert to string
-        motion_class_str = entry.get("motion_class", "")
+        motion_class_str = rdentry.get("motion_class", "")
         motion_class = self.motion_states.index(motion_class_str) if motion_class_str in self.motion_states else 0
     
-        anomaly = entry.get("anomaly", False)
+        anomaly = rdentry.get("anomaly", False)
         if anomaly:
             motion_class += 4 #convert to anomaly motion class index
         # Insert placeholder fields
@@ -380,98 +318,6 @@ class NodeDetailsTab(ttk.Frame):
         self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
         self.vars["motion_class"].set(node.motionString())
         self.vars["confidence"].set(f"{node.confidence:.2f}")
-    def _load_node_info(self, node_id: str):
-        """
-        Load and display node metadata.
-        
-        Args:
-            node_id: ID of the node
-        """
-        # TODO: Implement with real database query
-        #
-        # # node_info = db.get_node_info(node_id)
-        # node_info = MOCK_NODE_INFO  # Temporary
-        #
-        # # Update info labels
-        # self.info_labels['node_id'].config(text=node_info['node_id'])
-        # self.info_labels['status'].config(text=node_info['status'])
-        # self.info_labels['current_motion'].config(text=node_info['current_motion'])
-        # self.info_labels['location'].config(text=node_info.get('location', 'Unknown'))
-        # self.info_labels['first_seen'].config(text=format_timestamp(node_info['first_seen']))
-        # self.info_labels['last_seen'].config(text=format_timestamp(node_info['last_seen']))
-        # self.info_labels['total_inferences'].config(text=f"{node_info['total_inferences']:,}")
-        # self.info_labels['total_anomalies'].config(text=str(node_info['total_anomalies']))
-        pass
-    
-    # def _load_history(self, node_id: str):
-        """
-        Load and display motion classification history.
-        
-        Args:
-            node_id: ID of the node
-        """
-        # TODO: Implement with real database query
-        #
-        # # Clear existing rows
-        # for item in self.history_tree.get_children():
-        #     self.history_tree.delete(item)
-        #
-        # # history = db.get_node_history(node_id, hours=24)
-        # history = MOCK_HISTORY  # Temporary
-        #
-        # # Add rows
-        # for i, record in enumerate(history):
-        #     values = (
-        #         format_timestamp(record['timestamp'], include_date=False),
-        #         record['motion_class'],
-        #         format_confidence(record['confidence']),
-        #         format_anomaly_score(record['anomaly_score'])
-        #     )
-        #     self.history_tree.insert('', 'end', iid=str(i), values=values,
-        #                              tags=(record['motion_class'],))
-        pass
-    
-    # def _load_anomaly_trend(self, node_id: str):
-        """
-        Load and display anomaly score trend chart.
-        
-        Args:
-            node_id: ID of the node
-        """
-        # TODO: Implement with real database query
-        #
-        # if not self.trend_ax:
-        #     return
-        #
-        # # trend_data = db.get_node_anomaly_trend(node_id, hours=24)
-        # trend_data = MOCK_ANOMALY_TREND  # Temporary
-        #
-        # self.trend_ax.clear()
-        #
-        # times = [t[0] for t in trend_data]
-        # scores = [t[1] for t in trend_data]
-        #
-        # # Plot line
-        # self.trend_ax.plot(times, scores, 'b-', linewidth=2, marker='o', markersize=4)
-        # self.trend_ax.fill_between(times, scores, alpha=0.3)
-        #
-        # # Add threshold line
-        # self.trend_ax.axhline(y=0.5, color='r', linestyle='--', alpha=0.7, label='Threshold')
-        #
-        # # Labels
-        # self.trend_ax.set_xlabel('Time')
-        # self.trend_ax.set_ylabel('Anomaly Score')
-        # self.trend_ax.set_ylim(0, 1)
-        # self.trend_ax.legend(loc='upper right')
-        # self.trend_ax.grid(True, linestyle='--', alpha=0.7)
-        #
-        # # Format dates
-        # self.trend_fig.autofmt_xdate()
-        #
-        # # Redraw
-        # self.trend_fig.tight_layout()
-        # self.trend_canvas.draw()
-        pass
     
     def _on_node_select(self, event):
         """
@@ -484,26 +330,11 @@ class NodeDetailsTab(ttk.Frame):
             return
         node_id = self.node_selector.get()
         self.display_node(node_id)
-    
-    def update_node_list(self, node_ids: List[str]):
-        """
-        Update the node selector dropdown with available nodes.
-        
-        Args:
-            node_ids: List of all node IDs
-        """
-        # TODO: Implement
-        #
-        # if self.node_selector:
-        #     current = self.node_selector.get()
-        #     self.node_selector['values'] = sorted(node_ids)
-        #     # Preserve selection if still valid
-        #     if current in node_ids:
-        #         self.node_selector.set(current)
-        #     elif node_ids:
-        #         self.node_selector.current(0)
-        pass
-    
+    def _parse_nodes(self):
+        for node_id in self.rddict:
+            rdentry = self.rddict[node_id]
+            mlentry = self.mldict.get(node_id, {})
+            self.load_node(node_id, rdentry, mlentry)
     def refresh(self):
         """
         Refresh data for the currently selected node.
@@ -512,9 +343,18 @@ class NodeDetailsTab(ttk.Frame):
         #
         # if self.current_node_id:
         #     self.load_node(self.current_node_id)
-        pass
+        try:
+            self.rddict = self.redis_reader.getRDDict() #get the raw data dictionary from the redis reader
+            self.mldict = self.redis_reader.getMLDict() #get the machine learning dictionary from the redis reader
+            self._parse_nodes()
+
+            if self.current_node_id:
+                self.display_node(self.current_node_id)
+        except Exception as e:
+            print(f"[NodeDetailsTab.refresh] Error refreshing data: {e}")
 
 
+        
 # =============================================================================
 # DEMO / TEST
 # =============================================================================

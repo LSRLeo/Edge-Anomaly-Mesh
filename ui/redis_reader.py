@@ -27,7 +27,7 @@ class RedisReader:
             raise Exception("Subscriber and Publisher must be connected before refreshing dataframes")
         newmldict = {}
         newrddict = {}
-        self.publisher.publish(self.channel_name, "get-nodes") #publish get-nodes message to redis channel
+        self.publisher.publish(self.channel_name, "get_nodes") #publish get-nodes message to redis channel
         get_nodes_response = self.subscriber.get_message() #wait for get-nodes response from redis
         if get_nodes_response is not None and get_nodes_response['type'] == 'message':
             nodes_message = get_nodes_response['data']

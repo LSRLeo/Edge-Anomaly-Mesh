@@ -4,7 +4,7 @@ from tkinter import ttk
 from datetime import datetime, timedelta
 from abc import ABC, abstractmethod
 
-class DashboardParents:
+class DashboardParents():
     def __init__(self, redis_reader, parent: ttk.Notebook, dashboard: 'DashboardApp'):
 
         self.redis_reader = redis_reader
