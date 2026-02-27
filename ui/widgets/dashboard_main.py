@@ -45,15 +45,17 @@ class DashboardApp:
     Coordinates communication between tabs.
     """
     
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: tk.Tk, redis_reader: RedisReader):
         """
         Initialize the dashboard application.
         
         Args:
             root: The root Tkinter window
+            redis_reader: An instance of RedisReader for data access
         """
         self.root = root
         self.root.title("Edge Anomaly Mesh - Dashboard")
+        self.redis_reader = redis_reader
         self.root.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
         
         # TODO: Set minimum window size
@@ -146,7 +148,7 @@ class DashboardApp:
         self.network_tab = NetworkTab(self.notebook, dashboard=self)
         self.anomalies_tab = AnomaliesTab(self.notebook, dashboard=self)
         self.analytics_tab = AnalyticsTab(self.notebook, dashboard=self)
-        self.node_details_tab = NodeDetailsTab(self.notebook, dashboard=self)
+        self.node_details_tab = NodeDetailsTab(self.notebook, dashboard=self, redis_reader=self.redis_reader)
         
         # Add tabs to notebook
         self.notebook.add(self.network_tab, text='Network')
@@ -268,12 +270,13 @@ def main():
     Creates the root window and starts the dashboard.
     """
 
-    redis_reader = RedisReader(CHANNELNAME)
+    
     pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
     sub = pub.pubsub()
     sub.subscribe(CHANNELNAME)
-    redis_reader.connect(sub, pub)
-
+    redis_reader = RedisReader(CHANNELNAME,pub,sub)
+    
+    redis_reader.refresh(instant=True) #initial refresh to populate data from redis before starting dashboard
     RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
     RedisThread.start
     root = tk.Tk()
@@ -282,7 +285,7 @@ def main():
     # root.iconbitmap('path/to/icon.ico')
     
     # Create dashboard
-    app = DashboardApp(root)
+    app = DashboardApp(root, redis_reader=redis_reader)
     # Create Thread for main DashBoard
 
 
