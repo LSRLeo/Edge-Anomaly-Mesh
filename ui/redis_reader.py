@@ -1,18 +1,18 @@
 
+import json
 import time
 import ast
 
 class RedisReader:
-    def __init__(self, channel_name):
+    def __init__(self, channel_name, publisher, subscriber):
         self.channel_name = channel_name
         self.nodes = [] #list of nodes available in the system, will be populated by get-nodes response from redis
-        self.subscriber = None
-        self.publisher = None
+        self.subscriber = subscriber
+        self.publisher = publisher
         self.mldict = {} #machine learning dictionary
         self.rddict = {} #raw data dictionary
-    def connect(self, subscriber, publisher):
-        self.subscriber = subscriber #redis subscriber will be created in main dashboard loop and passed to this class
-        self.publisher = publisher #redis publisher will be created in main dashboard loop and passed to this class
+        self.message_counter = 1 #counter for m_id
+    
     def refresh(self): #refreshes the dataframes with new data from redis, thread for subscribing to redis will be created in main dashboard loop
 
         """
@@ -27,27 +27,97 @@ class RedisReader:
             raise Exception("Subscriber and Publisher must be connected before refreshing dataframes")
         newmldict = {}
         newrddict = {}
-        self.publisher.publish(self.channel_name, "get_nodes") #publish get-nodes message to redis channel
-        get_nodes_response = self.subscriber.get_message() #wait for get-nodes response from redis
-        if get_nodes_response is not None and get_nodes_response['type'] == 'message':
-            nodes_message = get_nodes_response['data']
-            self.nodes = nodes_message.split(",") #assuming nodes are sent as a comma separated string
+        self.nodes = self.request_node_ids() #request list of node IDs from redis and update nodes list
+        if self.nodes is not None:
+            
             for node in self.nodes: #parse each node as a dict and load into dataframe
-                self.publisher.publish(self.channel_name, f"get-raw-data-{node}") #publish get-raw-data message to redis channel for each node
-                get_raw_data_response = self.subscriber.get_message() #wait for get-raw-data response from redis
-                if get_raw_data_response is not None and get_raw_data_response['type'] == 'message':
-                    raw_data_message = get_raw_data_response['data']
-                    raw_data_dict = ast.literal_eval(raw_data_message) #assuming raw data is sent as a string representation of a dictionary
+                get_raw_data_message = self.request_raw_node_data(node) #request raw data for node from redis
+                if get_raw_data_message is not None:
+                    raw_data_dict = get_raw_data_message.get("records", {})
                     newrddict[node] = raw_data_dict #store raw data dict in raw data dictionary with node as key
 
-                self.publisher.publish(self.channel_name, f"get-inference-output-{node}") #publish get-inference-output message to redis channel for each node
-                get_inference_output_response = self.subscriber.get_message() #wait for get-inference-output response from redis
-                if get_inference_output_response is not None and get_inference_output_response['type'] == 'message':
-                    inference_output_message = get_inference_output_response['data']
-                    inference_output_list = ast.literal_eval(inference_output_message) #assuming inference output is sent as a string representation of a list
+                get_inference_output_message = self.request_inference_output(node) #request inference output for node from redis
+                if get_inference_output_message is not None:
+                    inference_output_list = get_inference_output_message.get("records", []) 
                     newmldict[node] = inference_output_list #store inference output list in machine learning dictionary with node as key
         self.rddict = newrddict #update raw data dictionary with new data
         self.mldict = newmldict #update machine learning dictionary with new data
+    def request_node_ids(self):
+        """
+        Request list of node IDs from Redis.
+        """
+        request = {
+            'm_type': 'get-nodes', 
+            'm_id': f'ui_{self.message_counter:05d}'}
+        self.message_counter += 1
+        self.publisher.publish(self.channel_name, json.dumps(request))
+        start = time.monotonic() #start timer to prevent infinite blocking
+        try:
+            for msg in self.subscriber.listen():
+                if time.monotonic() - start > 3: #timeout after 3 seconds
+                    raise TimeoutError("Timeout waiting for node IDs")
+                if msg['type'] == 'message':
+                    data = json.loads(msg['data'])
+                    if data.get('responding_to') == request['m_id']:
+                        return data.get('nodes', [])
+                if time.monotonic() - start > 5: #timeout after 5 seconds
+                    print("Timeout waiting for node IDs")
+                    return None
+        except Exception as e:
+            print(f"Error requesting node IDs: {e}")
+            return None
+    def request_raw_node_data(self, node_id):
+        """
+        Request raw data for a specific node from Redis.
+        """
+        request = {
+            'm_type': 'get-recent-raw-data', 
+            'm_id': f'ui_{self.message_counter:05d}',
+            'node_id': node_id}
+        self.message_counter += 1
+        self.publisher.publish(self.channel_name, json.dumps(request))
+        start = time.monotonic() #start timer to prevent infinite blocking
+        try:
+            for msg in self.subscriber.listen():
+                if time.monotonic() - start > 3: #timeout after 3 seconds
+                    raise TimeoutError(f"Timeout waiting for raw data for node {node_id}")
+                if msg['type'] == 'message':
+                    data = json.loads(msg['data'])
+                    if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
+                        return data.get('records', {})
+                if time.monotonic() - start > 5: #timeout after 5 seconds
+                    print(f"Timeout waiting for raw data for node {node_id}")
+                    return None
+        except Exception as e:
+            print(f"Error requesting raw data for node {node_id}: {e}")
+            return None
+
+    def request_inference_output(self, node_id):
+        """
+        Request inference output for a specific node from Redis.
+        """
+        request = {
+            'm_type': 'get-recent-inference', 
+            'm_id': f'ui_{self.message_counter:05d}',
+            'node_id': node_id
+        }
+        self.message_counter += 1
+        self.publisher.publish(self.channel_name, json.dumps(request))
+        start = time.monotonic() #start timer to prevent infinite blocking
+        try:
+            for msg in self.subscriber.listen():
+                if time.monotonic() - start > 3: #timeout after 3 seconds
+                    raise TimeoutError(f"Timeout waiting for inference output for node {node_id}")
+                if msg['type'] == 'message':
+                    data = json.loads(msg['data'])
+                    if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
+                        return data.get('inference_output', []) #assumes list of probabilities, might change depending on team discourse. (2/27/2026) -TE
+                if time.monotonic() - start > 5: #timeout after 5 seconds
+                    print(f"Timeout waiting for inference output for node {node_id}")
+                    return None
+        except Exception as e:
+            print(f"Error requesting inference output for node {node_id}: {e}")
+            return None
     def getMLDict(self): #returns the machine learning dictionary
         return self.mldict
     def getRDDict(self): #returns the raw data dictionary

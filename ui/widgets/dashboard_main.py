@@ -270,11 +270,12 @@ def main():
     Creates the root window and starts the dashboard.
     """
 
-    redis_reader = RedisReader(CHANNELNAME)
+    
     pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
     sub = pub.pubsub()
     sub.subscribe(CHANNELNAME)
-    redis_reader.connect(sub, pub)
+    redis_reader = RedisReader(CHANNELNAME,pub,sub)
+    
 
     RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
     RedisThread.start
