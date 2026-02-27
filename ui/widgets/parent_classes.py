@@ -21,15 +21,21 @@ class DashboardParents():
 
 class Node:
     motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-    def __init__(self, node_id: str, lat: float, lon: float, timestamp: datetime, motion_class: int, anomaly: bool, confidence: float):
+    def __init__(self, node_id: str, timestamp, seq, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, lat: float, lon: float, motion_class: int, anomaly: bool, confidence: float):
         self.node_id = node_id
+        self.timestamp = timestamp
+        self.seq = seq
+        self.accel_x = accel_x
+        self.accel_y = accel_y
+        self.accel_z = accel_z
+        self.gyro_x = gyro_x
+        self.gyro_y = gyro_y
+        self.gyro_z = gyro_z
         self.lat = lat
         self.lon = lon
-        self.timestamp = timestamp
         self.motion_class = motion_class
         self.anomaly = anomaly
         self.confidence = confidence
-        self.anomaly = anomaly
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
     def updateTimestamp(self):
         self.timestamp = datetime.now()
@@ -42,7 +48,7 @@ class Node:
             else:                raise ValueError(f"Invalid motion class string: {motion_class}")
         self.confidence = confidence
     def __str__(self):
-        return f"Node({self.node_id}, {self.lat}, {self.lon}, {self.timestamp}, {self.motion_class}, {self.confidence})"
+        return f"Node {self.node_id}: ({self.lat}, {self.lon}) - Motion: {self.motionString()} (Confidence: {self.confidence:.2f})"
     def getNodeID(self):
         return self.node_id
     def getCoords(self):
@@ -54,9 +60,16 @@ class Node:
     def toDict(self): #returns a dictionary representation of the node for easy access
         return {
             'node_id': self.node_id,
+            'timestamp': self.timestamp,
+            'seq': self.seq,
+            'accel_x': self.accel_x,
+            'accel_y': self.accel_y,
+            'accel_z': self.accel_z,
+            'gyro_x': self.gyro_x,
+            'gyro_y': self.gyro_y,
+            'gyro_z': self.gyro_z,
             'lat': self.lat,
             'lon': self.lon,
-            'timestamp': self.timestamp,
             'motion_class': self.motion_class,
             'anomaly': self.anomaly,
             'confidence': self.confidence

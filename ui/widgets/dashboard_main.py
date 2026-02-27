@@ -276,7 +276,7 @@ def main():
     sub.subscribe(CHANNELNAME)
     redis_reader = RedisReader(CHANNELNAME,pub,sub)
     
-
+    redis_reader.refresh(instant=True) #initial refresh to populate data from redis before starting dashboard
     RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
     RedisThread.start
     root = tk.Tk()

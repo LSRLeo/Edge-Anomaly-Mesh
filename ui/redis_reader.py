@@ -13,7 +13,7 @@ class RedisReader:
         self.rddict = {} #raw data dictionary
         self.message_counter = 1 #counter for m_id
     
-    def refresh(self): #refreshes the dataframes with new data from redis, thread for subscribing to redis will be created in main dashboard loop
+    def refresh(self, instant=False): #refreshes the dataframes with new data from redis, thread for subscribing to redis will be created in main dashboard loop
 
         """
         pull all available nodes
@@ -22,9 +22,10 @@ class RedisReader:
         parse the raw data into dictionary format for easy indexing
         for each node pull most recent inference output and store it in the machine learning dataframe
         """
-        time.sleep(10) #sleep for 10 seconds to allow time for subscriber to connect and receive get-nodes response from redis (also acts as the periodic refresh interval)
+        if instant == False:
+            time.sleep(10) #sleep for 10 seconds to allow time for subscriber to connect and receive get-nodes response from redis (also acts as the periodic refresh interval)
         if self.subscriber is None or self.publisher is None:
-            raise Exception("Subscriber and Publisher must be connected before refreshing dataframes")
+            raise Exception("Subscriber and Publisher must be connected before refreshing dataframes") #CYA measure should never happen
         newmldict = {}
         newrddict = {}
         self.nodes = self.request_node_ids() #request list of node IDs from redis and update nodes list

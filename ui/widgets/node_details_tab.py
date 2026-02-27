@@ -101,7 +101,8 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.rddict = {} #raw data dictionary
         self.nodes = {} #dict of node_id to Node object
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-        self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
+        # self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
+        self.refresh() #initial refresh to populate data from redis
         # Build UI
         self._setup_ui()
         
@@ -208,6 +209,13 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             "timestamp": tk.StringVar(value="—"),
             "motion_class": tk.StringVar(value="—"),
             "confidence": tk.StringVar(value="—"),
+            "seq": tk.StringVar(value="—"),
+            "accel_x": tk.StringVar(value="—"),
+            "accel_y": tk.StringVar(value="—"),
+            "accel_z": tk.StringVar(value="—"),
+            "gyro_x": tk.StringVar(value="—"),
+            "gyro_y": tk.StringVar(value="—"),
+            "gyro_z": tk.StringVar(value="—"),
         }
 
         # Helper to add a labeled row
@@ -219,9 +227,16 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
 
         r = 1
         add_row(r, "Node ID", self.vars["node_id"]); r += 1
+        add_row(r, "Timestamp", self.vars["timestamp"]); r += 1
+        add_row(r, "Sequence", self.vars["seq"]); r += 1
+        add_row(r, "Accel X", self.vars["accel_x"]); r += 1
+        add_row(r, "Accel Y", self.vars["accel_y"]); r += 1
+        add_row(r, "Accel Z", self.vars["accel_z"]); r += 1
+        add_row(r, "Gyro X", self.vars["gyro_x"]); r += 1
+        add_row(r, "Gyro Y", self.vars["gyro_y"]); r += 1
+        add_row(r, "Gyro Z", self.vars["gyro_z"]); r += 1
         add_row(r, "Latitude", self.vars["lat"]); r += 1
         add_row(r, "Longitude", self.vars["lon"]); r += 1
-        add_row(r, "Timestamp", self.vars["timestamp"]); r += 1
         add_row(r, "Motion Class", self.vars["motion_class"]); r += 1
         add_row(r, "Confidence", self.vars["confidence"]); r += 1
 
@@ -239,19 +254,19 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             raise FileNotFoundError
         with open(filename, 'r') as file:
             return json.load(file)
-    def populate_test_nodes(self):
-        file = self.load_json('widgets/test_nodes.json')
+    # def populate_test_nodes(self):
+    #     file = self.load_json('widgets/test_nodes.json')
         
 
-        for entry in file:
-            try:
-                self.load_node(entry["node_id"], entry)
+    #     for entry in file:
+    #         try:
+    #             self.load_node(entry["node_id"], entry)
 
-            except Exception as e:
-                print(f"[load_nodes] Failed to load entry {entry}: {e}")
+    #         except Exception as e:
+    #             print(f"[load_nodes] Failed to load entry {entry}: {e}")
 
   
-    def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry: Dict[str, Any]):
+    def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
         Load data for a specific node.
         
@@ -260,38 +275,47 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         Args:
             node_id: ID of the node to display
         """
-        # TODO: Implement
-        #
-        # self.current_node_id = node_id
-        #
-        # # Update selector to show this node
-        # if self.node_selector:
-        #     self.node_selector.set(node_id)
-        #
-        # # Fetch and display data
-        # self._load_node_info(node_id)
-        # self._load_history(node_id)
-        # self._load_anomaly_trend(node_id)
-        node_id = rdentry["node_id"]
-        lat = float(rdentry["lat"])
-        lon = float(rdentry["lon"])
-        # JSON uses an int for motion_class → convert to string
-        motion_class_str = rdentry.get("motion_class", "")
-        motion_class = self.motion_states.index(motion_class_str) if motion_class_str in self.motion_states else 0
-    
-        anomaly = rdentry.get("anomaly", False)
-        if anomaly:
-            motion_class += 4 #convert to anomaly motion class index
-        # Insert placeholder fields
-        timestamp = datetime.now()
-        confidence = 1.0
-
+        if node_id is None:
+            raise ValueError("Node ID cannot be None")
+        if rdentry is None:
+            raise ValueError(f"Raw data entry for node {node_id} cannot be None")
+        if mlentry is None:
+            raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
+        if node_id not in rdentry:
+            raise ValueError(f"Node ID {node_id} not found in raw data entry")
+        node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
+        
+        #raw data fields with defaults if missing
+        timestamp = rdentry.get("timestamp", datetime.now().isoformat())
+        seq = rdentry.get("seq", 0)
+        accel = rdentry.get("accel")
+        accel_x = accel.get("x", 0) if accel else 0
+        accel_y = accel.get("y", 0) if accel else 0
+        accel_z = accel.get("z", 0) if accel else 0
+        gyro = rdentry.get("gyro_rads")
+        gyro_x = gyro.get("x", 0) if gyro else 0
+        gyro_y = gyro.get("y", 0) if gyro else 0
+        gyro_z = gyro.get("z", 0) if gyro else 0
+        gps = rdentry.get("gps")
+        lat = gps.get("lat_deg", 0) if gps else 0
+        lon = gps.get("lon_deg", 0) if gps else 0
+        #inference output fields with defaults if missing
+        motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
+        confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
+        anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
         # Build Node object
         node = Node(
             node_id=node_id,
+            timestamp=timestamp,
+            seq=seq,
+            accel_x=accel_x,
+            accel_y=accel_y,
+            accel_z=accel_z,
+            gyro_x=gyro_x,
+            gyro_y=gyro_y,
+            gyro_z=gyro_z,
             lat=lat,
             lon=lon,
-            timestamp=timestamp,
             motion_class=motion_class,
             anomaly= anomaly,
             confidence=confidence,
@@ -313,9 +337,16 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         
         node = self.nodes[node_id]
         self.vars["node_id"].set(node.getNodeID())
+        self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
+        self.vars["seq"].set(str(node.seq))
+        self.vars["accel_x"].set(f"{node.accel_x:.2f}")
+        self.vars["accel_y"].set(f"{node.accel_y:.2f}")
+        self.vars["accel_z"].set(f"{node.accel_z:.2f}")
+        self.vars["gyro_x"].set(f"{node.gyro_x:.2f}")
+        self.vars["gyro_y"].set(f"{node.gyro_y:.2f}")
+        self.vars["gyro_z"].set(f"{node.gyro_z:.2f}")
         self.vars["lat"].set(f"{node.lat:.6f}")
         self.vars["lon"].set(f"{node.lon:.6f}")
-        self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
         self.vars["motion_class"].set(node.motionString())
         self.vars["confidence"].set(f"{node.confidence:.2f}")
     
@@ -331,10 +362,25 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         node_id = self.node_selector.get()
         self.display_node(node_id)
     def _parse_nodes(self):
-        for node_id in self.rddict:
-            rdentry = self.rddict[node_id]
-            mlentry = self.mldict.get(node_id, {})
-            self.load_node(node_id, rdentry, mlentry)
+        for node_id, rdentry in self.rddict.items():
+            mlentry = self.mldict.get(node_id, [])
+            try:
+                self.load_node(node_id, rdentry, mlentry)
+            except Exception as e:
+                print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
+    def refresh_dropdown(self):
+        """
+        Refresh the node selector dropdown with current nodes.
+        """
+        if self.node_selector is None:
+            return
+        node_ids = list(self.nodes.keys())
+        self.node_selector['values'] = node_ids
+        if self.current_node_id in node_ids:
+            self.node_selector.set(self.current_node_id)
+        elif node_ids:
+            self.node_selector.set(node_ids[0])
+            self.display_node(node_ids[0])
     def refresh(self):
         """
         Refresh data for the currently selected node.
@@ -347,7 +393,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             self.rddict = self.redis_reader.getRDDict() #get the raw data dictionary from the redis reader
             self.mldict = self.redis_reader.getMLDict() #get the machine learning dictionary from the redis reader
             self._parse_nodes()
-
+            self.refresh_dropdown()
             if self.current_node_id:
                 self.display_node(self.current_node_id)
         except Exception as e:
