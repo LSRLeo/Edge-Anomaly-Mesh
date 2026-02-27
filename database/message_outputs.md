@@ -147,11 +147,6 @@ Message request/response pairs for DB query functions.
       "event_id": "node_001_2026-01-22T18:52:14.818400",
       "timestamp": "2026-01-22T18:52:14.818400",
       "seq": 12345,
-      "gps": {
-        "lat_deg": 40.713923,
-        "lon_deg": -74.004764,
-        "altitude_m": 50.1
-      },
       "accel_mss": {
         "x": 0.05,
         "y": 0.02,
@@ -162,11 +157,10 @@ Message request/response pairs for DB query functions.
         "y": 0.01,
         "z": 0.01
       },
-      "meta": {
-        "sample_rate_hz": 50,
-        "battery_pct": 95,
-        "sim_mode": "IDLE",
-        "sim_anomaly": false
+      "gps": {
+        "lat_deg": 40.713923,
+        "lon_deg": -74.004764,
+        "altitude_m": 50.1
       }
     }
   ]
