@@ -20,11 +20,11 @@ We use a simple feedforward neural network (also called MLP - Multi-Layer Percep
          ↓
     ReLU Activation
          ↓
-    Linear Layer (32 → 8 outputs)
+    Linear Layer (32 → 4 outputs)
          ↓
     Softmax (converts to probabilities)
          ↓
-    Output: [P(IDLE), P(TERR), P(MAR), P(LIFT), P(IDLE_A), P(TERR_A), P(MAR_A), P(LIFT_A)]
+    Output: [P(IDLE), P(TERRESTRIAL), P(MARITIME), P(LIFT)]
 
 TRAINING PROCESS:
 =================
@@ -60,7 +60,7 @@ from datetime import datetime
 
 # Import from our feature extraction module
 from feature_extraction import FeatureExtractor, normalize_features
-from data_pipeline import create_windows, load_json_data, windows_to_features
+from data_pipeline import load_json_data, create_windows
 
 # Clear model history
 import gc
@@ -171,9 +171,7 @@ def parse_args():
                     help='Path to save normalization mean/std stats as JSON')
     
     
-    
     return parser.parse_args()
-
 
 
 # ============================================================================
@@ -343,6 +341,7 @@ class MotionClassifier(nn.Module):
             confidence, predicted = torch.max(probabilities, dim=1)
 
             return predicted, confidence
+        
 
 # ============================================================================
 # TRAINING FUNCTIONS
@@ -362,7 +361,6 @@ def save_normalization_stats(scaler, out_path: str):
 
     with open(out_path, "w") as f:
         json.dump(stats, f, indent=2)
-
 
 def train_epoch(model, dataloader, criterion, optimizer, device):
     """
