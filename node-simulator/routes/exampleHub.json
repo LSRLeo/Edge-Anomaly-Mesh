@@ -7,7 +7,12 @@
       "lon": -104.961222,
       "altitude_m": 1609.0,
       "radius_m": 500,
-      "type": "distribution_center"
+      "type": "distribution_center",
+
+      "time_at_hub": 1,
+      "mode": "terrestrial",
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "hub_id": "hub_idaho_springs_01",
@@ -16,7 +21,12 @@
       "lon": -105.6009229854025,
       "altitude_m": 2340.0,
       "radius_m": 300,
-      "type": "warehouse"
+      "type": "warehouse",
+
+      "time_at_hub": 0,
+      "mode": "terrestrial",
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "hub_id": "hub_estes_park_01",
@@ -25,7 +35,12 @@
       "lon": -105.475005,
       "altitude_m": 2293.0,
       "radius_m": 400,
-      "type": "logistics_hub"
+      "type": "logistics_hub",
+
+      "time_at_hub": 0,
+      "mode": "terrestrial",
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "hub_id": "hub_la_port_01",
@@ -34,7 +49,12 @@
       "lon": -118.2728,
       "altitude_m": 5.0,
       "radius_m": 800,
-      "type": "seaport"
+      "type": "seaport",
+
+      "time_at_hub": 0,
+      "mode": "maritime",
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "hub_id": "hub_oakland_port_01",
@@ -43,7 +63,12 @@
       "lon": -122.2789,
       "altitude_m": 3.0,
       "radius_m": 600,
-      "type": "seaport"
+      "type": "seaport",
+
+      "time_at_hub": 0,
+      "mode": "maritime",
+      "lift_time": 0,
+      "label": "normal"
     },
     {
       "hub_id": "hub_seattle_port_01",
@@ -52,7 +77,12 @@
       "lon": -122.3463,
       "altitude_m": 4.0,
       "radius_m": 700,
-      "type": "seaport"
+      "type": "seaport",
+
+      "time_at_hub": 0,
+      "mode": "maritime",
+      "lift_time": 0,
+      "label": "normal"
     }
   ]
 }
