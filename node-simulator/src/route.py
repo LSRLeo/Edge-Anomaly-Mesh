@@ -21,15 +21,17 @@ class Route:
             for hub_data in hubs:
 
                 hub = Hub(
-                    name=hub_data['name'],
-                    lat=hub_data['gps_lat'],
-                    lon=hub_data['gps_lon'],
-                    alt=hub_data['alt'],
-                    time_at_hub=hub_data['time_at_hub'],
-                    mode=hub_data['mode'],
-                    lift_time=hub_data['lift_time'],
-                    #dont have label yet
-                    #label=hub_data['label'] 
+                    hub_id=hub_data["hub_id"],
+                    name=hub_data["name"],
+                    lat=hub_data["lat"],
+                    lon=hub_data["lon"],
+                    altitude=hub_data["altitude_m"],
+                    time_at_hub=hub_data["time_at_hub"],
+                    mode=hub_data["mode"],
+                    radius=hub_data["radius_m"],
+                    hub_type=hub_data["type"],
+                    lift_time=hub_data["lift_time", 0],
+                    label=hub_data["label"]
                 )
 
                 hub_list.append(hub)
