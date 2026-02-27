@@ -10,12 +10,12 @@ from src.idle import Idle
 from src.noise import apply_idle_node_noise, apply_lift_node_noise, apply_maritime_node_noise, apply_terrestrial_node_noise
 
 class Node:
-    def __init__(self, node_file, route):
+    def __init__(self, node_file, route, data_mode):
         self.route = route
         self.origin = route.points[0]
         self.destination = route.points[-1]
         self.messages = []
-
+        self.data_mode = data_mode
         try:
             with open(node_file, 'r') as f:
                 node_config = json.load(f)
@@ -308,6 +308,21 @@ class Node:
             else:
                 gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
             
+            if self.data_mode == "live":
+                label = {
+                    "motion_type": mode,
+                    "is_anomaly": "",
+                    "anomaly_type": "",
+                    "location": "hub_denver_01"
+                }
+            else:
+                # NOTE: This is where we will add the anomaly label
+                label = {
+                    "motion_type": mode,
+                    "is_anomaly": False,
+                    "anomaly_type": "impact",
+                    "location": "hub_denver_01"
+                }
             polished_message = {
                 "node_id": self.node_id,
                 "timestamp": self.timestamp.isoformat(),
@@ -323,12 +338,7 @@ class Node:
                     "y": message['gyro_y'],
                     "z": message['gyro_z']
                 },
-                "label": {
-                    "motion_type": mode,
-                    "is_anomaly": False,
-                    "anomaly_type": "",
-                    "location": "hub_denver_01"
-                }
+                "label": label
             }
             self.seq += 1
             self.timestamp += timedelta(1 / self.sample_rate_hz)
