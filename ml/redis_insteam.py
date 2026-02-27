@@ -156,6 +156,10 @@ class RedisSubscriber:
                 return
             self.seen_seqs[node_id].add(seq)
 
+            # Add receipt time for latency monitoring
+            receipt_time = time.time()
+            data['receipt_time'] = receipt_time
+
             # Initialize buffer for new node_id
             now = time.time()
             if node_id not in self.node_states:
@@ -225,7 +229,15 @@ class RedisSubscriber:
     def trigger_inference(self, node_id, window, window_metadata):
         """
         Extract features from the buffer and run classifier inference.
+        Also calculates latency between message receipt and inference trigger.
         """
+        # Latency monitoring: calculate time difference from earliest receipt_time
+        receipt_times = [event.get('receipt_time', None) for event in window]
+        earliest_receipt_time = min([t for t in receipt_times if t is not None], default=None)
+        latency = None
+        if earliest_receipt_time is not None:
+            latency = time.time() - earliest_receipt_time
+
         features = stream_window_to_features(window, self.window_size, sample_rate=50)
         features_tensor = torch.FloatTensor(features)
         predicted, confidence = self.classifier.predict(features_tensor)
@@ -233,11 +245,12 @@ class RedisSubscriber:
             "node_id": node_id,
             "predicted": predicted.item(),
             "confidence": confidence.item(),
-            "window_metadata": window_metadata
+            "window_metadata": window_metadata,
+            "latency": latency
         }
         logger.info(
             f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}, "
-            f"window_metadata={window_metadata}"
+            f"latency={latency:.3f}s, window_metadata={window_metadata}"
         )
         # Pass window_metadata to outstream for decoding terrain/anomaly as needed
         return result
