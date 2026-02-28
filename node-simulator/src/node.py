@@ -9,6 +9,11 @@ from src.terrestrial import Terrestrial
 from src.idle import Idle
 from src.noise import apply_idle_node_noise, apply_lift_node_noise, apply_maritime_node_noise, apply_terrestrial_node_noise
 
+
+#To-Do:
+#1. Hubs are always in state of Idle, we need to generate time at the hub now that we don't use time_at_hub as a input hub attribute
+#2. Based on example output, we may need to have separate data files that's organized by sections of the trip (hub - hub)
+
 class Node:
     def __init__(self, node_file, route, data_mode):
         self.route = route
@@ -288,24 +293,53 @@ class Node:
         polished_messages = []
         total_messages = len(messages)
 
-        in_motion = mode in ["LIFT", "TERRESTRIAL", "MARITIME"]
-
         for message_index, message in enumerate(messages):
-            # GPS
-            if in_motion:
-                gps = self.calculate_gps(
+            # GPS calculation (your functions return lat_deg/lon_deg/altitude_m for motion modes)
+            if mode in ["LIFT", "TERRESTRIAL", "MARITIME"]:
+                gps_calc = self.calculate_gps(
                     current_point, next_point, mode, message_index, total_messages,
                     accel_x=message["accel_x"],
                     accel_y=message["accel_y"],
                     accel_z=message["accel_z"],
                 )
             else:
-                gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
+                gps_calc = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
 
-            # Base message
+            # Normalize GPS key names to match example generator
+            lat = gps_calc.get("lat", gps_calc.get("lat_deg", current_point.lat))
+            lon = gps_calc.get("lon", gps_calc.get("lon_deg", current_point.lon))
+            alt = gps_calc.get("altitude_m", current_point.alt)
+
+            gps = {
+                "lat": round(lat, 6) if isinstance(lat, (int, float)) else lat,
+                "lon": round(lon, 6) if isinstance(lon, (int, float)) else lon,
+                "altitude_m": round(alt, 1) if isinstance(alt, (int, float)) else alt,
+                "satellites": 8,
+                "fix": True
+            }
+
+            # Label: IDLE uses location; motion uses segment_progress instead
+            #To-do: Idle always at Hub, so we are saying that this is when is HUB
+            if mode == "IDLE":
+                label = {
+                    "motion_type": mode,
+                    "is_anomaly": False,
+                    "anomaly_type": "none",
+                    "location": current_point.hub_id
+                }
+            else:
+                #When we are not at Hub anymore but going to reach waypoints in between hubs
+                progress = message_index / (total_messages - 1) if total_messages > 1 else 0.0
+                label = {
+                    "motion_type": mode,
+                    "is_anomaly": False,
+                    "anomaly_type": "none",
+                    "segment_progress": round(progress, 3)
+                }
+
             polished_message = {
                 "node_id": self.node_id,
-                "timestamp": self.timestamp.isoformat(),
+                "timestamp": self.timestamp.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                 "seq": self.seq,
                 "gps": gps,
                 "accel": {
@@ -318,27 +352,11 @@ class Node:
                     "y": message["gyro_y"],
                     "z": message["gyro_z"],
                 },
-                "label": {
-                    "motion_type": mode,
-                    "is_anomaly": False,
-                    "anomaly_type": "",
-                    "location": "hub_denver_01",
-                },
+                "label": label
             }
 
-            # Only add segment_progress for motion modes
-            if in_motion:
-                if total_messages <= 1:
-                    segment_progress = 1.0
-                else:
-                    segment_progress = message_index / (total_messages - 1)
-
-                polished_message["segment_progress"] = segment_progress
-
-            # Advance counters/time
             self.seq += 1
-            self.timestamp += timedelta(seconds=(1 / self.sample_rate_hz))
-
+            self.timestamp += timedelta(seconds=(1.0 / self.sample_rate_hz))
             polished_messages.append(polished_message)
 
         return polished_messages
