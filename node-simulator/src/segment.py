@@ -9,4 +9,4 @@ class Segment:
         self.points = points
 
     def is_motion(self) -> bool:
-        return self.mode.upper() not in {"IDLE"}
+        return self.mode.upper() not in {"IDLE", "LIFT"}
