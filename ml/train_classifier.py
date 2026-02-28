@@ -113,7 +113,7 @@ def parse_args():
     )
     
     # Data arguments
-    parser.add_argument('--data-dir', type=str, default='data/generated_data',
+    parser.add_argument('--data-dir', type=str, default='data/training',
                         help='Directory containing training data')
     
     parser.add_argument('--features-file', type=str, default=None,
@@ -757,9 +757,9 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
     # Create feature extractor
     extractor = FeatureExtractor(sample_rate=50)
 
-    # Find all JSON files
+    # Find all JSON files (exclude metadata.json)
     data_path = Path(data_dir)
-    json_files = list(data_path.glob("**/*.json"))
+    json_files = [f for f in data_path.glob("**/*.json") if f.name != "metadata.json"]
 
     if not json_files:
         raise ValueError(f"No JSON files found in {data_dir}")
