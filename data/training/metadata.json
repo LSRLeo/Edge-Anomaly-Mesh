@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-20T12:39:44.708195",
+  "generated_at": "2026-02-26T17:22:17.059554",
   "hubs": [
     "hub_denver_01",
     "hub_idaho_springs_01",
@@ -25,7 +25,8 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.0,
-      "anomaly_type": null
+      "anomaly_type": null,
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_idaho_springs_01_spike.json",
@@ -46,7 +47,8 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "spike"
+      "anomaly_type": "spike",
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_idaho_springs_01_dropout.json",
@@ -67,7 +69,8 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "dropout"
+      "anomaly_type": "dropout",
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_idaho_springs_01_drift.json",
@@ -88,7 +91,8 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "drift"
+      "anomaly_type": "drift",
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_idaho_springs_01_motion_mismatch.json",
@@ -109,11 +113,192 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "motion_mismatch"
+      "anomaly_type": "motion_mismatch",
+      "include_lift": false
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_idaho_springs_01_with_lift.json",
+      "journey_id": "journey_node_002_hub_denver_01_hub_idaho_springs_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_denver_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.0,
+      "anomaly_type": null,
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_idaho_springs_01_with_lift_spike.json",
+      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_idaho_springs_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_denver_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "spike",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_idaho_springs_01_with_lift_dropout.json",
+      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_idaho_springs_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_denver_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "dropout",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_idaho_springs_01_with_lift_drift.json",
+      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_idaho_springs_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_denver_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "drift",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_idaho_springs_01_with_lift_motion_mismatch.json",
+      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_idaho_springs_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_denver_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "motion_mismatch",
+      "include_lift": true
     },
     {
       "file": "route_hub_denver_01_to_hub_estes_park_01.json",
-      "journey_id": "journey_node_002_hub_denver_01_hub_estes_park_01",
+      "journey_id": "journey_node_003_hub_denver_01_hub_estes_park_01",
       "from_hub": "hub_denver_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -130,11 +315,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.0,
-      "anomaly_type": null
+      "anomaly_type": null,
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_estes_park_01_spike.json",
-      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_estes_park_01",
+      "journey_id": "journey_node_003_anomaly_hub_denver_01_hub_estes_park_01",
       "from_hub": "hub_denver_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -151,11 +337,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "spike"
+      "anomaly_type": "spike",
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_estes_park_01_dropout.json",
-      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_estes_park_01",
+      "journey_id": "journey_node_003_anomaly_hub_denver_01_hub_estes_park_01",
       "from_hub": "hub_denver_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -172,11 +359,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "dropout"
+      "anomaly_type": "dropout",
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_estes_park_01_drift.json",
-      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_estes_park_01",
+      "journey_id": "journey_node_003_anomaly_hub_denver_01_hub_estes_park_01",
       "from_hub": "hub_denver_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -193,11 +381,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "drift"
+      "anomaly_type": "drift",
+      "include_lift": false
     },
     {
       "file": "route_hub_denver_01_to_hub_estes_park_01_motion_mismatch.json",
-      "journey_id": "journey_node_002_anomaly_hub_denver_01_hub_estes_park_01",
+      "journey_id": "journey_node_003_anomaly_hub_denver_01_hub_estes_park_01",
       "from_hub": "hub_denver_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -214,11 +403,192 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "motion_mismatch"
+      "anomaly_type": "motion_mismatch",
+      "include_lift": false
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_estes_park_01_with_lift.json",
+      "journey_id": "journey_node_004_hub_denver_01_hub_estes_park_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_denver_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.0,
+      "anomaly_type": null,
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_estes_park_01_with_lift_spike.json",
+      "journey_id": "journey_node_004_anomaly_hub_denver_01_hub_estes_park_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_denver_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "spike",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_estes_park_01_with_lift_dropout.json",
+      "journey_id": "journey_node_004_anomaly_hub_denver_01_hub_estes_park_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_denver_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "dropout",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_estes_park_01_with_lift_drift.json",
+      "journey_id": "journey_node_004_anomaly_hub_denver_01_hub_estes_park_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_denver_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "drift",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_denver_01_to_hub_estes_park_01_with_lift_motion_mismatch.json",
+      "journey_id": "journey_node_004_anomaly_hub_denver_01_hub_estes_park_01",
+      "from_hub": "hub_denver_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_denver_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "motion_mismatch",
+      "include_lift": true
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_denver_01.json",
-      "journey_id": "journey_node_003_hub_idaho_springs_01_hub_denver_01",
+      "journey_id": "journey_node_005_hub_idaho_springs_01_hub_denver_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -235,11 +605,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.0,
-      "anomaly_type": null
+      "anomaly_type": null,
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_denver_01_spike.json",
-      "journey_id": "journey_node_003_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "journey_id": "journey_node_005_anomaly_hub_idaho_springs_01_hub_denver_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -256,11 +627,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "spike"
+      "anomaly_type": "spike",
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_denver_01_dropout.json",
-      "journey_id": "journey_node_003_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "journey_id": "journey_node_005_anomaly_hub_idaho_springs_01_hub_denver_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -277,11 +649,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "dropout"
+      "anomaly_type": "dropout",
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_denver_01_drift.json",
-      "journey_id": "journey_node_003_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "journey_id": "journey_node_005_anomaly_hub_idaho_springs_01_hub_denver_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -298,11 +671,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "drift"
+      "anomaly_type": "drift",
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_denver_01_motion_mismatch.json",
-      "journey_id": "journey_node_003_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "journey_id": "journey_node_005_anomaly_hub_idaho_springs_01_hub_denver_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -319,11 +693,192 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "motion_mismatch"
+      "anomaly_type": "motion_mismatch",
+      "include_lift": false
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_denver_01_with_lift.json",
+      "journey_id": "journey_node_006_hub_idaho_springs_01_hub_denver_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.0,
+      "anomaly_type": null,
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_denver_01_with_lift_spike.json",
+      "journey_id": "journey_node_006_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "spike",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_denver_01_with_lift_dropout.json",
+      "journey_id": "journey_node_006_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "dropout",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_denver_01_with_lift_drift.json",
+      "journey_id": "journey_node_006_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "drift",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_denver_01_with_lift_motion_mismatch.json",
+      "journey_id": "journey_node_006_anomaly_hub_idaho_springs_01_hub_denver_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "motion_mismatch",
+      "include_lift": true
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_estes_park_01.json",
-      "journey_id": "journey_node_004_hub_idaho_springs_01_hub_estes_park_01",
+      "journey_id": "journey_node_007_hub_idaho_springs_01_hub_estes_park_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -340,11 +895,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.0,
-      "anomaly_type": null
+      "anomaly_type": null,
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_spike.json",
-      "journey_id": "journey_node_004_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "journey_id": "journey_node_007_anomaly_hub_idaho_springs_01_hub_estes_park_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -361,11 +917,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "spike"
+      "anomaly_type": "spike",
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_dropout.json",
-      "journey_id": "journey_node_004_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "journey_id": "journey_node_007_anomaly_hub_idaho_springs_01_hub_estes_park_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -382,11 +939,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "dropout"
+      "anomaly_type": "dropout",
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_drift.json",
-      "journey_id": "journey_node_004_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "journey_id": "journey_node_007_anomaly_hub_idaho_springs_01_hub_estes_park_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -403,11 +961,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "drift"
+      "anomaly_type": "drift",
+      "include_lift": false
     },
     {
       "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_motion_mismatch.json",
-      "journey_id": "journey_node_004_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "journey_id": "journey_node_007_anomaly_hub_idaho_springs_01_hub_estes_park_01",
       "from_hub": "hub_idaho_springs_01",
       "to_hub": "hub_estes_park_01",
       "path": [
@@ -424,11 +983,192 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "motion_mismatch"
+      "anomaly_type": "motion_mismatch",
+      "include_lift": false
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_with_lift.json",
+      "journey_id": "journey_node_008_hub_idaho_springs_01_hub_estes_park_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.0,
+      "anomaly_type": null,
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_with_lift_spike.json",
+      "journey_id": "journey_node_008_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "spike",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_with_lift_dropout.json",
+      "journey_id": "journey_node_008_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "dropout",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_with_lift_drift.json",
+      "journey_id": "journey_node_008_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "drift",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_idaho_springs_01_to_hub_estes_park_01_with_lift_motion_mismatch.json",
+      "journey_id": "journey_node_008_anomaly_hub_idaho_springs_01_hub_estes_park_01",
+      "from_hub": "hub_idaho_springs_01",
+      "to_hub": "hub_estes_park_01",
+      "path": [
+        "hub_idaho_springs_01",
+        "hub_estes_park_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "motion_mismatch",
+      "include_lift": true
     },
     {
       "file": "route_hub_estes_park_01_to_hub_denver_01.json",
-      "journey_id": "journey_node_005_hub_estes_park_01_hub_denver_01",
+      "journey_id": "journey_node_009_hub_estes_park_01_hub_denver_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -445,11 +1185,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.0,
-      "anomaly_type": null
+      "anomaly_type": null,
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_denver_01_spike.json",
-      "journey_id": "journey_node_005_anomaly_hub_estes_park_01_hub_denver_01",
+      "journey_id": "journey_node_009_anomaly_hub_estes_park_01_hub_denver_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -466,11 +1207,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "spike"
+      "anomaly_type": "spike",
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_denver_01_dropout.json",
-      "journey_id": "journey_node_005_anomaly_hub_estes_park_01_hub_denver_01",
+      "journey_id": "journey_node_009_anomaly_hub_estes_park_01_hub_denver_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -487,11 +1229,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "dropout"
+      "anomaly_type": "dropout",
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_denver_01_drift.json",
-      "journey_id": "journey_node_005_anomaly_hub_estes_park_01_hub_denver_01",
+      "journey_id": "journey_node_009_anomaly_hub_estes_park_01_hub_denver_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -508,11 +1251,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "drift"
+      "anomaly_type": "drift",
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_denver_01_motion_mismatch.json",
-      "journey_id": "journey_node_005_anomaly_hub_estes_park_01_hub_denver_01",
+      "journey_id": "journey_node_009_anomaly_hub_estes_park_01_hub_denver_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_denver_01",
       "path": [
@@ -529,11 +1273,192 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "motion_mismatch"
+      "anomaly_type": "motion_mismatch",
+      "include_lift": false
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_denver_01_with_lift.json",
+      "journey_id": "journey_node_010_hub_estes_park_01_hub_denver_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.0,
+      "anomaly_type": null,
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_denver_01_with_lift_spike.json",
+      "journey_id": "journey_node_010_anomaly_hub_estes_park_01_hub_denver_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "spike",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_denver_01_with_lift_dropout.json",
+      "journey_id": "journey_node_010_anomaly_hub_estes_park_01_hub_denver_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "dropout",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_denver_01_with_lift_drift.json",
+      "journey_id": "journey_node_010_anomaly_hub_estes_park_01_hub_denver_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "drift",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_denver_01_with_lift_motion_mismatch.json",
+      "journey_id": "journey_node_010_anomaly_hub_estes_park_01_hub_denver_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_denver_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_denver_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_denver_01",
+          "to_hub": "hub_denver_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "motion_mismatch",
+      "include_lift": true
     },
     {
       "file": "route_hub_estes_park_01_to_hub_idaho_springs_01.json",
-      "journey_id": "journey_node_006_hub_estes_park_01_hub_idaho_springs_01",
+      "journey_id": "journey_node_011_hub_estes_park_01_hub_idaho_springs_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_idaho_springs_01",
       "path": [
@@ -550,11 +1475,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.0,
-      "anomaly_type": null
+      "anomaly_type": null,
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_spike.json",
-      "journey_id": "journey_node_006_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "journey_id": "journey_node_011_anomaly_hub_estes_park_01_hub_idaho_springs_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_idaho_springs_01",
       "path": [
@@ -571,11 +1497,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "spike"
+      "anomaly_type": "spike",
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_dropout.json",
-      "journey_id": "journey_node_006_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "journey_id": "journey_node_011_anomaly_hub_estes_park_01_hub_idaho_springs_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_idaho_springs_01",
       "path": [
@@ -592,11 +1519,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "dropout"
+      "anomaly_type": "dropout",
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_drift.json",
-      "journey_id": "journey_node_006_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "journey_id": "journey_node_011_anomaly_hub_estes_park_01_hub_idaho_springs_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_idaho_springs_01",
       "path": [
@@ -613,11 +1541,12 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "drift"
+      "anomaly_type": "drift",
+      "include_lift": false
     },
     {
       "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_motion_mismatch.json",
-      "journey_id": "journey_node_006_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "journey_id": "journey_node_011_anomaly_hub_estes_park_01_hub_idaho_springs_01",
       "from_hub": "hub_estes_park_01",
       "to_hub": "hub_idaho_springs_01",
       "path": [
@@ -634,8 +1563,189 @@
       ],
       "total_samples": 560,
       "anomaly_rate": 0.1,
-      "anomaly_type": "motion_mismatch"
+      "anomaly_type": "motion_mismatch",
+      "include_lift": false
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_with_lift.json",
+      "journey_id": "journey_node_012_hub_estes_park_01_hub_idaho_springs_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.0,
+      "anomaly_type": null,
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_with_lift_spike.json",
+      "journey_id": "journey_node_012_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "spike",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_with_lift_dropout.json",
+      "journey_id": "journey_node_012_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "dropout",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_with_lift_drift.json",
+      "journey_id": "journey_node_012_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "drift",
+      "include_lift": true
+    },
+    {
+      "file": "route_hub_estes_park_01_to_hub_idaho_springs_01_with_lift_motion_mismatch.json",
+      "journey_id": "journey_node_012_anomaly_hub_estes_park_01_hub_idaho_springs_01",
+      "from_hub": "hub_estes_park_01",
+      "to_hub": "hub_idaho_springs_01",
+      "path": [
+        "hub_estes_park_01",
+        "hub_idaho_springs_01"
+      ],
+      "segments": [
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_estes_park_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "loading"
+        },
+        {
+          "from_hub": "hub_estes_park_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "TERRESTRIAL",
+          "num_samples": 500
+        },
+        {
+          "from_hub": "hub_idaho_springs_01",
+          "to_hub": "hub_idaho_springs_01",
+          "motion_type": "LIFT",
+          "num_samples": 40,
+          "operation": "unloading"
+        }
+      ],
+      "total_samples": 640,
+      "anomaly_rate": 0.1,
+      "anomaly_type": "motion_mismatch",
+      "include_lift": true
     }
   ],
-  "total_samples": 16800
+  "total_samples": 36000
 }
