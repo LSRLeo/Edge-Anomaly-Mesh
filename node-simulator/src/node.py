@@ -69,7 +69,8 @@ class Node:
                     anomalous_idleResults = self.idle.inject_anomalies(idleResults)
                     idleResults_noisy = [apply_idle_node_noise(message) for message in anomalous_idleResults]
                     self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
-                    
+                
+                #Hub doesn't currently carry IDLE mode at all, so the following if statment will not run
                 if recent_hub_mode == "idle":
                     if hasattr(current_point, "time_at_hub"):
                         idleResults = self.idle.generate_reading(current_point)
