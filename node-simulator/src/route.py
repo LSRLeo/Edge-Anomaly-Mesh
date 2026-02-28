@@ -2,12 +2,14 @@ from src.hub import Hub
 from src.waypoint import Waypoint
 import json
 from src.waypointsMaker import WaypointMaker
+from src.segment import Segment
 from random import randint
 class Route:
     def __init__(self, jason_file): #route is a array of hubs in order
        self.points = [] #ordered list of hubs and waypoints in the route
        self.jason_file = jason_file
        self.waypointMaker = WaypointMaker(5) #default is 5 waypoints can later modify
+       self.segments = [] #ordered list of segments in the route, each segment is a start hub, end hub, mode, and waypoints in between
     
 
     def load_route(self):
@@ -39,12 +41,6 @@ class Route:
 
             return self.generate_waypoints(hub_list)
 
-
-
-                    
-
-
-
         except FileNotFoundError:
             raise FileNotFoundError(f"JSON file {self.jason_file} not found")
         except json.JSONDecodeError:
@@ -52,12 +48,12 @@ class Route:
         except KeyError as e:
             raise ValueError(f"Missing key {e} in JSON file {self.jason_file}")
 
-   
-    
+            
 
     def generate_waypoints(self, hubs):
         
         self.points = []
+        self.segments = []
 
         if len(hubs) == 0:
             return self.points
@@ -69,24 +65,27 @@ class Route:
         # start hub
         self.points.append(hubs[0])
 
-        # each segment hub[i] -> hub[i+1]
         for i in range(len(hubs) - 1):
             start = hubs[i]
             end = hubs[i + 1]
 
             self.waypointMaker.num_waypoints = randint(3, 10)
-            route_type = start.mode.lower()
+            mode = start.mode.lower()
 
-            """
-            since idle means the package is not moving, we will not produce waypoints for idle. the same 
-            goes for lift.
-            """
-            if route_type != "idle" or route_type != "lift":
-                wps = self.waypointMaker.make(start, end, route_type)
+            wps: list[Waypoint] = []
+
+            # Only generate transit waypoints for motion modes
+            if mode not in {"idle", "lift"}:
+                wps = self.waypointMaker.make(start, end, mode)
                 self.points.extend(wps)
-                self.points.append(end)
-            else:
-                self.points.append(end)
+
+            # Always append end hub to flattened points
+            self.points.append(end)
+
+            # Record the hub->hub segment (even if idle/lift; points can be empty)
+            self.segments.append(
+                Segment(start=start, end=end, mode=mode.upper(), points=wps)
+            )
 
         return self.points
 

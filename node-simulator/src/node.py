@@ -315,6 +315,11 @@ class Node:
             else:
                 gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
             
+            """
+            To-do: Calculate Segement Progress and modify label to include progress
+            include segment progress if we are in transit(in between hub)
+            
+            """
             if self.data_mode == "live":
                 label = {
                     "motion_type": mode,

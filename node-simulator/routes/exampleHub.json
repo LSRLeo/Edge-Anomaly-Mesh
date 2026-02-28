@@ -9,7 +9,7 @@
       "radius_m": 500,
       "type": "distribution_center",
 
-      "time_at_hub": 1,
+      "time_at_hub": 30, 
       "mode": "terrestrial",
       "lift_time": 0,
       "label": "normal"
@@ -23,7 +23,7 @@
       "radius_m": 300,
       "type": "warehouse",
 
-      "time_at_hub": 0,
+      "time_at_hub": 30,
       "mode": "terrestrial",
       "lift_time": 0,
       "label": "normal"
@@ -37,7 +37,7 @@
       "radius_m": 400,
       "type": "logistics_hub",
 
-      "time_at_hub": 0,
+      "time_at_hub": 30,
       "mode": "terrestrial",
       "lift_time": 0,
       "label": "normal"
@@ -51,7 +51,7 @@
       "radius_m": 800,
       "type": "seaport",
 
-      "time_at_hub": 0,
+      "time_at_hub": 30,
       "mode": "maritime",
       "lift_time": 0,
       "label": "normal"
@@ -65,7 +65,7 @@
       "radius_m": 600,
       "type": "seaport",
 
-      "time_at_hub": 0,
+      "time_at_hub": 30,
       "mode": "maritime",
       "lift_time": 0,
       "label": "normal"
@@ -79,7 +79,7 @@
       "radius_m": 700,
       "type": "seaport",
 
-      "time_at_hub": 0,
+      "time_at_hub": 30,
       "mode": "maritime",
       "lift_time": 0,
       "label": "normal"
