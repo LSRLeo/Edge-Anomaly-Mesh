@@ -2,6 +2,7 @@ from random import random, uniform
 from src.hub import Hub
 import time
 import math
+from .anomalies import *
 
 class Terrestrial:
 
@@ -125,6 +126,21 @@ class Terrestrial:
                 "gyro_z": 0.0,
             })
         return messages
+    
+    
+    def inject_anomalies(self, nodes, anomaly_func=car_crash):
+        """
+        Applies the selected anomaly function to each node in the list.
+        nodes: list of dicts (sensor messages)
+        anomaly_func: function to apply (default: car_crash)
+        Returns a new list of anomalous nodes.
+        """
+        if isinstance(nodes, dict):
+            # If a single node dict is passed, wrap in list
+            nodes = [nodes]
+        return [anomaly_func(node) for node in nodes]
+    
+
     def calculate_time(self, hub1:Hub, hub2:Hub):
         R = 6371000  # meters
 

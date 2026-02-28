@@ -71,6 +71,9 @@ def rocky_seas(node):
     node["gyro_x"] += np.random.uniform(-1.0, 1.0)
     node["gyro_y"] += np.random.uniform(-1.0, 1.0)
     node["gyro_z"] += np.random.uniform(-1.0, 1.0)
+    node["anomalous"] = True
+
+
 def car_crash(node):
     node = node.copy()
     # Set all acceleration and velocity values to zero to simulate abrupt stop
@@ -83,6 +86,8 @@ def car_crash(node):
         node["velocity_y"] = 0.0
     if "velocity_z" in node:
         node["velocity_z"] = 0.0
+    node["anomalous"] = True
+
 def package_falls_off_ship(node):
     node = node.copy()
     # Simulate constant sinking: strong negative z velocity, zero x/y velocity, and mark as anomalous
