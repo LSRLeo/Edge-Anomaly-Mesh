@@ -30,7 +30,7 @@ class Route:
                     mode=hub_data["mode"],
                     radius=hub_data["radius_m"],
                     hub_type=hub_data["type"],
-                    lift_time=hub_data["lift_time", 0],
+                    lift_time=hub_data["lift_time"],
                     label=hub_data["label"]
                 )
 
@@ -38,12 +38,6 @@ class Route:
 
 
             return self.generate_waypoints(hub_list)
-
-
-
-                    
-
-
 
         except FileNotFoundError:
             raise FileNotFoundError(f"JSON file {self.jason_file} not found")
@@ -81,7 +75,7 @@ class Route:
             since idle means the package is not moving, we will not produce waypoints for idle. the same 
             goes for lift.
             """
-            if route_type != "idle" or route_type != "lift":
+            if route_type != "idle" and route_type != "lift":
                 wps = self.waypointMaker.make(start, end, route_type)
                 self.points.extend(wps)
                 self.points.append(end)
