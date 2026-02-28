@@ -781,15 +781,33 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
         # Extract features
         features = windows_to_features(windows, sample_rate=50)
 
+        # Filter out windows with None or NaN labels
+        valid_mask = np.array([
+            v is not None and not (isinstance(v, float) and np.isnan(v))
+            for v in window_labels
+        ])
+        n_dropped = int((~valid_mask).sum())
+        if n_dropped > 0:
+            print(f"    Warning: dropped {n_dropped} window(s) with None/NaN labels")
+        features = features[valid_mask]
+        window_labels = window_labels[valid_mask]
+
+        if len(features) == 0:
+            print(f"    Skipping {json_file.name}: no valid windows after filtering")
+            continue
+
         # Add to lists
         all_features.append(features)
         all_labels.append(window_labels)
 
         print(f"    {len(features)} windows extracted")
 
+    if not all_features:
+        raise ValueError(f"No valid training samples found in {data_dir}. All labels were None/NaN.")
+
     # Stack all data
     X = np.vstack(all_features)
-    y = np.concatenate(all_labels)
+    y = np.concatenate(all_labels).astype(int)
 
     print(f"\nTotal samples: {len(X)}")
     print(f"Feature shape: {X.shape}")
