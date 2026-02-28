@@ -338,7 +338,12 @@ class Node:
                     "y": message['gyro_y'],
                     "z": message['gyro_z']
                 },
-                "label": label
+                "label": {
+                    "motion_type": mode,
+                    "is_anomaly": False,
+                    "anomaly_type": "",
+                    "location": "hub_denver_01"
+                }
             }
             self.seq += 1
             self.timestamp += timedelta(1 / self.sample_rate_hz)
