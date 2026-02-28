@@ -287,69 +287,67 @@ class Node:
     def add_metadata(self, messages, mode, current_point, next_point):
         polished_messages = []
         total_messages = len(messages)
-        
-        # Reset state tracking when starting a new sequence
-        if mode == "LIFT":
-            self.lift_start_hub = None
-        elif mode == "TERRESTRIAL":
-            self.terrestrial_start_hub = None
-        elif mode == "MARITIME":
-            self.maritime_start_hub = None
-        
+
+        in_motion = mode in ["LIFT", "TERRESTRIAL", "MARITIME"]
+
         for message_index, message in enumerate(messages):
-            # For LIFT, TERRESTRIAL, and MARITIME modes, pass accelerations to calculate GPS from them
-            if mode in ["LIFT", "TERRESTRIAL", "MARITIME"]:
+            # GPS
+            if in_motion:
                 gps = self.calculate_gps(
                     current_point, next_point, mode, message_index, total_messages,
-                    accel_x=message['accel_x'],
-                    accel_y=message['accel_y'],
-                    accel_z=message['accel_z']
+                    accel_x=message["accel_x"],
+                    accel_y=message["accel_y"],
+                    accel_z=message["accel_z"],
                 )
             else:
                 gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
-            
-            if self.data_mode == "live":
-                label = {
-                    "motion_type": mode,
-                    "is_anomaly": "",
-                    "anomaly_type": "",
-                    "location": "hub_denver_01"
-                }
-            else:
-                # NOTE: This is where we will add the anomaly label
-                label = {
-                    "motion_type": mode,
-                    "is_anomaly": False,
-                    "anomaly_type": "impact",
-                    "location": "hub_denver_01"
-                }
+
+            # Base message
             polished_message = {
                 "node_id": self.node_id,
                 "timestamp": self.timestamp.isoformat(),
                 "seq": self.seq,
                 "gps": gps,
                 "accel": {
-                    "x": message['accel_x'],
-                    "y": message['accel_y'],
-                    "z": message['accel_z']
+                    "x": message["accel_x"],
+                    "y": message["accel_y"],
+                    "z": message["accel_z"],
                 },
                 "gyro": {
-                    "x": message['gyro_x'],
-                    "y": message['gyro_y'],
-                    "z": message['gyro_z']
+                    "x": message["gyro_x"],
+                    "y": message["gyro_y"],
+                    "z": message["gyro_z"],
                 },
-                 "label": {
+                "label": {
                     "motion_type": mode,
                     "is_anomaly": False,
                     "anomaly_type": "",
-                    "location": "hub_denver_01"
-                 }
+                    "location": "hub_denver_01",
+                },
             }
+
+            # Only add segment_progress for motion modes
+            if in_motion:
+                if total_messages <= 1:
+                    segment_progress = 1.0
+                else:
+                    segment_progress = message_index / (total_messages - 1)
+
+                polished_message["segment_progress"] = segment_progress
+
+            # Advance counters/time
             self.seq += 1
-            self.timestamp += timedelta(1 / self.sample_rate_hz)
+            self.timestamp += timedelta(seconds=(1 / self.sample_rate_hz))
+
             polished_messages.append(polished_message)
+
         return polished_messages
             
     def publish(self):
         with open('raw_data.json', 'w') as f:
             json.dump(self.messages, f, indent=2)
+    
+    def _segment_progress(self, message_index: int, total_messages: int) -> float:
+        if total_messages <= 1:
+            return 1.0
+        return message_index / (total_messages - 1)
