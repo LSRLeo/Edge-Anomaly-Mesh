@@ -37,7 +37,7 @@ import numpy as np
 from pathlib import Path
 import json
 
-from ml.feature_extraction import FeatureExtractor
+from feature_extraction import FeatureExtractor
 
 # ============================================================================
 # ARGUMENT PARSING
@@ -174,6 +174,30 @@ def windows_to_features(windows, sample_rate=50):
     features = extractor.extract_batch(windows)
     return features
 
+def stream_window_to_features(buffer, window_size, sample_rate=50):
+    """
+    Given a list of sensor dicts, extract a window and return features.
+
+    Handles both nested ('accel', 'gyro') and flat ('accel_x', ...) formats.
+
+    Args:
+        buffer: list of sensor dicts (each may be nested or flat)
+        window_size: number of samples per window
+        sample_rate: sensor sample rate in Hz
+
+    Returns:
+        features: numpy array (1, n_features) for the window
+    """
+    window_events = buffer[-window_size:]
+    data = json_events_to_numpy(window_events)
+    # Stack into (window_size, 6)
+    window = np.column_stack([
+        data['accel_x'], data['accel_y'], data['accel_z'],
+        data['gyro_x'], data['gyro_y'], data['gyro_z']
+    ])
+    window = window.reshape(1, window_size, 6)
+    features = windows_to_features(window, sample_rate=sample_rate)
+    return features
 
 # ============================================================================
 # DATA LOADING
@@ -182,11 +206,17 @@ def windows_to_features(windows, sample_rate=50):
 def load_json_data(filepath):
     """
     Load sensor data from a JSON file (single object or list of objects).
-    Handles both accel/accel_mss and gyro/gyro_rads keys.
+
+    Handles both nested ('accel', 'gyro') and flat ('accel_x', ...) formats.
+
+    Args:
+        filepath: path to JSON sensor file
 
     Returns:
-        data: dict of numpy arrays (accel_x, ..., gyro_z)
-        label: motion label (sim_mode / mode) or None
+        data: dict of numpy arrays (accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z)
+        labels: numpy array of combined terrain+anomaly labels (0-7)
+                Labels 0-3: IDLE, TERRESTRIAL, MARITIME, LIFT (no anomaly)
+                Labels 4-7: IDLE, TERRESTRIAL, MARITIME, LIFT (with anomaly)
     """
     filepath = Path(filepath)
     with open(filepath, "r") as f:
@@ -208,34 +238,70 @@ def load_json_data(filepath):
     if events and "seq" in events[0]:
         events = sorted(events, key=get_sequence_number)
 
-    accel_x, accel_y, accel_z = [], [], []
-    gyro_x, gyro_y, gyro_z = [], [], []
+    data = json_events_to_numpy(events)
     labels = []
 
+    # Mapping from terrain type strings to indices
+    TERRAIN_MAP = {
+        "IDLE": 0,
+        "TERRESTRIAL": 1,
+        "TRANSIT": 1,  # TRANSIT is the same as TERRESTRIAL
+        "MARITIME": 2,
+        "LIFT": 3
+    }
+
     for event in events:
+        meta = event.get("meta", {})
+        label_field = event.get("label", {})
+        terrain_str = (meta.get("sim_mode") or meta.get("mode") or
+                       event.get("mode") or label_field.get("motion_type"))
+        if terrain_str is None:
+            terrain_idx = None
+        else:
+            terrain_idx = TERRAIN_MAP.get(terrain_str.upper())
+            if terrain_idx is None:
+                raise ValueError(f"Unknown terrain type: {terrain_str}")
+
+        has_anomaly = (meta.get("anomaly", False) or meta.get("has_anomaly", False) or
+                       event.get("anomaly", False) or label_field.get("is_anomaly", False))
+        if terrain_idx is not None:
+            combined_label = terrain_idx + (4 if has_anomaly else 0)
+        else:
+            combined_label = None
+
+        labels.append(combined_label)
+
+    labels = np.array(labels)
+    return data, labels
+
+def json_events_to_numpy(events):
+    """
+    Convert a list of sensor dicts to NumPy arrays for each axis.
+    Handles both nested ('accel', 'gyro') and flat ('accel_x', ...) formats.
+    """
+    accel_x, accel_y, accel_z = [], [], []
+    gyro_x, gyro_y, gyro_z = [], [], []
+    for event in events:
+        # Try nested first, then flat, then fallback to 0
         accel = event.get("accel_mss") or event.get("accel")
         gyro = event.get("gyro_rads") or event.get("gyro")
-        if accel is None:
-            raise KeyError("Missing accel data")
-        if gyro is None:
-            raise KeyError("Missing gyro data")
-
-        accel_x.append(accel["x"])
-        accel_y.append(accel["y"])
-        accel_z.append(accel["z"])
-        gyro_x.append(gyro["x"])
-        gyro_y.append(gyro["y"])
-        gyro_z.append(gyro["z"])
-
-        meta = event.get("meta", {})
-        if "sim_mode" in meta:
-            labels.append(meta["sim_mode"])
-        elif "mode" in meta:
-            labels.append(meta["mode"])
+        if accel:
+            accel_x.append(accel.get("x", 0))
+            accel_y.append(accel.get("y", 0))
+            accel_z.append(accel.get("z", 0))
         else:
-            labels.append(None)
-
-    data = {
+            accel_x.append(event.get("accel_x", 0))
+            accel_y.append(event.get("accel_y", 0))
+            accel_z.append(event.get("accel_z", 0))
+        if gyro:
+            gyro_x.append(gyro.get("x", 0))
+            gyro_y.append(gyro.get("y", 0))
+            gyro_z.append(gyro.get("z", 0))
+        else:
+            gyro_x.append(event.get("gyro_x", 0))
+            gyro_y.append(event.get("gyro_y", 0))
+            gyro_z.append(event.get("gyro_z", 0))
+    return {
         "accel_x": np.array(accel_x, dtype=np.float32),
         "accel_y": np.array(accel_y, dtype=np.float32),
         "accel_z": np.array(accel_z, dtype=np.float32),
@@ -243,9 +309,6 @@ def load_json_data(filepath):
         "gyro_y":  np.array(gyro_y,  dtype=np.float32),
         "gyro_z":  np.array(gyro_z,  dtype=np.float32),
     }
-    labels = np.array(labels)
-
-    return data, labels
 
 def process_file(filepath, window_size=100, overlap=0.0, sample_rate=50):
     """
