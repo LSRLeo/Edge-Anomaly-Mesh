@@ -324,10 +324,14 @@ class Node:
                 }
             else:
                 # NOTE: This is where we will add the anomaly label
+                if message['anomalous']:
+                    anomaly_type = message['anomalous']
+                else:
+                    anomaly_type = "False"
                 label = {
                     "motion_type": mode,
-                    "is_anomaly": False,
-                    "anomaly_type": "impact",
+                    "is_anomaly": anomaly_type,
+                    "anomaly_type": "",
                     "location": "hub_denver_01"
                 }
             polished_message = {
