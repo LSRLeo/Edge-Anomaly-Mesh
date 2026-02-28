@@ -18,6 +18,7 @@ import torch
 import time
 
 from data_pipeline import stream_window_to_features
+from feature_extraction import normalize_features
 from train_classifier import MotionClassifier
 
 # ============================================================================
@@ -69,19 +70,20 @@ class RedisSubscriber:
         redis_client (redis.Redis): Redis client instance.
     """
 
-    INACTIVITY_THRESHOLD = 600 # An inactive buffer for 10 minutes is inactive and should be emptied
-
-    def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None):
+    def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None, scaler=None):
         """
         Initialize the Redis subscriber.
 
         Args:
             channel (str): Redis channel pattern.
+            scaler: (mean, std) tuple from training normalization, used to
+                    normalize features before inference.
         """
         self.channel = channel
         self.window_size = window_size
         self.stride = stride
         self.classifier = classifier
+        self.scaler = scaler
         self.redis_client = redis.Redis(
             host=REDIS_HOST,
             port=REDIS_PORT,
@@ -226,8 +228,13 @@ class RedisSubscriber:
         """
         Extract features from the buffer and run classifier inference.
         """
-        features = stream_window_to_features(window, self.window_size, sample_rate=50)
-        features_tensor = torch.FloatTensor(features)
+        buffer = list(self.node_states[node_id]['buffer'])
+        # features shape: (1, n_features)
+        features = stream_window_to_features(buffer, self.window_size, sample_rate=50)
+        # Apply the same normalization used during training
+        if self.scaler is not None:
+            features, _ = normalize_features(features, scaler=self.scaler)
+        features_tensor = torch.FloatTensor(features)  # shape: (1, n_features)
         predicted, confidence = self.classifier.predict(features_tensor)
         result = {
             "node_id": node_id,
@@ -248,14 +255,22 @@ class RedisSubscriber:
 
 if __name__ == "__main__":
     args = parse_args()
-    classifier = MotionClassifier(input_dim=38)  # Adjust input_dim as needed
-    classifier.load_state_dict(torch.load(args.model_path))
+    checkpoint = torch.load(args.model_path, weights_only=False)
+    config = checkpoint['model_config']
+    classifier = MotionClassifier(
+        input_dim=config['input_dim'],
+        hidden_dims=tuple(config['hidden_dims']),
+        dropout=config['dropout'],
+        num_classes=config['num_classes'],
+    )
+    classifier.load_state_dict(checkpoint['model_state_dict'])
     classifier.eval()
 
     subscriber = RedisSubscriber(
         channel="sensor:raw:*",
         window_size=args.window_size,
         stride=args.stride,
-        classifier=classifier
+        classifier=classifier,
+        scaler=checkpoint['scaler'],
     )
     subscriber.listen()
