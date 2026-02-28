@@ -1,5 +1,7 @@
 import math
 import random
+from .anomalies import *
+
 
 class Maritime:
     def __init__(self, sample_rate_hz):
@@ -196,3 +198,15 @@ class Maritime:
             })
         
         return messages
+    
+    def inject_anomalies(self, nodes, anomaly_func=package_falls_off_ship):
+        """
+        Applies the selected anomaly function to each node in the list.
+        nodes: list of dicts (sensor messages)
+        anomaly_func: function to apply (default: package_falls_off_ship)
+        Returns a new list of anomalous nodes.
+        """
+        if isinstance(nodes, dict):
+            # If a single node dict is passed, wrap in list
+            nodes = [nodes]
+        return [anomaly_func(node) for node in nodes]

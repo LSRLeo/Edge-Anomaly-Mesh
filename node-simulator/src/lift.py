@@ -2,6 +2,7 @@ from typing import List, Tuple
 from enum import Enum
 
 from typing import List, Tuple
+from .anomalies import *
 
 
 class Lift():
@@ -103,7 +104,20 @@ class Lift():
             t = i / self.sample_rate
             readings.append(self.generate_reading(t))
         return readings
-"""
+    
+    def inject_anomalies(self, nodes, anomaly_func=package_dropped):
+        """
+        Applies the selected anomaly function to each node in the list.
+        nodes: list of dicts (sensor messages)
+        anomaly_func: function to apply (default: package_dropped)
+        Returns a new list of anomalous nodes.
+        """
+        if isinstance(nodes, dict):
+            # If a single node dict is passed, wrap in list
+            nodes = [nodes]
+        return [anomaly_func(node) for node in nodes]
+
+    """
 LIFT Motion Generator
 
 Simulates cargo being lifted and moved by a forklift.

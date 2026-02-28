@@ -30,7 +30,7 @@ class Route:
                     mode=hub_data["mode"],
                     radius=hub_data["radius_m"],
                     hub_type=hub_data["type"],
-                    lift_time=hub_data["lift_time", 0],
+                    lift_time=hub_data["lift_time"],
                     label=hub_data["label"]
                 )
 

@@ -8,6 +8,8 @@ from src.maritime import Maritime
 from src.terrestrial import Terrestrial
 from src.idle import Idle
 from src.noise import apply_idle_node_noise, apply_lift_node_noise, apply_maritime_node_noise, apply_terrestrial_node_noise
+from .anomalies import *
+
 
 class Node:
     def __init__(self, node_file, route, data_mode):
@@ -65,23 +67,28 @@ class Node:
                 if recent_hub_mode == "idle":
                 # Generate idle readings and apply noise 
                     idleResults = self.idle.generate_reading(current_point)
-                    idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
+                    # Optionally inject anomalies (default: package_stolen)
+                    anomalous_idleResults = self.idle.inject_anomalies(idleResults)
+                    # Apply noise after anomaly injection
+                    idleResults_noisy = [apply_idle_node_noise(message) for message in anomalous_idleResults]
                     self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
             
                 elif recent_hub_mode == "lift":
-                    #To-do waypoints has no lift_time what do we do with it?
                     if hasattr(current_point, "mode"):
                         self.lift.set_hub(current_point.lat, current_point.lon, 20)
                         liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
-                        liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
+                        anomalous_liftResults = self.lift.inject_anomalies(liftResults)
+                        liftResults_noisy = [apply_lift_node_noise(message) for message in anomalous_liftResults]
                         self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
                 elif recent_hub_mode == "maritime":
                     maritimeResults = self.maritime.generate_reading(current_point, next_point)
-                    maritimeResults_noisy = [apply_maritime_node_noise(message) for message in maritimeResults]
+                    anomalous_maritimeResults = self.maritime.inject_anomalies(maritimeResults)
+                    maritimeResults_noisy = [apply_maritime_node_noise(message) for message in anomalous_maritimeResults]
                     self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_point, next_point)
                 elif recent_hub_mode == "terrestrial":
                     terrestrialResults = self.terrestrial.generate_reading(current_point, next_point, self.sample_rate_hz)
-                    terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in terrestrialResults]
+                    anomalous_terrestrialResults = self.terrestrial.inject_anomalies(terrestrialResults)
+                    terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in anomalous_terrestrialResults]
                     self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_point, next_point)
                 else:
                     raise ValueError(f"Invalid mode: {recent_hub_mode}")
@@ -317,10 +324,14 @@ class Node:
                 }
             else:
                 # NOTE: This is where we will add the anomaly label
+                if message['anomalous']:
+                    anomaly_type = message['anomalous']
+                else:
+                    anomaly_type = "False"
                 label = {
                     "motion_type": mode,
-                    "is_anomaly": False,
-                    "anomaly_type": "impact",
+                    "is_anomaly": anomaly_type,
+                    "anomaly_type": "",
                     "location": "hub_denver_01"
                 }
             polished_message = {
@@ -338,12 +349,7 @@ class Node:
                     "y": message['gyro_y'],
                     "z": message['gyro_z']
                 },
-                "label": {
-                    "motion_type": mode,
-                    "is_anomaly": False,
-                    "anomaly_type": "",
-                    "location": "hub_denver_01"
-                }
+                "label": label
             }
             self.seq += 1
             self.timestamp += timedelta(1 / self.sample_rate_hz)
