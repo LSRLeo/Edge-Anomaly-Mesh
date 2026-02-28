@@ -763,6 +763,33 @@ def print_classification_report(matrix, class_names):
 # DATA LOADING
 # ============================================================================
 
+def validate_label_distribution(y):
+    """Print class counts and warn if any expected classes are missing.
+
+    Args:
+        y: numpy integer array of labels (values 0-7, where 0-3 are normal
+           motion classes and 4-7 are the corresponding anomaly classes)
+
+    Returns:
+        counts: dict mapping class name -> sample count
+    """
+    class_names = [
+        'IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',
+        'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM',
+    ]
+    counts = {name: int(np.sum(y == idx)) for idx, name in enumerate(class_names)}
+
+    print("\nClass distribution:")
+    for name, count in counts.items():
+        print(f"  {name}: {count}")
+
+    missing = [name for name, count in counts.items() if count == 0]
+    if missing:
+        print(f"  Warning: missing classes: {', '.join(missing)}")
+
+    return counts
+
+
 def load_all_data(data_dir, window_size=100, overlap=0.5):
     """
     Load and process data from all motion types.
@@ -846,7 +873,7 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
 
     print(f"\nTotal samples: {len(X)}")
     print(f"Feature shape: {X.shape}")
-    print(f"Unique labels: {np.unique(y)}")
+    validate_label_distribution(y)
 
     return X, y, extractor
 
