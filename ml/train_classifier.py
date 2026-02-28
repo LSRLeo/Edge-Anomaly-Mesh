@@ -1008,6 +1008,11 @@ def main():
                 'best_val_acc': val_acc,
                 'trained_at': datetime.now().isoformat(),
             }
+            # Explicitly remove any existing file before saving to guarantee a full
+            # overwrite (torch.save uses 'wb' mode, so this is defensive but clear).
+            model_path = Path(args.model_output)
+            if model_path.exists():
+                model_path.unlink()
             torch.save(checkpoint, args.model_output)
             print(f"  ✓ New best model saved (val_acc: {val_acc:.4f})")
         else:
