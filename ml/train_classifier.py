@@ -370,12 +370,7 @@ class MotionClassifier(nn.Module):
             # Get the highest probability and its index
             confidence, predicted = torch.max(probabilities, dim=1)
 
-            return predicted, confidence
-
-            # Get the highest probability and its index
-            confidence, predicted = torch.max(probabilities, dim=1)
-
-            return predicted, confidence
+            return predicted, confidence, probabilities
         
 
 # ============================================================================
