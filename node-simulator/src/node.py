@@ -73,20 +73,12 @@ class Node:
                 current_point = self.route.points[i]
                 next_point = self.route.points[i + 1]
 
-                # --- segment tracking (single if/elif chain) ---
-                if hasattr(current_point, "hub_id") and self.seg_i < len(self.segments):
+                # --- segment start reset (only when current_point is the start hub) ---
+                if self.seg_i < len(self.segments) and hasattr(current_point, "hub_id"):
                     seg = self.segments[self.seg_i]
-
-                    # 1) If we reached the segment end hub AND we've already consumed all edges, advance segment
-                    if current_point.hub_id == seg.end.hub_id and self.edge_i >= self.edge_n:
-                        self.seg_i += 1
+                    if current_point.hub_id == seg.start.hub_id:
                         self.edge_i = 0
-                        self.edge_n = 1
-
-                    # 2) Else if we are at the start hub of the (current) segment, reset edge counters
-                    elif current_point.hub_id == seg.start.hub_id:
-                        self.edge_i = 0
-                        self.edge_n = len(seg.points) + 1  # edges = waypoints + final hop to end hub
+                        self.edge_n = len(seg.points) + 1  # waypoints + final hop to end hub
 
                 #route always start with hub and waypoint take the mode that the most recent hub has
                 if hasattr(current_point, "mode"):
@@ -119,6 +111,14 @@ class Node:
                 else:
                     raise ValueError(f"Invalid mode: {recent_hub_mode}")
                 
+                # --- segment end advance (when next_point is the end hub of this segment) ---
+                if self.seg_i < len(self.segments) and hasattr(next_point, "hub_id"):
+                    seg = self.segments[self.seg_i]
+                    if next_point.hub_id == seg.end.hub_id:
+                        self.seg_i += 1
+                        self.edge_i = 0
+                        self.edge_n = 1
+
             else: #for the last hub generate idle readings for the time at the hub
                 current_point = self.route.points[i]
                 idleResults = self.idle.generate_reading(current_point)
@@ -330,8 +330,6 @@ class Node:
         elif mode == "MARITIME":
             self.maritime_start_hub = None
 
-        is_hub_point = hasattr(current_point, "hub_id")  # hubs have hub_id; waypoints don’t
-
         for message_index, message in enumerate(messages):
             if mode in ["LIFT", "TERRESTRIAL", "MARITIME"]:
                 gps = self.calculate_gps(
@@ -343,15 +341,15 @@ class Node:
             else:
                 gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
 
-            # label logic:
-            # - hub point => location
-            # - waypoint point => segment_progress
-            if is_hub_point:
+            # label: match example style
+            if mode in ["IDLE", "LIFT"]:
+                # use hub location (if available)
+                loc = current_point.hub_id if hasattr(current_point, "hub_id") else "unknown_hub"
                 label = {
                     "motion_type": mode,
                     "is_anomaly": False,
                     "anomaly_type": "none",
-                    "location": current_point.hub_id
+                    "location": loc
                 }
             else:
                 label = {
