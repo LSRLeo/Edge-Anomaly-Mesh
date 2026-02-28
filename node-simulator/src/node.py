@@ -7,6 +7,8 @@ from src.lift import Lift
 from src.maritime import Maritime
 from src.terrestrial import Terrestrial
 from src.idle import Idle
+from src.hub import Hub
+from src.waypoint import Waypoint
 from src.noise import apply_idle_node_noise, apply_lift_node_noise, apply_maritime_node_noise, apply_terrestrial_node_noise
 
 class Node:
@@ -17,12 +19,8 @@ class Node:
         self.messages = []
         self.data_mode = data_mode
 
-        #Segments data 
+        #segment information for calculating progress 
         self.segments = self.route.segments
-        self.seg_i = 0                  # current hub->hub segment index
-        self.edge_i = 0                 # which edge inside this segment we’re on
-        self.edge_n = 1                 # total edges in this segment (waypoints + 1)
-
 
         try:
             with open(node_file, 'r') as f:
@@ -60,75 +58,51 @@ class Node:
             raise ValueError(f"Error decoding node configuration file {node_file}")
     
     def generate(self):
-        #To-Do:
-        #1. Hubs are always in state of Idle, we need to generate time at the hub now that we don't use time_at_hub as a input hub attribute
-        #2. Based on example output, we may need to have separate data files that's organized by sections of the trip (hub - hub)
-        # reset segment progress tracking
-        self.seg_i = 0
-        self.edge_i = 0
-        self.edge_n = 1
         recent_hub_mode = None
+
         for i in range(len(self.route.points)):
             if i < len(self.route.points) - 1:
                 current_point = self.route.points[i]
                 next_point = self.route.points[i + 1]
 
-                # --- segment end advance (when we are AT the end hub) ---
-                if self.seg_i < len(self.segments) and hasattr(current_point, "hub_id"):
-                    seg = self.segments[self.seg_i]
-                    if current_point.hub_id == seg.end.hub_id:
-                        self.seg_i += 1
-                        self.edge_i = 0
-                        self.edge_n = 1
-
-                # --- segment start reset (only when current_point is the start hub) ---
-                if self.seg_i < len(self.segments) and hasattr(current_point, "hub_id"):
-                    seg = self.segments[self.seg_i]
-                    if current_point.hub_id == seg.start.hub_id:
-                        self.edge_i = 0
-                        self.edge_n = len(seg.points) + 1
-
-                #route always start with hub and waypoint take the mode that the most recent hub has
+                # Update mode if the current point has one (waypoints may carry terrestrial/maritime;
+                # hubs are guaranteed to be "hub" or "lift")
                 if hasattr(current_point, "mode"):
                     recent_hub_mode = current_point.mode.lower()
-                #To-Do what to do with labels - indicate anomalies and different types of normal behavior? 
-                # label = current.label
-                if recent_hub_mode == "idle":
-                # Generate idle readings and apply noise 
+
+                # HUB: always emit IDLE, then optional LIFT
+                if isinstance(current_point, Hub):
                     idleResults = self.idle.generate_reading(current_point)
-                    idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
+                    idleResults_noisy = [apply_idle_node_noise(m) for m in idleResults]
                     self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
-            
-                elif recent_hub_mode == "lift":
-                    #To-do waypoints has no lift_time what do we do with it?
-                    if hasattr(current_point, "mode"):
+
+                    if recent_hub_mode == "lift" and current_point.lift_time > 0:
                         self.lift.set_hub(current_point.lat, current_point.lon, 20)
                         liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
-                        liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
-                        self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
-                elif recent_hub_mode == "maritime":
-                    maritimeResults = self.maritime.generate_reading(current_point, next_point)
-                    maritimeResults_noisy = [apply_maritime_node_noise(message) for message in maritimeResults]
-                    edge_index = self.edge_i 
-                    self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_point, next_point, edge_index)
-                    self.edge_i += 1
-                elif recent_hub_mode == "terrestrial":
-                    terrestrialResults = self.terrestrial.generate_reading(current_point, next_point, self.sample_rate_hz)
-                    terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in terrestrialResults]
-                    edge_index = self.edge_i 
-                    self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_point, next_point, edge_index)
-                    self.edge_i += 1
-                else:
-                    raise ValueError(f"Invalid mode: {recent_hub_mode}")
-                
-              
+                        liftResults_noisy = [apply_lift_node_noise(m) for m in liftResults]
+                        self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, current_point)
 
-            else: #for the last hub generate idle readings for the time at the hub
+                # TRANSIT: only generate when we're not at a hub
+                if not isinstance(current_point, Hub):
+                    if recent_hub_mode == "maritime":
+                        maritimeResults = self.maritime.generate_reading(current_point, next_point)
+                        maritimeResults_noisy = [apply_maritime_node_noise(m) for m in maritimeResults]
+                        self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_point, next_point)
+
+                    elif recent_hub_mode == "terrestrial":
+                        terrestrialResults = self.terrestrial.generate_reading(current_point, next_point, self.sample_rate_hz)
+                        terrestrialResults_noisy = [apply_terrestrial_node_noise(m) for m in terrestrialResults]
+                        self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_point, next_point)
+
+                    else:
+                        raise ValueError(f"Invalid mode: {recent_hub_mode}")
+
+            else:
+                # Final point: ending IDLE at destination hub
                 current_point = self.route.points[i]
                 idleResults = self.idle.generate_reading(current_point)
-                idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
+                idleResults_noisy = [apply_idle_node_noise(m) for m in idleResults]
                 self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
-
     def calculate_gps(self, current_point, next_point, mode, message_index, total_messages, accel_x=0.0, accel_y=0.0, accel_z=0.0):
         if mode == "IDLE":
             return {
@@ -209,8 +183,8 @@ class Node:
         new_alt = start_hub.alt + self.lift_position["z"]  # z is vertical (altitude)
         
         return {
-            "lat_deg": new_lat,
-            "lon_deg": new_lon,
+            "lat": new_lat,
+            "lon": new_lon,
             "altitude_m": new_alt
         }
     
@@ -263,8 +237,8 @@ class Node:
         new_alt = start_hub.alt + self.terrestrial_position["up"]
         
         return {
-            "lat_deg": new_lat,
-            "lon_deg": new_lon,
+            "lat": new_lat,
+            "lon": new_lon,
             "altitude_m": new_alt
         }
     
@@ -317,88 +291,87 @@ class Node:
         new_alt = start_hub.alt + self.maritime_position["up"]
         
         return {
-            "lat_deg": new_lat,
-            "lon_deg": new_lon,
+            "lat": new_lat,
+            "lon": new_lon,
             "altitude_m": new_alt
         }
     
-    def add_metadata(self, messages, mode, current_point, next_point, edge_index = None):
+    def add_metadata(self, messages, mode, current_point, next_point):
         polished_messages = []
         total_messages = len(messages)
-
-        # Reset state tracking when starting a new sequence (your existing behavior)
+        
+        # Reset state tracking when starting a new sequence
         if mode == "LIFT":
             self.lift_start_hub = None
         elif mode == "TERRESTRIAL":
             self.terrestrial_start_hub = None
         elif mode == "MARITIME":
             self.maritime_start_hub = None
-
+        
         for message_index, message in enumerate(messages):
+            # For LIFT, TERRESTRIAL, and MARITIME modes, pass accelerations to calculate GPS from them
             if mode in ["LIFT", "TERRESTRIAL", "MARITIME"]:
                 gps = self.calculate_gps(
                     current_point, next_point, mode, message_index, total_messages,
-                    accel_x=message["accel_x"],
-                    accel_y=message["accel_y"],
-                    accel_z=message["accel_z"]
+                    accel_x=message['accel_x'],
+                    accel_y=message['accel_y'],
+                    accel_z=message['accel_z']
                 )
             else:
                 gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
+            
 
-            # label: match example style
-            if mode in ["IDLE", "LIFT"] or hasattr(current_point, "hub_id"):
-                # use hub location (if available)
-                loc = current_point.hub_id if hasattr(current_point, "hub_id") else "unknown_hub"
+            # Update label with segment information
+            if isinstance(current_point, Hub):
+                label_seg_or_hub = "location"
+                seq_or_hub = current_point.hub_id
+                mode = "IDLE"
+
+            elif isinstance(current_point, Waypoint):
+                label_seg_or_hub = "segment_progress"
+                seq_or_hub = round(message_index / (total_messages - 1), 3) if total_messages > 1 else 0.0
+
+            if self.data_mode == "live":
+                
                 label = {
                     "motion_type": mode,
-                    "is_anomaly": False,
-                    "anomaly_type": "none",
-                    "location": loc
+                    "is_anomaly": "",
+                    "anomaly_type": "",
+                    label_seg_or_hub: seq_or_hub
                 }
             else:
-                ei = edge_index if edge_index is not None else 0
+                # NOTE: This is where we will add the anomaly label
                 label = {
                     "motion_type": mode,
                     "is_anomaly": False,
-                    "anomaly_type": "none",
-                    "segment_progress": round(self.seg_progress(ei, message_index, total_messages), 3)
-    
+                    "anomaly_type": "impact",
+                    label_seg_or_hub: seq_or_hub
                 }
+            
+            
 
             polished_message = {
                 "node_id": self.node_id,
-                "timestamp": self.timestamp.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+                "timestamp": self.timestamp.isoformat(),
                 "seq": self.seq,
                 "gps": gps,
                 "accel": {
-                    "x": message["accel_x"],
-                    "y": message["accel_y"],
-                    "z": message["accel_z"]
+                    "x": message['accel_x'],
+                    "y": message['accel_y'],
+                    "z": message['accel_z']
                 },
                 "gyro": {
-                    "x": message["gyro_x"],
-                    "y": message["gyro_y"],
-                    "z": message["gyro_z"]
+                    "x": message['gyro_x'],
+                    "y": message['gyro_y'],
+                    "z": message['gyro_z']
                 },
                 "label": label
             }
-
             self.seq += 1
-            self.timestamp += timedelta(seconds=(1.0 / self.sample_rate_hz))
+            self.timestamp += timedelta(1 / self.sample_rate_hz)
             polished_messages.append(polished_message)
-
         return polished_messages
             
     def publish(self):
         with open('raw_data.json', 'w') as f:
             json.dump(self.messages, f, indent=2)
-    
-    def seg_progress(self, edge_index: int, msg_i: int, msg_n: int) -> float:
-        edge_p = (msg_i / (msg_n - 1)) if msg_n > 1 else 1.0
-        p = (edge_index + edge_p) / max(1, self.edge_n)
-
-        if p < 0.0:
-            return 0.0
-        if p > 1.0:
-            return 1.0
-        return p
