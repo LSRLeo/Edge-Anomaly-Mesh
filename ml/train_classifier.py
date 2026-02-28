@@ -92,6 +92,36 @@ def load_json_strict(path):
 
     return data
 
+# Clear model history
+import gc
+def clear_torch_session():
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
+
+clear_torch_session()
+
+def load_json_strict(path):
+    p = Path(path)
+
+    if not p.exists():
+        raise FileNotFoundError(f"JSON file not found: {p}")
+
+    if p.stat().st_size == 0:
+        raise ValueError(f"JSON file is empty: {p}")
+
+    with open(p, "r", encoding="utf-8") as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON format in file: {p}")
+
+    if data is None or (isinstance(data, (dict, list)) and len(data) == 0):
+        raise ValueError(f"JSON file contains no usable data: {p}")
+
+    return data
+
 
 # ============================================================================
 # ARGUMENT PARSING
@@ -336,6 +366,11 @@ class MotionClassifier(nn.Module):
 
             # Apply softmax to convert logits to probabilities
             probabilities = torch.softmax(logits, dim=1)
+
+            # Get the highest probability and its index
+            confidence, predicted = torch.max(probabilities, dim=1)
+
+            return predicted, confidence
 
             # Get the highest probability and its index
             confidence, predicted = torch.max(probabilities, dim=1)
