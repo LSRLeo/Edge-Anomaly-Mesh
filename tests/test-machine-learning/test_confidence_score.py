@@ -6,7 +6,7 @@ Covers:
   - confidence equals the maximum softmax probability
   - returned probabilities sum to 1.0 per sample
   - predicted class index equals argmax of probabilities
-  - terrain-specific confidence derivation: P(terrain) + P(terrain_anomaly)
+  - per-class confidence dict has all 8 keys, values in [0, 1], summing to 1
   - anomaly score in [0.0, 1.0]
   - predict() output shapes are correct
   - predict() is deterministic in eval mode
@@ -71,16 +71,45 @@ class TestMotionClassifierConfidence:
         expected = probs.argmax(dim=1)
         assert (predicted == expected).all()
 
-    def test_terrain_confidence_in_unit_interval(self, model):
-        """terrain_confidence = P(terrain) + P(terrain_anomaly) must be in [0, 1]."""
-        x = torch.randn(8, 20)
-        predicted, _, probs = model.predict(x)
-        for i in range(x.shape[0]):
-            terrain_idx = predicted[i].item() % 4
-            terrain_conf = probs[i, terrain_idx].item() + probs[i, terrain_idx + 4].item()
-            assert 0.0 <= terrain_conf <= 1.0 + 1e-6, (
-                f"sample {i}: terrain_conf={terrain_conf:.6f} out of [0, 1]"
-            )
+    def test_confidence_dict_has_all_eight_classes(self, model):
+        """The per-class confidence dict must contain exactly the 8 expected class keys."""
+        CLASS_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',
+                       'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM']
+        x = torch.randn(1, 20)
+        _, _, probs = model.predict(x)
+        confidence = {
+            name: round(float(probs[0, i].item()), 6)
+            for i, name in enumerate(CLASS_NAMES)
+        }
+        assert set(confidence.keys()) == set(CLASS_NAMES)
+
+    def test_confidence_dict_values_in_unit_interval(self, model):
+        """Every value in the per-class confidence dict must be in [0.0, 1.0]."""
+        CLASS_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',
+                       'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM']
+        x = torch.randn(4, 20)
+        _, _, probs = model.predict(x)
+        for sample_idx in range(x.shape[0]):
+            confidence = {
+                name: round(float(probs[sample_idx, i].item()), 6)
+                for i, name in enumerate(CLASS_NAMES)
+            }
+            for cls, val in confidence.items():
+                assert 0.0 <= val <= 1.0, f"{cls}={val} out of [0, 1]"
+
+    def test_confidence_dict_values_sum_to_one(self, model):
+        """The 8 per-class confidence values must sum to 1.0."""
+        CLASS_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',
+                       'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM']
+        x = torch.randn(4, 20)
+        _, _, probs = model.predict(x)
+        for sample_idx in range(x.shape[0]):
+            confidence = {
+                name: float(probs[sample_idx, i].item())
+                for i, name in enumerate(CLASS_NAMES)
+            }
+            total = sum(confidence.values())
+            assert abs(total - 1.0) < 1e-5, f"confidence values sum to {total}, expected 1.0"
 
     def test_anomaly_score_in_unit_interval(self, model):
         """anomaly_score = sum(P(anomaly classes 4-7)) must be in [0, 1]."""

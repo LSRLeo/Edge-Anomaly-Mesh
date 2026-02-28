@@ -32,7 +32,16 @@ Inference Output Schema (ml → database → ui):
     "node_id": "node_{number}",             # string, required
     "timestamp": "YYYY-MM-DDTHH:MM:SS.ffffff", # ISO 8601, required
     "classification": "IDLE|TERRESTRIAL|MARITIME|LIFT|UNKNOWN", # string, required, uppercase
-    "confidence": float,                    # required, range [0.0, 1.0]
+    "confidence": {                         # required, per-class softmax probabilities summing to 1.0
+        "IDLE": float,
+        "TERRESTRIAL": float,
+        "MARITIME": float,
+        "LIFT": float,
+        "IDLE_ANOM": float,
+        "TERRESTRIAL_ANOM": float,
+        "MARITIME_ANOM": float,
+        "LIFT_ANOM": float
+    },
     "is_anomaly": bool,                     # required
     "anomaly_score": float                  # required, range [0.0, 1.0]
 }
@@ -47,7 +56,7 @@ def build_inference_output(
     node_id: str,
     timestamp: str,
     classification: str,
-    confidence: float,
+    confidence: dict,
     is_anomaly: bool,
     anomaly_score: float
 ) -> dict:

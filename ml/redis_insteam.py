@@ -256,12 +256,13 @@ class RedisSubscriber:
         is_anomaly = bool(pred_class >= 4)
         terrain_name = TERRAIN_NAMES[terrain_idx]
 
-        # Terrain confidence: combine probability of predicted terrain class across
-        # both the normal variant (terrain_idx) and anomaly variant (terrain_idx + 4)
-        terrain_confidence = round(
-            float(probabilities[0, terrain_idx].item() + probabilities[0, terrain_idx + 4].item()),
-            6
-        )
+        # Per-class confidence: softmax probability for each of the 8 classes (sums to 1.0)
+        CLASS_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',
+                       'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM']
+        confidence = {
+            name: round(float(probabilities[0, i].item()), 6)
+            for i, name in enumerate(CLASS_NAMES)
+        }
 
         # Anomaly score: total probability assigned to any anomaly class (4-7)
         anomaly_score = round(float(probabilities[0, 4:].sum().item()), 6)
@@ -278,14 +279,14 @@ class RedisSubscriber:
             node_id=node_id,
             timestamp=timestamp,
             classification=terrain_name,
-            confidence=terrain_confidence,
+            confidence=confidence,
             is_anomaly=is_anomaly,
             anomaly_score=anomaly_score,
         )
 
         logger.info(
             f"Inference for node {node_id}: classification={terrain_name}, "
-            f"confidence={terrain_confidence:.4f}, is_anomaly={is_anomaly}, "
+            f"confidence={confidence}, is_anomaly={is_anomaly}, "
             f"anomaly_score={anomaly_score:.4f}"
         )
 
