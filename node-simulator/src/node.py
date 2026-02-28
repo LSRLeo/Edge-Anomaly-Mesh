@@ -21,6 +21,13 @@ class Node:
         self.destination = route.points[-1]
         self.messages = []
         self.data_mode = data_mode
+
+        #Current instance variables for segments progress calculation (might change)
+        self.segments = route.segments
+        self.edge_progress = {} #keep track of progress in each segment
+        self._build_edge_progress()
+
+
         try:
             with open(node_file, 'r') as f:
                 node_config = json.load(f)
@@ -320,7 +327,8 @@ class Node:
 
             # Label: IDLE uses location; motion uses segment_progress instead
             #To-do: Idle always at Hub, so we are saying that this is when is HUB
-            if mode == "IDLE":
+            # IDLE + LIFT: label uses location (hub)
+            if mode in {"IDLE", "LIFT"}:
                 label = {
                     "motion_type": mode,
                     "is_anomaly": False,
@@ -328,15 +336,13 @@ class Node:
                     "location": current_point.hub_id
                 }
             else:
-                #When we are not at Hub anymore but going to reach waypoints in between hubs
-                progress = message_index / (total_messages - 1) if total_messages > 1 else 0.0
+                # TERRESTRIAL / MARITIME: label uses segment_progress
                 label = {
                     "motion_type": mode,
                     "is_anomaly": False,
                     "anomaly_type": "none",
-                    "segment_progress": round(progress, 3)
+                    "segment_progress": round(self._segment_progress(message_index, total_messages), 3)
                 }
-
             polished_message = {
                 "node_id": self.node_id,
                 "timestamp": self.timestamp.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
@@ -369,3 +375,46 @@ class Node:
         if total_messages <= 1:
             return 1.0
         return message_index / (total_messages - 1)
+    
+    def _build_edge_progress(self):
+    
+        self.edge_progress = {}
+
+        for seg in self.segments:
+            seg_mode = seg.mode.upper()
+
+            # Only transit modes get segment_progress
+            if seg_mode not in {"TERRESTRIAL", "MARITIME"}:
+                continue
+
+            pts = [seg.start] + list(seg.points) + [seg.end]
+            edges = len(pts) - 1
+            if edges <= 0:
+                continue
+
+            for i in range(edges):
+                a = pts[i]
+                b = pts[i + 1]
+                p0 = i / edges
+                p1 = (i + 1) / edges
+                self.edge_progress[(id(a), id(b), seg_mode)] = (p0, p1)
+
+
+def _progress(self, mode, current_point, next_point, message_index, total_messages):
+    """
+    Return segment_progress for this batch message.
+    For non-transit modes, returns None.
+    """
+    m = mode.upper()
+    if m not in {"TERRESTRIAL", "MARITIME"}:
+        return None
+
+    key = (id(current_point), id(next_point), m)
+    p0, p1 = self.edge_progress.get(key, (0.0, 1.0))
+
+    if total_messages <= 1:
+        return round(p1, 3)
+
+    t = message_index / (total_messages - 1)  # 0..1 within this batch
+    p = p0 + (p1 - p0) * t
+    return round(p, 3)
