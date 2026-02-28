@@ -43,6 +43,20 @@
       "label": "normal"
     },
     {
+      "hub_id": "hub_la_port_lift_01",
+      "name": "Port of Los Angeles - Cargo Lift",
+      "lat": 33.7405,
+      "lon": -118.2728,
+      "altitude_m": 5.0,
+      "radius_m": 800,
+      "type": "cargo_handling",
+
+      "time_at_hub": 30,
+      "mode": "lift",
+      "lift_time": 20,
+      "label": "normal"
+    },
+    {
       "hub_id": "hub_la_port_01",
       "name": "Port of Los Angeles Terminal",
       "lat": 33.7405,

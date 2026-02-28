@@ -2,6 +2,7 @@ import time
 import json
 import math
 from datetime import datetime, timedelta
+from src.hub import Hub
 
 from src.lift import Lift
 from src.maritime import Maritime
@@ -62,17 +63,19 @@ class Node:
                 #route always start with hub and waypoint take the mode that the most recent hub has
                 if hasattr(current_point, "mode"):
                     recent_hub_mode = current_point.mode.lower()
-                #To-Do what to do with labels - indicate anomalies and different types of normal behavior? 
-                # label = current.label
-                if recent_hub_mode == "idle":
-                # Generate idle readings and apply noise 
+                # Only run the branch for current mode. Idle requires a hub (time_at_hub); waypoints don't have it.
+                if isinstance(current_point, Hub):
                     idleResults = self.idle.generate_reading(current_point)
-                    # Optionally inject anomalies (default: package_stolen)
                     anomalous_idleResults = self.idle.inject_anomalies(idleResults)
-                    # Apply noise after anomaly injection
                     idleResults_noisy = [apply_idle_node_noise(message) for message in anomalous_idleResults]
                     self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
-            
+                    
+                if recent_hub_mode == "idle":
+                    if hasattr(current_point, "time_at_hub"):
+                        idleResults = self.idle.generate_reading(current_point)
+                        anomalous_idleResults = self.idle.inject_anomalies(idleResults)
+                        idleResults_noisy = [apply_idle_node_noise(message) for message in anomalous_idleResults]
+                        self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
                 elif recent_hub_mode == "lift":
                     if hasattr(current_point, "mode"):
                         self.lift.set_hub(current_point.lat, current_point.lon, 20)
@@ -329,10 +332,8 @@ class Node:
                 }
             else:
                 # NOTE: This is where we will add the anomaly label
-                if message['anomalous']:
-                    anomaly_type = message['anomalous']
-                else:
-                    anomaly_type = "False"
+                # Messages from motion classes only have 'anomalous' when inject_anomalies was applied (e.g. at-hub IDLE); in-transit or unmodified messages do not.
+                anomaly_type = message.get('anomalous', "False")
                 label = {
                     "motion_type": mode,
                     "is_anomaly": anomaly_type,
