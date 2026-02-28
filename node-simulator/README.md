@@ -1,28 +1,87 @@
 # Simulator
 
-Quick rundown of what’s here and how to run it.
+Quick rundown of what's here and how to run it.
 
 ## Layout
 
-- **`simulation.py`** — Entry point
-- **`src/`** — Core logic
-- **`routes/`** — Example route JSONs: `exampleHub.json`
+- **`simulation.py`** — Entry point (supports `sim` and `redis` commands).
+- **`src/`** — Core logic (node, route, motion classes).
+- **`routes/`** — Example route JSONs (e.g. `exampleHub.json`, `exampleHubLabel.json`).
 - **`nodeConfig.json`** — Example node config (node_id, sample_rate_hz).
+- **`redisFiles/`** — Redis support used by the `redis` command
+
+Install deps first if you haven't: `pip install -r requirements.txt`.
+
+---
 
 ## How to run
 
-From the `simulator` directory:
+From the **`node-simulator`** directory.
+
+### Simulation (`sim`)
+
+Run the simulator from node and route config files. This generates the raw_data.json file that is required to then publish to Redis. You must choose **live** or **training** data mode which basically means whether you want your anomalies labled or not.
+
+**Live data:**
 
 ```bash
-python3 simulation.py -n nodeConfig.json -r routes/exampleHub.json
+python3 simulation.py sim -l -n nodeConfig.json -r routes/exampleHub.json
 ```
 
-- **`-n` / `--node`** — Path to the node config JSON (e.g. `nodeConfig.json`).
-- **`-r` / `--route`** — Path to the route JSON (e.g. `routes/exampleHub.json`).
+**Training data:**
 
-Install deps first if you haven’t: `pip install -r requirements.txt`.
+```bash
+python3 simulation.py sim -t -n nodeConfig.json -r routes/exampleHub.json
+```
 
+**`sim` arguments:**
 
+| Argument | Short | Required | Description |
+|----------|--------|----------|-------------|
+| **Data mode** | | **Yes** (one of) | |
+| `--live` | `-l` | | Use live data. |
+| `--training` | `-t` | | Use training data. |
+| `--node` | `-n` | Yes | Path to node config JSON (e.g. `nodeConfig.json`). |
+| `--route` | `-r` | Yes | Path to route JSON (e.g. `routes/exampleHub.json`). |
+
+You must pass exactly one of `-l` or `-t`; omitting both will error.
+
+---
+
+### Redis (`redis`)
+
+Run with Redis (publish to a channel). This required the raw_data.json file to already be generated with `sim` as all it does is take those messages and publish them to a Redis channel. It batches messages and publishes 1 message/sec and publishes any messages that are generated within that 1 second.
+
+```bash
+python3 simulation.py redis [--host HOST] [--port PORT] CHANNEL_NAME
+```
+
+**Examples:**
+
+```bash
+python3 simulation.py redis my-channel
+python3 simulation.py redis --host localhost --port 6379 my-channel
+```
+
+**`redis` arguments:**
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--host` | `localhost` | Redis server hostname. |
+| `--port` | `6379` | Redis server port. |
+| `channel_name` | (required) | Name of the channel to monitor/publish to. |
+
+---
+
+### Help
+
+```bash
+python3 simulation.py -h
+python3 simulation.py sim -h
+python3 simulation.py redis -h
+```
+
+---
 
 # Sprint 1 
 
