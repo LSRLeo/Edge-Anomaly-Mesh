@@ -20,11 +20,11 @@ We use a simple feedforward neural network (also called MLP - Multi-Layer Percep
          ↓
     ReLU Activation
          ↓
-    Linear Layer (32 → 8 outputs)
+    Linear Layer (32 → 4 outputs)
          ↓
     Softmax (converts to probabilities)
          ↓
-    Output: [P(IDLE), P(TERR), P(MAR), P(LIFT), P(IDLE_A), P(TERR_A), P(MAR_A), P(LIFT_A)]
+    Output: [P(IDLE), P(TERRESTRIAL), P(MARITIME), P(LIFT)]
 
 TRAINING PROCESS:
 =================
@@ -60,7 +60,37 @@ from datetime import datetime
 
 # Import from our feature extraction module
 from feature_extraction import FeatureExtractor, normalize_features
-from data_pipeline import create_windows, load_json_data, windows_to_features
+from data_pipeline import load_json_data, create_windows
+
+# Clear model history
+import gc
+def clear_torch_session():
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
+
+clear_torch_session()
+
+def load_json_strict(path):
+    p = Path(path)
+
+    if not p.exists():
+        raise FileNotFoundError(f"JSON file not found: {p}")
+
+    if p.stat().st_size == 0:
+        raise ValueError(f"JSON file is empty: {p}")
+
+    with open(p, "r", encoding="utf-8") as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON format in file: {p}")
+
+    if data is None or (isinstance(data, (dict, list)) and len(data) == 0):
+        raise ValueError(f"JSON file contains no usable data: {p}")
+
+    return data
 
 
 # ============================================================================
@@ -83,7 +113,7 @@ def parse_args():
     )
     
     # Data arguments
-    parser.add_argument('--data-dir', type=str, default='data/generated_data',
+    parser.add_argument('--data-dir', type=str, default='data/training',
                         help='Directory containing training data')
     
     parser.add_argument('--features-file', type=str, default=None,
@@ -133,8 +163,13 @@ def parse_args():
     parser.add_argument('--no-cuda', action='store_true',
                         help='Disable CUDA even if available')
     
-    parser.add_argument('--verbose', action='store_true',
+    parser.add_argument('--verbose', default=True, action='store_true',
                         help='Print detailed training progress')
+    
+    parser.add_argument('--norm-stats-output', type=str,
+                    default='ml/classifier/normalization_stats.json',
+                    help='Path to save normalization mean/std stats as JSON')
+    
     
     return parser.parse_args()
 
@@ -243,15 +278,22 @@ class MotionClassifier(nn.Module):
         """
         super().__init__()  # Always call parent __init__
 
-        # Build the network architecture
-        self.network = nn.Sequential(
-            nn.Linear(input_dim, hidden_dims[0]),      # Input → 64 neurons
-            nn.ReLU(),                                   # Non-linear activation
-            nn.Dropout(dropout),                         # Regularization (drop 30% of neurons)
-            nn.Linear(hidden_dims[0], hidden_dims[1]),  # 64 → 32 neurons
-            nn.ReLU(),                                   # Non-linear activation
-            nn.Linear(hidden_dims[1], num_classes)      # 32 → 8 output classes
-        )
+        # Build the network architecture (supports any number of hidden layers)
+        hidden_dims = list(hidden_dims)
+        if len(hidden_dims) == 0:
+            raise ValueError("hidden_dims must have at least 1 layer size")
+
+        layers = []
+        prev_dim = input_dim
+
+        for h in hidden_dims:
+            layers.append(nn.Linear(prev_dim, h))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(dropout))
+            prev_dim = h
+
+        layers.append(nn.Linear(prev_dim, num_classes))
+        self.network = nn.Sequential(*layers)
 
     def forward(self, x):
         """
@@ -299,11 +341,26 @@ class MotionClassifier(nn.Module):
             confidence, predicted = torch.max(probabilities, dim=1)
 
             return predicted, confidence
-
+        
 
 # ============================================================================
 # TRAINING FUNCTIONS
 # ============================================================================
+
+def save_normalization_stats(scaler, out_path: str):
+    mean, std = scaler  # scaler is (mean, std) from feature_extraction.normalize_features
+
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    stats = {
+        "mean": mean.tolist(),
+        "std": std.tolist(),
+        "std_zero_replaced_with_1": True
+    }
+
+    with open(out_path, "w") as f:
+        json.dump(stats, f, indent=2)
 
 def train_epoch(model, dataloader, criterion, optimizer, device):
     """
@@ -700,9 +757,9 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
     # Create feature extractor
     extractor = FeatureExtractor(sample_rate=50)
 
-    # Find all JSON files
+    # Find all JSON files (exclude metadata.json)
     data_path = Path(data_dir)
-    json_files = list(data_path.glob("**/*.json"))
+    json_files = [f for f in data_path.glob("**/*.json") if f.name != "metadata.json"]
 
     if not json_files:
         raise ValueError(f"No JSON files found in {data_dir}")
@@ -724,15 +781,33 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
         # Extract features
         features = windows_to_features(windows, sample_rate=50)
 
+        # Filter out windows with None or NaN labels
+        valid_mask = np.array([
+            v is not None and not (isinstance(v, float) and np.isnan(v))
+            for v in window_labels
+        ])
+        n_dropped = int((~valid_mask).sum())
+        if n_dropped > 0:
+            print(f"    Warning: dropped {n_dropped} window(s) with None/NaN labels")
+        features = features[valid_mask]
+        window_labels = window_labels[valid_mask]
+
+        if len(features) == 0:
+            print(f"    Skipping {json_file.name}: no valid windows after filtering")
+            continue
+
         # Add to lists
         all_features.append(features)
         all_labels.append(window_labels)
 
         print(f"    {len(features)} windows extracted")
 
+    if not all_features:
+        raise ValueError(f"No valid training samples found in {data_dir}. All labels were None/NaN.")
+
     # Stack all data
     X = np.vstack(all_features)
-    y = np.concatenate(all_labels)
+    y = np.concatenate(all_labels).astype(int)
 
     print(f"\nTotal samples: {len(X)}")
     print(f"Feature shape: {X.shape}")
@@ -807,6 +882,7 @@ def main():
 
     X, y, extractor = load_all_data(args.data_dir, args.window_size, args.overlap)
     X_normalized, scaler = normalize_features(X)
+    save_normalization_stats(scaler, args.norm_stats_output)
 
     # =========================================================================
     # 2. Create dataset and split

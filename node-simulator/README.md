@@ -23,4 +23,10 @@ Key Constraint: Timestamps must increase monotonically; allow Team 2 to handle l
 
 Shouldn't team1 create simulation data as well as pre-trained data?
 
+Redis Channel
+Channel: sensor:raw:{node_id}
+Publisher: Node-simulator
+Subscriber: ML & Databases
+
+
 

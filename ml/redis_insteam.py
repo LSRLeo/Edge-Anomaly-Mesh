@@ -14,8 +14,8 @@ import redis
 import logging
 import json
 import argparse
-from collections import deque
 import torch
+import time
 
 from data_pipeline import stream_window_to_features
 from feature_extraction import normalize_features
@@ -93,6 +93,7 @@ class RedisSubscriber:
             socket_timeout=REDIS_TIMEOUT
         )
         self.node_states = {}  # Maps node_id to buffer and state
+        self.seen_seqs = {}    # Maps node_id to set of seen seq numbers
         try:
             self.redis_client.ping()
             logger.info(f"Connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
@@ -114,6 +115,21 @@ class RedisSubscriber:
             if message['type'] == 'pmessage':
                 self.process_data(message['data'])
 
+    def insert_event_in_order(self, buffer, event):
+        seq = event.get("seq")
+        if seq is None:
+            buffer.append(event)
+            return
+        # Skip duplicates (already handled by seen_seqs, but double check)
+        if any(e.get("seq") == seq for e in buffer):
+            return
+        # Insert in order
+        for i, existing in enumerate(buffer):
+            if existing.get("seq", -1) > seq:
+                buffer.insert(i, event)
+                return
+        buffer.append(event)
+
     def process_data(self, message):
         """
         Process incoming messages, handle bytes or str.
@@ -129,36 +145,86 @@ class RedisSubscriber:
             data = json.loads(message)
 
             node_id = data.get('node_id')
+            seq = data.get('seq')
             if not node_id:
                 logger.warning("Missing node_id in message")
                 return
 
+            # Duplicate filtering
+            if node_id not in self.seen_seqs:
+                self.seen_seqs[node_id] = set()
+            if seq in self.seen_seqs[node_id]:
+                logger.info(f"Duplicate packet detected for node {node_id} seq {seq}, skipping.")
+                return
+            self.seen_seqs[node_id].add(seq)
+
             # Initialize buffer for new node_id
+            now = time.time()
             if node_id not in self.node_states:
                 self.node_states[node_id] = {
-                    'buffer': deque(),
+                    'buffer': [],  # Use a list
                     'stride_count': 0,
-                    'last_seq': -1
+                    'last_seq': -1,
+                    'last_active': now
                 }
+            
+            # Update last activity time for node
+            self.node_states[node_id]['last_active'] = now
 
             # Append new sample to node's buffer
             node_state = self.node_states[node_id]
-            node_state['buffer'].append(data)
+            self.insert_event_in_order(node_state['buffer'], data)
             node_state['stride_count'] += 1
 
             logger.info(f"Received message for node {node_id}: {data}")
 
             # Trigger inference when window and stride conditions are met
             if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
-                self.trigger_inference(node_id)
-                for _ in range(self.stride):
-                    node_state['buffer'].popleft()
+                window = node_state['buffer'][:self.window_size]
+                # Extract metadata for the window and reconstruct ground truth
+                terrain_map = {"IDLE": 0, "TERRESTRIAL": 1, "TRANSIT": 1, "MARITIME": 2, "LIFT": 3}
+                window_metadata = []
+                for event in window:
+                    meta = event.get("meta", {})
+                    terrain_str = meta.get("sim_mode") or meta.get("mode") or event.get("mode")
+                    anomaly = meta.get("anomaly", False) or meta.get("has_anomaly", False) or event.get("anomaly", False)
+                    terrain_idx = terrain_map.get(terrain_str.upper()) if terrain_str else None
+                    ground_truth = terrain_idx + (4 if anomaly else 0) if terrain_idx is not None else None
+                    window_metadata.append({
+                        "node_id": event.get("node_id"),
+                        "seq": event.get("seq"),
+                        "timestamp": event.get("timestamp"),
+                        "terrain_type": terrain_str,
+                        "is_anomaly": anomaly,
+                        "ground_truth": ground_truth
+                    })
+                self.trigger_inference(node_id, window, window_metadata)
+                node_state['buffer'] = node_state['buffer'][self.stride:]
                 node_state['stride_count'] = 0
+            
+            # Inactivity cleanup
+            self.cleanup_inactive_nodes()
+
 
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
 
-    def trigger_inference(self, node_id):
+    def cleanup_inactive_nodes(self):
+        """
+        Remove nodes from node_states and seen_seqs if inactive for threshold.
+        """
+
+        now = time.time()
+        inactive = [
+            node_id for node_id, state in self.node_states.items()
+            if now - state.get('last_active', now) > self.INACTIVITY_THRESHOLD
+        ]
+        for node_id in inactive:
+            logger.info(f"Cleaning up inactive node: {node_id}")
+            self.node_states.pop(node_id, None)
+            self.seen_seqs.pop(node_id, None)
+
+    def trigger_inference(self, node_id, window, window_metadata):
         """
         Extract features from the buffer and run classifier inference.
         """
@@ -170,7 +236,18 @@ class RedisSubscriber:
             features, _ = normalize_features(features, scaler=self.scaler)
         features_tensor = torch.FloatTensor(features)  # shape: (1, n_features)
         predicted, confidence = self.classifier.predict(features_tensor)
-        logger.info(f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}")
+        result = {
+            "node_id": node_id,
+            "predicted": predicted.item(),
+            "confidence": confidence.item(),
+            "window_metadata": window_metadata
+        }
+        logger.info(
+            f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}, "
+            f"window_metadata={window_metadata}"
+        )
+        # Pass window_metadata to outstream for decoding terrain/anomaly as needed
+        return result
 
 # ============================================================================
 # MAIN ENTRY POINT
