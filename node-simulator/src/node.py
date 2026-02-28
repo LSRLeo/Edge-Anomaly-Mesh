@@ -388,3 +388,19 @@ class Node:
     def publish(self):
         with open('raw_data.json', 'w') as f:
             json.dump(self.messages, f, indent=2)
+    
+    def seg_progress(self, msg_i: int, msg_n: int) -> float:
+        # progress within the current edge (0..1)
+        edge_p = (msg_i / (msg_n - 1)) if msg_n > 1 else 1.0
+
+        # progress across the whole hub->hub segment (0..1)
+        # edge_i = which hop we are on in this segment
+        # edge_n = total hops (waypoints + 1)
+        p = (self.edge_i + edge_p) / max(1, self.edge_n)
+
+        # clamp
+        if p < 0.0:
+            return 0.0
+        if p > 1.0:
+            return 1.0
+        return p
