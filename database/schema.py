@@ -13,7 +13,6 @@ from datetime import datetime
 #third party imports
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import (
-    DateTime,
     ForeignKeyConstraint,
     create_engine, 
     Column, 
@@ -28,7 +27,8 @@ from sqlalchemy import (
 # setup
 Base = declarative_base()
 DEFAULT_DB_PATH = 'mesh.db'
-engine = create_engine(f'sqlite+pysqlite:///database/{DEFAULT_DB_PATH}', echo=True)
+engine = create_engine(f'sqlite+pysqlite:///database/{DEFAULT_DB_PATH}', echo=False)
+
 
 class RawSensorData(Base):
     """
@@ -62,19 +62,17 @@ class RawSensorData(Base):
         UniqueConstraint("node_id", "timestamp", name="uq_node_timestamp"),
     )
 
+
 class Node(Base):
     __tablename__ = 'nodes'
     node_id = Column(String, primary_key=True, nullable=False)
     status = Column(String, CheckConstraint("status IN ('active', 'inactive')", name='status_check'), default='active', nullable=False)
-    first_seen = Column(DateTime, nullable=False)
-    last_seen = Column(DateTime, nullable=False)
+    first_seen = Column(Float, nullable=False)
+    last_seen = Column(Float, nullable=False)
     location_lat = Column(Float, nullable=False)
     location_lon = Column(Float, nullable=False)
     location_altitude_m = Column(Float, nullable=False)
 
-
-    def __repr__(self):
-        return f"<Node(node_id='{self.node_id}', seq={self.seq}, status='{self.status}', first_seen='{self.first_seen}', last_seen='{self.last_seen}', location=({self.location_lat}, {self.location_lon}, {self.location_altitude_m}))>"
 
 # SQLAlchemy ORM model for the inference_results table
 class InferenceResults(Base):
@@ -125,11 +123,13 @@ class AnomalyEvents(Base):
     __table_args__ = (ForeignKeyConstraint(['node_id'], ['nodes.node_id'], name='fk_anomaly_node'),
                       ForeignKeyConstraint(['inference_id'], ['inference_results.id'], name='fk_anomaly_inference'),)
     
+
 def create_schema():
     """
     Creates the database schema by creating all tables defined in the ORM models.
     """
     Base.metadata.create_all(engine)
+
 
 if __name__ == "__main__":
     create_schema()
