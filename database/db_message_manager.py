@@ -12,7 +12,7 @@ import json
 import sys
 import argparse
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 from db_message_factory import MessageFactory
 from db_table_manager import TableManager
@@ -44,11 +44,20 @@ class DBMessageManager:
         #Could validate message here too and then remove m_id and m_type before passing to message factory, but message factory already does validation and we want to avoid copying the dict if possible, so we'll just pass the original dict to the message factory and let it handle validation and object creation.
         message_obj = MessageFactory.create_message(message)
         if message_obj is None:
-            return MessageFactory.create_message({
-                "m_id": "error_" + message.get("m_id", "unknown"),
-                "m_type": "error",
-                "error": "Failed to create message object. Invalid message format or unknown message type."
-            })
+            m_id   = message.get("m_id",   "unknown") if isinstance(message, dict) else "unknown"
+            m_type = message.get("m_type", "unknown") if isinstance(message, dict) else "unknown"
+            logging.error("Factory could not create message  m_id=%s  m_type=%s", m_id, m_type)
+            return {
+                "m_id":             f"error_{m_id}",
+                "m_type":           "error",
+                "responding_to":    m_id,
+                "original_request": m_type,
+                "error_code":       "INVALID_REQUEST",
+                "error_message":    (
+                    "Failed to create message object. "
+                    "Invalid message format or unknown message type."
+                ),
+            }
         #GET RESULTS
         results = message_obj.execute(self.table_manager)
         return results.to_dict() if results else None
@@ -71,7 +80,7 @@ class DBMessageManager:
                     responses.append(response)
 
             self._write_responses(responses, outfile)
-
+            return responses
         except FileNotFoundError:
             logging.error("Input file not found: %s", infile)
             return []
@@ -150,13 +159,12 @@ def send_message(infile: str, outfile: str) -> None:
     """
     manager = DBMessageManager()
     responses = manager.read_file(infile, outfile)
-    try:
-        print(
-            f"\n  Processed '{Path(infile).name}' "
-            f"  {len(responses)} response(s) written to '{outfile}'"
+ 
+    print(
+        f"\n  Processed '{Path(infile).name}' "
+        f"  {len(responses)} response(s) written to '{outfile}'"
         )
-    except Exception as e:
-        logging.error(f"Error processing messages: {e}")
+    
 
 
 if __name__ == "__main__":

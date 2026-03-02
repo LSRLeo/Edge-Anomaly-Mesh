@@ -19,7 +19,7 @@ def orm_to_dict(obj) -> Optional[Dict[str, Any]]:
 	# Fallback: use __dict__ and filter out private attributes
 	return {k: v for k, v in vars(obj).items() if not k.startswith('_')}
 
-def get_nodes() -> List[str]::
+def get_nodes() -> List[str]:
 	"""Return all node_ids in the nodes table."""
 	session = Session()
 	try:
