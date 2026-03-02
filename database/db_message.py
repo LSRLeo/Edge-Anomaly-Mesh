@@ -20,27 +20,29 @@ def _serialize_inference_full(inf) -> Optional[Dict[str, Any]]:
     if inf is None:
         return None
 
+    # queries.py now returns plain dicts from orm_to_dict() instead of ORM objects
+    # feature_vector is stored as a JSON string in the DB; parse it back to dict.
     feature_vector = {}
-    if inf.feature_vector:
+    if inf.get("feature_vector"):
         try:
-            feature_vector = json.loads(inf.feature_vector)
+            feature_vector = json.loads(inf["feature_vector"])
         except (json.JSONDecodeError, TypeError):
             feature_vector = {}
 
     return {
-        "event_id": f"{inf.node_id}_{inf.timestamp}",
-        "timestamp": f"{inf.timestamp}",
-        "window_start": inf.window_start,
-        "window_end": inf.window_end,
-        "window_samples": inf.window_samples,
-        "location_state": inf.location_state,
-        "motion_class": inf.motion_class,
-        "confidence": inf.confidence,
-        "anomaly_detected": inf.anomaly_detected,
-        "anomaly_score": inf.anomaly_score,
-        "anomaly_type": inf.anomaly_type,
-        "nearest_hub_id": inf.nearest_hub_id,
-        "nearest_hub_distance": inf.nearest_hub_distance,
+        "event_id": f"{inf['node_id']}_{inf['timestamp']}",
+        "timestamp": f"{inf['timestamp']}",
+        "window_start": inf["window_start"],
+        "window_end": inf["window_end"],
+        "window_samples": inf["window_samples"],
+        "location_state": inf["location_state"],
+        "motion_class": inf["motion_class"],
+        "confidence": inf["confidence"],
+        "anomaly_detected": inf["anomaly_detected"],
+        "anomaly_score": inf["anomaly_score"],
+        "anomaly_type": inf["anomaly_type"],
+        "nearest_hub_id": inf["nearest_hub_id"],
+        "nearest_hub_distance": inf["nearest_hub_distance"],
         "feature_vector": feature_vector,
     }
 
@@ -52,18 +54,21 @@ def _serialize_raw(raw) -> Dict[str, Any]:
     """
     if raw is None:
         return None
+    # queries.py now returns plain dicts from orm_to_dict() instead of ORM
+    # objects, so access uses dict keys rather than attribute syntax.
     return {
-        "event_id": f"{raw.node_id}_{raw.timestamp}",
-        "timestamp": f"{raw.timestamp}",
-        "seq": raw.seq,
-        "accel_mss": {"x": raw.accel_x, "y": raw.accel_y, "z": raw.accel_z},
-        "gyro_rads": {"x": raw.gyro_x, "y": raw.gyro_y, "z": raw.gyro_z},
+        "event_id": f"{raw['node_id']}_{raw['timestamp']}",
+        "timestamp": f"{raw['timestamp']}",
+        "seq": raw["seq"],
+        "accel_mss": {"x": raw["accel_x"], "y": raw["accel_y"], "z": raw["accel_z"]},
+        "gyro_rads": {"x": raw["gyro_x"], "y": raw["gyro_y"], "z": raw["gyro_z"]},
         "gps": {
-            "lat_deg": raw.gps_lat,
-            "lon_deg": raw.gps_lon,
-            "altitude_m": raw.gps_altitude_m,
+            "lat_deg": raw["gps_lat"],
+            "lon_deg": raw["gps_lon"],
+            "altitude_m": raw["gps_altitude_m"],
         },
     }
+
 
 
 class Message(ABC):
