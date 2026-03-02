@@ -20,13 +20,13 @@ def print_raw_sensor_data(raw):
     if not raw:
         print("No raw sensor data found.")
         return
-    print(f"RawSensorData: node_id={raw.get('node_id')}, timestamp={raw.get('timestamp')}, seq={raw.get('seq')}")
+    print("RawSensorData (full):", raw)
 
 def print_inference(inf):
     if not inf:
         print("No inference result found.")
         return
-    print(f"InferenceResults: node_id={inf.get('node_id')}, window=({inf.get('window_start')}, {inf.get('window_end')}), class={inf.get('motion_class')}, confidence={inf.get('confidence')}")
+    print("InferenceResults (full):", inf)
 
 def main():
     print("--- Testing get_nodes() ---")
@@ -37,19 +37,15 @@ def main():
 
     print("\n--- Testing get_datum() ---")
     datum = get_datum(TEST_EVENT_ID)
-    if datum:
-        print_raw_sensor_data(datum.get('raw'))
-        print_inference(datum.get('inference'))
-    else:
-        print("Datum not found for event_id:", TEST_EVENT_ID)
+    print("Datum (full):", datum)
 
     print("\n--- Testing get_recent_raw_data() ---")
     raw = get_recent_raw_data(TEST_NODE_ID)
-    print_raw_sensor_data(raw)
+    print("Recent Raw Data (full):", raw)
 
     print("\n--- Testing get_recent_inference() ---")
     inf = get_recent_inference(TEST_NODE_ID)
-    print_inference(inf)
+    print("Recent Inference (full):", inf)
 
 if __name__ == "__main__":
     main()
