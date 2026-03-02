@@ -14,6 +14,7 @@ class MessageFactory:
         "raw-data": RawDataMessage,
         "inference-output": InferenceOutputMessage,
         "error": ErrorResponse
+        #TODO: add get-recent-raw-data and get-recent-inference types
     }
 
     @classmethod

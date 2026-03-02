@@ -1,15 +1,28 @@
 '''
 Docstring for database.db_message_manager
-m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'Error'
+m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'error'
+
+TWO USAGE SCENARIOS:
+1) sample usage, uses sample_message_data.json and sample_message_requests.json and writes results to sample_message_responses.json
+2) send own messages with python db_message_manager.py --infile <path_to_input_messages.json> --outfile <path_to_output_responses.json>
 '''
 from asyncio.log import logger
 from email import message
 import logging
 import json
 import sys
+import argparse
+from pathlib import Path
+from typing import Dict, Any, Optional
+
+from db_message_factory import MessageFactory
+from db_table_manager import TableManager
+from schema import create_schema
 
 #logging for debugging purposes
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
+
+#TODO: add default file paths for sample messages
 
 class DBMessageManager:
     '''
@@ -18,46 +31,54 @@ class DBMessageManager:
 
 
     def __init__(self):
-        self.handlers = {}
-        self._register_handlers()
-        logging.info("DBMessageManager initialized with handlers: %s", list(self.handlers.keys()))
+        create_schema()  # Ensure database schema is created
+        self.table_manager = TableManager()
+        logging.info("DBMessageManager initialized and database schema created")
 
 
-    def _register_handlers(self):
-        """Register all message type handlers"""
-        self.handlers = {
-            'raw-data': self.handle_raw_data,
-            'inference-output': self.handle_inference_output,
-            'get-nodes': self.handle_get_nodes,
-            'get-node-data-ids': self.handle_get_node_data_ids,
-            'get-datum': self.handle_get_datum,  
-        }
+    def process_message(self, message:Dict[str, Any]):
+        """Processes incoming message and creates message objects"""
 
-    def process_message(self, message:dict):
-        """Processes incoming message and routes it to the appropriate handler after calling validation"""
+        #Could validate message here too and then remove m_id and m_type before passing to message factory, but message factory already does validation and we want to avoid copying the dict if possible, so we'll just pass the original dict to the message factory and let it handle validation and object creation.
+        message_obj = MessageFactory.create_message(message)
+        if message_obj is None:
+            return MessageFactory.create_message({
+                "m_id": "error_" + message.get("m_id", "unknown"),
+                "m_type": "error",
+                "error": "Failed to create message object. Invalid message format or unknown message type."
+            })
+        #GET RESULTS
+        results = message_obj.process(self.table_manager)
+        return results.to_dict() if results else None
 
-        if self.validate_message(message):
-            m_type = message.get('m_type')
-            recieved_m_id = message.get('m_id')
-            handler = self.handlers.get(m_type)
+    def process_file(self, infile: str | Path, outfile: str | Path):
+        """Processes messages from an input file and writes responses to an output file."""
+        infile  = Path(infile)
+        outfile = Path(outfile)
+        try:
+            with open(infile, "r") as f:
+                data = json.load(f)
+                messages = data if isinstance(data, list) else [data]
+            responses = []
+            for message in messages:
+                response = self.process_message(message)
+                if response:
+                    responses.append(response)
 
-            if handler:
-                logging.info("Found handler for m_type: %s, processing message with m_id: %s", m_type, recieved_m_id)
-                #call handler function
-                handler(message)
+            with open(outfile, "w") as f:
+                json.dump(responses, f, indent=2)
+        
+        except FileNotFoundError:
+            logging.error("Input file not found: %s", infile)
+            return []
+        except json.JSONDecodeError as e:
+            logging.error("JSON parse error in %s : %s", infile, e)
+            return []
 
-            else:
-                logging.error("No handler found for m_type: %s, message with m_id: %s cannot be processed", m_type, recieved_m_id)
-                return
-
-        else:
-            #Handle error and send error response
-            logging.error("Message failed validation and will not be processed")
-            return
         
         
-
-    def validate_message(self, message: dict) -> bool:
+    #VALIDATE is done in message factory
+    def validate_message(self, message: Dict[str, Any]) -> bool:
         """Validates structure is a dictionary and contains required fields 'm_type' and 'm_id'"""
 
         if not isinstance(message, dict):
@@ -74,30 +95,6 @@ class DBMessageManager:
         
         return True
     
-
-    def handle_raw_data(self, message: dict):
-        logger.info(f"Handling raw-data message: {message['m_id']} inserts raw data into the databases")
-
-
-    def handle_inference_output(self, message: dict):
-        logger.info(f"Handling inference-output message: {message['m_id']} inserts inference output into the databases")
-
-
-    def handle_get_nodes(self, message: dict):
-        logger.info(f"Handling get-nodes request: {message['m_id']} returns message of type get-nodes-response") 
-        
-
-
-    def handle_get_node_data_ids(self, message: dict):
-        logger.info(f"Handling get-node-data-ids request: {message['m_id']} returns message of type get-node-data-ids-response")
-
-    def handle_get_datum(self, message: dict):
-        logger.info(f"Handling get-datum request: {message['m_id']} returns message of type get-datum-response")
-
-
-
-    def handle_error(self):
-        logger.error(f"sends error response to sender")
 
 
 if __name__ == "__main__":
