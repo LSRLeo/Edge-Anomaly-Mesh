@@ -123,6 +123,19 @@ class RedisMonitorSection(ttk.Frame):
 
         # Build initial rows
         self._build_rows()
+    def _on_inner_configure(self, event):
+        # Update scroll region to encompass the inner frame
+        if self._canvas:
+            self._canvas.configure(scrollregion=self._canvas.bbox("all"))
+        return
+    def _on_canvas_configure(self, event):
+        # Update the inner frame's width to match the canvas width
+        if self._canvas and self._inner_window is not None:
+            self._canvas.itemconfig(self._inner_window, width=event.width)
+        return
+    def _build_rows(self):
+        pass #placeholder for building rows of redis messages
+    
 class AnomalySection(ttk.Frame):
     """
     Tab subsection for anomaly viewer, will be contained in the AnomaliesTab.
