@@ -34,4 +34,4 @@ Publisher: Node-simulator
 Subscriber: ML
 
 Channel: inference:results:{node_id}
-Publisher: ML
+Puglisher: ML
