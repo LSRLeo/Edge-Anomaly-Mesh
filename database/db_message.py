@@ -374,4 +374,107 @@ class GetDatumRequest(MessageRequest):
 
 
 #TODO: Implement GetRecentRawDataRequest and GetRecentInferenceRequest classes
+class GetRecentRawDataRequest(MessageRequest):
+
+    M_TYPE = "get-recent-raw-data"
+
+    def __init__(self, m_id: str, m_content: Dict[str, Any]):
+        super().__init__(m_id, m_content)
+        self.node_id = m_content.get("node_id", None)
+
+    def execute(self, db_manager: TableManager) -> MessageResponse:
+        logging.info(f"Executing get-recent-raw-data for node: {self.node_id}")
+
+        try:
+            if not self.node_id:
+                raise ValueError("Missing required field: node_id")
+
+            records = get_recent_raw_data(self.node_id)
+
+            if records is None:
+                return ErrorResponse(
+                    m_id=M_ID_DB,
+                    responding_to=self.m_id,
+                    original_request=self.m_type,
+                    error_message=f"No raw data found for node: {self.node_id}",
+                    error_code="NOT_FOUND",
+                )
+
+            return MessageResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                m_type="get-recent-raw-data-response",
+                results={"node_id": self.node_id, "records": records},
+            )
+
+        except ValueError as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST",
+            )
+        except Exception as e:
+            logging.error(f"get-recent-raw-data failed: {e}")
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INTERNAL_ERROR",
+            )
+
+
+class GetRecentInferenceRequest(MessageRequest):
+
+    M_TYPE = "get-recent-inference"
+
+    def __init__(self, m_id: str, m_content: Dict[str, Any]):
+        super().__init__(m_id, m_content)
+        self.node_id = m_content.get("node_id", None)
+
+    def execute(self, db_manager: TableManager) -> MessageResponse:
+        logging.info(f"Executing get-recent-inference for node: {self.node_id}")
+
+        try:
+            if not self.node_id:
+                raise ValueError("Missing required field: node_id")
+
+            records = get_recent_inference(self.node_id)
+
+            if records is None:
+                return ErrorResponse(
+                    m_id=M_ID_DB,
+                    responding_to=self.m_id,
+                    original_request=self.m_type,
+                    error_message=f"No inference data found for node: {self.node_id}",
+                    error_code="NOT_FOUND",
+                )
+
+            return MessageResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                m_type="get-recent-inference-response",
+                results={"node_id": self.node_id, "records": records},
+            )
+
+        except ValueError as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST",
+            )
+        except Exception as e:
+            logging.error(f"get-recent-inference failed: {e}")
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INTERNAL_ERROR",
+            )
+
 #TODO: Method for generating unique message IDs instead of using M_ID_DB for all messages

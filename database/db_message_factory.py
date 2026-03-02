@@ -1,6 +1,6 @@
 # message_factory.py
 from typing import Dict, Any, Optional, Tuple
-from db_message import Message, GetNodesRequest, GetNodeDataIdsRequest, GetDatumRequest, RawDataMessage, InferenceOutputMessage, ErrorResponse
+from db_message import GetRecentRawDataRequest,GetRecentInferenceRequest, Message, GetNodesRequest, GetNodeDataIdsRequest, GetDatumRequest, RawDataMessage, InferenceOutputMessage, ErrorResponse
 import logging
 
 
@@ -13,8 +13,9 @@ class MessageFactory:
         "get-datum": GetDatumRequest,
         "raw-data": RawDataMessage,
         "inference-output": InferenceOutputMessage,
+        "get-recent-raw-data": GetRecentRawDataRequest,
+        "get-recent-inference": GetRecentInferenceRequest,
         "error": ErrorResponse
-        #TODO: add get-recent-raw-data and get-recent-inference types
     }
 
     @classmethod
