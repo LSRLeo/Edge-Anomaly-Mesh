@@ -5,14 +5,14 @@ from db_message_manager import DBMessageManager
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 
-# Channels to subscribe to (wildcards supported)
+# Channels to subscribe to
 # ================================================
 # ADD MORE BASED ON UI TEAM AND OTHER SPECIFICATIONS
 # ================================================
 SUBSCRIBE_CHANNELS = [
     "sensor:raw:*",
     "inference:results:*",
-    "ui:query:*"
+    "ui:query:*" # placeholder
 ]
 
 def main():
