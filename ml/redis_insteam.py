@@ -16,9 +16,12 @@ import json
 import argparse
 import torch
 import time
+from datetime import datetime
 
 from data_pipeline import stream_window_to_features
+from feature_extraction import normalize_features
 from train_classifier import MotionClassifier
+from redis_outstream import build_inference_output, InferenceRedisPublisher
 
 # ============================================================================
 # CONSTANTS
@@ -69,19 +72,20 @@ class RedisSubscriber:
         redis_client (redis.Redis): Redis client instance.
     """
 
-    INACTIVITY_THRESHOLD = 600 # An inactive buffer for 10 minutes is inactive and should be emptied
-
-    def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None):
+    def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None, scaler=None):
         """
         Initialize the Redis subscriber.
 
         Args:
             channel (str): Redis channel pattern.
+            scaler: (mean, std) tuple from training normalization, used to
+                    normalize features before inference.
         """
         self.channel = channel
         self.window_size = window_size
         self.stride = stride
         self.classifier = classifier
+        self.scaler = scaler
         self.redis_client = redis.Redis(
             host=REDIS_HOST,
             port=REDIS_PORT,
@@ -92,6 +96,7 @@ class RedisSubscriber:
         )
         self.node_states = {}  # Maps node_id to buffer and state
         self.seen_seqs = {}    # Maps node_id to set of seen seq numbers
+        self.publisher = InferenceRedisPublisher(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
         try:
             self.redis_client.ping()
             logger.info(f"Connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
@@ -247,12 +252,67 @@ class RedisSubscriber:
             "confidence": confidence.item(),
             "window_metadata": window_metadata,
             "latency": latency
+        Extract features from the window and run classifier inference.
+
+        Computes:
+          - terrain_confidence: P(terrain) + P(terrain_anomaly), i.e. the total
+            probability mass the model assigns to the predicted terrain type
+            regardless of anomaly status.
+          - anomaly_score: sum of all anomaly-class probabilities (classes 4-7),
+            used as the continuous anomaly score.
+
+        Publishes a standardized inference-output message to Redis.
+        """
+        TERRAIN_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT']
+
+        # Use the window events passed in (not the internal buffer)
+        features = stream_window_to_features(window, self.window_size, sample_rate=50)
+        if self.scaler is not None:
+            features, _ = normalize_features(features, scaler=self.scaler)
+        features_tensor = torch.FloatTensor(features)  # shape: (1, n_features)
+
+        # predict() returns (predicted_class_0-7, max_softmax_prob, full_prob_tensor)
+        predicted, _, probabilities = self.classifier.predict(features_tensor)
+
+        pred_class = predicted.item()
+        terrain_idx = pred_class % 4
+        is_anomaly = bool(pred_class >= 4)
+        terrain_name = TERRAIN_NAMES[terrain_idx]
+
+        # Per-class confidence: softmax probability for each of the 8 classes (sums to 1.0)
+        CLASS_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',
+                       'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM']
+        confidence = {
+            name: round(float(probabilities[0, i].item()), 6)
+            for i, name in enumerate(CLASS_NAMES)
         }
+
+        # Anomaly score: total probability assigned to any anomaly class (4-7)
+        anomaly_score = round(float(probabilities[0, 4:].sum().item()), 6)
+
+        # Build standardized inference-output message
+        last_meta = window_metadata[-1] if window_metadata else {}
+        timestamp = last_meta.get("timestamp") or datetime.utcnow().isoformat(timespec="microseconds")
+        event_id = f"{node_id}_{timestamp}"
+        m_id = f"ml_{event_id}"
+
+        result = build_inference_output(
+            m_id=m_id,
+            event_id=event_id,
+            node_id=node_id,
+            timestamp=timestamp,
+            classification=terrain_name,
+            confidence=confidence,
+            is_anomaly=is_anomaly,
+            anomaly_score=anomaly_score,
+        )
+
         logger.info(
             f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}, "
             f"latency={latency:.3f}s, window_metadata={window_metadata}"
         )
-        # Pass window_metadata to outstream for decoding terrain/anomaly as needed
+
+        self.publisher.publish(node_id, result)
         return result
 
 # ============================================================================
@@ -261,14 +321,22 @@ class RedisSubscriber:
 
 if __name__ == "__main__":
     args = parse_args()
-    classifier = MotionClassifier(input_dim=38)  # Adjust input_dim as needed
-    classifier.load_state_dict(torch.load(args.model_path))
+    checkpoint = torch.load(args.model_path, weights_only=False)
+    config = checkpoint['model_config']
+    classifier = MotionClassifier(
+        input_dim=config['input_dim'],
+        hidden_dims=tuple(config['hidden_dims']),
+        dropout=config['dropout'],
+        num_classes=config['num_classes'],
+    )
+    classifier.load_state_dict(checkpoint['model_state_dict'])
     classifier.eval()
 
     subscriber = RedisSubscriber(
         channel="sensor:raw:*",
         window_size=args.window_size,
         stride=args.stride,
-        classifier=classifier
+        classifier=classifier,
+        scaler=checkpoint['scaler'],
     )
     subscriber.listen()

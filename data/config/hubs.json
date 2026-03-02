@@ -1,7 +1,7 @@
 {
-  "version": "2.0",
-  "generated_at": "2026-02-20T12:00:00.000000",
-  "description": "Hub network for cargo tracking with multi-state journey support",
+  "version": "2.1",
+  "generated_at": "2026-02-26T12:00:00.000000",
+  "description": "Hub network for cargo tracking with multi-state journey support including maritime ports",
   "hubs": [
     {
       "hub_id": "hub_denver_01",
@@ -29,6 +29,33 @@
       "altitude_m": 2293.0,
       "radius_m": 400,
       "type": "logistics_hub"
+    },
+    {
+      "hub_id": "hub_la_port_01",
+      "name": "Port of Los Angeles Terminal",
+      "lat": 33.7405,
+      "lon": -118.2728,
+      "altitude_m": 5.0,
+      "radius_m": 800,
+      "type": "seaport"
+    },
+    {
+      "hub_id": "hub_oakland_port_01",
+      "name": "Port of Oakland Terminal",
+      "lat": 37.7956,
+      "lon": -122.2789,
+      "altitude_m": 3.0,
+      "radius_m": 600,
+      "type": "seaport"
+    },
+    {
+      "hub_id": "hub_seattle_port_01",
+      "name": "Port of Seattle Terminal",
+      "lat": 47.5793,
+      "lon": -122.3463,
+      "altitude_m": 4.0,
+      "radius_m": 700,
+      "type": "seaport"
     }
   ],
   "routes": [
@@ -64,11 +91,47 @@
       "typical_duration_hours": 2.0,
       "bidirectional": true,
       "description": "Mountain roads via US-40 and CO-7"
+    },
+    {
+      "route_id": "route_la_oakland_sea",
+      "from_hub": "hub_la_port_01",
+      "to_hub": "hub_oakland_port_01",
+      "route_type": "SEA",
+      "motion_type": "MARITIME",
+      "distance_km": 620.0,
+      "typical_duration_hours": 24.0,
+      "bidirectional": true,
+      "description": "Pacific coastal shipping route LA to Oakland"
+    },
+    {
+      "route_id": "route_oakland_seattle_sea",
+      "from_hub": "hub_oakland_port_01",
+      "to_hub": "hub_seattle_port_01",
+      "route_type": "SEA",
+      "motion_type": "MARITIME",
+      "distance_km": 1300.0,
+      "typical_duration_hours": 48.0,
+      "bidirectional": true,
+      "description": "Pacific coastal shipping route Oakland to Seattle"
+    },
+    {
+      "route_id": "route_la_seattle_sea",
+      "from_hub": "hub_la_port_01",
+      "to_hub": "hub_seattle_port_01",
+      "route_type": "SEA",
+      "motion_type": "MARITIME",
+      "distance_km": 1850.0,
+      "typical_duration_hours": 72.0,
+      "bidirectional": true,
+      "description": "Pacific coastal shipping route LA to Seattle direct"
     }
   ],
   "adjacency": {
     "hub_denver_01": ["hub_idaho_springs_01", "hub_estes_park_01"],
     "hub_idaho_springs_01": ["hub_denver_01", "hub_estes_park_01"],
-    "hub_estes_park_01": ["hub_denver_01", "hub_idaho_springs_01"]
+    "hub_estes_park_01": ["hub_denver_01", "hub_idaho_springs_01"],
+    "hub_la_port_01": ["hub_oakland_port_01", "hub_seattle_port_01"],
+    "hub_oakland_port_01": ["hub_la_port_01", "hub_seattle_port_01"],
+    "hub_seattle_port_01": ["hub_la_port_01", "hub_oakland_port_01"]
   }
 }

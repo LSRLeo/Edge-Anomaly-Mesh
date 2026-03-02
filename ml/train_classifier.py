@@ -92,6 +92,36 @@ def load_json_strict(path):
 
     return data
 
+# Clear model history
+import gc
+def clear_torch_session():
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
+
+clear_torch_session()
+
+def load_json_strict(path):
+    p = Path(path)
+
+    if not p.exists():
+        raise FileNotFoundError(f"JSON file not found: {p}")
+
+    if p.stat().st_size == 0:
+        raise ValueError(f"JSON file is empty: {p}")
+
+    with open(p, "r", encoding="utf-8") as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON format in file: {p}")
+
+    if data is None or (isinstance(data, (dict, list)) and len(data) == 0):
+        raise ValueError(f"JSON file contains no usable data: {p}")
+
+    return data
+
 
 # ============================================================================
 # ARGUMENT PARSING
@@ -113,7 +143,7 @@ def parse_args():
     )
     
     # Data arguments
-    parser.add_argument('--data-dir', type=str, default='data/generated_data',
+    parser.add_argument('--data-dir', type=str, default='data/training',
                         help='Directory containing training data')
     
     parser.add_argument('--features-file', type=str, default=None,
@@ -340,7 +370,7 @@ class MotionClassifier(nn.Module):
             # Get the highest probability and its index
             confidence, predicted = torch.max(probabilities, dim=1)
 
-            return predicted, confidence
+            return predicted, confidence, probabilities
         
 
 # ============================================================================
@@ -728,6 +758,33 @@ def print_classification_report(matrix, class_names):
 # DATA LOADING
 # ============================================================================
 
+def validate_label_distribution(y):
+    """Print class counts and warn if any expected classes are missing.
+
+    Args:
+        y: numpy integer array of labels (values 0-7, where 0-3 are normal
+           motion classes and 4-7 are the corresponding anomaly classes)
+
+    Returns:
+        counts: dict mapping class name -> sample count
+    """
+    class_names = [
+        'IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT',
+        'IDLE_ANOM', 'TERRESTRIAL_ANOM', 'MARITIME_ANOM', 'LIFT_ANOM',
+    ]
+    counts = {name: int(np.sum(y == idx)) for idx, name in enumerate(class_names)}
+
+    print("\nClass distribution:")
+    for name, count in counts.items():
+        print(f"  {name}: {count}")
+
+    missing = [name for name, count in counts.items() if count == 0]
+    if missing:
+        print(f"  Warning: missing classes: {', '.join(missing)}")
+
+    return counts
+
+
 def load_all_data(data_dir, window_size=100, overlap=0.5):
     """
     Load and process data from all motion types.
@@ -757,9 +814,9 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
     # Create feature extractor
     extractor = FeatureExtractor(sample_rate=50)
 
-    # Find all JSON files
+    # Find all JSON files (exclude metadata.json)
     data_path = Path(data_dir)
-    json_files = list(data_path.glob("**/*.json"))
+    json_files = [f for f in data_path.glob("**/*.json") if f.name != "metadata.json"]
 
     if not json_files:
         raise ValueError(f"No JSON files found in {data_dir}")
@@ -781,19 +838,37 @@ def load_all_data(data_dir, window_size=100, overlap=0.5):
         # Extract features
         features = windows_to_features(windows, sample_rate=50)
 
+        # Filter out windows with None or NaN labels
+        valid_mask = np.array([
+            v is not None and not (isinstance(v, float) and np.isnan(v))
+            for v in window_labels
+        ])
+        n_dropped = int((~valid_mask).sum())
+        if n_dropped > 0:
+            print(f"    Warning: dropped {n_dropped} window(s) with None/NaN labels")
+        features = features[valid_mask]
+        window_labels = window_labels[valid_mask]
+
+        if len(features) == 0:
+            print(f"    Skipping {json_file.name}: no valid windows after filtering")
+            continue
+
         # Add to lists
         all_features.append(features)
         all_labels.append(window_labels)
 
         print(f"    {len(features)} windows extracted")
 
+    if not all_features:
+        raise ValueError(f"No valid training samples found in {data_dir}. All labels were None/NaN.")
+
     # Stack all data
     X = np.vstack(all_features)
-    y = np.concatenate(all_labels)
+    y = np.concatenate(all_labels).astype(int)
 
     print(f"\nTotal samples: {len(X)}")
     print(f"Feature shape: {X.shape}")
-    print(f"Unique labels: {np.unique(y)}")
+    validate_label_distribution(y)
 
     return X, y, extractor
 
@@ -941,8 +1016,26 @@ def main():
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             patience_counter = 0
-            # Save best model
-            torch.save(model.state_dict(), args.model_output)
+            # Save full checkpoint bundle: weights + scaler + architecture config
+            checkpoint = {
+                'model_state_dict': model.state_dict(),
+                'scaler': scaler,
+                'model_config': {
+                    'input_dim': extractor.n_features,
+                    'hidden_dims': tuple(args.hidden_dims),
+                    'dropout': args.dropout,
+                    'num_classes': 8,
+                },
+                'class_names': CLASS_NAMES,
+                'best_val_acc': val_acc,
+                'trained_at': datetime.now().isoformat(),
+            }
+            # Explicitly remove any existing file before saving to guarantee a full
+            # overwrite (torch.save uses 'wb' mode, so this is defensive but clear).
+            model_path = Path(args.model_output)
+            if model_path.exists():
+                model_path.unlink()
+            torch.save(checkpoint, args.model_output)
             print(f"  ✓ New best model saved (val_acc: {val_acc:.4f})")
         else:
             patience_counter += 1
@@ -959,7 +1052,8 @@ def main():
     print("Evaluating best model on test set...")
     print("=" * 60)
 
-    model.load_state_dict(torch.load(args.model_output))
+    checkpoint = torch.load(args.model_output, weights_only=False)
+    model.load_state_dict(checkpoint['model_state_dict'])
     test_loss, test_acc, predictions, labels = evaluate(model, test_loader, criterion, device)
 
     print(f"\nTest Loss: {test_loss:.4f}")
