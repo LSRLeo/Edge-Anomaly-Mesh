@@ -277,10 +277,13 @@ class StatsComponent(AnalyticsComponent):
         super().__init__(parent, "Statistics", row, col)
         
     def parse(self, records: List[Dict]) -> Dict[str, Any]:
+        # Unique node IDs observed in the current dataset.
         nodes = {r["node_id"] for r in records}
+        # Count records whose anomaly score crosses the display threshold.
         total_anomalies = sum(
             1 for r in records if sum(r["state_confidence"][4:]) >= 0.5
         )
+        # Estimate uptime from sample count assuming 10-second sampling cadence.
         uptime_hours = (
             len(records) / len(nodes) * 10 / 3600
             if nodes else 0
@@ -306,6 +309,7 @@ class StatsComponent(AnalyticsComponent):
             ttk.Label(self.frame, text=label_text, font=("Arial", 11)).grid(
                 row=i, column=0, sticky="w", padx=10, pady=8
             )
+            # Store value labels by key so update() can target them directly.
             value_label = ttk.Label(self.frame, text="--", font=("Arial", 11, "bold"))
             value_label.grid(row=i, column=1, sticky="e", padx=10, pady=8)
             self.labels[key] = value_label
@@ -315,6 +319,7 @@ class StatsComponent(AnalyticsComponent):
         
     def update(self, records: List[Dict]) -> None:
         stats = self.parse(records)
+        # Keep presentation formatting close to the UI update path.
         formatters = {
             "total_inferences": lambda v: f"{v:,}",
             "total_anomalies": lambda v: f"{v:,}",
@@ -324,6 +329,7 @@ class StatsComponent(AnalyticsComponent):
         
         for key, label in self.labels.items():
             if key in stats:
+                # Fall back to str() if no custom formatter is defined.
                 formatter = formatters.get(key, str)
                 label.config(text=formatter(stats[key]))
         
