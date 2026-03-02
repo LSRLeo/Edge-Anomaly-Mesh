@@ -276,6 +276,23 @@ class StatsComponent(AnalyticsComponent):
         self.labels: Dict[str, ttk.Label] = {}
         super().__init__(parent, "Statistics", row, col)
         
+    def parse(self, records: List[Dict]) -> Dict[str, Any]:
+        nodes = {r["node_id"] for r in records}
+        total_anomalies = sum(
+            1 for r in records if sum(r["state_confidence"][4:]) >= 0.5
+        )
+        uptime_hours = (
+            len(records) / len(nodes) * 10 / 3600
+            if nodes else 0
+        )
+        
+        return {
+            "total_inferences": len(records),
+            "total_anomalies": total_anomalies,
+            "active_nodes": len(nodes),
+            "uptime_hours": round(uptime_hours, 1),
+        }
+        
     def setup(self) -> None:
         # Create a simple grid of labels for each statistic.
         stats_config = [
@@ -295,6 +312,7 @@ class StatsComponent(AnalyticsComponent):
         
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(1, weight=1)
+        
 
 def parse_motion_distribution(records):
     counts = Counter()
