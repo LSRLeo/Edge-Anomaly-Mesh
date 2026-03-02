@@ -121,14 +121,14 @@ def run_sample_usage():
     print("=" * 65)
     #EMPTY response file before writing new responses
    
-    db_message_manager = DBMessageManager()
-    data_msg_responses = db_message_manager.read_file(SAMPLE_DATA_FILE, SAMPLE_RESPONSE_FILE)
+    manager = DBMessageManager()
+    data_msg_responses = manager.read_file(SAMPLE_DATA_FILE, SAMPLE_RESPONSE_FILE)
 
     if data_msg_responses:
         #Errors
         print(f"{len(data_msg_responses)} messages from {SAMPLE_DATA_FILE} processed with responses written to {SAMPLE_RESPONSE_FILE}")
 
-    request_msg_responses = db_message_manager.read_file(SAMPLE_REQUEST_FILE, SAMPLE_RESPONSE_FILE)
+    request_msg_responses = manager.read_file(SAMPLE_REQUEST_FILE, SAMPLE_RESPONSE_FILE)
 
     if request_msg_responses:
         print(f"{len(request_msg_responses)} queries responses written to {SAMPLE_RESPONSE_FILE}")
@@ -138,8 +138,70 @@ def run_sample_usage():
     print(f"\tDone")
     print(f"{'=' * 65}\n")
 
+
+#CLI
+def send_message(infile: str, outfile: str) -> None:
+    """
+    Process all messages in infile and write responses to outfile.
+
+    Called by the argparse CLI when --infile and --outfile are both supplied.
+
+    Example:
+        python db_message_manager.py --infile my_messages.json --outfile my_responses.json, outfile will be overwritten if it already exists.
+    """
+    manager = DBMessageManager()
+    responses = manager.read_file(infile, outfile)
+    try:
+        print(
+            f"\n  Processed '{Path(infile).name}' "
+            f"  {len(responses)} response(s) written to '{outfile}'"
+        )
+    except Exception as e:
+        logging.error(f"Error processing messages: {e}")
+
+
 if __name__ == "__main__":
-    db_message_manager = DBMessageManager()
-    # logging.info("DBMessageManager instance created: %s", db_message_manager)
-    run_sample_usage()
     
+    # logging.info("DBMessageManager instance created: %s", db_message_manager)
+    
+    parser = argparse.ArgumentParser(
+        description="Process JSON message files through the DB message pipeline.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+        Examples--------
+        # Built-in demo (no arguments required):
+        python db_message_manager.py
+        # Custom files via CLI (send_message mode):
+        python db_message_manager.py --infile my_messages.json --outfile my_responses.json
+        """,
+    )
+    parser.add_argument(
+        "--infile",
+        type=str,
+        default=None,
+        help="Path to input JSON file (single message dict or list of dicts).",
+    )
+    parser.add_argument(
+        "--outfile",
+        type=str,
+        default=None,
+        help="Path to output JSON file where responses will be written/appended.",
+    )
+
+    args = parser.parse_args()
+
+    if args.infile and args.outfile:
+        # CLI / send_message mode
+        send_message(args.infile, args.outfile)
+    elif args.infile or args.outfile:
+        # Only one flag — that's an error
+        parser.error("Both --infile and --outfile must be supplied together.")
+    else:
+        # No flags → built-in sample usage
+        run_sample_usage()
+
+
+
+
+
+
