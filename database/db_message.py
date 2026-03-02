@@ -91,7 +91,7 @@ class MessageResponse(Message):
 
 
 class ErrorResponse(MessageResponse):
-    M_TYPE = "Error"  # Fixed type for all errors
+    M_TYPE = "error"  # Fixed type for all errors
 
 
     def __init__(self, m_id: str, responding_to: str, original_request: str, error_message: str, error_code: str = "INTERNAL_ERROR"):
@@ -177,9 +177,7 @@ class RawDataMessage(MessageData):
             if not self.event_id or not self.node_id:
                 logging.error("Missing event_id or node_id in raw data")
                 raise ValueError("Missing event_id or node_id in raw data")
-            # Store the processed data in the database
-            #call correct methods to store in Node Table and RawData Table
-            #TODO: Implement the actual storage logic in the db_manager
+            
             db_manager.insert_raw_data([self.data]) 
             logging.info(f"Successfully stored raw data for event: {self.event_id} and node: {self.node_id}")
             return None  # Indicate successful execution
@@ -221,7 +219,7 @@ class InferenceOutputMessage(MessageData):
                 raise ValueError("Missing event_id or node_id in inference output data")
             # Store the processed data in the database
             #call correct methods to store in Anomaly Table and InferenceOutput Table
-            #TODO: Implement the actual storage logic in the db_manager
+            db_manager.insert_inference_results([self.m_content])
             logging.info(f"Successfully stored inference output for event: {self.event_id} and node: {self.node_id}")
             return None  # Indicate successful execution
         
@@ -247,18 +245,19 @@ class GetNodesRequest(MessageRequest):
         Returns:
             MessageResponse containing the list of nodes or an ErrorResponse if execution fails.
         """
-        #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+        
         logging.info("Executing get-nodes request")
 
         try: 
             #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
+            node_ids = get_nodes()  # Example function call to get nodes from the database
+            logging.info(f"Retrieved nodes: {node_ids}")
             logging.info("Executing get-nodes request")
             return MessageResponse(
                 m_id=M_ID_DB,
                 responding_to=self.m_id,
                 m_type="get-nodes-response",
-                results={"nodes": []}  # Placeholder for actual nodes data
-                )
+                results={"nodes": node_ids})
         
         except Exception as e:
             return ErrorResponse(
@@ -269,18 +268,7 @@ class GetNodesRequest(MessageRequest):
                 error_code="INTERNAL_ERROR"
             )
 
-"""
-{
-  "m_type": "get-node-data-ids-response",
-  "m_id": "ui_00002",
-  "node_id": "node_001",
-  "data_ids": [
-    "node_001_2026-01-22T18:52:14.818400",
-    "node_001_2026-01-22T18:52:14.838400",
-    "node_001_2026-01-22T18:52:14.858400"
-  ]
-}
-"""
+
 class GetNodeDataIdsRequest(MessageRequest):
     M_TYPE = "get-node-data-ids"
 
@@ -289,8 +277,49 @@ class GetNodeDataIdsRequest(MessageRequest):
         self.node_id = m_content.get("node_id", None)
 
     def execute(self, db_manager):
-        #TODO: 
-        pass
+        
+            
+        logging.info(f"Executing get-node-data-ids for node: {self.node_id}")
+
+        try:
+            if not self.node_id:
+                raise ValueError("Missing required field: node_id")
+
+            data_ids = get_node_data_ids(self.node_id)
+
+            if data_ids is None:
+                return ErrorResponse(
+                    m_id=M_ID_DB,
+                    responding_to=self.m_id,
+                    original_request=self.m_type,
+                    error_message=f"Node not found: {self.node_id}",
+                    error_code="NOT_FOUND",
+                )
+
+            return MessageResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                m_type="get-node-data-ids-response",
+                results={"node_id": self.node_id, "data_ids": data_ids},
+            )
+
+        except ValueError as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST",
+            )
+        except Exception as e:
+            logging.error(f"get-node-data-ids failed: {e}")
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INTERNAL_ERROR",
+            )
 
 class GetDatumRequest(MessageRequest):
     M_TYPE = "get-datum"
@@ -300,7 +329,49 @@ class GetDatumRequest(MessageRequest):
         self.event_id = self.m_content.get("event_id")
 
     def execute(self, db_manager):
-        #TODO: execute datum query, handle errors, respond
-        pass
+        logging.info(f"Executing get-datum for event: {self.event_id}")
+
+        try:
+            if not self.event_id:
+                raise ValueError("Missing required field: event_id")
+
+            result = get_datum(self.event_id)
+
+            if result is None:
+                return ErrorResponse(
+                    m_id=M_ID_DB,
+                    responding_to=self.m_id,
+                    original_request=self.m_type,
+                    error_message=f"Event ID not found: {self.event_id}",
+                    error_code="NOT_FOUND",
+                )
 
 
+            return MessageResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                m_type="get-datum-response",
+                results=result
+            )
+
+        except ValueError as e:
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INVALID_REQUEST",
+            )
+        except Exception as e:
+            logging.error(f"get-datum failed: {e}")
+            return ErrorResponse(
+                m_id=M_ID_DB,
+                responding_to=self.m_id,
+                original_request=self.m_type,
+                error_message=str(e),
+                error_code="INTERNAL_ERROR",
+            )
+
+
+#TODO: Implement GetRecentRawDataRequest and GetRecentInferenceRequest classes
+#TODO: Method for generating unique message IDs instead of using M_ID_DB for all messages
