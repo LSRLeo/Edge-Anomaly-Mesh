@@ -6,8 +6,7 @@ TWO USAGE SCENARIOS:
 1) sample usage, uses sample_message_data.json and sample_message_requests.json and writes results to sample_message_responses.json
 2) send custom messages with python db_message_manager.py --infile <path_to_input_messages.json> --outfile <path_to_output_responses.json>
 '''
-from asyncio.log import logger
-from email import message
+
 import logging
 import json
 import sys
