@@ -30,7 +30,7 @@ import numpy as np
 import math
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
-
+from redis_reader import RedisReader
 
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
@@ -90,7 +90,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
     Highlights anomalous nodes and allows clicking to view details.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader=None):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader):
         """
         Initialize the Network tab.
         
@@ -105,6 +105,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
         # Replace super with individual inheritance since it now has two parents
         ttk.Frame.__init__(self, parent)
         DashboardParents.__init__(self, redis_reader, parent, dashboard)
+
+        self.redis_reader = redis_reader
 
         self.dashboard = dashboard
         # Dict[node_id: str, node_data: dict]
@@ -449,9 +451,13 @@ class NetworkTab(ttk.Frame, DashboardParents):
             return json.load(file)
     def populate_test_nodes(self):
         #file = self.load_json('test_nodes.json')
-        raw_file = self.load_json('widgets/raw_data.json')
-        ml_file = self.load_json('widgets/ml_data.json')
-
+        #raw_file = self.load_json('widgets/raw_data.json')
+        #ml_file = self.load_json('widgets/ml_data.json')
+        try:
+            raw_file, ml_file = self.redis_reader.getDicts()
+        except Exception as e:
+            print(f'Error refreshing: {e}')
+            return
         # Sort ml dict using node_id as key for quick indexing
         ml_id_sort = {msg["node_id"]: msg for msg in ml_file} 
 
