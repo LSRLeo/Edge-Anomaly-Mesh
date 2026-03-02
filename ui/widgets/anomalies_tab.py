@@ -23,6 +23,7 @@ from typing import Dict, List, Optional, Any, TYPE_CHECKING
 from datetime import datetime, timedelta
 
 from matplotlib import style
+from redis_reader import RedisReader
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
 
@@ -90,9 +91,9 @@ class AnomalySection(ttk.Frame):
         self._status_var = tk.StringVar(value="Ready")
         self._rows: List[Dict[str, Any]] = []
         self.anomaly_data: List[Dict[str, Any]] = []
-        self.nodes = {} #dict of node_id to Node object for easy access when opening node details from anomaly row
+        
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-
+        
         self._build_ui()
     
     def _build_ui(self):
@@ -143,20 +144,20 @@ class AnomalySection(ttk.Frame):
         for row in self._rows:
             row['frame'].destroy()
         self._rows.clear()
-        self.populate_test_nodes()
-        self.redis_refresh()
+        # self.populate_test_nodes()
+        self.parent.refresh()
         # Build new rows
-        for node_id in list(self.nodes.keys()):
-            node = self.nodes[node_id]
+        for node_id in list(self.parent.nodes.keys()):
+            node = self.parent.nodes[node_id]
             if node.anomaly:
-                self._build_single_row(node.toDict())
+                self._build_single_row(node)
     
     def load_json(self, filename):
         if not os.path.exists(filename):
             raise FileNotFoundError
         with open(filename, 'r') as file:
             return json.load(file)
-    def populate_test_nodes(self):
+    # def populate_test_nodes(self):
         file = self.load_json('widgets/test_nodes.json')
         
 
@@ -168,55 +169,8 @@ class AnomalySection(ttk.Frame):
                 print(f"[load_nodes] Failed to load entry {entry}: {e}")
 
   
-    def load_node(self, node_id: str, entry: Dict[str, Any]):
-        """
-        Load data for a specific node.
-        
-        Called when node list is populated
-        
-        Args:
-            node_id: ID of the node to display
-        """
-        # TODO: Implement
-        #
-        # self.current_node_id = node_id
-        #
-        # # Update selector to show this node
-        # if self.node_selector:
-        #     self.node_selector.set(node_id)
-        #
-        # # Fetch and display data
-        # self._load_node_info(node_id)
-        # self._load_history(node_id)
-        # self._load_anomaly_trend(node_id)
-        node_id = entry["node_id"]
-        lat = float(entry["lat"])
-        lon = float(entry["lon"])
-        # JSON uses an int for motion_class → convert to string
-        motion_class_str = entry.get("motion_class", "")
-        motion_class = self.motion_states.index(motion_class_str) if motion_class_str in self.motion_states else 0
     
-        anomaly = entry.get("anomaly", False)
-        if anomaly:
-            motion_class += 4 #convert to anomaly motion class index
-        # Insert placeholder fields
-        timestamp = datetime.now()
-        
-
-        # Build Node object
-        node = Node(
-            node_id=node_id,
-            lat=lat,
-            lon=lon,
-            timestamp=timestamp,
-            motion_class=motion_class,
-            anomaly=anomaly,
-            confidence=1.0
-        )
-
-        # Store it
-        self.nodes[node_id] = node    
-    def _build_single_row(self, anomaly: Dict[str, Any]):
+    def _build_single_row(self, anomaly: Node):
         
         container = ttk.Frame(self._inner, padding=(10, 8))
         container.pack(fill="x", pady=4)
@@ -233,29 +187,29 @@ class AnomalySection(ttk.Frame):
     # Top line: node_id (bold) left, timestamp right
         top = ttk.Frame(container)
         top.pack(fill="x")
-        node_lbl = ttk.Label(top, text=anomaly["node_id"])
+        node_lbl = ttk.Label(top, text=anomaly.getNodeID())
         try:
             node_lbl.configure(font=("TkDefaultFont", 10, "bold"))
         except Exception:
             pass
         node_lbl.pack(side="left")
-        ttk.Label(top, text=self._fmt_ts(anomaly["timestamp"])).pack(side="right")
+        ttk.Label(top, text=self._fmt_ts(anomaly.timestampToStr())).pack(side="right")
 
 
         # Second line: anomaly type
         mid = ttk.Frame(container)
         mid.pack(fill="x", pady=(4, 0))
-        ttk.Label(mid, text=f"Type: {anomaly['motion_class']}").pack(side="left")
+        ttk.Label(mid, text=f"Type: {anomaly.getMotionString()}").pack(side="left")
 
         # Actions
         actions = ttk.Frame(container)
         actions.pack(fill="x", pady=(6, 0))
-        ttk.Button(actions, text="Open node", command=lambda r=anomaly["node_id"]: self._open_node(r)).pack(side="left")
+        ttk.Button(actions, text="Open node", command=lambda r=anomaly.getNodeID(): self._open_node(r)).pack(side="left")
 
         # Make row clickable to open node
-        container.bind("<Button-1>", lambda _e, r=anomaly: self._open_node(r))
-        top.bind("<Button-1>", lambda _e, r=anomaly: self._open_node(r))
-        mid.bind("<Button-1>", lambda _e, r=anomaly: self._open_node(r))
+        container.bind("<Button-1>", lambda _e, r=anomaly.getNodeID(): self._open_node(r))
+        top.bind("<Button-1>", lambda _e, r=anomaly.getNodeID(): self._open_node(r))
+        mid.bind("<Button-1>", lambda _e, r=anomaly.getNodeID(): self._open_node(r))
 
     def _fmt_ts(self, iso_str: str) -> str:
         """Return a compact UTC display string."""
@@ -273,6 +227,9 @@ class AnomalySection(ttk.Frame):
             return iso_str
     def _open_node(self, node_id: str):
         """Callback when an anomaly row is clicked to open node details."""
+        if self.dashboard.node_details_tab is None:
+            print("Node Details tab not available")
+            return
         self.dashboard._select_tab(3)  # Switch to Node Details tab
         self.dashboard.node_details_tab.display_node(node_id)
 
@@ -284,14 +241,14 @@ class AnomalySection(ttk.Frame):
     
 
 
-class AnomaliesTab(ttk.Frame):
+class AnomaliesTab(ttk.Frame, DashboardParents):
     """
     Anomalies feed tab.
     
     Displays a table of detected anomalies and click-to-view-details functionality.
     """
     
-    def __init__(self, parent, dashboard: 'DashboardApp'):
+    def __init__(self, parent, dashboard: 'DashboardApp', redis_reader: RedisReader):
         """
         Initialize the Anomalies tab.
         
@@ -304,7 +261,10 @@ class AnomaliesTab(ttk.Frame):
         style.layout('Tabless.TNotebook', [('Notebook.client', {'sticky': 'nswe'})])
         self.dashboard = dashboard
 
-
+        self.redis_reader = redis_reader
+        self.nodes = {}  # Store Node objects keyed by node_id
+        self.rddict = {} #raw data dictionary
+        self.mldict = {} #machine learning dictionary
         self._nav = ttk.Frame(self)
         self._nav.pack(fill="x", padx=10, pady=10)
 
@@ -318,296 +278,70 @@ class AnomaliesTab(ttk.Frame):
         # Create and add the initial anomalies list section
         self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
         self._sections_nb.add(self._list_section, text=self._list_section.title)
+    def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
+        """
+        Load data for a specific node.
+        
+        Called when node list is populated
+        
+        Args:
+            node_id: ID of the node to display
+        """
+        if node_id is None:
+            raise ValueError("Node ID cannot be None")
+        if rdentry is None:
+            raise ValueError(f"Raw data entry for node {node_id} cannot be None")
+        if mlentry is None:
+            raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
+        if node_id not in rdentry:
+            raise ValueError(f"Node ID {node_id} not found in raw data entry")
+        node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
+        
+        #raw data fields with defaults if missing
+        timestamp = rdentry.get("timestamp", datetime.now().isoformat())
+        seq = rdentry.get("seq", 0)
+        accel = rdentry.get("accel")
+        accel_x = accel.get("x", 0) if accel else 0
+        accel_y = accel.get("y", 0) if accel else 0
+        accel_z = accel.get("z", 0) if accel else 0
+        gyro = rdentry.get("gyro_rads")
+        gyro_x = gyro.get("x", 0) if gyro else 0
+        gyro_y = gyro.get("y", 0) if gyro else 0
+        gyro_z = gyro.get("z", 0) if gyro else 0
+        gps = rdentry.get("gps")
+        lat = gps.get("lat_deg", 0) if gps else 0
+        lon = gps.get("lon_deg", 0) if gps else 0
+        #inference output fields with defaults if missing
+        motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
+        confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
+        anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
+        # Build Node object
+        node = Node(
+            node_id=node_id,
+            timestamp=timestamp,
+            seq=seq,
+            accel_x=accel_x,
+            accel_y=accel_y,
+            accel_z=accel_z,
+            gyro_x=gyro_x,
+            gyro_y=gyro_y,
+            gyro_z=gyro_z,
+            lat=lat,
+            lon=lon,
+            motion_class=motion_class,
+            anomaly= anomaly,
+            confidence=confidence,
+        )
 
-        # Build UI
-        # self._setup_ui()
-    
-    # def _setup_ui(self):
-    #     """
-    #     Create the tab layout.
-        
-    #     Layout:
-    #     ┌─────────────────────────────────────┐
-    #     │  Node: [▼]  Severity: [▼]  Time: [▼]│
-    #     ├─────────────────────────────────────┤
-    #     │  Timestamp  │ Node │ Sev │ Score │  │
-    #     │  ─────────────────────────────────  │
-    #     │  10:30:00   │ 003  │ HIGH│ 0.92  │  │
-    #     │  10:18:00   │ 005  │ MED │ 0.67  │  │
-    #     │  ...        │ ...  │ ... │ ...   │  │
-    #     └─────────────────────────────────────┘
-    #     """
-    #     # Configure grid
-    #     self.columnconfigure(0, weight=1)
-    #     self.rowconfigure(1, weight=1)
-        
-    #     # TODO: Create filter bar
-    #     # self._setup_filters()
-        
-    #     # TODO: Create treeview table
-    #     # self._setup_table()
-        
-    #     # TEMPORARY: Placeholder
-    #     ttk.Label(self, text="Anomalies Tab - TODO: Implement filters and table").pack(pady=20)
-    
-    # def _setup_filters(self):
-    # #     """
-    # #     Create the filter controls bar.
-        
-    # #     Filters:
-    # #     - Node ID: Dropdown with all node IDs + "All"
-    # #     - Severity: Dropdown with HIGH, MEDIUM, LOW + "All"
-    # #     - Time Range: Dropdown with preset time ranges
-    # #     """
-    # #     # TODO: Implement filters
-    # #     #
-    # #     # filter_frame = ttk.Frame(self)
-    # #     # filter_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
-    # #     #
-    # #     # # Node filter
-    # #     # ttk.Label(filter_frame, text="Node:").grid(row=0, column=0, padx=(0, 5))
-    # #     # self.node_filter = ttk.Combobox(filter_frame, values=['All'], 
-    # #     #                                  state='readonly', width=12)
-    # #     # self.node_filter.current(0)
-    # #     # self.node_filter.grid(row=0, column=1, padx=(0, 15))
-    # #     # self.node_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
-    # #     #
-    # #     # # Severity filter
-    # #     # ttk.Label(filter_frame, text="Severity:").grid(row=0, column=2, padx=(0, 5))
-    # #     # self.severity_filter = ttk.Combobox(
-    # #     #     filter_frame, 
-    # #     #     values=['All', 'HIGH', 'MEDIUM', 'LOW'],
-    # #     #     state='readonly', width=10
-    # #     # )
-    # #     # self.severity_filter.current(0)
-    # #     # self.severity_filter.grid(row=0, column=3, padx=(0, 15))
-    # #     # self.severity_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
-    # #     #
-    # #     # # Time range filter
-    # #     # ttk.Label(filter_frame, text="Time:").grid(row=0, column=4, padx=(0, 5))
-    # #     # self.time_filter = ttk.Combobox(
-    # #     #     filter_frame,
-    # #     #     values=['Last hour', 'Last 6 hours', 'Last 24 hours', 'Last 7 days', 'All time'],
-    # #     #     state='readonly', width=15
-    # #     # )
-    # #     # self.time_filter.current(2)  # Default: Last 24 hours
-    # #     # self.time_filter.grid(row=0, column=5, padx=(0, 15))
-    # #     # self.time_filter.bind('<<ComboboxSelected>>', self._on_filter_change)
-    # #     #
-    # #     # # Refresh button
-    # #     # ttk.Button(filter_frame, text="Refresh", 
-    # #     #            command=self.refresh).grid(row=0, column=6, padx=(15, 0))
-    #     pass
-    
-    # def _setup_table(self):
-    #     """
-    #     Create the Treeview table for displaying anomalies.
-        
-    #     Columns:
-    #     - Timestamp (150px)
-    #     - Node ID (100px)
-    #     - Motion Class (100px)
-    #     - Confidence Score (80px)
-    #     """
-    #     # TODO: Implement table
-    #     #
-    #     # # Frame for treeview and scrollbar
-    #     # table_frame = ttk.Frame(self)
-    #     # table_frame.grid(row=1, column=0, sticky='nsew', padx=10, pady=(0, 10))
-    #     # table_frame.columnconfigure(0, weight=1)
-    #     # table_frame.rowconfigure(0, weight=1)
-    #     #
-    #     # # Define columns
-    #     # columns = ('timestamp', 'node_id', 'motion_class', 'confidence_score')
-    #     #
-    #     # # Create treeview
-    #     # self.tree = ttk.Treeview(table_frame, columns=columns, show='headings',
-    #     #                          selectmode='browse')
-    #     #
-    #     # # Configure columns
-    #     # self.tree.heading('timestamp', text='Timestamp')
-    #     # self.tree.heading('node_id', text='Node ID')
-    #     # self.tree.heading('motion_class', text='Motion Class')
-    #     # self.tree.heading('confidence_score', text='Confidence Score')
-    #     # 
-    #     # self.tree.column('timestamp', width=150, anchor='center')
-    #     # self.tree.column('node_id', width=100, anchor='center')
-    #     # self.tree.column('motion_class', width=100, anchor='center')
-    #     # self.tree.column('confidence_score', width=80, anchor='center')
-    #     # 
-    #     # self.tree.grid(row=0, column=0, sticky='nsew')
-    #     #
-    #     # # Scrollbar
-    #     # scrollbar = ttk.Scrollbar(table_frame, orient='vertical', 
-    #     #                           command=self.tree.yview)
-    #     # scrollbar.grid(row=0, column=1, sticky='ns')
-    #     # self.tree.configure(yscrollcommand=scrollbar.set)
-    #     #
-    #     # # Bind selection event
-    #     # self.tree.bind('<<TreeviewSelect>>', self._on_row_select)
-    #     #
-    #     # # Configure row tags for coloring
-    #     # self.tree.tag_configure('HIGH', foreground=SEVERITY_COLORS['HIGH'])
-    #     # self.tree.tag_configure('MEDIUM', foreground=SEVERITY_COLORS['MEDIUM'])
-    #     # self.tree.tag_configure('LOW', foreground=SEVERITY_COLORS['LOW'])
-    #     pass
-    
-    # def load_anomalies(self, anomalies: List[Dict[str, Any]]):
-    #     """
-    #     Load anomalies into the table.
-        
-    #     Args:
-    #         anomalies: List of anomaly dictionaries
-    #     """
-    #     # TODO: Implement
-    #     #
-    #     # # Clear existing rows
-    #     # for item in self.tree.get_children():
-    #     #     self.tree.delete(item)
-    #     #
-    #     # # Add new rows
-    #     # for anomaly in anomalies:
-    #     #     self._add_anomaly_row(anomaly)
-    #     pass
-    
-    # def _add_anomaly_row(self, anomaly: Dict[str, Any]):
-    # #     """
-    # #     Add a single anomaly row to the table.
-        
-    # #     Args:
-    # #         anomaly: Anomaly dictionary
-    # #     """
-    # #     # TODO: Implement
-    # #     #
-    # #     # values = (
-    # #     #     format_timestamp(anomaly['timestamp']),
-    # #     #     anomaly['node_id'],
-    # #     #     anomaly['severity'],
-    # #     #     anomaly['motion_class'],
-    # #     #     format_anomaly_score(anomaly['score']),
-    # #     #     anomaly['status'],
-    # #     #     anomaly.get('description', '')
-    # #     # )
-    # #     #
-    # #     # # Insert with severity tag for coloring
-    # #     # self.tree.insert('', 'end', iid=str(anomaly['id']), values=values,
-    # #     #                  tags=(anomaly['severity'],))
-    #     pass
-    
-    # def apply_filters(self):
-    # #     """
-    # #     Re-query data with current filter settings.
-        
-    # #     Reads filter values from UI and fetches matching anomalies.
-    # #     """
-    # #     # TODO: Implement
-    # #     #
-    # #     # # Get current filter values
-    # #     # self.current_filters['node_id'] = self.node_filter.get()
-    # #     # self.current_filters['severity'] = self.severity_filter.get()
-    # #     # self.current_filters['time_range'] = self.time_filter.get()
-    # #     #
-    # #     # # Convert time range to datetime
-    # #     # time_ranges = {
-    # #     #     'Last hour': timedelta(hours=1),
-    # #     #     'Last 6 hours': timedelta(hours=6),
-    # #     #     'Last 24 hours': timedelta(hours=24),
-    # #     #     'Last 7 days': timedelta(days=7),
-    # #     #     'All time': None
-    # #     # }
-    # #     # time_delta = time_ranges.get(self.current_filters['time_range'])
-    # #     #
-    # #     # # Fetch filtered data from database
-    # #     # # anomalies = db.get_anomalies(
-    # #     # #     node_id=None if self.current_filters['node_id'] == 'All' else self.current_filters['node_id'],
-    # #     # #     severity=None if self.current_filters['severity'] == 'All' else self.current_filters['severity'],
-    # #     # #     since=datetime.now() - time_delta if time_delta else None
-    # #     # # )
-    # #     #
-    # #     # # For now, filter mock data
-    # #     # anomalies = self._filter_mock_data()
-    # #     #
-    # #     # # Update table
-    # #     # self.load_anomalies(anomalies)
-    #     pass
-    
-    # def _filter_mock_data(self) -> List[Dict[str, Any]]:
-    # #     """
-    # #     Filter mock data based on current filters (temporary).
-        
-    # #     Returns:
-    # #         Filtered list of anomalies
-    # #     """
-    # #     # TODO: Remove when real database is connected
-    # #     filtered = MOCK_ANOMALIES.copy()
-        
-    # #     # Apply node filter
-    # #     if self.current_filters['node_id'] != 'All':
-    # #         filtered = [a for a in filtered 
-    # #                    if a['node_id'] == self.current_filters['node_id']]
-        
-    # #     # Apply severity filter
-    # #     if self.current_filters['severity'] != 'All':
-    # #         filtered = [a for a in filtered 
-    # #                    if a['severity'] == self.current_filters['severity']]
-        
-    # #     return filtered
-    #  pass
-    
-    # def _on_filter_change(self, event):
-    # #     """
-    # #     Handle filter dropdown change.
-        
-    # #     Args:
-    # #         event: Combobox selection event
-    # #     """
-    # #     # TODO: Implement
-    # #     # self.apply_filters()
-    #     pass
-    
-    # def _on_row_select(self, event):
-    # #     """
-    # #     Handle row selection in the table.
-        
-    # #     Navigates to Node Details tab for the selected anomaly's node.
-        
-    # #     Args:
-    # #         event: Treeview selection event
-    # #     """
-    # #     # TODO: Implement
-    # #     #
-    # #     # selection = self.tree.selection()
-    # #     # if not selection:
-    # #     #     return
-    # #     #
-    # #     # # Get the selected row's values
-    # #     # item = self.tree.item(selection[0])
-    # #     # values = item['values']
-    # #     # node_id = values[1]  # node_id is column index 1
-    # #     #
-    # #     # # Navigate to node details
-    # #     # self.dashboard.show_node_details(node_id)
-    #     pass
-    
-    # def update_node_filter_options(self, node_ids: List[str]):
-    # #     """
-    # #     Update the node filter dropdown with available node IDs.
-        
-    # #     Args:
-    # #         node_ids: List of all node IDs
-    # #     """
-    # #     # TODO: Implement
-    # #     #
-    # #     # if self.node_filter:
-    # #     #     current = self.node_filter.get()
-    # #     #     self.node_filter['values'] = ['All'] + sorted(node_ids)
-    # #     #     # Preserve selection if still valid
-    # #     #     if current in ['All'] + node_ids:
-    # #     #         self.node_filter.set(current)
-    # #     #     else:
-    # #     #         self.node_filter.current(0)
-    #     pass
-    
+        # Store it
+        self.nodes[node_id] = node    
+    def _parse_nodes(self):
+        for node_id, rdentry in self.rddict.items():
+            mlentry = self.mldict.get(node_id, [])
+            try:
+                self.load_node(node_id, rdentry, mlentry)
+            except Exception as e:
+                print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
     def refresh(self):
     #     """
     #     Refresh the anomalies table with latest data.
@@ -616,19 +350,13 @@ class AnomaliesTab(ttk.Frame):
 
     #     Will be tied to a "Refresh" button in the UI to prevent excessive queries and ensure readability
     #     """
-    #     # TODO: Implement with real database queries
-    #     #
-    #     # try:
-    #     #     # Update node filter options
-    #     #     # node_ids = db.get_all_node_ids()
-    #     #     # self.update_node_filter_options(node_ids)
-    #     #     
-    #     #     # Apply current filters and reload
-    #     #     self.apply_filters()
-    #     #     
-    #     # except Exception as e:
-    #     #     print(f"Error refreshing anomalies tab: {e}")
-        pass
+        try:
+            self.rddict = self.redis_reader.getRDDict() #get the raw data dictionary from the redis reader
+            self.mldict = self.redis_reader.getMLDict() #get the machine learning dictionary from the redis reader
+            self._parse_nodes() #parse nodes to update self.nodes with latest data
+            self._list_section._build_rows() #rebuild the anomaly rows with updated node data
+        except Exception as e:
+            print(f"Error refreshing anomalies tab: {e}")
 
 
 # =============================================================================

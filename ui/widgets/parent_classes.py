@@ -48,13 +48,15 @@ class Node:
             else:                raise ValueError(f"Invalid motion class string: {motion_class}")
         self.confidence = confidence
     def __str__(self):
-        return f"Node {self.node_id}: ({self.lat}, {self.lon}) - Motion: {self.motionString()} (Confidence: {self.confidence:.2f})"
+        return f"Node {self.node_id}: ({self.lat}, {self.lon}) - Motion: {self.getMotionString()} (Confidence: {self.confidence:.2f})"
     def getNodeID(self):
         return self.node_id
     def getCoords(self):
         return (self.lat, self.lon)
     def getTimestamp(self):
         return self.timestamp
+    def timestampToStr(self):
+        return self.timestamp.strftime("%Y-%m-%d %H:%M:%S")
     def getMotion(self):
         return (self.motion_class, self.confidence)
     def toDict(self): #returns a dictionary representation of the node for easy access
@@ -74,6 +76,6 @@ class Node:
             'anomaly': self.anomaly,
             'confidence': self.confidence
         }
-    def motionString(self): #returns the motion class as a string for the user
+    def getMotionString(self): #returns the motion class as a string for the user
         return self.motion_states[self.motion_class]  
 
