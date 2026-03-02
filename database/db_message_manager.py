@@ -22,7 +22,10 @@ from schema import create_schema
 #logging for debugging purposes
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
-#TODO: add default file paths for sample messages
+#default file paths for sample messages
+SAMPLE_DATA_FILE     = Path("sample_message_data.json")
+SAMPLE_REQUEST_FILE  = Path("sample_message_requests.json")
+SAMPLE_RESPONSE_FILE = Path("sample_message_responses.json")
 
 class DBMessageManager:
     '''
@@ -109,7 +112,16 @@ class DBMessageManager:
         
         return True
     
+def run_sample_usage():
+    """demonstrates usage with sample files. Reads sample_message_data.json and populates database,
+    then eads sample_message_requests.json, Runs: get-nodes, get-node-data-ids, get-datum queries against the DB.
+    Every query response is appended to sample_message_responses.json"""
+    #EMPTY response file before writing new responses
+    print("\n\n\n\n  DB MESSAGE MANAGER — SAMPLE USAGE")
+    print("=" * 65)
 
+    db_message_manager = DBMessageManager()
+   
 
 if __name__ == "__main__":
     db_message_manager = DBMessageManager()
