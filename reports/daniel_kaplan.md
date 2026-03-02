@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** danielkaplan32
 **Email(s):** daniel.kaplan32@du.edu
-**Report Generated:** 2026-02-18 15:05:05
-**Branches Analyzed:** main
+**Report Generated:** 2026-02-24 15:40:46
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
 
@@ -11,25 +11,25 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 7 |
-| Lines Added | 411 |
-| Lines Deleted | 159 |
-| Net Lines Changed | +252 |
-| PRs Created | 7 |
+| Total Commits | 16 |
+| Lines Added | 622 |
+| Lines Deleted | 167 |
+| Net Lines Changed | +455 |
+| PRs Created | 12 |
 | PRs Assigned | 6 |
-| PRs Reviewed | 0 |
-| PRs Commented | 0 |
-| PRs Merged (as merger) | 8 |
-| Issues Created | 8 |
+| PRs Reviewed | 1 |
+| PRs Commented | 1 |
+| PRs Merged (as merger) | 9 |
+| Issues Created | 18 |
 | Issues Commented | 1 |
-| Files Changed | 5 |
+| Files Changed | 7 |
 
 ---
 
 ## Issues
 
-### Created (8)
-#46, #47, #48, #49, #50, #51, #97, #165
+### Created (18)
+#46, #47, #48, #49, #50, #51, #97, #165, #235, #236, #237, #238, #239, #240, #241, #242, #273, #274
 
 ### Commented (1)
 #49
@@ -38,41 +38,43 @@
 
 ## Pull Requests
 
-### Created (7)
-#106, #108, #109, #110, #142, #143, #168
+### Created (12)
+#106, #108, #109, #110, #142, #143, #168, #346, #348, #364, #367, #368
 
 ### Assigned (6)
 #106, #108, #109, #110, #142, #143
 
-### Reviewed (0)
-None
+### Reviewed (1)
+#369
 
-### Commented (0)
-None
+### Commented (1)
+#369
 
-### Merged (as merger) (8)
-#106, #108, #109, #110, #139, #142, #143, #167
+### Merged (as merger) (9)
+#106, #108, #109, #110, #139, #142, #143, #167, #369
 
 ---
 
 ## Commits
 
-Total non-merge commits in main branch: **7**
+Total non-merge commits in sprint-2 branches: **16**
 
 ### Code Changes
-- **Lines Added:** 411
-- **Lines Deleted:** 159
-- **Net Change:** +252
+- **Lines Added:** 622
+- **Lines Deleted:** 167
+- **Net Change:** +455
 
 ---
 
-## Files Changed (5)
+## Files Changed (7)
 
 - `machine-learning/classifier_preparation.py`
 - `machine-learning/model_training.py`
 - `machine-learning/train_classifier.py`
 - `ml/data_pipeline.py`
 - `ml/feature_extraction.py`
+- `ml/redis_insteam.py`
+- `ml/requirements.txt`
 
 ---
 
@@ -112,3 +114,10 @@ Total non-merge commits in main branch: **7**
 | 2026-02-16 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-17 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-18 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 0 | 10 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-21 | Sat | 1 | 0 | 0 | 2 | 0 | 0 | 0 |
+| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-24 | Tue | 4 | 0 | 0 | 3 | 1 | 1 | 1 |

@@ -41,3 +41,12 @@ Handle duplicate messages idempotently
 Proper indexing for common queries
 Thread-safe access (Team 4 calls from UI thread)
 
+Redis Channel
+Channel: inference:results*
+Publisher: ML
+Subscriber: Database
+
+Channel: dashboard:updates:{node_id}
+Publisher: Database
+Channel: dashboard:anomalies:{node_id}
+Publisher: Database

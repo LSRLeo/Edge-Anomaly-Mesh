@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** ohenconlon
 **Email(s):** 167807269+ohenconlon@users.noreply.github.com, owen.conlon@du.edu
-**Report Generated:** 2026-02-18 15:05:00
-**Branches Analyzed:** main
+**Report Generated:** 2026-02-24 15:40:39
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
 
 ---
 
@@ -11,66 +11,70 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 11 |
-| Lines Added | 519 |
-| Lines Deleted | 333 |
-| Net Lines Changed | +186 |
-| PRs Created | 3 |
-| PRs Assigned | 8 |
-| PRs Reviewed | 6 |
-| PRs Commented | 5 |
-| PRs Merged (as merger) | 0 |
-| Issues Created | 14 |
-| Issues Commented | 2 |
-| Files Changed | 3 |
+| Total Commits | 20 |
+| Lines Added | 756 |
+| Lines Deleted | 497 |
+| Net Lines Changed | +259 |
+| PRs Created | 6 |
+| PRs Assigned | 12 |
+| PRs Reviewed | 10 |
+| PRs Commented | 9 |
+| PRs Merged (as merger) | 2 |
+| Issues Created | 26 |
+| Issues Commented | 5 |
+| Files Changed | 7 |
 
 ---
 
 ## Issues
 
-### Created (14)
-#29, #30, #31, #32, #33, #34, #35, #36, #132, #133, #134, #202, #217, #221
+### Created (26)
+#29, #30, #31, #32, #33, #34, #35, #36, #132, #133, #134, #202, #217, #221, #243, #245, #248, #251, #268, #281, #284, #291, #292, #296, #313, #344
 
-### Commented (2)
-#33, #217
+### Commented (5)
+#33, #217, #268, #296, #336
 
 ---
 
 ## Pull Requests
 
-### Created (3)
-#145, #155, #173
+### Created (6)
+#145, #155, #173, #336, #337, #350
 
-### Assigned (8)
-#107, #144, #155, #172, #173, #186, #195, #199
+### Assigned (12)
+#107, #144, #155, #172, #173, #186, #195, #199, #336, #337, #350, #358
 
-### Reviewed (6)
-#107, #144, #172, #186, #195, #199
+### Reviewed (10)
+#107, #144, #172, #186, #195, #199, #335, #353, #356, #358
 
-### Commented (5)
-#107, #144, #172, #195, #199
+### Commented (9)
+#107, #144, #172, #195, #199, #335, #353, #356, #358
 
-### Merged (as merger) (0)
-None
+### Merged (as merger) (2)
+#337, #350
 
 ---
 
 ## Commits
 
-Total non-merge commits in main branch: **11**
+Total non-merge commits in sprint-2 branches: **20**
 
 ### Code Changes
-- **Lines Added:** 519
-- **Lines Deleted:** 333
-- **Net Change:** +186
+- **Lines Added:** 756
+- **Lines Deleted:** 497
+- **Net Change:** +259
 
 ---
 
-## Files Changed (3)
+## Files Changed (7)
 
+- `ui/README.md`
 - `ui/requirements.txt`
+- `ui/widgets/dashboard_main.py`
 - `ui/widgets/network_tab.py`
+- `ui/widgets/parent_classes.py`
 - `ui/widgets/test_nodes.json`
+- `ui/widgets/widgetextras/mercator.jpg`
 
 ---
 
@@ -110,3 +114,10 @@ Total non-merge commits in main branch: **11**
 | 2026-02-16 | Mon | 0 | 0 | 0 | 0 | 0 | 3 | 2 |
 | 2026-02-17 | Tue | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
 | 2026-02-18 | Wed | 0 | 2 | 1 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 2 | 11 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 2 | 1 | 3 | 2 | 0 | 1 | 1 |
+| 2026-02-21 | Sat | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-22 | Sun | 0 | 0 | 1 | 1 | 2 | 0 | 0 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 4 | 0 | 0 | 0 | 0 | 1 | 1 |
+| 2026-02-24 | Tue | 0 | 0 | 0 | 0 | 0 | 2 | 2 |
