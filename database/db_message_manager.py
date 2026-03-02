@@ -119,17 +119,29 @@ def run_sample_usage():
     #EMPTY response file before writing new responses
     print("\n\n\n\n  DB MESSAGE MANAGER — SAMPLE USAGE")
     print("=" * 65)
+    #EMPTY response file before writing new responses
+    with open(SAMPLE_RESPONSE_FILE, "w") as f:
+        json.dump([], f)
 
     db_message_manager = DBMessageManager()
-   
+    data_msg_responses = db_message_manager.read_file(SAMPLE_DATA_FILE, SAMPLE_RESPONSE_FILE)
+
+    if data_msg_responses:
+        #Errors
+        print(f"{len(data_msg_responses)} messages from {SAMPLE_DATA_FILE} processed with responses written to {SAMPLE_RESPONSE_FILE}")
+
+    request_msg_responses = db_message_manager.read_file(SAMPLE_REQUEST_FILE, SAMPLE_RESPONSE_FILE)
+
+    if request_msg_responses:
+        print(f"{len(request_msg_responses)} queries responses written to {SAMPLE_RESPONSE_FILE}")
+
+    total = len(data_msg_responses) + len(request_msg_responses)
+    print(f"\n{'=' * 65}")
+    print(f"  Done.  {total} total response(s) in {SAMPLE_RESPONSE_FILE.name}")
+    print(f"{'=' * 65}\n")
 
 if __name__ == "__main__":
     db_message_manager = DBMessageManager()
     # logging.info("DBMessageManager instance created: %s", db_message_manager)
-    test_message = '''{
-        "m_type": "inference-output",
-        "m_id": "ui_00001"
-    }'''
-    test_message_json = json.loads(test_message)
-    testing_result = db_message_manager.process_message(test_message_json)
-
+    run_sample_usage()
+    
