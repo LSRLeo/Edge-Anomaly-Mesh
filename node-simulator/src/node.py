@@ -2,20 +2,23 @@ import time
 import json
 import math
 from datetime import datetime, timedelta
+from src.hub import Hub
 
 from src.lift import Lift
 from src.maritime import Maritime
 from src.terrestrial import Terrestrial
 from src.idle import Idle
 from src.noise import apply_idle_node_noise, apply_lift_node_noise, apply_maritime_node_noise, apply_terrestrial_node_noise
+from .anomalies import *
+
 
 class Node:
-    def __init__(self, node_file, route):
+    def __init__(self, node_file, route, data_mode):
         self.route = route
-        self.origin = route.hubs[0]
-        self.destination = route.hubs[-1]
+        self.origin = route.points[0]
+        self.destination = route.points[-1]
         self.messages = []
-
+        self.data_mode = data_mode
         try:
             with open(node_file, 'r') as f:
                 node_config = json.load(f)
@@ -52,58 +55,74 @@ class Node:
             raise ValueError(f"Error decoding node configuration file {node_file}")
     
     def generate(self):
-        for i in range(len(self.route.hubs)):
-            if i < len(self.route.hubs) - 1:
-                current_hub = self.route.hubs[i]
-                next_hub = self.route.hubs[i + 1]
-
-                # Generate idle readings and apply noise 
-                idleResults = self.idle.generate_reading(current_hub)
-                idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
-                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
-
-                if current_hub.mode == "lift":
-                    self.lift.set_hub(current_hub.lat, current_hub.lon, 20)
-                    liftResults = self.lift.generate_reading(current_hub, current_hub.lift_time)
-                    liftResults_noisy = [apply_lift_node_noise(message) for message in liftResults]
-                    self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_hub, next_hub)
-                elif current_hub.mode == "maritime":
-                    maritimeResults = self.maritime.generate_reading(current_hub, next_hub)
-                    maritimeResults_noisy = [apply_maritime_node_noise(message) for message in maritimeResults]
-                    self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_hub, next_hub)
-                elif current_hub.mode == "terrestrial":
-                    terrestrialResults = self.terrestrial.generate_reading(current_hub, next_hub, self.sample_rate_hz)
-                    terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in terrestrialResults]
-                    self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_hub, next_hub)
+        recent_hub_mode = None
+        for i in range(len(self.route.points)):
+            if i < len(self.route.points) - 1:
+                current_point = self.route.points[i]
+                next_point = self.route.points[i + 1]
+                #route always start with hub and waypoint take the mode that the most recent hub has
+                if hasattr(current_point, "mode"):
+                    recent_hub_mode = current_point.mode.lower()
+                # Only run the branch for current mode. Idle requires a hub (time_at_hub); waypoints don't have it.
+                if isinstance(current_point, Hub):
+                    idleResults = self.idle.generate_reading(current_point)
+                    anomalous_idleResults = self.idle.inject_anomalies(idleResults)
+                    idleResults_noisy = [apply_idle_node_noise(message) for message in anomalous_idleResults]
+                    self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
+                
+                #Hub doesn't currently carry IDLE mode at all, so the following if statment will not run
+                if recent_hub_mode == "idle":
+                    if hasattr(current_point, "time_at_hub"):
+                        idleResults = self.idle.generate_reading(current_point)
+                        anomalous_idleResults = self.idle.inject_anomalies(idleResults)
+                        idleResults_noisy = [apply_idle_node_noise(message) for message in anomalous_idleResults]
+                        self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
+                elif recent_hub_mode == "lift":
+                    if hasattr(current_point, "mode"):
+                        self.lift.set_hub(current_point.lat, current_point.lon, 20)
+                        liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
+                        anomalous_liftResults = self.lift.inject_anomalies(liftResults)
+                        liftResults_noisy = [apply_lift_node_noise(message) for message in anomalous_liftResults]
+                        self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
+                elif recent_hub_mode == "maritime":
+                    maritimeResults = self.maritime.generate_reading(current_point, next_point)
+                    anomalous_maritimeResults = self.maritime.inject_anomalies(maritimeResults)
+                    maritimeResults_noisy = [apply_maritime_node_noise(message) for message in anomalous_maritimeResults]
+                    self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_point, next_point)
+                elif recent_hub_mode == "terrestrial":
+                    terrestrialResults = self.terrestrial.generate_reading(current_point, next_point, self.sample_rate_hz)
+                    anomalous_terrestrialResults = self.terrestrial.inject_anomalies(terrestrialResults)
+                    terrestrialResults_noisy = [apply_terrestrial_node_noise(message) for message in anomalous_terrestrialResults]
+                    self.messages += self.add_metadata(terrestrialResults_noisy, "TERRESTRIAL", current_point, next_point)
                 else:
-                    raise ValueError(f"Invalid mode: {current_hub.mode}")
+                    raise ValueError(f"Invalid mode: {recent_hub_mode}")
             else:
-                current_hub = self.route.hubs[i]
-                idleResults = self.idle.generate_reading(current_hub)
+                current_point = self.route.points[i]
+                idleResults = self.idle.generate_reading(current_point)
                 idleResults_noisy = [apply_idle_node_noise(message) for message in idleResults]
-                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_hub, current_hub)
+                self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
 
-    def calculate_gps(self, current_hub, next_hub, mode, message_index, total_messages, accel_x=0.0, accel_y=0.0, accel_z=0.0):
+    def calculate_gps(self, current_point, next_point, mode, message_index, total_messages, accel_x=0.0, accel_y=0.0, accel_z=0.0):
         if mode == "IDLE":
             return {
-                "lat_deg": current_hub.lat,
-                "lon_deg": current_hub.lon,
-                "altitude_m": current_hub.alt
+                "lat": current_point.lat,
+                "lon": current_point.lon,
+                "altitude_m": current_point.alt
             }
         elif mode == "LIFT":
             # Calculate GPS from accelerations for LIFT mode
-            return self._calculate_gps_from_accel_lift(current_hub, accel_x, accel_y, accel_z)
+            return self._calculate_gps_from_accel_lift(current_point, accel_x, accel_y, accel_z)
         elif mode == "TERRESTRIAL":
             # Calculate GPS from accelerations for TERRESTRIAL mode
-            return self._calculate_gps_from_accel_terrestrial(current_hub, next_hub, accel_x, accel_y, accel_z)
+            return self._calculate_gps_from_accel_terrestrial(current_point, next_point, accel_x, accel_y, accel_z)
         elif mode == "MARITIME":
             # Calculate GPS from accelerations for MARITIME mode
-            return self._calculate_gps_from_accel_maritime(current_hub, next_hub, accel_x, accel_y, accel_z)
+            return self._calculate_gps_from_accel_maritime(current_point, next_point, accel_x, accel_y, accel_z)
         else:
             return {
-                "lat_deg": current_hub.lat,
-                "lon_deg": current_hub.lon,
-                "altitude_m": current_hub.alt
+                "lat": current_point.lat,
+                "lon": current_point.lon,
+                "altitude_m": current_point.alt
             }
     
     def _calculate_bearing(self, start_hub, end_hub):
@@ -276,7 +295,7 @@ class Node:
             "altitude_m": new_alt
         }
     
-    def add_metadata(self, messages, mode, current_hub, next_hub):
+    def add_metadata(self, messages, mode, current_point, next_point):
         polished_messages = []
         total_messages = len(messages)
         
@@ -292,48 +311,52 @@ class Node:
             # For LIFT, TERRESTRIAL, and MARITIME modes, pass accelerations to calculate GPS from them
             if mode in ["LIFT", "TERRESTRIAL", "MARITIME"]:
                 gps = self.calculate_gps(
-                    current_hub, next_hub, mode, message_index, total_messages,
+                    current_point, next_point, mode, message_index, total_messages,
                     accel_x=message['accel_x'],
                     accel_y=message['accel_y'],
                     accel_z=message['accel_z']
                 )
             else:
-                gps = self.calculate_gps(current_hub, next_hub, mode, message_index, total_messages)
+                gps = self.calculate_gps(current_point, next_point, mode, message_index, total_messages)
             
+            """
+            To-do: Calculate Segement Progress and modify label to include progress
+            include segment progress if we are in transit(in between hub)
+            
+            """
+            if self.data_mode == "live":
+                label = {
+                    "motion_type": mode,
+                    "is_anomaly": "",
+                    "anomaly_type": "",
+                    "location": "hub_denver_01"
+                }
+            else:
+                # NOTE: This is where we will add the anomaly label
+                # Messages from motion classes only have 'anomalous' when inject_anomalies was applied (e.g. at-hub IDLE); in-transit or unmodified messages do not.
+                anomaly_type = message.get('anomalous', "False")
+                label = {
+                    "motion_type": mode,
+                    "is_anomaly": anomaly_type,
+                    "anomaly_type": "",
+                    "location": "hub_denver_01"
+                }
             polished_message = {
-                "m_type": "raw-data",
-                "m_id": f"{self.node_id}_{self.seq}",
-                "event_id": f"{self.node_id}_{self.timestamp.isoformat()}",
                 "node_id": self.node_id,
                 "timestamp": self.timestamp.isoformat(),
                 "seq": self.seq,
                 "gps": gps,
-                "accel_mss": {
+                "accel": {
                     "x": message['accel_x'],
                     "y": message['accel_y'],
                     "z": message['accel_z']
                 },
-                "gyro_rads": {
+                "gyro": {
                     "x": message['gyro_x'],
                     "y": message['gyro_y'],
                     "z": message['gyro_z']
                 },
-                "meta": {
-                    "sample_rate_hz": self.sample_rate_hz,
-                    "battery_pct": 95,
-                    "sim_mode": mode,
-                    "sim_anomaly": False
-                },
-                "origin": {
-                    "lat_deg": self.origin.lat,
-                    "lon_deg": self.origin.lon,
-                    "altitude_m": self.origin.alt
-                },
-                "dest": {
-                    "lat_deg": self.destination.lat,
-                    "lon_deg": self.destination.lon,
-                    "altitude_m": self.destination.alt
-                }
+                "label": label
             }
             self.seq += 1
             self.timestamp += timedelta(1 / self.sample_rate_hz)

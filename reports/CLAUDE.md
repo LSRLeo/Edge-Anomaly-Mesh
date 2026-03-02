@@ -41,14 +41,10 @@ Previously analyzed sprint-1 branches (kept in script for reference):
 ## Contributions Formula
 
 ```
-Contributions = (Commits × 50%) + (Issues × 25%) + (PRs × 25%)
+Contributions = Commits + Issues Created + PRs Created + PRs Closed + PRs Reviewed
 ```
 
-Where:
-- **Issues** = Issues Created + Issues Commented
-- **PRs** = PRs Created + PRs Closed + PRs Reviewed + PRs Merged
-
-Note: Merge commits (git) are tracked separately. PRs Merged refers to GitHub PRs merged by the contributor.
+Note: Merge commits are tracked separately and not included in the contributions score.
 
 ## Summary Table Columns
 
@@ -59,11 +55,9 @@ Note: Merge commits (git) are tracked separately. PRs Merged refers to GitHub PR
 | Merges | Merge commits (not in contributions) |
 | Files | Unique files changed |
 | Issues Created | GitHub issues opened |
-| Issues Commented | GitHub issue comments |
 | PRs Created | Pull requests authored |
 | PRs Closed | PRs authored that are merged/closed |
 | PRs Reviewed | PRs where user submitted a review |
-| PRs Merged | PRs where user performed the merge |
 
 ## Individual Report Sections
 
