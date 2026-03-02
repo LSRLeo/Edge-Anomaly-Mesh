@@ -51,32 +51,46 @@ class DBMessageManager:
         results = message_obj.process(self.table_manager)
         return results.to_dict() if results else None
 
-    def process_file(self, infile: str | Path, outfile: str | Path):
+    def read_file(self, infile: str | Path, outfile: str | Path):
         """Processes messages from an input file and writes responses to an output file."""
         infile  = Path(infile)
         outfile = Path(outfile)
+
         try:
             with open(infile, "r") as f:
                 data = json.load(f)
                 messages = data if isinstance(data, list) else [data]
+
             responses = []
             for message in messages:
                 response = self.process_message(message)
+
                 if response:
                     responses.append(response)
 
-            with open(outfile, "w") as f:
-                json.dump(responses, f, indent=2)
-        
+            self._write_responses(responses, outfile)
+
         except FileNotFoundError:
             logging.error("Input file not found: %s", infile)
             return []
+        
         except json.JSONDecodeError as e:
             logging.error("JSON parse error in %s : %s", infile, e)
             return []
 
-        
-        
+    def _write_responses(self, responses: list[Dict[str, Any]], outfile: str | Path):
+        """Writes responses to an output file."""
+        outfile = Path(outfile)
+        try:
+            with open(outfile, "a") as f:
+                json.dump(responses, f, indent=2)
+        except FileNotFoundError:
+            logging.error("Output file not found: %s", outfile)
+            return []
+        except json.JSONDecodeError as e:
+            logging.error("JSON parse error in %s : %s", outfile, e)
+            return []
+
     #VALIDATE is done in message factory
     def validate_message(self, message: Dict[str, Any]) -> bool:
         """Validates structure is a dictionary and contains required fields 'm_type' and 'm_id'"""
