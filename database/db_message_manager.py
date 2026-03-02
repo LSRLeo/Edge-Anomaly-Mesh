@@ -4,7 +4,7 @@ m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-
 
 TWO USAGE SCENARIOS:
 1) sample usage, uses sample_message_data.json and sample_message_requests.json and writes results to sample_message_responses.json
-2) send own messages with python db_message_manager.py --infile <path_to_input_messages.json> --outfile <path_to_output_responses.json>
+2) send custom messages with python db_message_manager.py --infile <path_to_input_messages.json> --outfile <path_to_output_responses.json>
 '''
 from asyncio.log import logger
 from email import message
@@ -161,26 +161,26 @@ def send_message(infile: str, outfile: str) -> None:
 
 
 if __name__ == "__main__":
-    
-    # logging.info("DBMessageManager instance created: %s", db_message_manager)
-    
+    #set up argparse for CLI usage
     parser = argparse.ArgumentParser(
         description="Process JSON message files through the DB message pipeline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
         Examples--------
         # Built-in demo (no arguments required):
-        python db_message_manager.py
+            python db_message_manager.py
         # Custom files via CLI (send_message mode):
-        python db_message_manager.py --infile my_messages.json --outfile my_responses.json
+            python db_message_manager.py --infile my_messages.json --outfile my_responses.json
         """,
     )
+
     parser.add_argument(
         "--infile",
         type=str,
         default=None,
         help="Path to input JSON file (single message dict or list of dicts).",
     )
+
     parser.add_argument(
         "--outfile",
         type=str,
