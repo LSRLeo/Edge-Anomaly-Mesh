@@ -266,6 +266,73 @@ class BarChartComponent(AnalyticsComponent):
         self.ax.invert_yaxis()
         self.fig.tight_layout()
         self.canvas.draw()
+        
+        
+
+class StatsComponent(AnalyticsComponent):
+    """Statistics panel showing key metrics"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.labels: Dict[str, ttk.Label] = {}
+        super().__init__(parent, "Statistics", row, col)
+        
+    def parse(self, records: List[Dict]) -> Dict[str, Any]:
+        # Unique node IDs observed in the current dataset.
+        nodes = {r["node_id"] for r in records}
+        # Count records whose anomaly score crosses the display threshold.
+        total_anomalies = sum(
+            1 for r in records if sum(r["state_confidence"][4:]) >= 0.5
+        )
+        # Estimate uptime from sample count assuming 10-second sampling cadence.
+        uptime_hours = (
+            len(records) / len(nodes) * 10 / 3600
+            if nodes else 0
+        )
+        
+        return {
+            "total_inferences": len(records),
+            "total_anomalies": total_anomalies,
+            "active_nodes": len(nodes),
+            "uptime_hours": round(uptime_hours, 1),
+        }
+        
+    def setup(self) -> None:
+        # Create a simple grid of labels for each statistic.
+        stats_config = [
+            ("total_inferences", "Total Inferences:"),
+            ("total_anomalies", "Total Anomalies:"),
+            ("active_nodes", "Active Nodes:"),
+            ("uptime_hours", "Uptime:"),
+        ]
+        
+        for i, (key, label_text) in enumerate(stats_config):
+            ttk.Label(self.frame, text=label_text, font=("Arial", 11)).grid(
+                row=i, column=0, sticky="w", padx=10, pady=8
+            )
+            # Store value labels by key so update() can target them directly.
+            value_label = ttk.Label(self.frame, text="--", font=("Arial", 11, "bold"))
+            value_label.grid(row=i, column=1, sticky="e", padx=10, pady=8)
+            self.labels[key] = value_label
+        
+        self.frame.columnconfigure(0, weight=1)
+        self.frame.columnconfigure(1, weight=1)
+        
+    def update(self, records: List[Dict]) -> None:
+        stats = self.parse(records)
+        # Keep presentation formatting close to the UI update path.
+        formatters = {
+            "total_inferences": lambda v: f"{v:,}",
+            "total_anomalies": lambda v: f"{v:,}",
+            "active_nodes": lambda v: str(v),
+            "uptime_hours": lambda v: f"{v:.1f} hours",
+        }
+        
+        for key, label in self.labels.items():
+            if key in stats:
+                # Fall back to str() if no custom formatter is defined.
+                formatter = formatters.get(key, str)
+                label.config(text=formatter(stats[key]))
+        
 
 def parse_motion_distribution(records):
     counts = Counter()
