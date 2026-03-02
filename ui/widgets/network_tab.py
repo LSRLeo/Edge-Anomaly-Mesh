@@ -454,10 +454,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         #raw_file = self.load_json('widgets/raw_data.json')
         #ml_file = self.load_json('widgets/ml_data.json')
         try:
-            raw_file = self.redis_reader.getRDDict() #get the raw data dictionary from the redis reader
-            ml_file = self.redis_reader.getMLDict() #get the machine learning dictionary from the redis reader
-            self._parse_nodes() #parse nodes to update self.nodes with latest data
-            self._list_section._build_rows() #rebuild the anomaly rows with updated node data
+            raw_file, ml_file = self.redis_reader.getDicts()
         except Exception as e:
             print(f'Error refreshing: {e}')
             return
