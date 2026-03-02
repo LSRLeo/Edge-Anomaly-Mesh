@@ -386,8 +386,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         Refresh data for the currently selected node.
         """
         try:
-            self.rddict = self.redis_reader.getRDDict() #get the raw data dictionary from the redis reader
-            self.mldict = self.redis_reader.getMLDict() #get the machine learning dictionary from the redis reader
+            self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
             self._parse_nodes()
             self.refresh_dropdown()
             if self.current_node_id:

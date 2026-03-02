@@ -2,7 +2,7 @@
 import json
 import time
 import ast
-
+import threading
 class RedisReader:
     def __init__(self, channel_name, publisher, subscriber):
         self.channel_name = channel_name
@@ -12,7 +12,8 @@ class RedisReader:
         self.mldict = {} #machine learning dictionary
         self.rddict = {} #raw data dictionary
         self.message_counter = 1 #counter for m_id
-    
+        self.refresh_lock = threading.Lock() #lock for refreshing dataframes to prevent
+        self._stop_refresh = threading.Event() #event to signal refresh thread to stop
     def refresh(self, instant=False): #refreshes the dataframes with new data from redis, thread for subscribing to redis will be created in main dashboard loop
 
         """
@@ -23,7 +24,9 @@ class RedisReader:
         for each node pull most recent inference output and store it in the machine learning dataframe
         """
         if instant == False:
-            time.sleep(10) #sleep for 10 seconds to allow time for subscriber to connect and receive get-nodes response from redis (also acts as the periodic refresh interval)
+            # time.sleep(10) #sleep for 10 seconds to allow time for subscriber to connect and receive get-nodes response from redis (also acts as the periodic refresh interval)
+            if self._stop_refresh.wait(timeout=10): #wait for 10 seconds or until stop event is set
+                return #if stop event is set, exit the refresh loop
         if self.subscriber is None or self.publisher is None:
             raise Exception("Subscriber and Publisher must be connected before refreshing dataframes") #CYA measure should never happen
         newmldict = {}
@@ -41,8 +44,9 @@ class RedisReader:
                 if get_inference_output_message is not None:
                     inference_output_list = get_inference_output_message.get("records", []) 
                     newmldict[node] = inference_output_list #store inference output list in machine learning dictionary with node as key
-        self.rddict = newrddict #update raw data dictionary with new data
-        self.mldict = newmldict #update machine learning dictionary with new data
+        with self.refresh_lock: #acquire lock to ensure thread safety when updating dataframes
+            self.rddict = newrddict #update raw data dictionary with new data
+            self.mldict = newmldict #update machine learning dictionary with new data
     def request_node_ids(self):
         """
         Request list of node IDs from Redis.
@@ -119,7 +123,12 @@ class RedisReader:
         except Exception as e:
             print(f"Error requesting inference output for node {node_id}: {e}")
             return None
-    def getMLDict(self): #returns the machine learning dictionary
-        return self.mldict
-    def getRDDict(self): #returns the raw data dictionary
-        return self.rddict
+    def getDicts(self): #returns both dictionaries as a tuple
+        with self.refresh_lock: #acquire lock to ensure thread safety when accessing dictionaries
+            return dict(self.rddict), dict(self.mldict) #return copies of the dictionaries to prevent external modification
+    def stop(self):
+        """
+        Signal the refresh thread to stop.
+        """
+        self._stop_refresh.set()
+    

@@ -74,6 +74,68 @@ MOCK_ANOMALIES = [
     }
 
 ]
+class RedisMonitorSection(ttk.Frame):
+    def __init__(self, parent, dashboard: 'DashboardApp', title= "Redis Monitor"):
+
+        super().__init__(parent)
+        self.parent = parent
+        self.dashboard = dashboard
+        self.title = title
+        # self._on_open_node = on_open_node
+        self._canvas: Optional[tk.Canvas] = None
+        self._rows_frame: Optional[ttk.Frame] = None
+        self._status_var = tk.StringVar(value="Ready")
+        self._rows: List[Dict[str, Any]] = []
+        
+        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+        
+        self._build_ui()
+    def _build_ui(self):
+        # --- Top bar ---
+        top = ttk.Frame(self)
+        top.pack(fill="x", padx=10, pady=10)
+
+        ttk.Button(top, text="Refresh", command=self.parent.refresh()).pack(side="left")
+
+        # --- Scrollable area ---
+        outer = ttk.Frame(self)
+        outer.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        outer.columnconfigure(0, weight=1)
+        outer.rowconfigure(0, weight=1)
+
+        self._canvas = tk.Canvas(outer, highlightthickness=0)
+        self._canvas.grid(row=0, column=0, sticky="nsew")
+
+        vscroll = ttk.Scrollbar(outer, orient="vertical", command=self._canvas.yview)
+        vscroll.grid(row=0, column=1, sticky="ns")
+        self._canvas.configure(yscrollcommand=vscroll.set)
+
+        # Inner frame goes inside the canvas as a window
+        self._inner = ttk.Frame(self._canvas)
+        self._inner_window = self._canvas.create_window((0, 0), window=self._inner, anchor="nw")
+
+
+        # Bindings to make scrolling and resizing correct
+        self._inner.bind("<Configure>", self._on_inner_configure)
+        self._canvas.bind("<Configure>", self._on_canvas_configure)
+
+        
+
+        # Build initial rows
+        self._build_rows()
+    def _on_inner_configure(self, event):
+        # Update scroll region to encompass the inner frame
+        if self._canvas:
+            self._canvas.configure(scrollregion=self._canvas.bbox("all"))
+        return
+    def _on_canvas_configure(self, event):
+        # Update the inner frame's width to match the canvas width
+        if self._canvas and self._inner_window is not None:
+            self._canvas.itemconfig(self._inner_window, width=event.width)
+        return
+    def _build_rows(self):
+        pass #placeholder for building rows of redis messages
+    
 class AnomalySection(ttk.Frame):
     """
     Tab subsection for anomaly viewer, will be contained in the AnomaliesTab.
@@ -351,9 +413,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
     #     Will be tied to a "Refresh" button in the UI to prevent excessive queries and ensure readability
     #     """
         try:
-            self.rddict = self.redis_reader.getRDDict() #get the raw data dictionary from the redis reader
-            self.mldict = self.redis_reader.getMLDict() #get the machine learning dictionary from the redis reader
-            self._parse_nodes() #parse nodes to update self.nodes with latest data
+            self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
             self._list_section._build_rows() #rebuild the anomaly rows with updated node data
         except Exception as e:
             print(f"Error refreshing anomalies tab: {e}")
