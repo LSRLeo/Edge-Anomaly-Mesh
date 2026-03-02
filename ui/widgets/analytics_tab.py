@@ -266,6 +266,15 @@ class BarChartComponent(AnalyticsComponent):
         self.ax.invert_yaxis()
         self.fig.tight_layout()
         self.canvas.draw()
+        
+        
+
+class StatsComponent(AnalyticsComponent):
+    """Statistics panel showing key metrics"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.labels: Dict[str, ttk.Label] = {}
+        super().__init__(parent, "Statistics", row, col)
 
 def parse_motion_distribution(records):
     counts = Counter()
