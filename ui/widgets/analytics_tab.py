@@ -275,6 +275,26 @@ class StatsComponent(AnalyticsComponent):
     def __init__(self, parent: ttk.Frame, row: int, col: int):
         self.labels: Dict[str, ttk.Label] = {}
         super().__init__(parent, "Statistics", row, col)
+        
+    def setup(self) -> None:
+        # Create a simple grid of labels for each statistic.
+        stats_config = [
+            ("total_inferences", "Total Inferences:"),
+            ("total_anomalies", "Total Anomalies:"),
+            ("active_nodes", "Active Nodes:"),
+            ("uptime_hours", "Uptime:"),
+        ]
+        
+        for i, (key, label_text) in enumerate(stats_config):
+            ttk.Label(self.frame, text=label_text, font=("Arial", 11)).grid(
+                row=i, column=0, sticky="w", padx=10, pady=8
+            )
+            value_label = ttk.Label(self.frame, text="--", font=("Arial", 11, "bold"))
+            value_label.grid(row=i, column=1, sticky="e", padx=10, pady=8)
+            self.labels[key] = value_label
+        
+        self.frame.columnconfigure(0, weight=1)
+        self.frame.columnconfigure(1, weight=1)
 
 def parse_motion_distribution(records):
     counts = Counter()
