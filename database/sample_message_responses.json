@@ -1,0 +1,182 @@
+[
+  {
+    "m_id": "db_message_id",
+    "m_type": "get-nodes-response",
+    "responding_to": "ui_req_001",
+    "nodes": [
+      "node_001",
+      "node_002",
+      "node_003"
+    ]
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "get-node-data-ids-response",
+    "responding_to": "ui_req_002",
+    "node_id": "node_001",
+    "data_ids": [
+      "node_001_1769133134.0",
+      "node_001_1769133136.0",
+      "node_001_1769133138.0",
+      "node_001_1769133140.0",
+      "node_001_1769133142.0",
+      "node_001_1772038800.0",
+      "node_001_1772038860.0",
+      "node_001_1772038920.0"
+    ]
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "get-node-data-ids-response",
+    "responding_to": "ui_req_003",
+    "node_id": "node_002",
+    "data_ids": [
+      "node_002_1769133134.0",
+      "node_002_1772038800.0",
+      "node_002_1772038860.0",
+      "node_002_1772038920.0"
+    ]
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "error",
+    "responding_to": "ui_req_004",
+    "original_request": "get-datum",
+    "error_code": "NOT_FOUND",
+    "error_message": "Event ID not found: node_001_1769107934"
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "error",
+    "responding_to": "ui_req_005",
+    "original_request": "get-datum",
+    "error_code": "NOT_FOUND",
+    "error_message": "Event ID not found: node_001_1769107942"
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "error",
+    "responding_to": "ui_req_006",
+    "original_request": "get-datum",
+    "error_code": "NOT_FOUND",
+    "error_message": "Event ID not found: node_002_1769107934"
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "get-recent-raw-data-response",
+    "responding_to": "ui_req_007",
+    "node_id": "node_001",
+    "records": [
+      {
+        "event_id": "node_001_1772038920.0",
+        "timestamp": "1772038920.0",
+        "seq": 2,
+        "accel_mss": {
+          "x": 0.01,
+          "y": 0.02,
+          "z": 9.81
+        },
+        "gyro_rads": {
+          "x": 0.01,
+          "y": 0.01,
+          "z": 0.01
+        },
+        "gps": {
+          "lat_deg": 41.7,
+          "lon_deg": -104.9,
+          "altitude_m": 1600.0
+        }
+      }
+    ]
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "get-recent-raw-data-response",
+    "responding_to": "ui_req_008",
+    "node_id": "node_002",
+    "records": [
+      {
+        "event_id": "node_002_1772038920.0",
+        "timestamp": "1772038920.0",
+        "seq": 2,
+        "accel_mss": {
+          "x": 0.01,
+          "y": 0.02,
+          "z": 9.81
+        },
+        "gyro_rads": {
+          "x": 0.01,
+          "y": 0.01,
+          "z": 0.01
+        },
+        "gps": {
+          "lat_deg": 41.7,
+          "lon_deg": -104.9,
+          "altitude_m": 1600.0
+        }
+      }
+    ]
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "get-recent-inference-response",
+    "responding_to": "ui_req_009",
+    "node_id": "node_001",
+    "records": [
+      {
+        "event_id": "node_001_1769133142.0",
+        "timestamp": "1769133142.0",
+        "window_start": 1769133140.0,
+        "window_end": 1769133142.0,
+        "window_samples": 20,
+        "location_state": "HOME",
+        "motion_class": "IDLE",
+        "confidence": 0.922,
+        "anomaly_detected": false,
+        "anomaly_score": 0.128,
+        "anomaly_type": null,
+        "nearest_hub_id": "hub_nyc_01",
+        "nearest_hub_distance": 15.9,
+        "feature_vector": {
+          "rms_accel": 0.05,
+          "peak_accel": 0.12,
+          "dominant_freq_hz": 0.0,
+          "variance_x": 0.002,
+          "variance_y": 0.002,
+          "variance_z": 0.003
+        }
+      }
+    ]
+  },
+  {
+    "m_id": "db_message_id",
+    "m_type": "get-recent-inference-response",
+    "responding_to": "ui_req_010",
+    "node_id": "node_002",
+    "records": [
+      {
+        "event_id": "node_002_1769133134.0",
+        "timestamp": "1769133134.0",
+        "window_start": 1769133132.0,
+        "window_end": 1769133134.0,
+        "window_samples": 100,
+        "location_state": "TRANSIT",
+        "motion_class": "TERRESTRIAL",
+        "confidence": 0.939,
+        "anomaly_detected": false,
+        "anomaly_score": 0.177,
+        "anomaly_type": null,
+        "nearest_hub_id": "hub_chicago_01",
+        "nearest_hub_distance": 15475.5,
+        "feature_vector": {
+          "rms_accel": 0.42,
+          "peak_accel": 1.15,
+          "dominant_freq_hz": 3.2,
+          "variance_x": 0.12,
+          "variance_y": 0.08,
+          "variance_z": 0.015
+        }
+      }
+    ]
+  }
+]

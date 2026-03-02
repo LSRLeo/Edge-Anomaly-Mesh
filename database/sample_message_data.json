@@ -1,0 +1,284 @@
+[
+  {
+    "m_type": "raw-data",
+    "m_id": "raw_node001_001",
+    "event_id": "node_001_2026-01-22T18:52:14.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:14.818400",
+    "seq": 1,
+    "gps": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "accel_mss": { "x": 0.05, "y": 0.02, "z": 9.81 },
+    "gyro_rads": { "x": 0.01, "y": 0.01, "z": 0.01 },
+    "meta": { "sample_rate_hz": 50, "battery_pct": 95, "sim_mode": "IDLE", "sim_anomaly": false },
+    "origin": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "dest":   { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "raw_node001_002",
+    "event_id": "node_001_2026-01-22T18:52:16.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:16.818400",
+    "seq": 2,
+    "gps": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "accel_mss": { "x": 0.05, "y": 0.02, "z": 9.81 },
+    "gyro_rads": { "x": 0.01, "y": 0.01, "z": 0.01 },
+    "meta": { "sample_rate_hz": 50, "battery_pct": 95, "sim_mode": "IDLE", "sim_anomaly": false },
+    "origin": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "dest":   { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "raw_node001_003",
+    "event_id": "node_001_2026-01-22T18:52:18.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:18.818400",
+    "seq": 3,
+    "gps": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "accel_mss": { "x": 0.05, "y": 0.02, "z": 9.81 },
+    "gyro_rads": { "x": 0.01, "y": 0.01, "z": 0.01 },
+    "meta": { "sample_rate_hz": 50, "battery_pct": 95, "sim_mode": "IDLE", "sim_anomaly": false },
+    "origin": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "dest":   { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "raw_node001_004",
+    "event_id": "node_001_2026-01-22T18:52:20.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:20.818400",
+    "seq": 4,
+    "gps": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "accel_mss": { "x": 0.05, "y": 0.02, "z": 9.81 },
+    "gyro_rads": { "x": 0.01, "y": 0.01, "z": 0.01 },
+    "meta": { "sample_rate_hz": 50, "battery_pct": 95, "sim_mode": "IDLE", "sim_anomaly": false },
+    "origin": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "dest":   { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "raw_node001_005",
+    "event_id": "node_001_2026-01-22T18:52:22.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:22.818400",
+    "seq": 5,
+    "gps": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "accel_mss": { "x": 0.05, "y": 0.02, "z": 9.81 },
+    "gyro_rads": { "x": 0.01, "y": 0.01, "z": 0.01 },
+    "meta": { "sample_rate_hz": 50, "battery_pct": 95, "sim_mode": "IDLE", "sim_anomaly": false },
+    "origin": { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 },
+    "dest":   { "lat_deg": 40.712776, "lon_deg": -74.005974, "altitude_m": 10.0 }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "raw_node002_001",
+    "event_id": "node_002_2026-01-22T18:52:14.818400",
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:14.818400",
+    "seq": 1,
+    "gps": { "lat_deg": 41.739370, "lon_deg": -87.554860, "altitude_m": 182.0 },
+    "accel_mss": { "x": 0.42, "y": 0.18, "z": 9.79 },
+    "gyro_rads": { "x": 0.03, "y": 0.02, "z": 0.04 },
+    "meta": { "sample_rate_hz": 50, "battery_pct": 88, "sim_mode": "TERRESTRIAL", "sim_anomaly": false },
+    "origin": { "lat_deg": 41.739370, "lon_deg": -87.554860, "altitude_m": 182.0 },
+    "dest":   { "lat_deg": 41.878113, "lon_deg": -87.629799, "altitude_m": 180.0 }
+  },
+  {
+    "m_type": "inference-output",
+    "m_id": "inf_node001_001",
+    "event_id": "node_001_2026-01-22T18:52:14.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:14.818400",
+    "window": {
+      "start": "2026-01-22T18:52:12.818400",
+      "end": "2026-01-22T18:52:14.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.963,
+    "anomaly": {
+      "detected": false,
+      "score": 0.063,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 39.7
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 40
+  },
+  {
+    "m_type": "inference-output",
+    "m_id": "inf_node001_002",
+    "event_id": "node_001_2026-01-22T18:52:16.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:16.818400",
+    "window": {
+      "start": "2026-01-22T18:52:14.818400",
+      "end": "2026-01-22T18:52:16.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.931,
+    "anomaly": {
+      "detected": false,
+      "score": 0.061,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 27.1
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 56
+  },
+  {
+    "m_type": "inference-output",
+    "m_id": "inf_node001_003",
+    "event_id": "node_001_2026-01-22T18:52:18.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:18.818400",
+    "window": {
+      "start": "2026-01-22T18:52:16.818400",
+      "end": "2026-01-22T18:52:18.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.995,
+    "anomaly": {
+      "detected": false,
+      "score": 0.064,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 43.1
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 31
+  },
+  {
+    "m_type": "inference-output",
+    "m_id": "inf_node001_004",
+    "event_id": "node_001_2026-01-22T18:52:20.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:20.818400",
+    "window": {
+      "start": "2026-01-22T18:52:18.818400",
+      "end": "2026-01-22T18:52:20.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.913,
+    "anomaly": {
+      "detected": false,
+      "score": 0.056,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 45.2
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 57
+  },
+  {
+    "m_type": "inference-output",
+    "m_id": "inf_node001_005",
+    "event_id": "node_001_2026-01-22T18:52:22.818400",
+    "node_id": "node_001",
+    "timestamp": "2026-01-22T18:52:22.818400",
+    "window": {
+      "start": "2026-01-22T18:52:20.818400",
+      "end": "2026-01-22T18:52:22.818400",
+      "samples": 20
+    },
+    "location_state": "HOME",
+    "motion_class": "IDLE",
+    "confidence": 0.922,
+    "anomaly": {
+      "detected": false,
+      "score": 0.128,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_nyc_01",
+      "distance_m": 15.9
+    },
+    "features": {
+      "rms_accel": 0.05,
+      "peak_accel": 0.12,
+      "dominant_freq_hz": 0.0,
+      "variance_x": 0.002,
+      "variance_y": 0.002,
+      "variance_z": 0.003
+    },
+    "processing_time_ms": 49
+  },
+  {
+    "m_type": "inference-output",
+    "m_id": "inf_node002_001",
+    "event_id": "node_002_2026-01-22T18:52:14.818400",
+    "node_id": "node_002",
+    "timestamp": "2026-01-22T18:52:14.818400",
+    "window": {
+      "start": "2026-01-22T18:52:12.818400",
+      "end": "2026-01-22T18:52:14.818400",
+      "samples": 100
+    },
+    "location_state": "TRANSIT",
+    "motion_class": "TERRESTRIAL",
+    "confidence": 0.939,
+    "anomaly": {
+      "detected": false,
+      "score": 0.177,
+      "type": null
+    },
+    "nearest_hub": {
+      "hub_id": "hub_chicago_01",
+      "distance_m": 15475.5
+    },
+    "features": {
+      "rms_accel": 0.42,
+      "peak_accel": 1.15,
+      "dominant_freq_hz": 3.2,
+      "variance_x": 0.12,
+      "variance_y": 0.08,
+      "variance_z": 0.015
+    },
+    "processing_time_ms": 42
+  }
+]

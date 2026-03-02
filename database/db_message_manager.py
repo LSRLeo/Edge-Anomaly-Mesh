@@ -1,15 +1,30 @@
 '''
 Docstring for database.db_message_manager
-m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'Error'
+m_Types: 'raw-data', 'inference-output', 'get-nodes', 'get-nodes-response','get-node-data-ids', 'get-node-data-ids-response', 'get-datum', 'get-datum-response', 'error'
+
+TWO USAGE SCENARIOS:
+1) sample usage, uses sample_message_data.json and sample_message_requests.json and writes results to sample_message_responses.json
+2) send custom messages with python db_message_manager.py --infile <path_to_input_messages.json> --outfile <path_to_output_responses.json>
 '''
-from asyncio.log import logger
-from email import message
+
 import logging
 import json
 import sys
+import argparse
+from pathlib import Path
+from typing import Dict, Any, Optional, List
+
+from db_message_factory import MessageFactory
+from db_table_manager import TableManager
+from schema import create_schema
 
 #logging for debugging purposes
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
+
+#default file paths for sample messages
+SAMPLE_DATA_FILE     = Path("sample_message_data.json")
+SAMPLE_REQUEST_FILE  = Path("sample_message_requests.json")
+SAMPLE_RESPONSE_FILE = Path("sample_message_responses.json")
 
 class DBMessageManager:
     '''
@@ -18,46 +33,77 @@ class DBMessageManager:
 
 
     def __init__(self):
-        self.handlers = {}
-        self._register_handlers()
-        logging.info("DBMessageManager initialized with handlers: %s", list(self.handlers.keys()))
+        create_schema()  # Ensure database schema is created - caused issue so lets assume it is already created
+        self.table_manager = TableManager()
+        logging.info("DBMessageManager initialized and database schema created")
 
 
-    def _register_handlers(self):
-        """Register all message type handlers"""
-        self.handlers = {
-            'raw-data': self.handle_raw_data,
-            'inference-output': self.handle_inference_output,
-            'get-nodes': self.handle_get_nodes,
-            'get-node-data-ids': self.handle_get_node_data_ids,
-            'get-datum': self.handle_get_datum,  
-        }
+    def process_message(self, message:Dict[str, Any]):
+        """Processes incoming message and creates message objects"""
 
-    def process_message(self, message:dict):
-        """Processes incoming message and routes it to the appropriate handler after calling validation"""
+        #Could validate message here too and then remove m_id and m_type before passing to message factory, but message factory already does validation and we want to avoid copying the dict if possible, so we'll just pass the original dict to the message factory and let it handle validation and object creation.
+        message_obj = MessageFactory.create_message(message)
+        if message_obj is None:
+            m_id   = message.get("m_id",   "unknown") if isinstance(message, dict) else "unknown"
+            m_type = message.get("m_type", "unknown") if isinstance(message, dict) else "unknown"
+            logging.error("Factory could not create message  m_id=%s  m_type=%s", m_id, m_type)
+            return {
+                "m_id":             f"error_{m_id}",
+                "m_type":           "error",
+                "responding_to":    m_id,
+                "original_request": m_type,
+                "error_code":       "INVALID_REQUEST",
+                "error_message":    (
+                    "Failed to create message object. "
+                    "Invalid message format or unknown message type."
+                ),
+            }
+        #GET RESULTS
+        results = message_obj.execute(self.table_manager)
+        return results.to_dict() if results else None
 
-        if self.validate_message(message):
-            m_type = message.get('m_type')
-            recieved_m_id = message.get('m_id')
-            handler = self.handlers.get(m_type)
+    def read_file(self, infile: str | Path, outfile: str | Path):
+        """Processes messages from an input file and writes responses to an output file."""
+        infile  = Path(infile)
+        outfile = Path(outfile)
 
-            if handler:
-                logging.info("Found handler for m_type: %s, processing message with m_id: %s", m_type, recieved_m_id)
-                #call handler function
-                handler(message)
+        try:
+            with open(infile, "r") as f:
+                data = json.load(f)
+                messages = data if isinstance(data, list) else [data]
 
-            else:
-                logging.error("No handler found for m_type: %s, message with m_id: %s cannot be processed", m_type, recieved_m_id)
-                return
+            responses = []
+            for message in messages:
+                response = self.process_message(message)
 
-        else:
-            #Handle error and send error response
-            logging.error("Message failed validation and will not be processed")
-            return
+                if response:
+                    responses.append(response)
+
+            self._write_responses(responses, outfile)
+            return responses
+        except FileNotFoundError:
+            logging.error("Input file not found: %s", infile)
+            return []
         
-        
+        except json.JSONDecodeError as e:
+            logging.error("JSON parse error in %s : %s", infile, e)
+            return []
 
-    def validate_message(self, message: dict) -> bool:
+    def _write_responses(self, responses: list[Dict[str, Any]], outfile: str | Path):
+        """Writes responses to an output file."""
+        outfile = Path(outfile)
+        try:
+            with open(outfile, "w") as f:
+                json.dump(responses, f, indent=2)
+        except FileNotFoundError:
+            logging.error("Output file not found: %s", outfile)
+            return []
+        except json.JSONDecodeError as e:
+            logging.error("JSON parse error in %s : %s", outfile, e)
+            return []
+
+    #VALIDATE is done in message factory
+    def validate_message(self, message: Dict[str, Any]) -> bool:
         """Validates structure is a dictionary and contains required fields 'm_type' and 'm_id'"""
 
         if not isinstance(message, dict):
@@ -74,39 +120,95 @@ class DBMessageManager:
         
         return True
     
+def run_sample_usage():
+    """demonstrates usage with sample files. Reads sample_message_data.json and populates database,
+    then eads sample_message_requests.json, Runs: get-nodes, get-node-data-ids, get-datum queries against the DB.
+    Every query response is appended to sample_message_responses.json"""
+    #EMPTY response file before writing new responses
+    print("\n\n\n\n  DB MESSAGE MANAGER — SAMPLE USAGE")
+    print("=" * 65)
+    #EMPTY response file before writing new responses
+   
+    manager = DBMessageManager()
+    data_msg_responses = manager.read_file(SAMPLE_DATA_FILE, SAMPLE_RESPONSE_FILE)
 
-    def handle_raw_data(self, message: dict):
-        logger.info(f"Handling raw-data message: {message['m_id']} inserts raw data into the databases")
+    if data_msg_responses:
+        #Errors
+        print(f"{len(data_msg_responses)} messages from {SAMPLE_DATA_FILE} processed with responses written to {SAMPLE_RESPONSE_FILE}")
+
+    request_msg_responses = manager.read_file(SAMPLE_REQUEST_FILE, SAMPLE_RESPONSE_FILE)
+
+    if request_msg_responses:
+        print(f"{len(request_msg_responses)} queries responses written to {SAMPLE_RESPONSE_FILE}")
+
+    
+    print(f"\n{'=' * 65}")
+    print(f"\tDone")
+    print(f"{'=' * 65}\n")
 
 
-    def handle_inference_output(self, message: dict):
-        logger.info(f"Handling inference-output message: {message['m_id']} inserts inference output into the databases")
+#CLI
+def send_message(infile: str, outfile: str) -> None:
+    """
+    Process all messages in infile and write responses to outfile.
 
+    Called by the argparse CLI when --infile and --outfile are both supplied.
 
-    def handle_get_nodes(self, message: dict):
-        logger.info(f"Handling get-nodes request: {message['m_id']} returns message of type get-nodes-response") 
-        
-
-
-    def handle_get_node_data_ids(self, message: dict):
-        logger.info(f"Handling get-node-data-ids request: {message['m_id']} returns message of type get-node-data-ids-response")
-
-    def handle_get_datum(self, message: dict):
-        logger.info(f"Handling get-datum request: {message['m_id']} returns message of type get-datum-response")
-
-
-
-    def handle_error(self):
-        logger.error(f"sends error response to sender")
+    Example:
+        python db_message_manager.py --infile my_messages.json --outfile my_responses.json, outfile will be overwritten if it already exists.
+    """
+    manager = DBMessageManager()
+    responses = manager.read_file(infile, outfile)
+ 
+    print(
+        f"\n  Processed '{Path(infile).name}' "
+        f"  {len(responses)} response(s) written to '{outfile}'"
+        )
+    
 
 
 if __name__ == "__main__":
-    db_message_manager = DBMessageManager()
-    # logging.info("DBMessageManager instance created: %s", db_message_manager)
-    test_message = '''{
-        "m_type": "inference-output",
-        "m_id": "ui_00001"
-    }'''
-    test_message_json = json.loads(test_message)
-    testing_result = db_message_manager.process_message(test_message_json)
+    #set up argparse for CLI usage
+    parser = argparse.ArgumentParser(
+        description="Process JSON message files through the DB message pipeline.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+        Examples--------
+        # Built-in demo (no arguments required):
+            python db_message_manager.py
+        # Custom files via CLI (send_message mode):
+            python db_message_manager.py --infile my_messages.json --outfile my_responses.json
+        """,
+    )
+
+    parser.add_argument(
+        "--infile",
+        type=str,
+        default=None,
+        help="Path to input JSON file (single message dict or list of dicts).",
+    )
+
+    parser.add_argument(
+        "--outfile",
+        type=str,
+        default=None,
+        help="Path to output JSON file where responses will be written/appended.",
+    )
+
+    args = parser.parse_args()
+
+    if args.infile and args.outfile:
+        # CLI / send_message mode
+        send_message(args.infile, args.outfile)
+    elif args.infile or args.outfile:
+        # Only one flag — that's an error
+        parser.error("Both --infile and --outfile must be supplied together.")
+    else:
+        # No flags → built-in sample usage
+        run_sample_usage()
+
+
+
+
+
 
