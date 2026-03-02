@@ -5,7 +5,18 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import desc
 from schema import engine, Node, RawSensorData, InferenceResults
 
+
 Session = sessionmaker(bind=engine)
+
+# Helper to convert SQLAlchemy ORM object to dict
+def orm_to_dict(obj):
+	if obj is None:
+		return None
+	# Try to use __table__.columns if available
+	if hasattr(obj, '__table__'):
+		return {c.name: getattr(obj, c.name) for c in obj.__table__.columns}
+	# Fallback: use __dict__ and filter out private attributes
+	return {k: v for k, v in vars(obj).items() if not k.startswith('_')}
 
 def get_nodes():
 	"""Return all node_ids in the nodes table."""
@@ -45,8 +56,8 @@ def get_datum(event_id):
 			InferenceResults.window_end >= timestamp
 		).order_by(desc(InferenceResults.window_end)).first()
 		return {
-			'raw': raw,
-			'inference': inference
+			'raw': orm_to_dict(raw),
+			'inference': orm_to_dict(inference)
 		}
 	finally:
 		session.close()
@@ -56,7 +67,7 @@ def get_recent_raw_data(node_id):
 	session = Session()
 	try:
 		row = session.query(RawSensorData).filter(RawSensorData.node_id == node_id).order_by(desc(RawSensorData.timestamp)).first()
-		return row
+		return orm_to_dict(row)
 	finally:
 		session.close()
 
@@ -65,6 +76,6 @@ def get_recent_inference(node_id):
 	session = Session()
 	try:
 		row = session.query(InferenceResults).filter(InferenceResults.node_id == node_id).order_by(desc(InferenceResults.window_end)).first()
-		return row
+		return orm_to_dict(row)
 	finally:
 		session.close()
