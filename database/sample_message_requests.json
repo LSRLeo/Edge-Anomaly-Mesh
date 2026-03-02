@@ -27,5 +27,25 @@
     "m_type": "get-datum",
     "m_id": "ui_req_006",
     "event_id": "node_002_1769107934"
+  },
+  {
+    "m_type": "get-recent-raw-data",
+    "m_id": "ui_req_007",
+    "node_id": "node_001"
+  },
+  {
+    "m_type": "get-recent-raw-data",
+    "m_id": "ui_req_008",
+    "node_id": "node_002"
+  },
+  {
+    "m_type": "get-recent-inference",
+    "m_id": "ui_req_009",
+    "node_id": "node_001"
+  },
+  {
+    "m_type": "get-recent-inference",
+    "m_id": "ui_req_010",
+    "node_id": "node_002"
   }
 ]

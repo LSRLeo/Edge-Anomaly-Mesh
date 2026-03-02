@@ -6,10 +6,65 @@ from abc import ABC, abstractmethod
 import logging
 from db_table_manager import TableManager
 from queries import get_nodes,get_nodes,get_node_data_ids,get_datum, get_recent_inference, get_recent_raw_data,get_recent_raw_data
-
+import json
+from datetime import datetime
 
 ERROR_CODES = ["NOT_FOUND", "INVALID_REQUEST", "INTERNAL_ERROR"]
 M_ID_DB = "db_message_id" #temp id for DB messages, to be replaced by actual message ID generation logic
+
+
+def _serialize_inference_full(inf) -> Optional[Dict[str, Any]]:
+    """
+    Serialize an InferenceResults ORM row to the full get-recent-inference record format.
+    """
+    if inf is None:
+        return None
+
+    feature_vector = {}
+    if inf.feature_vector:
+        try:
+            feature_vector = json.loads(inf.feature_vector)
+        except (json.JSONDecodeError, TypeError):
+            feature_vector = {}
+
+    return {
+        "event_id": f"{inf.node_id}_{inf.timestamp}",
+        "timestamp": f"{inf.timestamp}",
+        "window_start": inf.window_start,
+        "window_end": inf.window_end,
+        "window_samples": inf.window_samples,
+        "location_state": inf.location_state,
+        "motion_class": inf.motion_class,
+        "confidence": inf.confidence,
+        "anomaly_detected": inf.anomaly_detected,
+        "anomaly_score": inf.anomaly_score,
+        "anomaly_type": inf.anomaly_type,
+        "nearest_hub_id": inf.nearest_hub_id,
+        "nearest_hub_distance": inf.nearest_hub_distance,
+        "feature_vector": feature_vector,
+    }
+
+
+def _serialize_raw(raw) -> Dict[str, Any]:
+    """
+    Serialize a RawSensorData ORM row to the message_outputs format.
+    Returns None if raw is None.
+    """
+    if raw is None:
+        return None
+    return {
+        "event_id": f"{raw.node_id}_{raw.timestamp}",
+        "timestamp": f"{raw.timestamp}",
+        "seq": raw.seq,
+        "accel_mss": {"x": raw.accel_x, "y": raw.accel_y, "z": raw.accel_z},
+        "gyro_rads": {"x": raw.gyro_x, "y": raw.gyro_y, "z": raw.gyro_z},
+        "gps": {
+            "lat_deg": raw.gps_lat,
+            "lon_deg": raw.gps_lon,
+            "altitude_m": raw.gps_altitude_m,
+        },
+    }
+
 
 class Message(ABC):
     """
@@ -72,7 +127,7 @@ class MessageResponse(Message):
     """
 
 
-    def __init__(self, m_id: str, responding_to: str, m_type: str, results: Dict[str, Any]):
+    def __init__(self, m_id: str, m_type: str, responding_to: str,results: Dict[str, Any]):
         self.responding_to = responding_to 
         self.results = results
         self.M_TYPE = m_type #override M_TYPE in constructor
@@ -92,7 +147,16 @@ class MessageResponse(Message):
 
 class ErrorResponse(MessageResponse):
     M_TYPE = "error"  # Fixed type for all errors
-
+    """
+    {
+    "m_type": "error",
+    "m_id": "db_00099",
+    "responding_to": "ui_00001",
+    "original_request": "get-datum",
+    "error_code": "NOT_FOUND",
+    "error_message": "Event ID not found"
+    }
+    """
 
     def __init__(self, m_id: str, responding_to: str, original_request: str, error_message: str, error_code: str = "INTERNAL_ERROR"):
         """
@@ -112,16 +176,25 @@ class ErrorResponse(MessageResponse):
             error_code = "INTERNAL_ERROR"
 
         results = {
-            "original_request": responding_to,
+            "original_request": original_request,
             "error_code": error_code,
             "error_message": error_message
         }
         
-        super().__init__(m_id, self.M_TYPE, responding_to, results)
-        self.original_request = original_request
-        self.error_code = error_code
-        self.error_message = error_message
-
+        super().__init__(m_id, responding_to, self.M_TYPE, results)
+        # self.original_request = original_request
+        # self.error_code = error_code
+        # self.error_message = error_message
+    # def to_dict(self) -> Dict[str, Any]:
+    #     """Convert error response to dictionary for publishing"""
+    #     return {
+    #         "m_id": self.m_id,
+    #         "m_type": self.m_type,
+    #         "responding_to": self.responding_to,
+    #         "original_request": self.original_request,
+    #         "error_code": self.error_code,
+    #         "error_message": self.error_message
+    #     }
 
 class MessageRequest(Message):
     '''
@@ -255,8 +328,8 @@ class GetNodesRequest(MessageRequest):
             logging.info("Executing get-nodes request")
             return MessageResponse(
                 m_id=M_ID_DB,
-                responding_to=self.m_id,
                 m_type="get-nodes-response",
+                responding_to=self.m_id,
                 results={"nodes": node_ids})
         
         except Exception as e:
@@ -298,8 +371,8 @@ class GetNodeDataIdsRequest(MessageRequest):
 
             return MessageResponse(
                 m_id=M_ID_DB,
-                responding_to=self.m_id,
                 m_type="get-node-data-ids-response",
+                responding_to=self.m_id,
                 results={"node_id": self.node_id, "data_ids": data_ids},
             )
 
@@ -349,8 +422,8 @@ class GetDatumRequest(MessageRequest):
 
             return MessageResponse(
                 m_id=M_ID_DB,
-                responding_to=self.m_id,
                 m_type="get-datum-response",
+                responding_to=self.m_id,
                 results=result
             )
 
@@ -389,9 +462,9 @@ class GetRecentRawDataRequest(MessageRequest):
             if not self.node_id:
                 raise ValueError("Missing required field: node_id")
 
-            records = get_recent_raw_data(self.node_id)
+            row = get_recent_raw_data(self.node_id)
 
-            if records is None:
+            if row is None:
                 return ErrorResponse(
                     m_id=M_ID_DB,
                     responding_to=self.m_id,
@@ -400,13 +473,14 @@ class GetRecentRawDataRequest(MessageRequest):
                     error_code="NOT_FOUND",
                 )
 
+            records = [_serialize_raw(row)]
+
             return MessageResponse(
                 m_id=M_ID_DB,
-                responding_to=self.m_id,
                 m_type="get-recent-raw-data-response",
+                responding_to=self.m_id,
                 results={"node_id": self.node_id, "records": records},
             )
-
         except ValueError as e:
             return ErrorResponse(
                 m_id=M_ID_DB,
@@ -441,9 +515,9 @@ class GetRecentInferenceRequest(MessageRequest):
             if not self.node_id:
                 raise ValueError("Missing required field: node_id")
 
-            records = get_recent_inference(self.node_id)
+            row = get_recent_inference(self.node_id)
 
-            if records is None:
+            if row is None:
                 return ErrorResponse(
                     m_id=M_ID_DB,
                     responding_to=self.m_id,
@@ -451,11 +525,13 @@ class GetRecentInferenceRequest(MessageRequest):
                     error_message=f"No inference data found for node: {self.node_id}",
                     error_code="NOT_FOUND",
                 )
+            #if multiple rows, can do list comprehension to serialize each row and return list
+            records = [_serialize_inference_full(row)]
 
             return MessageResponse(
                 m_id=M_ID_DB,
-                responding_to=self.m_id,
                 m_type="get-recent-inference-response",
+                responding_to=self.m_id,
                 results={"node_id": self.node_id, "records": records},
             )
 
