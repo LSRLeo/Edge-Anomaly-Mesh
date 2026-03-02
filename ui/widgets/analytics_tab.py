@@ -313,6 +313,20 @@ class StatsComponent(AnalyticsComponent):
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(1, weight=1)
         
+    def update(self, records: List[Dict]) -> None:
+        stats = self.parse(records)
+        formatters = {
+            "total_inferences": lambda v: f"{v:,}",
+            "total_anomalies": lambda v: f"{v:,}",
+            "active_nodes": lambda v: str(v),
+            "uptime_hours": lambda v: f"{v:.1f} hours",
+        }
+        
+        for key, label in self.labels.items():
+            if key in stats:
+                formatter = formatters.get(key, str)
+                label.config(text=formatter(stats[key]))
+        
 
 def parse_motion_distribution(records):
     counts = Counter()
