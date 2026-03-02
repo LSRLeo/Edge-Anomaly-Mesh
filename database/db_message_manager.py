@@ -85,7 +85,7 @@ class DBMessageManager:
         """Writes responses to an output file."""
         outfile = Path(outfile)
         try:
-            with open(outfile, "a") as f:
+            with open(outfile, "w") as f:
                 json.dump(responses, f, indent=2)
         except FileNotFoundError:
             logging.error("Output file not found: %s", outfile)
@@ -120,9 +120,7 @@ def run_sample_usage():
     print("\n\n\n\n  DB MESSAGE MANAGER — SAMPLE USAGE")
     print("=" * 65)
     #EMPTY response file before writing new responses
-    with open(SAMPLE_RESPONSE_FILE, "w") as f:
-        json.dump([], f)
-
+   
     db_message_manager = DBMessageManager()
     data_msg_responses = db_message_manager.read_file(SAMPLE_DATA_FILE, SAMPLE_RESPONSE_FILE)
 
