@@ -22,6 +22,9 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List, Optional, Any, Tuple, TYPE_CHECKING
 from datetime import datetime, timedelta
+from widgets.parent_classes import Node
+from widgets.parent_classes import DashboardParents
+from redis_reader import RedisReader
 
 # Matplotlib imports
 import matplotlib
@@ -37,72 +40,27 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Avoid circular import
 if TYPE_CHECKING:
-    from ui.widgets.dashboard_main import DashboardApp
+    from widgets.dashboard_main import DashboardApp
 
 
 # =============================================================================
 # MOCK DATA - Replace with database queries
 # =============================================================================
 
-MOCK_NODES = ['node_001', 'node_002', 'node_003', 'node_004', 'node_005', 'node_006']
+# MOCK_NODES = ['node_001', 'node_002', 'node_003', 'node_004', 'node_005', 'node_006']
 
-MOCK_NODE_INFO = {
-    'node_id': 'node_003',
-    'status': 'ACTIVE',
-    'current_motion': 'MARITIME',
-    'location': 'Hub B - Dock 4',
-    'first_seen': datetime.now() - timedelta(days=7),
-    'last_seen': datetime.now() - timedelta(seconds=30),
-    'total_inferences': 8452,
-    'total_anomalies': 12,
-}
-class Node:
-    def __init__(self, node_id: str, lat: float, lon: float, timestamp: datetime, motion_class: int, confidence: float):
-        self.node_id = node_id
-        self.lat = lat
-        self.lon = lon
-        self.timestamp = timestamp
-        self.motion_class = motion_class
-        self.confidence = confidence
-        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-    def updateTimestamp(self):
-        self.timestamp = datetime.now()
-    def updateMotion(self, motion_class, confidence: float):
-        if isinstance(motion_class, int):
-            self.motion_class = motion_class
-        if isinstance(motion_class, str):
-            if motion_class in self.motion_states:
-                self.motion_class = self.motion_states.index(motion_class)
-            else:                raise ValueError(f"Invalid motion class string: {motion_class}")
-        self.confidence = confidence
-    def __str__(self):
-        return f"Node({self.node_id}, {self.lat}, {self.lon}, {self.timestamp}, {self.motion_class}, {self.confidence})"
-    def getNodeID(self):
-        return self.node_id
-    def getCoords(self):
-        return (self.lat, self.lon)
-    def getTimestamp(self):
-        return self.timestamp
-    def getMotion(self):
-        return (self.motion_class, self.confidence)
-    def toDict(self): #returns a dictionary representation of the node for easy access
-        return {
-            'node_id': self.node_id,
-            'lat': self.lat,
-            'lon': self.lon,
-            'timestamp': self.timestamp,
-            'motion_class': self.motion_class,
-            'confidence': self.confidence
-        }
-    def motionString(self): #returns the motion class as a string for the user
-        return self.motion_states[self.motion_class]
+# MOCK_NODE_INFO = {
+#     'node_id': 'node_003',
+#     'status': 'ACTIVE',
+#     'current_motion': 'MARITIME',
+#     'location': 'Hub B - Dock 4',
+#     'first_seen': datetime.now() - timedelta(days=7),
+#     'last_seen': datetime.now() - timedelta(seconds=30),
+#     'total_inferences': 8452,
+#     'total_anomalies': 12,
+# }
 
-
-
-
-
-
-class NodeDetailsTab(ttk.Frame):
+class NodeDetailsTab(ttk.Frame, DashboardParents):
     """
     Node details drill-down tab.
     
@@ -110,7 +68,7 @@ class NodeDetailsTab(ttk.Frame):
     including metadata, motion history, and anomaly trends.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', selected_node_id: Optional[str] = None):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader, selected_node_id: Optional[str] = None):
         """
         Initialize the Node Details tab.
         
@@ -139,10 +97,15 @@ class NodeDetailsTab(ttk.Frame):
         # self.trend_fig: Optional[Figure] = None
         # self.trend_ax = None
         # self.trend_canvas: Optional[FigureCanvasTkAgg] = None
+        self.mldict = {} #machine learning dictionary
+        self.rddict = {} #raw data dictionary
         self.nodes = {} #dict of node_id to Node object
-        self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
+        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+        # self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
+        self.refresh() #initial refresh to populate data from redis
         # Build UI
         self._setup_ui()
+        
     
     def _setup_ui(self):
         """
@@ -169,8 +132,6 @@ class NodeDetailsTab(ttk.Frame):
         
         self._setup_node_selector()
         self._setup_info_panel()
-        # self._setup_history_table()
-        # self._setup_anomaly_trend_chart()
         
 
     
@@ -248,6 +209,13 @@ class NodeDetailsTab(ttk.Frame):
             "timestamp": tk.StringVar(value="—"),
             "motion_class": tk.StringVar(value="—"),
             "confidence": tk.StringVar(value="—"),
+            "seq": tk.StringVar(value="—"),
+            "accel_x": tk.StringVar(value="—"),
+            "accel_y": tk.StringVar(value="—"),
+            "accel_z": tk.StringVar(value="—"),
+            "gyro_x": tk.StringVar(value="—"),
+            "gyro_y": tk.StringVar(value="—"),
+            "gyro_z": tk.StringVar(value="—"),
         }
 
         # Helper to add a labeled row
@@ -259,9 +227,16 @@ class NodeDetailsTab(ttk.Frame):
 
         r = 1
         add_row(r, "Node ID", self.vars["node_id"]); r += 1
+        add_row(r, "Timestamp", self.vars["timestamp"]); r += 1
+        add_row(r, "Sequence", self.vars["seq"]); r += 1
+        add_row(r, "Accel X", self.vars["accel_x"]); r += 1
+        add_row(r, "Accel Y", self.vars["accel_y"]); r += 1
+        add_row(r, "Accel Z", self.vars["accel_z"]); r += 1
+        add_row(r, "Gyro X", self.vars["gyro_x"]); r += 1
+        add_row(r, "Gyro Y", self.vars["gyro_y"]); r += 1
+        add_row(r, "Gyro Z", self.vars["gyro_z"]); r += 1
         add_row(r, "Latitude", self.vars["lat"]); r += 1
         add_row(r, "Longitude", self.vars["lon"]); r += 1
-        add_row(r, "Timestamp", self.vars["timestamp"]); r += 1
         add_row(r, "Motion Class", self.vars["motion_class"]); r += 1
         add_row(r, "Confidence", self.vars["confidence"]); r += 1
 
@@ -273,128 +248,76 @@ class NodeDetailsTab(ttk.Frame):
             self.selected_node_id = list(self.nodes.keys())[0]
             self.display_node(self.selected_node_id)
 
-
-    
-    # def _setup_history_table(self):
-        """
-        Create the motion history treeview table.
-        
-        Columns:
-        - Timestamp
-        - Motion Class
-        - Confidence
-        - Anomaly Score
-        """
-        # TODO: Implement
-        #
-        # history_frame = ttk.LabelFrame(self, text="Motion History (Last 24 Hours)")
-        # history_frame.grid(row=2, column=0, sticky='nsew', padx=10, pady=5)
-        # history_frame.columnconfigure(0, weight=1)
-        # history_frame.rowconfigure(0, weight=1)
-        #
-        # columns = ('timestamp', 'motion_class', 'confidence', 'anomaly_score')
-        #
-        # self.history_tree = ttk.Treeview(history_frame, columns=columns,
-        #                                   show='headings', height=8)
-        #
-        # self.history_tree.heading('timestamp', text='Timestamp')
-        # self.history_tree.heading('motion_class', text='Motion Class')
-        # self.history_tree.heading('confidence', text='Confidence')
-        # self.history_tree.heading('anomaly_score', text='Anomaly Score')
-        #
-        # self.history_tree.column('timestamp', width=150, anchor='center')
-        # self.history_tree.column('motion_class', width=120, anchor='center')
-        # self.history_tree.column('confidence', width=100, anchor='center')
-        # self.history_tree.column('anomaly_score', width=100, anchor='center')
-        #
-        # self.history_tree.grid(row=0, column=0, sticky='nsew')
-        #
-        # # Scrollbar
-        # scrollbar = ttk.Scrollbar(history_frame, orient='vertical',
-        #                           command=self.history_tree.yview)
-        # scrollbar.grid(row=0, column=1, sticky='ns')
-        # self.history_tree.configure(yscrollcommand=scrollbar.set)
-        #
-        # # Configure row tags for motion class coloring
-        # for motion_class, color in MOTION_COLORS.items():
-        #     self.history_tree.tag_configure(motion_class, foreground=color)
-        pass
-    
-    # def _setup_anomaly_trend_chart(self):
-        """
-        Create the anomaly score trend line chart.
-        
-        Shows anomaly score over time for the selected node.
-        """
-        # TODO: Implement
-        #
-        # chart_frame = ttk.LabelFrame(self, text="Anomaly Score Trend")
-        # chart_frame.grid(row=3, column=0, sticky='nsew', padx=10, pady=5)
-        #
-        # self.trend_fig = Figure(figsize=(8, 3), dpi=100)
-        # self.trend_ax = self.trend_fig.add_subplot(111)
-        #
-        # self.trend_canvas = FigureCanvasTkAgg(self.trend_fig, master=chart_frame)
-        # self.trend_canvas.get_tk_widget().pack(fill='both', expand=True, padx=5, pady=5)
-        pass
     
     def load_json(self, filename):
         if not os.path.exists(filename):
             raise FileNotFoundError
         with open(filename, 'r') as file:
             return json.load(file)
-    def populate_test_nodes(self):
-        file = self.load_json('test_nodesV2.json')
+    # def populate_test_nodes(self):
+    #     file = self.load_json('widgets/test_nodes.json')
         
 
-        for entry in file:
-            try:
-                self.load_node(entry["node_id"], entry)
+    #     for entry in file:
+    #         try:
+    #             self.load_node(entry["node_id"], entry)
 
-            except Exception as e:
-                print(f"[load_nodes] Failed to load entry {entry}: {e}")
+    #         except Exception as e:
+    #             print(f"[load_nodes] Failed to load entry {entry}: {e}")
 
   
-    def load_node(self, node_id: str, entry: Dict[str, Any]):
+    def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
-        Load and display data for a specific node.
+        Load data for a specific node.
         
-        Called when:
-        - User selects node from dropdown
-        - User clicks node in Network tab
-        - User clicks anomaly row in Anomalies tab
+        Called when node list is populated
         
         Args:
             node_id: ID of the node to display
         """
-        # TODO: Implement
-        #
-        # self.current_node_id = node_id
-        #
-        # # Update selector to show this node
-        # if self.node_selector:
-        #     self.node_selector.set(node_id)
-        #
-        # # Fetch and display data
-        # self._load_node_info(node_id)
-        # self._load_history(node_id)
-        # self._load_anomaly_trend(node_id)
-        node_id = entry["node_id"]
-        lat = float(entry["lat"])
-        lon = float(entry["lon"])
-        # JSON uses an int for motion_class → convert to string
-        motion_class = entry.get("motion_class", "")
-        # Insert placeholder fields
-        timestamp = datetime.now()
-        confidence = 1.0
-
+        if node_id is None:
+            raise ValueError("Node ID cannot be None")
+        if rdentry is None:
+            raise ValueError(f"Raw data entry for node {node_id} cannot be None")
+        if mlentry is None:
+            raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
+        if node_id not in rdentry:
+            raise ValueError(f"Node ID {node_id} not found in raw data entry")
+        node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
+        
+        #raw data fields with defaults if missing
+        timestamp = rdentry.get("timestamp", datetime.now().isoformat())
+        seq = rdentry.get("seq", 0)
+        accel = rdentry.get("accel")
+        accel_x = accel.get("x", 0) if accel else 0
+        accel_y = accel.get("y", 0) if accel else 0
+        accel_z = accel.get("z", 0) if accel else 0
+        gyro = rdentry.get("gyro_rads")
+        gyro_x = gyro.get("x", 0) if gyro else 0
+        gyro_y = gyro.get("y", 0) if gyro else 0
+        gyro_z = gyro.get("z", 0) if gyro else 0
+        gps = rdentry.get("gps")
+        lat = gps.get("lat_deg", 0) if gps else 0
+        lon = gps.get("lon_deg", 0) if gps else 0
+        #inference output fields with defaults if missing
+        motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
+        confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
+        anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
         # Build Node object
         node = Node(
             node_id=node_id,
+            timestamp=timestamp,
+            seq=seq,
+            accel_x=accel_x,
+            accel_y=accel_y,
+            accel_z=accel_z,
+            gyro_x=gyro_x,
+            gyro_y=gyro_y,
+            gyro_z=gyro_z,
             lat=lat,
             lon=lon,
-            timestamp=timestamp,
             motion_class=motion_class,
+            anomaly= anomaly,
             confidence=confidence,
         )
 
@@ -414,103 +337,18 @@ class NodeDetailsTab(ttk.Frame):
         
         node = self.nodes[node_id]
         self.vars["node_id"].set(node.getNodeID())
+        self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
+        self.vars["seq"].set(str(node.seq))
+        self.vars["accel_x"].set(f"{node.accel_x:.2f}")
+        self.vars["accel_y"].set(f"{node.accel_y:.2f}")
+        self.vars["accel_z"].set(f"{node.accel_z:.2f}")
+        self.vars["gyro_x"].set(f"{node.gyro_x:.2f}")
+        self.vars["gyro_y"].set(f"{node.gyro_y:.2f}")
+        self.vars["gyro_z"].set(f"{node.gyro_z:.2f}")
         self.vars["lat"].set(f"{node.lat:.6f}")
         self.vars["lon"].set(f"{node.lon:.6f}")
-        self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
         self.vars["motion_class"].set(node.motionString())
         self.vars["confidence"].set(f"{node.confidence:.2f}")
-    def _load_node_info(self, node_id: str):
-        """
-        Load and display node metadata.
-        
-        Args:
-            node_id: ID of the node
-        """
-        # TODO: Implement with real database query
-        #
-        # # node_info = db.get_node_info(node_id)
-        # node_info = MOCK_NODE_INFO  # Temporary
-        #
-        # # Update info labels
-        # self.info_labels['node_id'].config(text=node_info['node_id'])
-        # self.info_labels['status'].config(text=node_info['status'])
-        # self.info_labels['current_motion'].config(text=node_info['current_motion'])
-        # self.info_labels['location'].config(text=node_info.get('location', 'Unknown'))
-        # self.info_labels['first_seen'].config(text=format_timestamp(node_info['first_seen']))
-        # self.info_labels['last_seen'].config(text=format_timestamp(node_info['last_seen']))
-        # self.info_labels['total_inferences'].config(text=f"{node_info['total_inferences']:,}")
-        # self.info_labels['total_anomalies'].config(text=str(node_info['total_anomalies']))
-        pass
-    
-    # def _load_history(self, node_id: str):
-        """
-        Load and display motion classification history.
-        
-        Args:
-            node_id: ID of the node
-        """
-        # TODO: Implement with real database query
-        #
-        # # Clear existing rows
-        # for item in self.history_tree.get_children():
-        #     self.history_tree.delete(item)
-        #
-        # # history = db.get_node_history(node_id, hours=24)
-        # history = MOCK_HISTORY  # Temporary
-        #
-        # # Add rows
-        # for i, record in enumerate(history):
-        #     values = (
-        #         format_timestamp(record['timestamp'], include_date=False),
-        #         record['motion_class'],
-        #         format_confidence(record['confidence']),
-        #         format_anomaly_score(record['anomaly_score'])
-        #     )
-        #     self.history_tree.insert('', 'end', iid=str(i), values=values,
-        #                              tags=(record['motion_class'],))
-        pass
-    
-    # def _load_anomaly_trend(self, node_id: str):
-        """
-        Load and display anomaly score trend chart.
-        
-        Args:
-            node_id: ID of the node
-        """
-        # TODO: Implement with real database query
-        #
-        # if not self.trend_ax:
-        #     return
-        #
-        # # trend_data = db.get_node_anomaly_trend(node_id, hours=24)
-        # trend_data = MOCK_ANOMALY_TREND  # Temporary
-        #
-        # self.trend_ax.clear()
-        #
-        # times = [t[0] for t in trend_data]
-        # scores = [t[1] for t in trend_data]
-        #
-        # # Plot line
-        # self.trend_ax.plot(times, scores, 'b-', linewidth=2, marker='o', markersize=4)
-        # self.trend_ax.fill_between(times, scores, alpha=0.3)
-        #
-        # # Add threshold line
-        # self.trend_ax.axhline(y=0.5, color='r', linestyle='--', alpha=0.7, label='Threshold')
-        #
-        # # Labels
-        # self.trend_ax.set_xlabel('Time')
-        # self.trend_ax.set_ylabel('Anomaly Score')
-        # self.trend_ax.set_ylim(0, 1)
-        # self.trend_ax.legend(loc='upper right')
-        # self.trend_ax.grid(True, linestyle='--', alpha=0.7)
-        #
-        # # Format dates
-        # self.trend_fig.autofmt_xdate()
-        #
-        # # Redraw
-        # self.trend_fig.tight_layout()
-        # self.trend_canvas.draw()
-        pass
     
     def _on_node_select(self, event):
         """
@@ -519,68 +357,70 @@ class NodeDetailsTab(ttk.Frame):
         Args:
             event: Combobox selection event
         """
-        # TODO: Implement
-        #
-        # node_id = self.node_selector.get()
-        # if node_id:
-        #     self.load_node(node_id)
-        pass
-    
-    def update_node_list(self, node_ids: List[str]):
+        if self.node_selector is None:
+            return
+        node_id = self.node_selector.get()
+        self.display_node(node_id)
+    def _parse_nodes(self):
+        for node_id, rdentry in self.rddict.items():
+            mlentry = self.mldict.get(node_id, [])
+            try:
+                self.load_node(node_id, rdentry, mlentry)
+            except Exception as e:
+                print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
+    def refresh_dropdown(self):
         """
-        Update the node selector dropdown with available nodes.
-        
-        Args:
-            node_ids: List of all node IDs
+        Refresh the node selector dropdown with current nodes.
         """
-        # TODO: Implement
-        #
-        # if self.node_selector:
-        #     current = self.node_selector.get()
-        #     self.node_selector['values'] = sorted(node_ids)
-        #     # Preserve selection if still valid
-        #     if current in node_ids:
-        #         self.node_selector.set(current)
-        #     elif node_ids:
-        #         self.node_selector.current(0)
-        pass
-    
+        if self.node_selector is None:
+            return
+        node_ids = list(self.nodes.keys())
+        self.node_selector['values'] = node_ids
+        if self.current_node_id in node_ids:
+            self.node_selector.set(self.current_node_id)
+        elif node_ids:
+            self.node_selector.set(node_ids[0])
+            self.display_node(node_ids[0])
     def refresh(self):
         """
         Refresh data for the currently selected node.
         """
-        # TODO: Implement
-        #
-        # if self.current_node_id:
-        #     self.load_node(self.current_node_id)
-        pass
+        try:
+            self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
+            self._parse_nodes()
+            self.refresh_dropdown()
+            if self.current_node_id:
+                self.display_node(self.current_node_id)
+        except Exception as e:
+            print(f"[NodeDetailsTab.refresh] Error refreshing data: {e}")
 
 
+        
 # =============================================================================
 # DEMO / TEST
 # =============================================================================
 
-def demo():
-    """Demonstrate the NodeDetailsTab independently."""
-    root = tk.Tk()
-    root.title("Node Details Tab Demo")
-    root.geometry("800x700")
+# def demo():
+#     """Demonstrate the NodeDetailsTab independently."""
+#     root = tk.Tk()
+#     root.title("Node Details Tab Demo")
+#     root.geometry("800x700")
     
-    # Create a mock dashboard
-    class MockDashboard:
-        pass
+#     # Create a mock dashboard
+#     class MockDashboard:
+#         pass
     
-    notebook = ttk.Notebook(root)
-    notebook.pack(fill='both', expand=True)
+#     notebook = ttk.Notebook(root)
+#     notebook.pack(fill='both', expand=True)
     
-    tab = NodeDetailsTab(notebook, dashboard=MockDashboard())
-    notebook.add(tab, text='Node Details')
+#     tab = NodeDetailsTab(notebook, dashboard=MockDashboard())
+#     notebook.add(tab, text='Node Details')
     
-    # Load a node
-    # tab.load_node('node_003')
+#     # Load a node
+#     # tab.load_node('node_003')
     
-    root.mainloop()
+#     root.mainloop()
 
 
-if __name__ == '__main__':
-    demo()
+# if __name__ == '__main__':
+#     demo()

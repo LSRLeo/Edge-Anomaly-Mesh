@@ -18,6 +18,8 @@ from tkinter import ttk
 from typing import Dict, List, Optional, Any, Tuple, TYPE_CHECKING
 from datetime import datetime, timedelta
 
+from abc import ABC, abstractmethod
+
 import json
 from collections import Counter, defaultdict
 
@@ -57,10 +59,280 @@ STATE_INDEX = {
 }
 
 
+
+class AnalyticsComponent(ABC):
+    """
+    Abstract base class for analytics components.
+    
+    Defines interface for updating with new data.
+    """
+    
+    def __init__(self, parent: ttk.Frame, title: str, row: int, col: int):
+        self.parent = parent
+        self.frame = ttk.LabelFrame(parent, text=title)
+        self.frame.grid(row=row, column=col, sticky='nsew', padx=5, pady=5)
+        self.setup()
+        
+    @abstractmethod
+    def parse(self, records: List[Dict]) -> Any:
+        """Extract the data needed for this component from the raw records."""
+    
+    @abstractmethod
+    def setup(self) -> None:
+        """Create the initial UI elements for this component."""
+        
+    @abstractmethod
+    def update(self, data: Any) -> None:
+        """Update the component with the parsed data."""
+        
+        
+
 def load_ml_json(path: str) -> List[Dict]:
     with open(path, "r") as f:
         return json.load(f)["data"]
 
+
+
+
+class PieChartComponent(AnalyticsComponent):
+    """Pie chart motion class distribution"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Motion Distribution", row, col)
+        
+    def parse(self, records: List[Dict]) -> Dict[str, float]:
+        counts = Counter()
+        
+        for r in records:
+            # Pick the single most likely state (normal or anomalous variant).
+            dominant_idx = max(range(8), key=lambda i: r["state_confidence"][i])
+            # Collapse the 8-state model into the 4 motion classes for display.
+            motion, _ = STATE_INDEX[dominant_idx]
+            counts[motion] += 1
+            
+        # Guard against division by zero when no records are available.
+        total = max(sum(counts.values()), 1)
+        return {k: round((v / total) * 100, 1) for k, v in counts.items()}
+    
+    def setup(self) -> None:
+        # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
+        self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
+        self.ax = self.fig.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+        
+    def update(self, records: List[Dict]) -> None:
+        distribution = self.parse(records)
+        if not self.ax:
+            return
+        
+        # Clear and fully redraw the pie chart on each refresh.
+        self.ax.clear()
+        labels = list(distribution.keys())
+        sizes = list(distribution.values())
+        colors = [MOTION_COLORS.get(label, "#808080") for label in labels]
+        
+        self.ax.pie(
+            sizes,
+            labels=labels,
+            colors=colors,
+            autopct="%1.1f%%",
+            startangle=90,
+        )
+        # Keep the plot circular instead of stretching with the frame size.
+        self.ax.axis("equal")
+        self.fig.tight_layout()
+        self.canvas.draw()
+        
+        
+class LineChartComponent(AnalyticsComponent):
+    """Line chart for anomaly rate trend"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Anomaly Rate Trend (24h)", row, col)
+        
+    def parse(self, records: List[Dict]) -> List[Tuple[datetime, float]]:
+        bucket_minutes = 3
+        buckets = defaultdict(list)
+        
+        for r in records:
+            # Normalize timestamps into fixed-size buckets for a smoother trend line.
+            ts = datetime.fromisoformat(r["timestamp"].replace("Z", ""))
+            bucket = ts.replace(
+                minute=(ts.minute // bucket_minutes) * bucket_minutes,
+                second=0,
+                microsecond=0
+            )
+            # Treat the anomalous-state confidence mass as the anomaly score.
+            anomaly_score = sum(r["state_confidence"][4:])
+            buckets[bucket].append(anomaly_score)
+        
+        # Average anomaly score per bucket and return points in time order.
+        return sorted(
+            [(t, round(sum(v) / len(v), 3)) for t, v in buckets.items()],
+            key=lambda x: x[0]
+        )
+        
+    def setup(self) -> None:
+        # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
+        self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
+        self.ax = self.fig.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+    
+    def update(self, records: List[Dict]) -> None:
+        trend_data = self.parse(records)
+        if not self.ax:
+            return
+        
+        # Clear and fully redraw the chart on each refresh.
+        self.ax.clear()
+        times = [t[0] for t in trend_data]
+        rates = [t[1] for t in trend_data]
+        
+        self.ax.plot(times, rates, "b-", linewidth=2, marker="o", markersize=4)
+        if times and rates:
+            # Shade under the curve to make trend magnitude easier to read.
+            self.ax.fill_between(times, rates, alpha=0.3)
+            
+        self.ax.set_xlabel("Time")
+        self.ax.set_ylabel("Anomaly Rate")
+        # Rotate/align datetime tick labels so they fit in the embedded canvas.
+        self.fig.autofmt_xdate()
+        self.ax.grid(True, linestyle="--", alpha=0.7)
+        self.fig.tight_layout()
+        self.canvas.draw()
+
+
+
+class BarChartComponent(AnalyticsComponent):
+    """Bar chart for top anomalous nodes"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.fig: Optional[Figure] = None
+        self.ax = None
+        self.canvas: Optional[FigureCanvasTkAgg]
+        super().__init__(parent, "Top Anomalous Nodes", row, col)
+    
+    def parse(self, records: List[Dict]) -> List[Tuple[str, int]]:
+        threshold = 0.5
+        node_counts = Counter()
+        
+        for r in records:
+            # Sum anomalous-state confidence to score how anomalous this record is.
+            anomaly_score = sum(r["state_confidence"][4:])
+            if anomaly_score >= threshold:
+                # Count only records that cross the anomaly threshold.
+                node_counts[r["node_id"]] += 1
+        
+        # Keep only the highest-frequency anomalous nodes for a compact chart.
+        return node_counts.most_common(5)
+    
+    def setup(self) -> None:
+        # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
+        self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
+        self.ax = self.fig.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+        
+    def update(self, records: List[Dict]) -> None:
+        node_data = self.parse(records)
+        if not self.ax:
+            return
+        
+        # Clear and fully redraw the bar chart on each refresh.
+        self.ax.clear()
+        nodes = [d[0] for d in node_data]
+        counts = [d[1] for d in node_data]
+        
+        bars = self.ax.barh(nodes, counts, color="#e74c3c")
+        for bar, count in zip(bars, counts):
+            # Label each bar with its exact count for quick scanning.
+            self.ax.text(
+                bar.get_width() + 0.3,
+                bar.get_y() + bar.get_height() / 2,
+                str(count),
+                va="center"
+            )
+        
+        self.ax.set_xlabel("Anomaly Count")
+        # Show the highest-count node at the top of the chart.
+        self.ax.invert_yaxis()
+        self.fig.tight_layout()
+        self.canvas.draw()
+        
+        
+
+class StatsComponent(AnalyticsComponent):
+    """Statistics panel showing key metrics"""
+    
+    def __init__(self, parent: ttk.Frame, row: int, col: int):
+        self.labels: Dict[str, ttk.Label] = {}
+        super().__init__(parent, "Statistics", row, col)
+        
+    def parse(self, records: List[Dict]) -> Dict[str, Any]:
+        # Unique node IDs observed in the current dataset.
+        nodes = {r["node_id"] for r in records}
+        # Count records whose anomaly score crosses the display threshold.
+        total_anomalies = sum(
+            1 for r in records if sum(r["state_confidence"][4:]) >= 0.5
+        )
+        # Estimate uptime from sample count assuming 10-second sampling cadence.
+        uptime_hours = (
+            len(records) / len(nodes) * 10 / 3600
+            if nodes else 0
+        )
+        
+        return {
+            "total_inferences": len(records),
+            "total_anomalies": total_anomalies,
+            "active_nodes": len(nodes),
+            "uptime_hours": round(uptime_hours, 1),
+        }
+        
+    def setup(self) -> None:
+        # Create a simple grid of labels for each statistic.
+        stats_config = [
+            ("total_inferences", "Total Inferences:"),
+            ("total_anomalies", "Total Anomalies:"),
+            ("active_nodes", "Active Nodes:"),
+            ("uptime_hours", "Uptime:"),
+        ]
+        
+        for i, (key, label_text) in enumerate(stats_config):
+            ttk.Label(self.frame, text=label_text, font=("Arial", 11)).grid(
+                row=i, column=0, sticky="w", padx=10, pady=8
+            )
+            # Store value labels by key so update() can target them directly.
+            value_label = ttk.Label(self.frame, text="--", font=("Arial", 11, "bold"))
+            value_label.grid(row=i, column=1, sticky="e", padx=10, pady=8)
+            self.labels[key] = value_label
+        
+        self.frame.columnconfigure(0, weight=1)
+        self.frame.columnconfigure(1, weight=1)
+        
+    def update(self, records: List[Dict]) -> None:
+        stats = self.parse(records)
+        # Keep presentation formatting close to the UI update path.
+        formatters = {
+            "total_inferences": lambda v: f"{v:,}",
+            "total_anomalies": lambda v: f"{v:,}",
+            "active_nodes": lambda v: str(v),
+            "uptime_hours": lambda v: f"{v:.1f} hours",
+        }
+        
+        for key, label in self.labels.items():
+            if key in stats:
+                # Fall back to str() if no custom formatter is defined.
+                formatter = formatters.get(key, str)
+                label.config(text=formatter(stats[key]))
+        
 
 def parse_motion_distribution(records):
     counts = Counter()
@@ -430,7 +702,7 @@ class AnalyticsTab(ttk.Frame):
         Refresh all charts with latest data from ML JSON.
         """
         try:
-            records = load_ml_json("../sample_data/sample_anomaly_data.json")
+            records = load_ml_json("sample_data/sample_anomaly_data.json")
 
             motion_dist = parse_motion_distribution(records)
             trend = parse_anomaly_trend(records)

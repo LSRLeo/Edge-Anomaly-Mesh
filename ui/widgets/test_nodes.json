@@ -1,8 +1,8 @@
 [
-  {"node_id": "node_001", "x": 150, "y": 150, "motion_class": "IDLE", "anomaly": false},
-  {"node_id": "node_002", "x": 300, "y": 200, "motion_class": "TERRESTRIAL", "anomaly": false},
-  {"node_id": "node_003", "x": 450, "y": 150, "motion_class": "MARITIME", "anomaly": true},
-  {"node_id": "node_004", "x": 250, "y": 350, "motion_class": "LIFT", "anomaly": false},
-  {"node_id": "node_005", "x": 400, "y": 300, "motion_class": "IDLE", "anomaly": true},
-  {"node_id": "node_006", "x": 550, "y": 350, "motion_class": "TERRESTRIAL", "anomaly": false}
+  {"node_id": "node_001", "lat": 40.2548, "lon": 105.6161, "motion_class": "IDLE", "anomaly": false},
+  {"node_id": "node_002", "lat": 51.5074, "lon": -0.1278, "motion_class": "TERRESTRIAL", "anomaly": false},
+  {"node_id": "node_003", "lat": 35.6762, "lon": 139.6503, "motion_class": "MARITIME", "anomaly": true},
+  {"node_id": "node_004", "lat": -33.8688, "lon": 151.2093, "motion_class": "LIFT", "anomaly": false},
+  {"node_id": "node_005", "lat": 48.8566, "lon": 2.3522, "motion_class": "IDLE", "anomaly": true},
+  {"node_id": "node_006", "lat": -23.5505, "lon": -46.6333, "motion_class": "TERRESTRIAL", "anomaly": false}
 ]

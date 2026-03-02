@@ -1,0 +1,40 @@
+[
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_0",
+    "event_id": "node_001_2026-02-25T13:42:14.126238",
+    "node_id": "node_001",
+    "timestamp": "2026-02-25T13:42:14.126238",
+    "seq": 0,
+    "gps": {
+      "lat_deg": 39.7392,
+      "lon_deg": -104.9903,
+      "altitude_m": 1609.3
+    },
+    "accel_mss": {
+      "x": 0.11507129055903068,
+      "y": -0.050045718206729595,
+      "z": 9.639119285133454
+    },
+    "gyro_rads": {
+      "x": -0.025924252099745575,
+      "y": 0.017890871277423212,
+      "z": 0.011692804856653083
+    },
+    "meta": {
+      "sample_rate_hz": 1,
+      "battery_pct": 95,
+      "sim_mode": "IDLE",
+      "sim_anomaly": false
+    },
+    "origin": {
+      "lat_deg": 39.7392,
+      "lon_deg": -104.9903,
+      "altitude_m": 1609.3
+    },
+    "dest": {
+      "lat_deg": 39.542,
+      "lon_deg": -103.5915,
+      "altitude_m": 1612.8
+    }
+  }]

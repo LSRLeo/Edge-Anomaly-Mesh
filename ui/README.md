@@ -17,3 +17,56 @@ Subscriber: UI
 Channel: dashboard:anomalies:*
 Publisher: Database
 Subscriber: UI
+
+## Sprint 1:
+    network_tab.py
+        json/node parsing
+        implemented node drawing on a blank canvas
+        anomaly toggling with right click
+        node highlighting (blue outline when left clicked) and displaying details in a popout window
+        legend integration
+        different node outline for anomalous and non anomalous
+
+        to run starting from edge-anomaly-mesh folder
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 network_tab.py
+
+        (note that there is an issue that broke anomaly toggling but thats been fixed in sprint 2 already)
+    anomalies_tab.py
+        json/node parsing with example hardcoded nodes
+        implemented a scrollable field that displays all active anamolous nodes.
+        divided into a wrapper widget which contains the scrollable area, will be used to divide different sections in future sprints.
+        Will allow for navigation directly to the node viewer tab to view a specific node
+
+        to run starting from edge-anomaly-mesh folder
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 anomalies_tab.py
+    node_details_tab.py
+        parses hardcoded node data
+        displays relevant data associated with node
+        can be opened in future sprints from home dashboard, network tab, or anomalies tab.
+        will allow in future sprints to change anomaly status
+
+        to run starting from edge-anomaly-mesh folder:
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 node_details_tab.py
+    analytics_tab.py
+        parses generated sample data
+        shows 4 types of analytics(state pie chart, anomaly rate line graph, anomaly count bar graph, numerical stats)
+        in future can be open through main dashboard
+
+        to run starting from edge-anomaly-mesh folder
+        source venv/bin/activate
+        cd ui
+        pip3 install -r requirements.txt
+        cd widgets
+        python3 analytics_tab.py

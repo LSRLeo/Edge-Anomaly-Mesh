@@ -16,18 +16,25 @@ from tkinter import ttk
 from typing import Optional
 import sys
 import os
-
+import redis
+import threading
+from redis_reader import RedisReader
+# TODO setup redis sub and pub, redis.redis (host=39r2, port=9198, decoderesponses=True)
+# within main loop
+# redis reader object, sub and pub on a thread
+# redis reader connect
 # Add parent directory to path for imports
+CHANNELNAME = "Test"
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ui.ui_utils import (
+from ui_utils import (
     WINDOW_WIDTH, WINDOW_HEIGHT, REFRESH_INTERVAL_MS,
     configure_treeview_style
 )
-from ui.network_tab import NetworkTab
-from ui.anomalies_tab import AnomaliesTab
-from ui.analytics_tab import AnalyticsTab
-from ui.node_details_tab import NodeDetailsTab
+from widgets.network_tab import NetworkTab
+from widgets.anomalies_tab import AnomaliesTab
+from widgets.analytics_tab import AnalyticsTab
+from widgets.node_details_tab import NodeDetailsTab
 
 
 class DashboardApp:
@@ -38,23 +45,25 @@ class DashboardApp:
     Coordinates communication between tabs.
     """
     
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: tk.Tk, redis_reader: RedisReader):
         """
         Initialize the dashboard application.
         
         Args:
             root: The root Tkinter window
+            redis_reader: An instance of RedisReader for data access
         """
         self.root = root
         self.root.title("Edge Anomaly Mesh - Dashboard")
+        self.redis_reader = redis_reader
         self.root.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
         
         # TODO: Set minimum window size
-        # self.root.minsize(800, 600)
+        self.root.minsize(800, 600)
         
         # TODO: Configure root grid weights for resizing
-        # self.root.columnconfigure(0, weight=1)
-        # self.root.rowconfigure(0, weight=1)
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
         
         # Configure global styles
         configure_treeview_style()
@@ -96,29 +105,29 @@ class DashboardApp:
           - Node Details Tab
         """
         # TODO: Implement menu bar
-        # 
-        # menubar = tk.Menu(self.root)
-        # self.root.config(menu=menubar)
-        # 
-        # # File menu
-        # file_menu = tk.Menu(menubar, tearoff=0)
-        # menubar.add_cascade(label="File", menu=file_menu)
-        # file_menu.add_command(label="Refresh Now", command=self.refresh_all_tabs, accelerator="Ctrl+R")
-        # file_menu.add_separator()
-        # file_menu.add_command(label="Exit", command=self._on_close, accelerator="Ctrl+Q")
-        # 
-        # # Bind keyboard shortcuts
-        # self.root.bind('<Control-r>', lambda e: self.refresh_all_tabs())
-        # self.root.bind('<Control-q>', lambda e: self._on_close())
-        # 
-        # # View menu - for switching tabs
-        # view_menu = tk.Menu(menubar, tearoff=0)
-        # menubar.add_cascade(label="View", menu=view_menu)
-        # view_menu.add_command(label="Network", command=lambda: self._select_tab(0))
-        # view_menu.add_command(label="Anomalies", command=lambda: self._select_tab(1))
-        # view_menu.add_command(label="Analytics", command=lambda: self._select_tab(2))
-        # view_menu.add_command(label="Node Details", command=lambda: self._select_tab(3))
-        pass
+        
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        
+        # File menu
+        file_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="File", menu=file_menu)
+        file_menu.add_command(label="Refresh Now", command=self.refresh_all_tabs, accelerator="Ctrl+R")
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=self._on_close, accelerator="Ctrl+Q")
+        
+        # Bind keyboard shortcuts
+        self.root.bind('<Control-r>', lambda e: self.refresh_all_tabs())
+        self.root.bind('<Control-q>', lambda e: self._on_close())
+        
+        # View menu - for switching tabs
+        view_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="View", menu=view_menu)
+        view_menu.add_command(label="Network", command=lambda: self._select_tab(0))
+        view_menu.add_command(label="Anomalies", command=lambda: self._select_tab(1))
+        view_menu.add_command(label="Analytics", command=lambda: self._select_tab(2))
+        view_menu.add_command(label="Node Details", command=lambda: self._select_tab(3))
+        # pass
     
     def _setup_tabs(self):
         """
@@ -131,30 +140,30 @@ class DashboardApp:
         4. Node Details - Drill-down view for selected node
         """
         # TODO: Implement tab setup
-        #
-        # self.notebook = ttk.Notebook(self.root)
-        # self.notebook.pack(fill='both', expand=True, padx=5, pady=5)
-        # 
-        # # Create each tab, passing reference to self for callbacks
-        # self.network_tab = NetworkTab(self.notebook, dashboard=self)
-        # self.anomalies_tab = AnomaliesTab(self.notebook, dashboard=self)
-        # self.analytics_tab = AnalyticsTab(self.notebook, dashboard=self)
-        # self.node_details_tab = NodeDetailsTab(self.notebook, dashboard=self)
-        # 
-        # # Add tabs to notebook
-        # self.notebook.add(self.network_tab, text='Network')
-        # self.notebook.add(self.anomalies_tab, text='Anomalies')
-        # self.notebook.add(self.analytics_tab, text='Analytics')
-        # self.notebook.add(self.node_details_tab, text='Node Details')
         
-        # TEMPORARY: Add placeholder tabs for testing
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill='both', expand=True, padx=5, pady=5)
         
-        for name in ["Network", "Anomalies", "Analytics", "Node Details"]:
-            frame = ttk.Frame(self.notebook)
-            self.notebook.add(frame, text=name)
-            ttk.Label(frame, text=f"{name} tab - TODO: Implement").pack(pady=50)
+        # Create each tab, passing reference to self for callbacks
+        self.network_tab = NetworkTab(self.notebook, dashboard=self, redis_reader=self.redis_reader)
+        self.anomalies_tab = AnomaliesTab(self.notebook, dashboard=self, redis_reader=self.redis_reader)
+        self.analytics_tab = AnalyticsTab(self.notebook, dashboard=self)
+        self.node_details_tab = NodeDetailsTab(self.notebook, dashboard=self, redis_reader=self.redis_reader)
+        
+        # Add tabs to notebook
+        self.notebook.add(self.network_tab, text='Network')
+        self.notebook.add(self.anomalies_tab, text='Anomalies')
+        self.notebook.add(self.analytics_tab, text='Analytics')
+        self.notebook.add(self.node_details_tab, text='Node Details')
+        
+        # # TEMPORARY: Add placeholder tabs for testing
+        # self.notebook = ttk.Notebook(self.root)
+        # self.notebook.pack(fill='both', expand=True, padx=5, pady=5)
+        
+        # for name in ["Network", "Anomalies", "Analytics", "Node Details"]:
+        #     frame = ttk.Frame(self.notebook)
+        #     self.notebook.add(frame, text=name)
+        #     ttk.Label(frame, text=f"{name} tab - TODO: Implement").pack(pady=50)
     
     def _select_tab(self, index: int):
         """
@@ -164,8 +173,8 @@ class DashboardApp:
             index: Tab index (0-3)
         """
         # TODO: Implement
-        # self.notebook.select(index)
-        pass
+        self.notebook.select(index)
+        # pass
     
     def start_refresh_loop(self):
         """
@@ -174,14 +183,14 @@ class DashboardApp:
         Schedules refresh_all_tabs() to run every REFRESH_INTERVAL_MS.
         """
         # TODO: Implement
-        #
-        # def loop():
-        #     if not self._is_refreshing:
-        #         self.refresh_all_tabs()
-        #     self._refresh_job = self.root.after(REFRESH_INTERVAL_MS, loop)
-        # 
-        # loop()
-        pass
+        
+        def loop():
+            if not self._is_refreshing:
+                self.refresh_all_tabs()
+            self._refresh_job = self.root.after(REFRESH_INTERVAL_MS, loop)
+        
+        loop()
+        # pass
     
     def stop_refresh_loop(self):
         """
@@ -190,10 +199,10 @@ class DashboardApp:
         Call this before closing the application.
         """
         # TODO: Implement
-        #
-        # if self._refresh_job:
-        #     self.root.after_cancel(self._refresh_job)
-        #     self._refresh_job = None
+        
+        if self._refresh_job:
+            self.root.after_cancel(self._refresh_job)
+            self._refresh_job = None
         pass
     
     def refresh_all_tabs(self):
@@ -204,22 +213,22 @@ class DashboardApp:
         Handles errors gracefully to prevent one tab from breaking others.
         """
         # TODO: Implement
-        #
-        # self._is_refreshing = True
-        # try:
-        #     if self.network_tab:
-        #         self.network_tab.refresh()
-        #     if self.anomalies_tab:
-        #         self.anomalies_tab.refresh()
-        #     if self.analytics_tab:
-        #         self.analytics_tab.refresh()
-        #     if self.node_details_tab:
-        #         self.node_details_tab.refresh()
-        # except Exception as e:
-        #     print(f"Error during refresh: {e}")
-        # finally:
-        #     self._is_refreshing = False
-        pass
+        
+        self._is_refreshing = True
+        try:
+            if self.network_tab:
+                self.network_tab.refresh()
+            if self.anomalies_tab:
+                self.anomalies_tab.refresh()
+            if self.analytics_tab:
+                self.analytics_tab.refresh()
+            if self.node_details_tab:
+                self.node_details_tab.refresh()
+        except Exception as e:
+            print(f"Error during refresh: {e}")
+        finally:
+            self._is_refreshing = False
+        # pass
     
     def show_node_details(self, node_id: str):
         """
@@ -232,14 +241,14 @@ class DashboardApp:
             node_id: The ID of the node to display
         """
         # TODO: Implement
-        #
-        # # Switch to Node Details tab (index 3)
-        # self.notebook.select(3)
-        # 
-        # # Load the node data
-        # if self.node_details_tab:
-        #     self.node_details_tab.load_node(node_id)
-        pass
+        
+        # Switch to Node Details tab (index 3)
+        self.notebook.select(3)
+        
+        # Load the node data
+        if self.node_details_tab:
+            self.node_details_tab.display_node(node_id)
+        # pass
     
     def _on_close(self):
         """
@@ -248,10 +257,10 @@ class DashboardApp:
         Stops the refresh loop and destroys the window.
         """
         # TODO: Implement
-        #
-        # self.stop_refresh_loop()
-        # self.root.destroy()
+        
+        self.stop_refresh_loop()
         self.root.destroy()
+        # self.root.destroy()
 
 
 def main():
@@ -260,17 +269,38 @@ def main():
     
     Creates the root window and starts the dashboard.
     """
+
+    
+    pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
+    sub = pub.pubsub()
+    sub.subscribe(CHANNELNAME)
+    redis_reader = RedisReader(CHANNELNAME,pub,sub)
+    
+    redis_reader.refresh(instant=True) #initial refresh to populate data from redis before starting dashboard
+    RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
+    RedisThread.start
     root = tk.Tk()
     
     # Optional: Set application icon
     # root.iconbitmap('path/to/icon.ico')
     
     # Create dashboard
-    app = DashboardApp(root)
+    app = DashboardApp(root, redis_reader=redis_reader)
+    # Create Thread for main DashBoard
+
+
+    # Create listener and pub on RedisThread
+    
+
     
     # Start the Tkinter event loop
     root.mainloop()
+    # DashboardThread = threading.Thread(target=root.mainloop)
+    # DashboardThread.start()
 
+    # close redis conn
+
+    
 
 if __name__ == '__main__':
     main()
