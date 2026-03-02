@@ -34,7 +34,7 @@ class DBMessageManager:
 
 
     def __init__(self):
-        create_schema()  # Ensure database schema is created
+        #create_schema()  # Ensure database schema is created - caused issue so lets assume it is already created
         self.table_manager = TableManager()
         logging.info("DBMessageManager initialized and database schema created")
 
@@ -51,7 +51,7 @@ class DBMessageManager:
                 "error": "Failed to create message object. Invalid message format or unknown message type."
             })
         #GET RESULTS
-        results = message_obj.process(self.table_manager)
+        results = message_obj.execute(self.table_manager)
         return results.to_dict() if results else None
 
     def read_file(self, infile: str | Path, outfile: str | Path):
@@ -135,9 +135,9 @@ def run_sample_usage():
     if request_msg_responses:
         print(f"{len(request_msg_responses)} queries responses written to {SAMPLE_RESPONSE_FILE}")
 
-    total = len(data_msg_responses) + len(request_msg_responses)
+    
     print(f"\n{'=' * 65}")
-    print(f"  Done.  {total} total response(s) in {SAMPLE_RESPONSE_FILE.name}")
+    print(f"\tDone")
     print(f"{'=' * 65}\n")
 
 if __name__ == "__main__":
