@@ -1,7 +1,7 @@
 # Issue Report: W26-Sprint 2
 
 **Repository:** edge-anomaly-mesh
-**Report Generated:** 2026-03-03 14:38:58
+**Report Generated:** 2026-03-03 14:41:38
 **Target per Person:** 10 issues
 **Total Issues:** 139
 
@@ -61,10 +61,11 @@
 - ~~[#311](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/311): Real-time Result Publishing~~
 - ~~[#312](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/312): Implement Pydantic Schema Validation for Output Integrity~~
 
-### Truman Davis (9)
+### Truman Davis (10)
 
 - [#304](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/304): Fix accuracies upon model training
 - ~~[#297](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/297): Fix bug where 8 classifications have same label~~
+- ~~[#309](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/309): Clear session in model to prevent overwrites/edits~~
 - ~~[#314](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/314): Fix hard-coded Hidden Layers~~
 - ~~[#316](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/316): Create Normalization scale/stats~~
 - ~~[#317](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/317): Use normalization stats to normalize confusion matrix data~~
@@ -72,10 +73,6 @@
 - ~~[#323](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/323): Fix requirements.txt for ML Team~~
 - ~~[#333](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/333): Create safety check for empty json files~~
 - ~~[#334](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/334): Change verbose default value~~
-
-### Unassigned (1)
-
-- ~~[#309](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/309): Clear session in model to prevent overwrites/edits~~
 
 
 ---
@@ -141,7 +138,7 @@
 - ~~[#406](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/406): Update README~~
 - ~~[#426](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/426): Update raw_data and update what data is passed in it~~
 
-### Leo Liu (14 individual, 4 shared)
+### Leo Liu (15 individual, 4 shared)
 
 - [#9](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/9): DE - Multiple Nodes Compatability
 - [#424](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/424): Add anomaly_type to Label
@@ -154,6 +151,7 @@
 - ~~[#224](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/224): Refine Route Definitions and Node class~~
 - ~~[#225](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/225): Refractor Hub~~
 - ~~[#227](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/227): Package stuck in Traffic~~
+- ~~[#354](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/354): Refractor Generate Reading method method~~
 - ~~[#373](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/373): Create Waypoint class~~
 - ~~[#375](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/375): Refractor Route to generate waypoints between hubs~~
 - ~~[#377](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/377): Refractor Node class~~
@@ -179,10 +177,6 @@
 - ~~[#230](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/230): Function for the probability of anomalies appearance~~
 - ~~[#302](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/302): refractor LIFT~~
 - ~~[#310](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/310): LIFT - Package falls from shelf in storage center~~
-
-### Unassigned (1)
-
-- ~~[#354](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/354): Refractor Generate Reading method method~~
 
 
 ---
