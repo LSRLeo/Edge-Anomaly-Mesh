@@ -36,7 +36,7 @@ anomaly_events: inference_id, id, node_id, start_timestamp, end_timestamp, sever
 
 ## Key Constraints:
 
-## Sprint 2
+# Sprint 2
 # DB Message System
 
 Handles all database reads and writes through a unified JSON message interface. Send a message in, get a response out — the same pattern whether you're inserting sensor data, storing inference results, or querying the database.
