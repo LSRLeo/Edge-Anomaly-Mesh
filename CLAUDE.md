@@ -22,8 +22,10 @@ node-simulator → ml → database → ui
 ## Development Setup
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Each module has its own requirements.txt
+pip install -r ml/requirements.txt
+pip install -r database/requirements.txt
+pip install -r node-simulator/requirements.txt
 
 # Start Redis via Docker (required for inter-module communication)
 docker run --name redis-server -p 6379:6379 -d redis:latest
@@ -37,11 +39,9 @@ docker start redis-server
 
 ```bash
 # Run sensor simulator
-python node-simulator/run_simulator.py
-python node-simulator/run_simulator.py --nodes 10 --duration 60
+python node-simulator/simulation.py
 
 # Generate training data
-python node-simulator/training_data_generator.py --samples 1000 --output data/training
 python scripts/generate_init_data.py --duration 30
 
 # Train ML model
@@ -66,21 +66,27 @@ pytest tests/test-machine-learning/test_feature_extraction.py::test_function_nam
 ## Module Structure
 
 - **node-simulator/** - Sensor simulation and data generation
-  - `run_simulator.py` - Main entry point
-  - `node_simulator.py` - `SensorNode`, `NodeManager` classes
-  - `hub_manager.py` - Network topology management
-  - `redis_publisher.py` - Redis data publication
-  - `motion_generators/` - Factory pattern: `get_generator(motion_type)` returns generator for IDLE, TERRESTRIAL, MARITIME, or LIFT
+  - `simulation.py` - Main entry point
+  - `src/` - Motion generators: `idle.py`, `terrestrial.py`, `maritime.py`, `lift.py`, `anomalies.py`
+  - `src/node.py`, `src/hub.py`, `src/route.py` - Network topology classes
+  - `nodeConfig.json` - Configuration
 
 - **ml/** - Classification and anomaly detection
   - `train_classifier.py` - PyTorch MLP training (20 features → 64 → 32 → 4 classes)
   - `feature_extraction.py` - Windowed feature engineering (RMS, peaks, variance, FFT)
+  - `redis_insteam.py`, `redis_outstream.py` - Redis pub/sub integration
+  - `data_pipeline.py` - Data loading and preprocessing
+  - `classifier/` - Model definitions
 
-- **database/** - SQLite persistence (tables: `inference_results`, `nodes`, `anomaly_events`)
+- **database/** - SQLite persistence
+  - `schema.py` - Table definitions (`inference_results`, `nodes`, `anomaly_events`)
+  - `queries.py` - Query functions
+  - `redis_listener.py` - Subscribes to inference results
+  - `db_message*.py` - Message handling
 
 - **ui/** - Tkinter dashboard (Network, Anomalies, Analytics, Node Details tabs)
 
-- **scripts/** - Utility scripts including Redis pub/sub tools (`redis_pub.py`, `redis_sub.py`)
+- **scripts/** - Redis pub/sub tools (`redis_pub.py`, `redis_sub.py`, `generate_init_data.py`)
 
 - **tests/** - Pytest suite with shared fixtures in `conftest.py`
 
@@ -92,7 +98,7 @@ pytest tests/test-machine-learning/test_feature_extraction.py::test_function_nam
 - Constants: `UPPER_SNAKE_CASE`
 - JSON fields: `snake_case` with unit suffixes (`_m`, `_mss`, `_rads`, `_hz`, `_deg`, `_pct`, `_ms`)
 - Directories: `kebab-case` (e.g., `node-simulator/`, `test-machine-learning/`)
-- Python files: `snake_case` (e.g., `hub_manager.py`)
+- Python files: `snake_case` (e.g., `feature_extraction.py`)
 
 ### Message Type Convention
 All messages include:
