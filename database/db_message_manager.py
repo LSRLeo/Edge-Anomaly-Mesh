@@ -22,9 +22,9 @@ from schema import create_schema
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
 #default file paths for sample messages
-SAMPLE_DATA_FILE     = Path("sample_message_data.json")
-SAMPLE_REQUEST_FILE  = Path("sample_message_requests.json")
-SAMPLE_RESPONSE_FILE = Path("sample_message_responses.json")
+SAMPLE_DATA_FILE = Path(__file__).parent / "sample_message_data.json"
+SAMPLE_REQUEST_FILE  = Path(__file__).parent / "sample_message_requests.json"
+SAMPLE_RESPONSE_FILE = Path(__file__).parent / "sample_message_responses.json"
 
 class DBMessageManager:
     '''
