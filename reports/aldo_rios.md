@@ -1,0 +1,172 @@
+# Contributor Report: Aldo Rios
+
+**GitHub Username(s):** arios123
+**Email(s):** 124832719+arios123@users.noreply.github.com, aldorios369@gmail.com
+**Report Generated:** 2026-03-03 14:12:03
+**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
+
+---
+
+## Summary
+
+| Metric | Count |
+|--------|-------|
+| Total Commits | 33 |
+| Lines Added | 598,015 |
+| Lines Deleted | 602,876 |
+| Net Lines Changed | -4,861 |
+| PRs Created | 11 |
+| PRs Assigned | 2 |
+| PRs Reviewed | 26 |
+| PRs Commented | 7 |
+| PRs Merged (as merger) | 24 |
+| Issues Created | 37 |
+| Issues Commented | 0 |
+| Files Changed | 48 |
+
+---
+
+## Issues
+
+### Created (37)
+#6, #7, #8, #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19, #20, #21, #22, #23, #24, #25, #26, #27, #28, #115, #123, #125, #126, #127, #128, #130, #220, #384, #385, #386, #406, #426, #451
+
+### Commented (0)
+None
+
+---
+
+## Pull Requests
+
+### Created (11)
+#141, #159, #160, #174, #175, #178, #387, #389, #433, #436, #446
+
+### Assigned (2)
+#138, #140
+
+### Reviewed (26)
+#138, #140, #162, #164, #169, #171, #177, #179, #180, #188, #189, #191, #192, #351, #352, #360, #362, #382, #401, #402, #414, #416, #420, #437, #447, #450
+
+### Commented (7)
+#138, #140, #351, #360, #362, #382, #420
+
+### Merged (as merger) (24)
+#140, #162, #164, #171, #177, #180, #188, #189, #191, #192, #351, #352, #360, #362, #365, #382, #401, #402, #414, #416, #420, #437, #447, #450
+
+---
+
+## Commits
+
+Total non-merge commits in sprint-2 branches: **33**
+
+### Code Changes
+- **Lines Added:** 598,015
+- **Lines Deleted:** 602,876
+- **Net Change:** -4,861
+
+---
+
+## Files Changed (48)
+
+- `node-simulator/README.md`
+- `node-simulator/redis/redis_setup.py`
+- `node-simulator/redisFiles/redis_pub.py`
+- `node-simulator/redisFiles/redis_setup.py`
+- `node-simulator/requirements.txt`
+- `node-simulator/routes/exampleHub.json`
+- `node-simulator/simulation.py`
+- `node-simulator/src/anomalies.py`
+- `node-simulator/src/node.py`
+- `node-simulator/src/route.py`
+- `simulator/.gitignore`
+- `simulator/README.md`
+- `simulator/base.py`
+- `simulator/cli.py`
+- `simulator/exampleHub.json`
+- `simulator/exampleLift.json`
+- `simulator/exampleMaritime.json`
+- `simulator/exampleTerrestrial.json`
+- `simulator/generators.py`
+- `simulator/hub.py`
+- `simulator/idle.py`
+- `simulator/lift.py`
+- `simulator/listener_tester.py`
+- `simulator/maritime.json`
+- `simulator/maritime.py`
+- `simulator/node.py`
+- `simulator/nodeConfig.json`
+- `simulator/node_test.py`
+- `simulator/old/generators.py`
+- `simulator/old/listener_tester.py`
+- `simulator/old/node_test.py`
+- `simulator/old/publisher.py`
+- `simulator/raw_data.json`
+- `simulator/redis_test.py`
+- `simulator/requirements.txt`
+- `simulator/routes/exampleHub.json`
+- `simulator/routes/exampleLift.json`
+- `simulator/routes/exampleMaritime.json`
+- `simulator/routes/exampleTerrestrial.json`
+- `simulator/simulation.py`
+- `simulator/src/hub.py`
+- `simulator/src/idle.py`
+- `simulator/src/lift.py`
+- `simulator/src/maritime.py`
+- `simulator/src/node.py`
+- `simulator/src/noise.py`
+- `simulator/src/route.py`
+- `simulator/src/terrestrial.py`
+
+---
+
+## Timeline
+
+| Date | Day | Commits | Issues Created | Issues Commented | PRs Created | PRs Merged | PRs Reviewed | PRs Commented |
+|------|-----|---------|----------------|------------------|-------------|------------|--------------|---------------|
+| | | | **Week 3:** Jan 19 - Jan 25 | | | | | |
+| 2026-01-23 | Fri | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-01-24 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-01-25 | Sun | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 4:** Jan 26 - Feb 01 | | | | | |
+| 2026-01-26 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-01-27 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-01-28 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-01-29 | Thu | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-01-30 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-01-31 | Sat | 0 | 23 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-01 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 5:** Feb 02 - Feb 08 | | | | | |
+| 2026-02-02 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-03 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-04 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-05 | Thu | 0 | 6 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-06 | Fri | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-07 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-08 | Sun | 1 | 0 | 0 | 1 | 1 | 3 | 2 |
+| | | | **Week 6:** Feb 09 - Feb 15 | | | | | |
+| 2026-02-09 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-10 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-11 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-12 | Thu | 6 | 0 | 0 | 2 | 2 | 2 | 0 |
+| 2026-02-13 | Fri | 3 | 0 | 0 | 0 | 1 | 2 | 0 |
+| 2026-02-14 | Sat | 0 | 0 | 0 | 3 | 1 | 2 | 0 |
+| 2026-02-15 | Sun | 6 | 0 | 0 | 0 | 1 | 1 | 0 |
+| | | | **Week 7:** Feb 16 - Feb 22 | | | | | |
+| 2026-02-16 | Mon | 0 | 0 | 0 | 0 | 4 | 4 | 0 |
+| 2026-02-17 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-18 | Wed | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-19 | Thu | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-20 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-21 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
+| 2026-02-23 | Mon | 0 | 0 | 0 | 0 | 2 | 2 | 1 |
+| 2026-02-24 | Tue | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-02-25 | Wed | 2 | 3 | 0 | 2 | 4 | 3 | 3 |
+| 2026-02-26 | Thu | 3 | 2 | 0 | 1 | 5 | 5 | 1 |
+| 2026-02-27 | Fri | 0 | 0 | 0 | 1 | 1 | 1 | 0 |
+| 2026-02-28 | Sat | 4 | 1 | 0 | 1 | 2 | 2 | 0 |
+| 2026-03-01 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| | | | **Week 9:** Mar 02 - Mar 08 | | | | | |
+| 2026-03-02 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-03-03 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
