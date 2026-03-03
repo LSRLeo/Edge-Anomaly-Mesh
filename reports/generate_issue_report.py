@@ -280,12 +280,12 @@ def main():
 
     import os
     reports_dir = os.path.dirname(os.path.abspath(__file__))
-    output_path = os.path.join(reports_dir, 'issue_report.md')
+    output_path = os.path.join(reports_dir, 'ISSUE_REPORT.md')
 
     with open(output_path, 'w') as f:
         f.write(report)
 
-    print(f"  Created: issue_report.md")
+    print(f"  Created: ISSUE_REPORT.md")
     print("\nDone!")
 
 
