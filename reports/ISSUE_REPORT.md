@@ -1,7 +1,7 @@
 # Issue Report: W26-Sprint 2
 
 **Repository:** edge-anomaly-mesh
-**Report Generated:** 2026-03-03 14:14:05
+**Report Generated:** 2026-03-03 14:38:58
 **Target per Person:** 10 issues
 **Total Issues:** 139
 
@@ -12,10 +12,10 @@
 | Team | Open | Closed | Total |
 |------|------|--------|-------|
 | ML TEAM | 5 | 35 | 40 |
-| DB TEAM | 0 | 26 | 26 |
-| DE TEAM | 1 | 29 | 30 |
+| DB TEAM | 0 | 28 | 28 |
+| DE TEAM | 3 | 35 | 38 |
 | UI TEAM | 3 | 30 | 33 |
-| (No Team Label) | 2 | 8 | 10 |
+| (No Team Label) | 0 | 0 | 0 |
 | **Total** | **11** | **128** | **139** |
 
 ---
@@ -80,7 +80,7 @@
 
 ---
 
-## DB TEAM (26/30)
+## DB TEAM (28/30)
 
 ### Diego Ramirez (10 individual, 1 shared)
 
@@ -111,18 +111,20 @@
 - ~~[#342](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/342): Update README DB~~
 - ~~[#390](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/390): MessageData Subclasses~~
 
-### Kailar Hayes (4 individual, 1 shared)
+### Kailar Hayes (6 individual, 1 shared)
 
 - ~~[#277](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/277): Create a thread-safe query class.~~
 - ~~[#279](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/279): Add queries to the class~~
 - ~~[#293](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/293): Update gitignore with DB team specifics~~
 - ~~[#303](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/303): Update ML tables format with ML team output format~~
 - ~~[#342](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/342): Update README DB~~
+- ~~[#392](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/392): Return all node id's~~
+- ~~[#410](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/410): Test queries~~
 
 
 ---
 
-## DE TEAM (30/30)
+## DE TEAM (38/30)
 
 ### Aldo Rios (8 individual, 4 shared)
 
@@ -139,9 +141,11 @@
 - ~~[#406](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/406): Update README~~
 - ~~[#426](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/426): Update raw_data and update what data is passed in it~~
 
-### Leo Liu (7 individual, 4 shared)
+### Leo Liu (14 individual, 4 shared)
 
 - [#9](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/9): DE - Multiple Nodes Compatability
+- [#424](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/424): Add anomaly_type to Label
+- [#425](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/425): Add Location to Label
 - ~~[#7](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/7): DE - Raw Data Distributor~~
 - ~~[#10](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/10): DE - Labels for Mode and Anomalies~~
 - ~~[#20](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/20): Anomaly Label~~
@@ -150,10 +154,15 @@
 - ~~[#224](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/224): Refine Route Definitions and Node class~~
 - ~~[#225](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/225): Refractor Hub~~
 - ~~[#227](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/227): Package stuck in Traffic~~
+- ~~[#373](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/373): Create Waypoint class~~
+- ~~[#375](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/375): Refractor Route to generate waypoints between hubs~~
 - ~~[#377](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/377): Refractor Node class~~
+- ~~[#413](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/413): time_at_hub needed for every Motion ?~~
+- ~~[#422](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/422): ADD Motion Type in Label ~~
+- ~~[#423](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/423): Add is_Anamoly to Label~~
 - ~~[#442](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/442): Hub Idle time data generation~~
 
-### Sean Osman (10 individual, 4 shared)
+### Sean Osman (11 individual, 4 shared)
 
 - [#9](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/9): DE - Multiple Nodes Compatability
 - ~~[#7](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/7): DE - Raw Data Distributor~~
@@ -168,6 +177,7 @@
 - ~~[#216](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/216): MARITIME - Rocky Seas~~
 - ~~[#218](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/218): Create "inject_anomalies" method in each mode class~~
 - ~~[#230](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/230): Function for the probability of anomalies appearance~~
+- ~~[#302](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/302): refractor LIFT~~
 - ~~[#310](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/310): LIFT - Package falls from shelf in storage center~~
 
 ### Unassigned (1)
@@ -232,31 +242,4 @@
 - ~~[#344](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/344): Create ReadMe~~
 - ~~[#345](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/345): Implement RedisReader class~~
 - ~~[#434](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/434): review pathways and resolve slight merge issues~~
-
-
----
-
-## Issues Without Team Label
-
-### Kailar Hayes (2)
-
-- ~~[#392](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/392): Return all node id's~~
-- ~~[#410](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/410): Test queries~~
-
-### Leo Liu (5)
-
-- ~~[#373](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/373): Create Waypoint class~~
-- ~~[#375](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/375): Refractor Route to generate waypoints between hubs~~
-- ~~[#413](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/413): time_at_hub needed for every Motion ?~~
-- ~~[#422](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/422): ADD Motion Type in Label ~~
-- ~~[#423](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/423): Add is_Anamoly to Label~~
-
-### Sean Osman (1)
-
-- ~~[#302](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/302): refractor LIFT~~
-
-### Unassigned (2)
-
-- [#424](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/424): Add anomaly_type to Label
-- [#425](https://github.com/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/425): Add Location to Label
 
