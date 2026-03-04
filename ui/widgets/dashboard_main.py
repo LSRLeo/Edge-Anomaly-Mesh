@@ -147,8 +147,8 @@ class DashboardApp:
         self.notebook.pack(fill='both', expand=True, padx=5, pady=5)
         
         # Create each tab, passing reference to self for callbacks
-        self.network_tab = NetworkTab(self.notebook, dashboard=self, redis_reader=self.redis_reader)
-        self.anomalies_tab = AnomaliesTab(self.notebook, dashboard=self, redis_reader=self.redis_reader)
+        self.network_tab = NetworkTab(self.notebook, dashboard=self, redis_reader=self.redis_reader, test_mode=self.test_mode)
+        self.anomalies_tab = AnomaliesTab(self.notebook, dashboard=self, redis_reader=self.redis_reader, test_mode=self.test_mode)
         self.analytics_tab = AnalyticsTab(self.notebook, dashboard=self)
         self.node_details_tab = NodeDetailsTab(self.notebook, dashboard=self, redis_reader=self.redis_reader, test_mode=self.test_mode)
         

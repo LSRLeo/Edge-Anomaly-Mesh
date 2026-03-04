@@ -91,7 +91,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
     Highlights anomalous nodes and allows clicking to view details.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader, test_mode=False):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[RedisReader], test_mode=False):
         """
         Initialize the Network tab.
         

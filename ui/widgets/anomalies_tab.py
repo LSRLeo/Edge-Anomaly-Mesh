@@ -255,7 +255,7 @@ class AnomalySection(ttk.Frame):
         except Exception:
             pass
         node_lbl.pack(side="left")
-        ttk.Label(top, text=self._fmt_ts(anomaly.timestampToStr())).pack(side="right")
+        ttk.Label(top, text=anomaly.getTimestamp()).pack(side="right")
 
 
         # Second line: anomaly type
@@ -310,7 +310,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
     Displays a table of detected anomalies and click-to-view-details functionality.
     """
     
-    def __init__(self, parent, dashboard: 'DashboardApp', redis_reader: RedisReader, test_mode=False):
+    def __init__(self, parent, dashboard: 'DashboardApp', redis_reader: Optional[RedisReader], test_mode=False):
         """
         Initialize the Anomalies tab.
         

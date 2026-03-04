@@ -284,8 +284,8 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             raise ValueError(f"Raw data entry for node {node_id} cannot be None")
         if mlentry is None:
             raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
-        if node_id not in rdentry:
-            raise ValueError(f"Node ID {node_id} not found in raw data entry")
+        # if node_id not in rdentry:
+        #     raise ValueError(f"Node ID {node_id} not found in raw data entry")
         node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
         
         #raw data fields with defaults if missing
@@ -345,7 +345,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         
         node = self.nodes[node_id]
         self.vars["node_id"].set(node.getNodeID())
-        self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
+        self.vars["timestamp"].set(node.getTimestamp())
         self.vars["seq"].set(str(node.seq))
         self.vars["accel_x"].set(f"{node.accel_x:.2f}")
         self.vars["accel_y"].set(f"{node.accel_y:.2f}")
