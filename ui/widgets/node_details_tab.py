@@ -302,9 +302,14 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         lat = gps.get("lat_deg", 0) if gps else 0
         lon = gps.get("lon_deg", 0) if gps else 0
         #inference output fields with defaults if missing
-        motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
-        confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
-        anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
+        if len(mlentry) == 0:
+            motion_class = 0
+            confidence = 0
+            anomaly = False
+        else:
+            motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
+            confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
+            anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
         # Build Node object
         node = Node(
             node_id=node_id,
@@ -371,7 +376,19 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             except Exception as e:
                 print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
     def _parse_nodes_json(self):
-        pass
+        raw_data = self.load_json('widgets/raw_data.json')
+        ml_data = self.load_json('widgets/ml_data.json')
+
+        if len(raw_data.keys()) != len(ml_data.keys()):
+            print("[NodeDetailsTab._parse_nodes_json] Warning: Raw data and ML data have different node counts.")
+        for node_id in raw_data.keys():
+            rdentry = raw_data.get(node_id)
+            mlentry = ml_data.get(node_id, [])
+            mlarray = mlentry.get("inference_array", []) if mlentry else []
+            try:
+                self.load_node(node_id, rdentry, mlarray)
+            except Exception as e:
+                print(f"[NodeDetailsTab._parse_nodes_json] Error parsing node {node_id}: {e}")
     def refresh_dropdown(self):
         """
         Refresh the node selector dropdown with current nodes.
