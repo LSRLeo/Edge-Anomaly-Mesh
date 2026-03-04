@@ -409,8 +409,25 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
                 self.load_node(node_id, rdentry, mlentry)
             except Exception as e:
                 print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
+    def load_json(self, filename):
+        if not os.path.exists(filename):
+            raise FileNotFoundError
+        with open(filename, 'r') as file:
+            return json.load(file)
     def _parse_nodes_json(self):
-        pass
+        raw_data = self.load_json('widgets/raw_data.json')
+        ml_data = self.load_json('widgets/ml_data.json')
+
+        if len(raw_data.keys()) != len(ml_data.keys()):
+            print("[NodeDetailsTab._parse_nodes_json] Warning: Raw data and ML data have different node counts.")
+        for node_id in raw_data.keys():
+            rdentry = raw_data.get(node_id)
+            mlentry = ml_data.get(node_id, [])
+            mlarray = mlentry.get("inference_array", []) if mlentry else []
+            try:
+                self.load_node(node_id, rdentry, mlarray)
+            except Exception as e:
+                print(f"[NodeDetailsTab._parse_nodes_json] Error parsing node {node_id}: {e}")
     def refresh(self):
     #     """
     #     Refresh the anomalies table with latest data.
