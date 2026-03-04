@@ -343,7 +343,7 @@ class Node:
                 }
             polished_message = {
                 "m_type": "raw-data",
-                "m_id": self.node_id + "_" + self.seq,
+                "m_id": self.node_id + "_" + str(self.seq),
                 "event_id": self.node_id + "_" + self.timestamp.isoformat(),
                 "node_id": self.node_id,
                 "timestamp": self.timestamp.isoformat(),
