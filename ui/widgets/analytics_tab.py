@@ -93,7 +93,6 @@ def load_ml_json(path: str) -> List[Dict]:
 
 
 
-
 class PieChartComponent(AnalyticsComponent):
     """Pie chart motion class distribution"""
     
@@ -391,7 +390,7 @@ class AnalyticsTab(ttk.Frame):
         Refresh all charts with latest data from ML JSON.
         """
         try:
-            records = load_ml_json("sample_data/sample_anomaly_data.json")
+            records = load_ml_json("../sample_data/sample_anomaly_data.json")
 
             for component in self.components:
                 component.update(records)
