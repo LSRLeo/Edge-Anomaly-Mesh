@@ -334,21 +334,7 @@ class StatsComponent(AnalyticsComponent):
                 label.config(text=formatter(stats[key]))
         
 
-def parse_motion_distribution(records):
-    counts = Counter()
 
-    for r in records:
-        dominant_idx = max(range(8), key=lambda i: r["state_confidence"][i])
-        motion, _ = STATE_INDEX[dominant_idx]
-        counts[motion] += 1
-
-    total = sum(counts.values())
-    return {
-        k: round((v / total) * 100, 1)
-        for k, v in counts.items()
-    }
-    
-    
 def parse_anomaly_trend(records, bucket_minutes=3):
     buckets = defaultdict(list)
 
