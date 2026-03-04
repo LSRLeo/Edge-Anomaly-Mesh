@@ -105,6 +105,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
         # self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
         self.refresh() #initial refresh to populate data from redis
+        print(len(self.nodes))
         # Build UI
         self._setup_ui()
         

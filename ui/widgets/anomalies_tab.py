@@ -185,9 +185,9 @@ class AnomalySection(ttk.Frame):
         self._inner.bind("<Configure>", self._on_inner_configure)
         self._canvas.bind("<Configure>", self._on_canvas_configure)
 
-        
-
+        self.parent.refresh() #initial refresh to populate data
         # Build initial rows
+
         self._build_rows()
     def _on_inner_configure(self, event):
         # Update scroll region to encompass the inner frame
@@ -199,13 +199,15 @@ class AnomalySection(ttk.Frame):
         if self._canvas and self._inner_window is not None:
             self._canvas.itemconfig(self._inner_window, width=event.width)
         return
+    def _on_refresh_click(self):
+        self.parent.refresh() #call refresh method in AnomaliesTab to update data
+        self._build_rows() #rebuild the anomaly rows with updated node data
     def _build_rows(self):
         # Clear existing rows
         for row in self._rows:
             row['frame'].destroy()
         self._rows.clear()
         # self.populate_test_nodes()
-        self.parent.refresh()
         # Build new rows
         for node_id in list(self.parent.nodes.keys()):
             node = self.parent.nodes[node_id]
@@ -436,13 +438,12 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
     #     """
         if self.test_mode or self.redis_reader is None:
             self._parse_nodes_json() #load from json for testing
-            self._list_section._build_rows() #rebuild the anomaly rows with updated node data
             return
         else:
             try:
                 self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
                 self._parse_nodes() #parse raw data and ml output into Node objects
-                self._list_section._build_rows() #rebuild the anomaly rows with updated node data
+                
             except Exception as e:
                 print(f"Error refreshing anomalies tab: {e}")
 
