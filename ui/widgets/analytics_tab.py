@@ -335,26 +335,6 @@ class StatsComponent(AnalyticsComponent):
         
 
 
-def parse_anomaly_trend(records, bucket_minutes=3):
-    buckets = defaultdict(list)
-
-    for r in records:
-        ts = datetime.fromisoformat(r["timestamp"].replace("Z", ""))
-        bucket = ts.replace(
-            minute=(ts.minute // bucket_minutes) * bucket_minutes,
-            second=0,
-            microsecond=0
-        )
-
-        anomaly_score = sum(r["state_confidence"][4:])
-        buckets[bucket].append(anomaly_score)
-
-    return sorted(
-        [(t, round(sum(v) / len(v), 3)) for t, v in buckets.items()],
-        key=lambda x: x[0]
-    )
-
-
 def parse_top_anomalous_nodes(records, threshold=0.5, top_n=5):
     node_counts = Counter()
 
