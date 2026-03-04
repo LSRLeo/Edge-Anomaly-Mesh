@@ -1,0 +1,56 @@
+{
+  "hubs": [
+    {
+      "hub_id": "hub_compact_idle_01",
+      "name": "Compact Idle",
+      "lat": 39.74,
+      "lon": -104.99,
+      "altitude_m": 1609.0,
+      "radius_m": 100,
+      "type": "warehouse",
+      "time_at_hub": 5,
+      "mode": "idle",
+      "lift_time": 0,
+      "label": "normal"
+    },
+    {
+      "hub_id": "hub_compact_terrestrial_01",
+      "name": "Compact Terrestrial",
+      "lat": 39.741,
+      "lon": -104.99,
+      "altitude_m": 1610.0,
+      "radius_m": 100,
+      "type": "distribution_center",
+      "time_at_hub": 5,
+      "mode": "terrestrial",
+      "lift_time": 0,
+      "label": "normal"
+    },
+    {
+      "hub_id": "hub_compact_maritime_01",
+      "name": "Compact Maritime",
+      "lat": 39.742,
+      "lon": -104.99,
+      "altitude_m": 1609.0,
+      "radius_m": 100,
+      "type": "seaport",
+      "time_at_hub": 5,
+      "mode": "maritime",
+      "lift_time": 0,
+      "label": "normal"
+    },
+    {
+      "hub_id": "hub_compact_lift_01",
+      "name": "Compact Lift",
+      "lat": 39.743,
+      "lon": -104.99,
+      "altitude_m": 1610.0,
+      "radius_m": 100,
+      "type": "cargo_handling",
+      "time_at_hub": 5,
+      "mode": "lift",
+      "lift_time": 5,
+      "label": "normal"
+    }
+  ]
+}

@@ -45,14 +45,23 @@ def _group_by_second(messages):
     return groups
 
 
-def publish(rdis, channel_name, sleep_sec = 1.0, filename = "raw_data.json"):
+def publish(rdis, channel_name, sleep_sec=1.0, filename="raw_data.json"):
     messages = getMessages(filename)
-    groups = _group_by_second(messages)
 
-    for idx, group in enumerate(groups):
-        payload = json.dumps(group)
+    # --- Batching (kept, commented out): publish one batch per second (list of messages per second)
+    # groups = _group_by_second(messages)
+    # for idx, group in enumerate(groups):
+    #     payload = json.dumps(group)
+    #     rdis.publish(channel_name, payload)
+    #     print(f"Published to channel {channel_name}: message {idx + 1} of {len(groups)}")
+    #     if idx != len(groups) - 1:
+    #         time.sleep(sleep_sec)
+    # ---
+
+    # Current: one message per second (single dict per publish)
+    for idx, msg in enumerate(messages):
+        payload = json.dumps(msg)
         rdis.publish(channel_name, payload)
-        print(f"Published to channel {channel_name}: message {idx + 1} of {len(groups)}")
-
-        if idx != len(groups) - 1:
+        print(f"Published to channel {channel_name}: message {idx + 1} of {len(messages)}")
+        if idx != len(messages) - 1:
             time.sleep(sleep_sec)
