@@ -7,12 +7,16 @@ Uses BFS pathfinding and Bezier curve interpolation for realistic paths.
 
 Output format matches actual simulator format:
 {
+  "m_type": "raw-data",
+  "m_id": "node_001_8",
+  "event_id": "node_001_2026-02-12T21:19:19.000000",
   "node_id": "node_001",
-  "timestamp": "2026-02-12T21:19:19.000Z",
+  "timestamp": "2026-02-12T21:19:19.000000",
   "seq": 8,
-  "gps": {"lat": 39.673702, "lon": -104.961197, "altitude_m": 1657.4, "satellites": 8, "fix": true},
-  "accel": {"x": 0.363, "y": 0.301, "z": 9.287},
-  "gyro": {"x": -0.0565, "y": -0.1307, "z": -0.0242}
+  "gps": {"lat_deg": 39.673702, "lon_deg": -104.961197, "altitude_m": 1657.4},
+  "accel_mss": {"x": 0.363, "y": 0.301, "z": 9.287},
+  "gyro_rads": {"x": -0.0565, "y": -0.1307, "z": -0.0242},
+  "meta": {"motion_type": "IDLE", "is_anomaly": "False", "anomaly_type": "", "location": "hub_denver_01"}
 }
 
 Usage:
@@ -722,26 +726,28 @@ class TrainingDataGenerator:
         samples = []
 
         for i in range(duration):
-            timestamp = (start_time + timedelta(seconds=i)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            seq = start_seq + i
+            timestamp = (start_time + timedelta(seconds=i)).isoformat()
             accel, gyro = MotionPhysics.idle()
 
             sample = {
+                "m_type": "raw-data",
+                "m_id": f"{node_id}_{seq}",
+                "event_id": f"{node_id}_{timestamp}",
                 "node_id": node_id,
                 "timestamp": timestamp,
-                "seq": start_seq + i,
+                "seq": seq,
                 "gps": {
-                    "lat": round(hub.lat + random.gauss(0, 0.000001), 6),
-                    "lon": round(hub.lon + random.gauss(0, 0.000001), 6),
-                    "altitude_m": round(hub.altitude_m + random.gauss(0, 0.5), 1),
-                    "satellites": random.randint(6, 12),
-                    "fix": True
+                    "lat_deg": round(hub.lat + random.gauss(0, 0.000001), 6),
+                    "lon_deg": round(hub.lon + random.gauss(0, 0.000001), 6),
+                    "altitude_m": round(hub.altitude_m + random.gauss(0, 0.5), 1)
                 },
-                "accel": accel,
-                "gyro": gyro,
-                "label": {
+                "accel_mss": accel,
+                "gyro_rads": gyro,
+                "meta": {
                     "motion_type": "IDLE",
-                    "is_anomaly": False,
-                    "anomaly_type": "none",
+                    "is_anomaly": "False",
+                    "anomaly_type": "",
                     "location": hub.hub_id
                 }
             }
@@ -763,13 +769,14 @@ class TrainingDataGenerator:
         samples = []
 
         for i in range(duration):
-            timestamp = (start_time + timedelta(seconds=i)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            seq = start_seq + i
+            timestamp = (start_time + timedelta(seconds=i)).isoformat()
             t = i  # Time in seconds
             accel, gyro = MotionPhysics.lift(t)
 
             # Maybe inject anomaly
             is_anomaly = random.random() < anomaly_rate
-            current_anomaly = "none"
+            current_anomaly = ""
 
             if is_anomaly and anomaly_type:
                 current_anomaly = anomaly_type
@@ -783,21 +790,22 @@ class TrainingDataGenerator:
                     accel, gyro = AnomalyInjector.inject_motion_mismatch(t, "LIFT")
 
             sample = {
+                "m_type": "raw-data",
+                "m_id": f"{node_id}_{seq}",
+                "event_id": f"{node_id}_{timestamp}",
                 "node_id": node_id,
                 "timestamp": timestamp,
-                "seq": start_seq + i,
+                "seq": seq,
                 "gps": {
-                    "lat": round(hub.lat + random.gauss(0, 0.000005), 6),
-                    "lon": round(hub.lon + random.gauss(0, 0.000005), 6),
-                    "altitude_m": round(hub.altitude_m + random.gauss(0, 1.0), 1),
-                    "satellites": random.randint(6, 12),
-                    "fix": True
+                    "lat_deg": round(hub.lat + random.gauss(0, 0.000005), 6),
+                    "lon_deg": round(hub.lon + random.gauss(0, 0.000005), 6),
+                    "altitude_m": round(hub.altitude_m + random.gauss(0, 1.0), 1)
                 },
-                "accel": accel,
-                "gyro": gyro,
-                "label": {
+                "accel_mss": accel,
+                "gyro_rads": gyro,
+                "meta": {
                     "motion_type": "LIFT",
-                    "is_anomaly": is_anomaly,
+                    "is_anomaly": str(is_anomaly),
                     "anomaly_type": current_anomaly,
                     "location": hub.hub_id
                 }
@@ -836,7 +844,8 @@ class TrainingDataGenerator:
             lon = wp1.lon + (wp2.lon - wp1.lon) * wp_frac
             alt = wp1.altitude_m + (wp2.altitude_m - wp1.altitude_m) * wp_frac
 
-            timestamp = (start_time + timedelta(seconds=i)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            seq = start_seq + i
+            timestamp = (start_time + timedelta(seconds=i)).isoformat()
 
             # Generate sensor data
             t = i  # Time in seconds
@@ -844,7 +853,7 @@ class TrainingDataGenerator:
 
             # Maybe inject anomaly
             is_anomaly = random.random() < anomaly_rate
-            current_anomaly = "none"
+            current_anomaly = ""
 
             if is_anomaly and anomaly_type:
                 current_anomaly = anomaly_type
@@ -858,23 +867,24 @@ class TrainingDataGenerator:
                     accel, gyro = AnomalyInjector.inject_motion_mismatch(t, motion_type)
 
             sample = {
+                "m_type": "raw-data",
+                "m_id": f"{node_id}_{seq}",
+                "event_id": f"{node_id}_{timestamp}",
                 "node_id": node_id,
                 "timestamp": timestamp,
-                "seq": start_seq + i,
+                "seq": seq,
                 "gps": {
-                    "lat": round(lat + random.gauss(0, 0.000005), 6),
-                    "lon": round(lon + random.gauss(0, 0.000005), 6),
-                    "altitude_m": round(alt + random.gauss(0, 2), 1),
-                    "satellites": random.randint(6, 12),
-                    "fix": True
+                    "lat_deg": round(lat + random.gauss(0, 0.000005), 6),
+                    "lon_deg": round(lon + random.gauss(0, 0.000005), 6),
+                    "altitude_m": round(alt + random.gauss(0, 2), 1)
                 },
-                "accel": accel,
-                "gyro": gyro,
-                "label": {
+                "accel_mss": accel,
+                "gyro_rads": gyro,
+                "meta": {
                     "motion_type": motion_type,
-                    "is_anomaly": is_anomaly,
+                    "is_anomaly": str(is_anomaly),
                     "anomaly_type": current_anomaly,
-                    "segment_progress": round(progress, 3)
+                    "location": ""
                 }
             }
             samples.append(sample)
