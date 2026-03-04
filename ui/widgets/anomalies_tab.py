@@ -310,18 +310,21 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
     Displays a table of detected anomalies and click-to-view-details functionality.
     """
     
-    def __init__(self, parent, dashboard: 'DashboardApp', redis_reader: RedisReader):
+    def __init__(self, parent, dashboard: 'DashboardApp', redis_reader: RedisReader, test_mode=False):
         """
         Initialize the Anomalies tab.
         
         Args:
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
+            redis_reader: RedisReader instance for data access
+            test_mode: If True, runs in test mode with mock data
         """
         super().__init__(parent)
         style = ttk.Style(self)
         style.layout('Tabless.TNotebook', [('Notebook.client', {'sticky': 'nswe'})])
         self.dashboard = dashboard
+        self.test_mode = test_mode
 
         self.redis_reader = redis_reader
         self.nodes = {}  # Store Node objects keyed by node_id
@@ -339,6 +342,8 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         print("Inner notebook style:", self._sections_nb.cget("style"))
         # Create and add the initial anomalies list section
         self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
+        # if not self.test_mode: #not used yet
+        #     self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
         self._sections_nb.add(self._list_section, text=self._list_section.title)
     def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
@@ -404,6 +409,8 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
                 self.load_node(node_id, rdentry, mlentry)
             except Exception as e:
                 print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
+    def _parse_nodes_json(self):
+        pass
     def refresh(self):
     #     """
     #     Refresh the anomalies table with latest data.
@@ -412,11 +419,17 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
 
     #     Will be tied to a "Refresh" button in the UI to prevent excessive queries and ensure readability
     #     """
-        try:
-            self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
+        if self.test_mode or self.redis_reader is None:
+            self._parse_nodes_json() #load from json for testing
             self._list_section._build_rows() #rebuild the anomaly rows with updated node data
-        except Exception as e:
-            print(f"Error refreshing anomalies tab: {e}")
+            return
+        else:
+            try:
+                self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
+                self._parse_nodes() #parse raw data and ml output into Node objects
+                self._list_section._build_rows() #rebuild the anomaly rows with updated node data
+            except Exception as e:
+                print(f"Error refreshing anomalies tab: {e}")
 
 
 # =============================================================================

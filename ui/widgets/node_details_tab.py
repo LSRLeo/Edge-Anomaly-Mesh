@@ -68,7 +68,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
     including metadata, motion history, and anomaly trends.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader, selected_node_id: Optional[str] = None):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[RedisReader], selected_node_id: Optional[str] = None, test_mode=False):
         """
         Initialize the Node Details tab.
         
@@ -76,10 +76,12 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
             selected_node_id: Optional node ID to display on load
+            test_mode: If True, runs in test mode with mock data
         """
         super().__init__(parent)
         
         self.dashboard = dashboard
+        self.test_mode = test_mode
         
         # Current node
         self.current_node_id: Optional[str] = None
@@ -368,6 +370,8 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
                 self.load_node(node_id, rdentry, mlentry)
             except Exception as e:
                 print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
+    def _parse_nodes_json(self):
+        pass
     def refresh_dropdown(self):
         """
         Refresh the node selector dropdown with current nodes.
@@ -385,14 +389,20 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         """
         Refresh data for the currently selected node.
         """
-        try:
-            self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
-            self._parse_nodes()
-            self.refresh_dropdown()
+        if self.test_mode or self.redis_reader is None:
+            self._parse_nodes_json() #load from json for testing
+            self.refresh_dropdown() #refresh dropdown with loaded nodes
             if self.current_node_id:
-                self.display_node(self.current_node_id)
-        except Exception as e:
-            print(f"[NodeDetailsTab.refresh] Error refreshing data: {e}")
+                self.display_node(self.current_node_id) #refresh displayed node
+        else:
+            try:
+                self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
+                self._parse_nodes()
+                self.refresh_dropdown()
+                if self.current_node_id:
+                    self.display_node(self.current_node_id)
+            except Exception as e:
+                print(f"[NodeDetailsTab.refresh] Error refreshing data: {e}")
 
 
         

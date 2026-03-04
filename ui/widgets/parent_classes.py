@@ -3,12 +3,17 @@ import tkinter as tk
 from tkinter import ttk
 from datetime import datetime, timedelta
 from abc import ABC, abstractmethod
+from typing import Optional
+
+from redis_reader import RedisReader
 
 class DashboardParents():
-    def __init__(self, redis_reader, parent: ttk.Notebook, dashboard: 'DashboardApp'):
-
+    def __init__(self, redis_reader: Optional[RedisReader], parent: ttk.Notebook, dashboard: 'DashboardApp', test_mode=False):
+        if redis_reader is None:
+            redis_reader = None
         self.redis_reader = redis_reader
         self. dashboard = dashboard
+        self.test_mode = test_mode
     
     @abstractmethod
     def refresh(self):
