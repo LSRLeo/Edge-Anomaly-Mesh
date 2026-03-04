@@ -334,27 +334,6 @@ class StatsComponent(AnalyticsComponent):
                 label.config(text=formatter(stats[key]))
         
 
-def parse_stats(records):
-    nodes = {r["node_id"] for r in records}
-
-    total_anomalies = sum(
-        1 for r in records if sum(r["state_confidence"][4:]) >= 0.5
-    )
-
-    uptime_hours = (
-        len(records) / len(nodes) * 10 / 3600
-        if nodes else 0
-    )
-
-    return {
-        "total_inferences": len(records),
-        "total_anomalies": total_anomalies,
-        "avg_processing_time_ms": 42.3,
-        "active_nodes": len(nodes),
-        "uptime_hours": round(uptime_hours, 1),
-    }
-
-
 
 class AnalyticsTab(ttk.Frame):
     """
