@@ -378,14 +378,12 @@ class AnalyticsTab(ttk.Frame):
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
         
-        # TODO: Create all four quadrants
-        self._setup_pie_chart()
-        self._setup_line_chart()
-        self._setup_bar_chart()
-        self._setup_stats_panel()
-        
-        # TEMPORARY: Placeholder
-        # ttk.Label(self, text="Analytics Tab - TODO: Implement charts").pack(pady=20)
+        self.components = [
+            PieChartComponent(self, row=0, col=0),
+            LineChartComponent(self, row=0, col=1),
+            BarChartComponent(self, row=1, col=0),
+            StatsComponent(self, row=1, col=1),
+        ]
     
     def _setup_pie_chart(self):
         """
