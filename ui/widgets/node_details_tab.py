@@ -355,7 +355,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.vars["gyro_z"].set(f"{node.gyro_z:.2f}")
         self.vars["lat"].set(f"{node.lat:.6f}")
         self.vars["lon"].set(f"{node.lon:.6f}")
-        self.vars["motion_class"].set(node.motionString())
+        self.vars["motion_class"].set(node.getMotionString())
         self.vars["confidence"].set(f"{node.confidence:.2f}")
     
     def _on_node_select(self, event):
