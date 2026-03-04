@@ -72,6 +72,8 @@ class RedisSubscriber:
         redis_client (redis.Redis): Redis client instance.
     """
 
+    INACTIVITY_THRESHOLD = 600 # An inactive buffer for 10 minutes is inactive and should be emptied
+
     def __init__(self, channel="sensor:raw:*", window_size=100, stride=0, classifier=None, scaler=None):
         """
         Initialize the Redis subscriber.
@@ -136,6 +138,7 @@ class RedisSubscriber:
     def process_data(self, message):
         """
         Process incoming messages, handle bytes or str.
+        Supports both single event dict and list of event dicts.
 
         Args:
             message (str or bytes): The message payload.
@@ -147,80 +150,89 @@ class RedisSubscriber:
 
             data = json.loads(message)
 
-            node_id = data.get('node_id')
-            seq = data.get('seq')
-            if not node_id:
-                logger.warning("Missing node_id in message")
-                return
-
-            # Duplicate filtering
-            if node_id not in self.seen_seqs:
-                self.seen_seqs[node_id] = set()
-            if seq in self.seen_seqs[node_id]:
-                logger.info(f"Duplicate packet detected for node {node_id} seq {seq}, skipping.")
-                return
-            self.seen_seqs[node_id].add(seq)
-
-            # Add receipt time for latency monitoring
-            receipt_time = time.time()
-            data['receipt_time'] = receipt_time
-
-            # Initialize buffer for new node_id
-            now = time.time()
-            if node_id not in self.node_states:
-                self.node_states[node_id] = {
-                    'buffer': [],  # Use a list
-                    'stride_count': 0,
-                    'last_seq': -1,
-                    'last_active': now
-                }
-            
-            # Update last activity time for node
-            self.node_states[node_id]['last_active'] = now
-
-            # Append new sample to node's buffer
-            node_state = self.node_states[node_id]
-            self.insert_event_in_order(node_state['buffer'], data)
-            node_state['stride_count'] += 1
-
-            logger.info(f"Received message for node {node_id}: {data}")
-
-            # Trigger inference when window and stride conditions are met
-            if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
-                window = node_state['buffer'][:self.window_size]
-                # Extract metadata for the window and reconstruct ground truth
-                terrain_map = {"IDLE": 0, "TERRESTRIAL": 1, "TRANSIT": 1, "MARITIME": 2, "LIFT": 3}
-                window_metadata = []
-                for event in window:
-                    meta = event.get("meta", {})
-                    terrain_str = meta.get("sim_mode") or meta.get("mode") or event.get("mode")
-                    anomaly = meta.get("anomaly", False) or meta.get("has_anomaly", False) or event.get("anomaly", False)
-                    terrain_idx = terrain_map.get(terrain_str.upper()) if terrain_str else None
-                    ground_truth = terrain_idx + (4 if anomaly else 0) if terrain_idx is not None else None
-                    window_metadata.append({
-                        "node_id": event.get("node_id"),
-                        "seq": event.get("seq"),
-                        "timestamp": event.get("timestamp"),
-                        "terrain_type": terrain_str,
-                        "is_anomaly": anomaly,
-                        "ground_truth": ground_truth
-                    })
-                self.trigger_inference(node_id, window, window_metadata)
-                node_state['buffer'] = node_state['buffer'][self.stride:]
-                node_state['stride_count'] = 0
-            
-            # Inactivity cleanup
-            self.cleanup_inactive_nodes()
-
+            # If data is a list, process each event
+            if isinstance(data, list):
+                for event in data:
+                    self._process_single_event(event)
+            else:
+                self._process_single_event(data)
 
         except json.JSONDecodeError:
             logger.warning(f"Received invalid JSON: {message}")
+
+    def _process_single_event(self, data):
+        """
+        Process a single event dict.
+        """
+        node_id = data.get('node_id')
+        seq = data.get('seq')
+        if not node_id:
+            logger.warning("Missing node_id in message")
+            return
+
+        # Duplicate filtering
+        if node_id not in self.seen_seqs:
+            self.seen_seqs[node_id] = set()
+        if seq in self.seen_seqs[node_id]:
+            logger.info(f"Duplicate packet detected for node {node_id} seq {seq}, skipping.")
+            return
+        self.seen_seqs[node_id].add(seq)
+
+        # Add receipt time for latency monitoring
+        receipt_time = time.time()
+        data['receipt_time'] = receipt_time
+
+        # Initialize buffer for new node_id
+        now = time.time()
+        if node_id not in self.node_states:
+            self.node_states[node_id] = {
+                'buffer': [],  # Use a list
+                'stride_count': 0,
+                'last_seq': -1,
+                'last_active': now
+            }
+        
+        # Update last activity time for node
+        self.node_states[node_id]['last_active'] = now
+
+        # Append new sample to node's buffer
+        node_state = self.node_states[node_id]
+        self.insert_event_in_order(node_state['buffer'], data)
+        node_state['stride_count'] += 1
+
+        logger.info(f"Received message for node {node_id}: {data}")
+
+        # Trigger inference when window and stride conditions are met
+        if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
+            window = node_state['buffer'][:self.window_size]
+            # Extract metadata for the window and reconstruct ground truth
+            terrain_map = {"IDLE": 0, "TERRESTRIAL": 1, "TRANSIT": 1, "MARITIME": 2, "LIFT": 3}
+            window_metadata = []
+            for event in window:
+                meta = event.get("meta", {})
+                terrain_str = meta.get("sim_mode") or meta.get("mode") or event.get("mode")
+                anomaly = meta.get("anomaly", False) or meta.get("has_anomaly", False) or event.get("anomaly", False)
+                terrain_idx = terrain_map.get(terrain_str.upper()) if terrain_str else None
+                ground_truth = terrain_idx + (4 if anomaly else 0) if terrain_idx is not None else None
+                window_metadata.append({
+                    "node_id": event.get("node_id"),
+                    "seq": event.get("seq"),
+                    "timestamp": event.get("timestamp"),
+                    "terrain_type": terrain_str,
+                    "is_anomaly": anomaly,
+                    "ground_truth": ground_truth
+                })
+            self.trigger_inference(node_id, window, window_metadata)
+            node_state['buffer'] = node_state['buffer'][self.stride:]
+            node_state['stride_count'] = 0
+        
+        # Inactivity cleanup
+        self.cleanup_inactive_nodes()
 
     def cleanup_inactive_nodes(self):
         """
         Remove nodes from node_states and seen_seqs if inactive for threshold.
         """
-
         now = time.time()
         inactive = [
             node_id for node_id, state in self.node_states.items()
@@ -235,24 +247,6 @@ class RedisSubscriber:
         """
         Extract features from the buffer and run classifier inference.
         Also calculates latency between message receipt and inference trigger.
-        """
-        # Latency monitoring: calculate time difference from earliest receipt_time
-        receipt_times = [event.get('receipt_time', None) for event in window]
-        earliest_receipt_time = min([t for t in receipt_times if t is not None], default=None)
-        latency = None
-        if earliest_receipt_time is not None:
-            latency = time.time() - earliest_receipt_time
-
-        features = stream_window_to_features(window, self.window_size, sample_rate=50)
-        features_tensor = torch.FloatTensor(features)
-        predicted, confidence = self.classifier.predict(features_tensor)
-        result = {
-            "node_id": node_id,
-            "predicted": predicted.item(),
-            "confidence": confidence.item(),
-            "window_metadata": window_metadata,
-            "latency": latency
-        Extract features from the window and run classifier inference.
 
         Computes:
           - terrain_confidence: P(terrain) + P(terrain_anomaly), i.e. the total
@@ -265,7 +259,13 @@ class RedisSubscriber:
         """
         TERRAIN_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT']
 
-        # Use the window events passed in (not the internal buffer)
+        # Latency monitoring: calculate time difference from earliest receipt_time
+        receipt_times = [event.get('receipt_time', None) for event in window]
+        earliest_receipt_time = min([t for t in receipt_times if t is not None], default=None)
+        latency = None
+        if earliest_receipt_time is not None:
+            latency = time.time() - earliest_receipt_time
+
         features = stream_window_to_features(window, self.window_size, sample_rate=50)
         if self.scaler is not None:
             features, _ = normalize_features(features, scaler=self.scaler)
@@ -308,7 +308,7 @@ class RedisSubscriber:
         )
 
         logger.info(
-            f"Inference for node {node_id}: predicted={predicted.item()}, confidence={confidence.item()}, "
+            f"Inference for node {node_id}: predicted={pred_class}, confidence={confidence}, "
             f"latency={latency:.3f}s, window_metadata={window_metadata}"
         )
 
@@ -321,15 +321,22 @@ class RedisSubscriber:
 
 if __name__ == "__main__":
     args = parse_args()
-    checkpoint = torch.load(args.model_path, weights_only=False)
-    config = checkpoint['model_config']
+    state_dict = torch.load(args.model_path, weights_only=False)
+
+    config = {
+        'input_dim': 38,         
+        'hidden_dims': [64, 32],
+        'dropout': 0.3, 
+        'num_classes': 8
+    }
+
     classifier = MotionClassifier(
         input_dim=config['input_dim'],
         hidden_dims=tuple(config['hidden_dims']),
         dropout=config['dropout'],
         num_classes=config['num_classes'],
     )
-    classifier.load_state_dict(checkpoint['model_state_dict'])
+    classifier.load_state_dict(state_dict)
     classifier.eval()
 
     subscriber = RedisSubscriber(
@@ -337,6 +344,6 @@ if __name__ == "__main__":
         window_size=args.window_size,
         stride=args.stride,
         classifier=classifier,
-        scaler=checkpoint['scaler'],
+        scaler=None, 
     )
     subscriber.listen()
