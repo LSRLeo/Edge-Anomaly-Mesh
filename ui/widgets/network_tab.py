@@ -28,6 +28,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np
 import math
+from ui.widgets.dashboard_main import DashboardApp
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
 from redis_reader import RedisReader
@@ -90,7 +91,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
     Highlights anomalous nodes and allows clicking to view details.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader, test_mode=False):
         """
         Initialize the Network tab.
         
@@ -107,6 +108,9 @@ class NetworkTab(ttk.Frame, DashboardParents):
         DashboardParents.__init__(self, redis_reader, parent, dashboard)
 
         self.redis_reader = redis_reader
+
+        # Init test mode
+        self.test_mode = test_mode
 
         self.dashboard = dashboard
         # Dict[node_id: str, node_data: dict]
@@ -450,14 +454,17 @@ class NetworkTab(ttk.Frame, DashboardParents):
         with open(filename, 'r') as file:
             return json.load(file)
     def populate_test_nodes(self):
-        #file = self.load_json('test_nodes.json')
-        #raw_file = self.load_json('widgets/raw_data.json')
-        #ml_file = self.load_json('widgets/ml_data.json')
-        try:
-            raw_file, ml_file = self.redis_reader.getDicts()
-        except Exception as e:
-            print(f'Error refreshing: {e}')
-            return
+        
+        if self.test_mode:
+            file = self.load_json('test_nodes.json')
+            raw_file = self.load_json('widgets/raw_data.json')
+            ml_file = self.load_json('widgets/ml_data.json')
+        elif not self.test_mode:
+            try:
+                raw_file, ml_file = self.redis_reader.getDicts()
+            except Exception as e:
+                print(f'Error refreshing: {e}')
+                return
         # Sort ml dict using node_id as key for quick indexing
         ml_id_sort = {msg["node_id"]: msg for msg in ml_file} 
 
