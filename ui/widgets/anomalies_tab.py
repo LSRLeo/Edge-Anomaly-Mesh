@@ -163,8 +163,6 @@ class AnomalySection(ttk.Frame):
         top = ttk.Frame(self)
         top.pack(fill="x", padx=10, pady=10)
 
-        ttk.Button(top, text="Refresh", command=self.parent.refresh()).pack(side="left")
-
         # --- Scrollable area ---
         outer = ttk.Frame(self)
         outer.pack(fill="both", expand=True, padx=10, pady=(0, 10))
@@ -335,7 +333,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
 
         style.configure("Nav.TButton")
         style.configure("Nav.Active.TButton")
-
+        ttk.Button(self._nav, text="Refresh", command=self.refresh).pack(side="left")
         # Internal notebook to allow multiple sections later
         self._sections_nb = ttk.Notebook(self, style='Tabless.TNotebook')
         self._sections_nb.pack(fill="both", expand=True)
