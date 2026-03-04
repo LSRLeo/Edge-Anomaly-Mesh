@@ -28,7 +28,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np
 import math
-from ui.widgets.dashboard_main import DashboardApp
+#from widgets.dashboard_main import DashboardApp
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
 from redis_reader import RedisReader
@@ -465,13 +465,12 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 print(f'Error refreshing: {e}')
                 return
         # Sort ml dict using node_id as key for quick indexing
-        ml_id_sort = {msg["node_id"]: msg for msg in ml_file} 
 
         #self.test_nodes.clear()
         self.node_dict.clear()
         for node_data in raw_file:
             node_id = node_data["node_id"]
-            ml = ml_id_sort.get(node_id)
+            ml = ml_file.get(node_id)
 
             if ml is None:
                 print(f'No contents in ML {node_id}')
