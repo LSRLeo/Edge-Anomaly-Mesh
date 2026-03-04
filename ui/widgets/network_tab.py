@@ -468,15 +468,15 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         #self.test_nodes.clear()
         self.node_dict.clear()
-        for node_data in raw_file:
+        for node_id, node_data in raw_file.items():
             node_id = node_data["node_id"]
             ml = ml_file.get(node_id)
 
             if ml is None:
                 print(f'No contents in ML {node_id}')
                 continue
-            seq = node_data.get("seq", 0)
-            accel = node_data.get("accel")
+            seq=node_data.get("seq", 0),
+            accel = node_data.get("accel_mss")
             accel_x = accel.get("x", 0) if accel else 0
             accel_y = accel.get("y", 0) if accel else 0
             accel_z = accel.get("z", 0) if accel else 0
