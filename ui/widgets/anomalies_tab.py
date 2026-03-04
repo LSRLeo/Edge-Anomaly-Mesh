@@ -163,8 +163,6 @@ class AnomalySection(ttk.Frame):
         top = ttk.Frame(self)
         top.pack(fill="x", padx=10, pady=10)
 
-        ttk.Button(top, text="Refresh", command=self.parent.refresh()).pack(side="left")
-
         # --- Scrollable area ---
         outer = ttk.Frame(self)
         outer.pack(fill="both", expand=True, padx=10, pady=(0, 10))
@@ -187,9 +185,9 @@ class AnomalySection(ttk.Frame):
         self._inner.bind("<Configure>", self._on_inner_configure)
         self._canvas.bind("<Configure>", self._on_canvas_configure)
 
-        
-
+        self.parent.refresh() #initial refresh to populate data
         # Build initial rows
+
         self._build_rows()
     def _on_inner_configure(self, event):
         # Update scroll region to encompass the inner frame
@@ -201,13 +199,15 @@ class AnomalySection(ttk.Frame):
         if self._canvas and self._inner_window is not None:
             self._canvas.itemconfig(self._inner_window, width=event.width)
         return
+    def _on_refresh_click(self):
+        self.parent.refresh() #call refresh method in AnomaliesTab to update data
+        self._build_rows() #rebuild the anomaly rows with updated node data
     def _build_rows(self):
         # Clear existing rows
         for row in self._rows:
             row['frame'].destroy()
         self._rows.clear()
         # self.populate_test_nodes()
-        self.parent.refresh()
         # Build new rows
         for node_id in list(self.parent.nodes.keys()):
             node = self.parent.nodes[node_id]
@@ -255,7 +255,7 @@ class AnomalySection(ttk.Frame):
         except Exception:
             pass
         node_lbl.pack(side="left")
-        ttk.Label(top, text=self._fmt_ts(anomaly.timestampToStr())).pack(side="right")
+        ttk.Label(top, text=anomaly.getTimestamp()).pack(side="right")
 
 
         # Second line: anomaly type
@@ -310,18 +310,21 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
     Displays a table of detected anomalies and click-to-view-details functionality.
     """
     
-    def __init__(self, parent, dashboard: 'DashboardApp', redis_reader: RedisReader):
+    def __init__(self, parent, dashboard: 'DashboardApp', redis_reader: Optional[RedisReader], test_mode=False):
         """
         Initialize the Anomalies tab.
         
         Args:
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
+            redis_reader: RedisReader instance for data access
+            test_mode: If True, runs in test mode with mock data
         """
         super().__init__(parent)
         style = ttk.Style(self)
         style.layout('Tabless.TNotebook', [('Notebook.client', {'sticky': 'nswe'})])
         self.dashboard = dashboard
+        self.test_mode = test_mode
 
         self.redis_reader = redis_reader
         self.nodes = {}  # Store Node objects keyed by node_id
@@ -332,13 +335,15 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
 
         style.configure("Nav.TButton")
         style.configure("Nav.Active.TButton")
-
+        ttk.Button(self._nav, text="Refresh", command=self.refresh).pack(side="left")
         # Internal notebook to allow multiple sections later
         self._sections_nb = ttk.Notebook(self, style='Tabless.TNotebook')
         self._sections_nb.pack(fill="both", expand=True)
         print("Inner notebook style:", self._sections_nb.cget("style"))
         # Create and add the initial anomalies list section
         self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
+        # if not self.test_mode: #not used yet
+        #     self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
         self._sections_nb.add(self._list_section, text=self._list_section.title)
     def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
@@ -355,8 +360,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
             raise ValueError(f"Raw data entry for node {node_id} cannot be None")
         if mlentry is None:
             raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
-        if node_id not in rdentry:
-            raise ValueError(f"Node ID {node_id} not found in raw data entry")
+        
         node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
         
         #raw data fields with defaults if missing
@@ -404,6 +408,25 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
                 self.load_node(node_id, rdentry, mlentry)
             except Exception as e:
                 print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
+    def load_json(self, filename):
+        if not os.path.exists(filename):
+            raise FileNotFoundError
+        with open(filename, 'r') as file:
+            return json.load(file)
+    def _parse_nodes_json(self):
+        raw_data = self.load_json('widgets/raw_data.json')
+        ml_data = self.load_json('widgets/ml_data.json')
+
+        if len(raw_data.keys()) != len(ml_data.keys()):
+            print("[NodeDetailsTab._parse_nodes_json] Warning: Raw data and ML data have different node counts.")
+        for node_id in raw_data.keys():
+            rdentry = raw_data.get(node_id)
+            mlentry = ml_data.get(node_id, [])
+            mlarray = mlentry.get("inference_array", []) if mlentry else []
+            try:
+                self.load_node(node_id, rdentry, mlarray)
+            except Exception as e:
+                print(f"[NodeDetailsTab._parse_nodes_json] Error parsing node {node_id}: {e}")
     def refresh(self):
     #     """
     #     Refresh the anomalies table with latest data.
@@ -412,11 +435,16 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
 
     #     Will be tied to a "Refresh" button in the UI to prevent excessive queries and ensure readability
     #     """
-        try:
-            self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
-            self._list_section._build_rows() #rebuild the anomaly rows with updated node data
-        except Exception as e:
-            print(f"Error refreshing anomalies tab: {e}")
+        if self.test_mode or self.redis_reader is None:
+            self._parse_nodes_json() #load from json for testing
+            return
+        else:
+            try:
+                self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
+                self._parse_nodes() #parse raw data and ml output into Node objects
+                
+            except Exception as e:
+                print(f"Error refreshing anomalies tab: {e}")
 
 
 # =============================================================================

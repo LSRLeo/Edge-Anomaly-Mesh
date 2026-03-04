@@ -68,7 +68,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
     including metadata, motion history, and anomaly trends.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: RedisReader, selected_node_id: Optional[str] = None):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[RedisReader], selected_node_id: Optional[str] = None, test_mode=False):
         """
         Initialize the Node Details tab.
         
@@ -76,10 +76,12 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
             selected_node_id: Optional node ID to display on load
+            test_mode: If True, runs in test mode with mock data
         """
         super().__init__(parent)
         
         self.dashboard = dashboard
+        self.test_mode = test_mode
         
         # Current node
         self.current_node_id: Optional[str] = None
@@ -103,6 +105,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
         # self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
         self.refresh() #initial refresh to populate data from redis
+        print(len(self.nodes))
         # Build UI
         self._setup_ui()
         
@@ -281,8 +284,8 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             raise ValueError(f"Raw data entry for node {node_id} cannot be None")
         if mlentry is None:
             raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
-        if node_id not in rdentry:
-            raise ValueError(f"Node ID {node_id} not found in raw data entry")
+        # if node_id not in rdentry:
+        #     raise ValueError(f"Node ID {node_id} not found in raw data entry")
         node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
         
         #raw data fields with defaults if missing
@@ -300,9 +303,14 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         lat = gps.get("lat_deg", 0) if gps else 0
         lon = gps.get("lon_deg", 0) if gps else 0
         #inference output fields with defaults if missing
-        motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
-        confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
-        anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
+        if len(mlentry) == 0:
+            motion_class = 0
+            confidence = 0
+            anomaly = False
+        else:
+            motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
+            confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
+            anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
         # Build Node object
         node = Node(
             node_id=node_id,
@@ -337,7 +345,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         
         node = self.nodes[node_id]
         self.vars["node_id"].set(node.getNodeID())
-        self.vars["timestamp"].set(node.getTimestamp().strftime("%Y-%m-%d %H:%M:%S"))
+        self.vars["timestamp"].set(node.getTimestamp())
         self.vars["seq"].set(str(node.seq))
         self.vars["accel_x"].set(f"{node.accel_x:.2f}")
         self.vars["accel_y"].set(f"{node.accel_y:.2f}")
@@ -347,7 +355,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.vars["gyro_z"].set(f"{node.gyro_z:.2f}")
         self.vars["lat"].set(f"{node.lat:.6f}")
         self.vars["lon"].set(f"{node.lon:.6f}")
-        self.vars["motion_class"].set(node.motionString())
+        self.vars["motion_class"].set(node.getMotionString())
         self.vars["confidence"].set(f"{node.confidence:.2f}")
     
     def _on_node_select(self, event):
@@ -368,6 +376,20 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
                 self.load_node(node_id, rdentry, mlentry)
             except Exception as e:
                 print(f"[NodeDetailsTab._parse_nodes] Error parsing node {node_id}: {e}")
+    def _parse_nodes_json(self):
+        raw_data = self.load_json('widgets/raw_data.json')
+        ml_data = self.load_json('widgets/ml_data.json')
+
+        if len(raw_data.keys()) != len(ml_data.keys()):
+            print("[NodeDetailsTab._parse_nodes_json] Warning: Raw data and ML data have different node counts.")
+        for node_id in raw_data.keys():
+            rdentry = raw_data.get(node_id)
+            mlentry = ml_data.get(node_id, [])
+            mlarray = mlentry.get("inference_array", []) if mlentry else []
+            try:
+                self.load_node(node_id, rdentry, mlarray)
+            except Exception as e:
+                print(f"[NodeDetailsTab._parse_nodes_json] Error parsing node {node_id}: {e}")
     def refresh_dropdown(self):
         """
         Refresh the node selector dropdown with current nodes.
@@ -385,14 +407,20 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         """
         Refresh data for the currently selected node.
         """
-        try:
-            self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
-            self._parse_nodes()
-            self.refresh_dropdown()
+        if self.test_mode or self.redis_reader is None:
+            self._parse_nodes_json() #load from json for testing
+            self.refresh_dropdown() #refresh dropdown with loaded nodes
             if self.current_node_id:
-                self.display_node(self.current_node_id)
-        except Exception as e:
-            print(f"[NodeDetailsTab.refresh] Error refreshing data: {e}")
+                self.display_node(self.current_node_id) #refresh displayed node
+        else:
+            try:
+                self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
+                self._parse_nodes()
+                self.refresh_dropdown()
+                if self.current_node_id:
+                    self.display_node(self.current_node_id)
+            except Exception as e:
+                print(f"[NodeDetailsTab.refresh] Error refreshing data: {e}")
 
 
         
