@@ -334,18 +334,6 @@ class StatsComponent(AnalyticsComponent):
                 label.config(text=formatter(stats[key]))
         
 
-
-def parse_top_anomalous_nodes(records, threshold=0.5, top_n=5):
-    node_counts = Counter()
-
-    for r in records:
-        anomaly_score = sum(r["state_confidence"][4:])
-        if anomaly_score >= threshold:
-            node_counts[r["node_id"]] += 1
-
-    return node_counts.most_common(top_n)
-
-
 def parse_stats(records):
     nodes = {r["node_id"] for r in records}
 
