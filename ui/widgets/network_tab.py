@@ -456,7 +456,6 @@ class NetworkTab(ttk.Frame, DashboardParents):
     def populate_test_nodes(self):
         
         if self.test_mode:
-            file = self.load_json('test_nodes.json')
             raw_file = self.load_json('widgets/raw_data.json')
             ml_file = self.load_json('widgets/ml_data.json')
         elif not self.test_mode:
@@ -477,17 +476,35 @@ class NetworkTab(ttk.Frame, DashboardParents):
             if ml is None:
                 print(f'No contents in ML {node_id}')
                 continue
-                
+            seq = node_data.get("seq", 0)
+            accel = node_data.get("accel")
+            accel_x = accel.get("x", 0) if accel else 0
+            accel_y = accel.get("y", 0) if accel else 0
+            accel_z = accel.get("z", 0) if accel else 0
+            gyro = node_data.get("gyro_rads")
+            gyro_x = gyro.get("x", 0) if gyro else 0
+            gyro_y = gyro.get("y", 0) if gyro else 0
+            gyro_z = gyro.get("z", 0) if gyro else 0
+            
+
             node = Node(
-                node_id=node_id,
-                lat=node_data.get("gps", {}).get("lat_deg"),
-                lon=node_data.get("gps", {}).get("lon_deg"),
-                timestamp=datetime.fromisoformat(node_data["timestamp"]),
-                motion_class=Node.motion_states.index(ml["motion_class"]),
-                anomaly=ml["anomaly_flag"],
-                confidence=ml["motion_confidence"]
+            node_id=node_id,
+            timestamp=datetime.fromisoformat(node_data["timestamp"]),
+            seq=seq,
+            accel_x=accel_x,
+            accel_y=accel_y,
+            accel_z=accel_z,
+            gyro_x=gyro_x,
+            gyro_y=gyro_y,
+            gyro_z=gyro_z,
+            lat=node_data.get("gps", {}).get("lat_deg"),
+            lon=node_data.get("gps", {}).get("lon_deg"),
+            motion_class=Node.motion_states.index(ml["motion_class"]),
+            anomaly=ml["anomaly_flag"],
+            confidence=ml["motion_confidence"]
+        )
                 
-            )
+            
             # Append newly created node to dict of nodes, key node_id
             self.node_dict[node_id] = node
             
