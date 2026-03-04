@@ -386,7 +386,6 @@ class AnalyticsTab(ttk.Frame):
         ]
     
     
-    
     def refresh(self):
         """
         Refresh all charts with latest data from ML JSON.
@@ -394,15 +393,8 @@ class AnalyticsTab(ttk.Frame):
         try:
             records = load_ml_json("sample_data/sample_anomaly_data.json")
 
-            motion_dist = parse_motion_distribution(records)
-            trend = parse_anomaly_trend(records)
-            top_nodes = parse_top_anomalous_nodes(records)
-            stats = parse_stats(records)
-
-            self.update_pie_chart(motion_dist)
-            self.update_line_chart(trend)
-            self.update_bar_chart(top_nodes)
-            self.update_stats_panel(stats)
+            for component in self.components:
+                component.update(records)
 
         except Exception as e:
             print(f"Error refreshing analytics tab: {e}")
