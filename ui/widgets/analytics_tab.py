@@ -354,22 +354,7 @@ class AnalyticsTab(ttk.Frame):
         super().__init__(parent)
         
         self.dashboard = dashboard
-        
-        # Chart figures and canvases
-        self.pie_fig: Optional[Figure] = None
-        self.pie_ax = None
-        self.pie_canvas: Optional[FigureCanvasTkAgg] = None
-        
-        self.line_fig: Optional[Figure] = None
-        self.line_ax = None
-        self.line_canvas: Optional[FigureCanvasTkAgg] = None
-        
-        self.bar_fig: Optional[Figure] = None
-        self.bar_ax = None
-        self.bar_canvas: Optional[FigureCanvasTkAgg] = None
-        
-        # Stats labels
-        self.stats_labels: Dict[str, ttk.Label] = {}
+        self.components: List[AnalyticsComponent] = []
         
         # Build UI
         self._setup_ui()
