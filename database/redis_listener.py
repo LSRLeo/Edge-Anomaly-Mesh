@@ -16,15 +16,26 @@ SUBSCRIBE_CHANNELS = [
     "inference:results:*",
     "ui:query:*" # placeholder
 ]
+#map responding to prefixes to channels for responses
 
 def send_message(message: dict) -> None:
-    # Implement the logic to send a message
-    pass
+    # Implement the logic to send a message, use responding_to field to determine the channel to publish to
+    responding_to = message.get("responding_to")
+    if responding_to:
+        channel = f"response:{responding_to}"
+        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+        r.publish(channel, json.dumps(message))
+
 
 def validate_response(response: Dict[str, Any]) -> bool:
     # Implement the logic to validate a response
     return True
-
+def get_response_channel(message: Dict[str, Any]) -> Optional[str]:
+    # Implement the logic to determine the correct channel to publish the response to based on the original message
+    responding_to = message.get("responding_to")
+    if responding_to:
+        return f"response:{responding_to}"
+    return None
 def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     pubsub = r.pubsub()
