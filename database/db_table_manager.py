@@ -89,6 +89,7 @@ class TableManager:
             self.session.flush()  # Flush to get the record ID for anomaly event insertion
             if msg["is_anomaly"]:
                 self.insert_anomaly_event(record)
+            self.update_node_status(msg["node_id"], msg["classification"])
         try:
             self.session.commit()
             self.session.close()
@@ -110,6 +111,15 @@ class TableManager:
         )
         self.session.add(anomaly_record)
         return
+
+    def update_node_status(self, node_id: str, classification: str) -> bool:
+        node = self.session.query(Node).filter_by(node_id=node_id).first()
+        if node:
+            node.status = 'inactive' if classification == 'IDLE' else 'active'
+            self.session.add(node)
+        else:
+            print(f"Node with ID {node_id} not found.")
+            return False
     
 
     def iso_to_unix_timestamp(self, iso_str: str) -> int:
