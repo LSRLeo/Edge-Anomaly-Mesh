@@ -158,17 +158,17 @@ def main():
     inference_data = load_json(Path("database/example_inference.json"))
     
     TableManager().clear_tables()
-    if isinstance(raw_data, list):
-        success = manager.insert_raw_data(raw_data)
-        print(f"Inserted {len(raw_data)} records: {success}")
-    else:
-        print("Invalid JSON format. Expected a list of records.")
+    # if isinstance(raw_data, list):
+    #     success = manager.insert_raw_data(raw_data)
+    #     print(f"Inserted {len(raw_data)} records: {success}")
+    # else:
+    #     print("Invalid JSON format. Expected a list of records.")
     
-    if isinstance(inference_data, list):
-        success = manager.insert_inference_results(inference_data)
-        print(f"Inserted {len(inference_data)} inference records: {success}")
-    else:
-        print("Invalid JSON format. Expected a list of records.")
+    # if isinstance(inference_data, list):
+    #     success = manager.insert_inference_results(inference_data)
+    #     print(f"Inserted {len(inference_data)} inference records: {success}")
+    # else:
+    #     print("Invalid JSON format. Expected a list of records.")
 
 if __name__ == "__main__":
     main()
