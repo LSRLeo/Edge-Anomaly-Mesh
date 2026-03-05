@@ -426,8 +426,8 @@ class AnalyticsTab(ttk.Frame):
         Refresh all charts with latest data from ML JSON.
         """
         try:
-            records = load_ml_json("../sample_data/sample_anomaly_data.json")
-
+            records = self.parse_json() if self.test_mode else self.parse_redis()
+            
             for component in self.components:
                 component.update(records)
 
