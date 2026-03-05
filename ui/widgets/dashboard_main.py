@@ -24,7 +24,8 @@ from redis_reader import RedisReader
 # redis reader object, sub and pub on a thread
 # redis reader connect
 # Add parent directory to path for imports
-CHANNELNAME = "Test"
+CHANNELNAME_QUERY = "ui:query"
+CHANNELNAME_RESPONSE = "ui:responses"
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ui_utils import (
