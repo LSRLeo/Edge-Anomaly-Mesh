@@ -41,6 +41,7 @@ MOTION_COLORS = {
 # Chart sizing constants
 CHART_FIGSIZE = (6, 4)  # Width, height in inches
 CHART_DPI = 100         # Dots per inch for chart resolution
+DEFAULT_TEST_JSON_PATH = "sample_data/sample_anomaly_data.json"
 
 # Avoid circular import
 if TYPE_CHECKING:
@@ -342,22 +343,57 @@ class AnalyticsTab(ttk.Frame):
     and anomaly patterns.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp'):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[Any] = None, test_mode: bool = False):
         """
         Initialize the Analytics tab.
         
         Args:
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
+            redis_reader: Optional Redis reader for fetching data
+            test_mode: If True, runs in test mode with mock data
         """
         super().__init__(parent)
         
         self.dashboard = dashboard
+        self.redis_reader = redis_reader
+        self.test_mode = test_mode
         self.components: List[AnalyticsComponent] = []
         
         # Build UI
         self._setup_ui()
+        self.refresh()
     
+    def parse_json(self) -> List[Dict[str, Any]]:
+        return load_ml_json(DEFAULT_TEST_JSON_PATH)
+    
+    def parse_redis(self) -> List[Dict[str, Any]]:
+        if self.redis_reader is None:
+            raise ValueError("Redis mode enabled but redis_reader is not configured.")
+        
+        rddict, mldict = self.redis_reader.getDicts()
+        records: List[Dict[str, Any]] = []
+        
+        for node_id, state_confidence in mldict.items():
+            if not isinstance(state_confidence, list) or len(state_confidence) != 8:
+                continue
+            
+            raw_entry = rddict.get(node_id, {}) if isinstance(rddict, dict) else {}
+            timestamp = raw_entry.get("timestamp") if isinstance(raw_entry, dict) else None
+            if not timestamp:
+                timestamp = datetime.utcnow().isoformat()
+                
+            records.append(
+                {
+                    "node_id": node_id,
+                    "timestamp": timestamp,
+                    "state_confidence": state_confidence,
+                }
+            )
+        
+        return records
+            
+                
     def _setup_ui(self):
         """
         Create the tab layout.
@@ -390,8 +426,8 @@ class AnalyticsTab(ttk.Frame):
         Refresh all charts with latest data from ML JSON.
         """
         try:
-            records = load_ml_json("../sample_data/sample_anomaly_data.json")
-
+            records = self.parse_json() if self.test_mode else self.parse_redis()
+            
             for component in self.components:
                 component.update(records)
 
@@ -417,7 +453,7 @@ def demo():
     notebook = ttk.Notebook(root)
     notebook.pack(fill='both', expand=True)
     
-    tab = AnalyticsTab(notebook, dashboard=MockDashboard())
+    tab = AnalyticsTab(notebook, dashboard=MockDashboard(), test_mode=True)
     notebook.add(tab, text='Analytics')
     
     tab.refresh()
