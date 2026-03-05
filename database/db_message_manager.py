@@ -41,8 +41,9 @@ class DBMessageManager:
     def process_message(self, message:Dict[str, Any]) -> Dict[str, Any] | None:
         """Processes incoming message and creates message objects"""
 
-        #Could validate message here too and then remove m_id and m_type before passing to message factory, but message factory already does validation and we want to avoid copying the dict if possible, so we'll just pass the original dict to the message factory and let it handle validation and object creation.
+     
         message_obj = MessageFactory.create_message(message)
+        
         if message_obj is None:
             m_id   = message.get("m_id",   "unknown") if isinstance(message, dict) else "unknown"
             m_type = message.get("m_type", "unknown") if isinstance(message, dict) else "unknown"

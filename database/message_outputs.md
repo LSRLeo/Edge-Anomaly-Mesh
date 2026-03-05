@@ -4,6 +4,84 @@ Message request/response pairs for DB query functions.
 
 ---
 
+## Input Message Formats
+
+### raw-data
+
+```json
+{
+  "m_type": "raw-data",
+  "m_id": "node_001_12345",
+  "event_id": "node_001_2026-01-22T18:52:14.818400",
+  "node_id": "node_001",
+  "timestamp": "2026-01-22T18:52:14.818400",
+  "seq": 12345,
+  "gps": {
+    "lat_deg": 40.713923,
+    "lon_deg": -74.004764,
+    "altitude_m": 50.1
+  },
+  "accel_mss": {
+    "x": 0.05,
+    "y": 0.02,
+    "z": 9.81
+  },
+  "gyro_rads": {
+    "x": 0.01,
+    "y": 0.01,
+    "z": 0.01
+  },
+  "meta": {
+    "sample_rate_hz": 50,
+    "battery_pct": 95,
+    "sim_mode": "IDLE",
+    "sim_anomaly": false
+  },
+  "origin": {
+    "lat_deg": 40.712776,
+    "lon_deg": -74.005974,
+    "altitude_m": 10.0
+  },
+  "dest": {
+    "lat_deg": 41.878113,
+    "lon_deg": -87.629799,
+    "altitude_m": 180.0
+  }
+}
+```
+
+### inference-output
+
+```json
+{
+  "m_type": "inference-output",
+  "m_id": "ml_{seq}",
+  "event_id": "{node_id}_{timestamp}",
+  "node_id": "node_001",
+  "timestamp": "2026-01-22T18:52:14.818400",
+  "classification": "IDLE",
+  "confidence": {
+    "IDLE": 0.72,
+    "TERRESTRIAL": 0.08,
+    "MARITIME": 0.05,
+    "LIFT": 0.03,
+    "IDLE_ANOM": 0.06,
+    "TERRESTRIAL_ANOM": 0.03,
+    "MARITIME_ANOM": 0.02,
+    "LIFT_ANOM": 0.01
+  },
+  "is_anomaly": false,
+  "anomaly_score": 0.063
+}
+```
+
+**Field notes:**
+- `classification`: one of `IDLE`, `TERRESTRIAL`, `MARITIME`, `LIFT`, `UNKNOWN` (uppercase)
+- `confidence`: per-class softmax probabilities summing to 1.0
+- `anomaly_score`: range `[0.0, 1.0]`
+
+---
+
 ## 1. get_nodes
 
 **Request:**
@@ -48,7 +126,7 @@ Message request/response pairs for DB query functions.
   "m_id": "db_00002",
   "responding_to": "ui_00001",
   "node_id": "node_001",
-  "data_ids": [
+  "event_ids": [
     "node_001_2026-01-22T18:52:14.818400",
     "node_001_2026-01-22T18:52:14.838400",
     "node_001_2026-01-22T18:52:14.858400"
@@ -80,16 +158,16 @@ Message request/response pairs for DB query functions.
   "timestamp": "2026-01-22T18:52:14.818400",
   "seq": 12345,
   "gps": {
-    "lat_deg": 40.713923,
-    "lon_deg": -74.004764,
+    "lat": 40.713923,
+    "lon": -74.004764,
     "altitude_m": 50.1
   },
-  "accel_mss": {
+  "accel": {
     "x": 0.05,
     "y": 0.02,
     "z": 9.81
   },
-  "gyro_rads": {
+  "gyro": {
     "x": 0.01,
     "y": 0.01,
     "z": 0.01
@@ -101,13 +179,13 @@ Message request/response pairs for DB query functions.
     "sim_anomaly": false
   },
   "origin": {
-    "lat_deg": 40.712776,
-    "lon_deg": -74.005974,
+    "lat": 40.712776,
+    "lon": -74.005974,
     "altitude_m": 10.0
   },
   "dest": {
-    "lat_deg": 41.878113,
-    "lon_deg": -87.629799,
+    "lat": 41.878113,
+    "lon": -87.629799,
     "altitude_m": 180.0
   },
   "inference": {
@@ -169,6 +247,7 @@ Message request/response pairs for DB query functions.
 
 **Notes:**
 - `records` is ordered newest-first
+- `meta`, `origin`, and `dest` are excluded from this response
 - Caller may optionally include a `limit` field in the request (default TBD)
 
 ---
@@ -194,33 +273,87 @@ Message request/response pairs for DB query functions.
   "records": [
     {
       "event_id": "node_001_2026-01-22T18:52:14.818400",
+      "node_id": "node_001",
       "timestamp": "2026-01-22T18:52:14.818400",
-      "window_start": 1769133132,
-      "window_end": 1769133134,
-      "window_samples": 20,
-      "location_state": HOME,
-      "motion_class": IDLE,
-      "confidence": 0.95,
-      "anomaly_detected": false,
-      "anomaly_score": 0.12,
-      "anomaly_type": IMPACT,
-      "nearest_hub_id": hub_nyc_01,
-      "nearest_hub_distance": 39.7,
-      "feature_vector": {
-            "rms_accel": 0.05,
-            "peak_accel": 0.12,
-            "dominant_freq_hz": 0.0,
-            "variance_x": 0.002,
-            "variance_y": 0.002,
-            "variance_z": 0.003
-      }
+      "classification": "IDLE",
+      "confidence": {
+        "IDLE": 0.72,
+        "TERRESTRIAL": 0.08,
+        "MARITIME": 0.05,
+        "LIFT": 0.03,
+        "IDLE_ANOM": 0.06,
+        "TERRESTRIAL_ANOM": 0.03,
+        "MARITIME_ANOM": 0.02,
+        "LIFT_ANOM": 0.01
+      },
+      "is_anomaly": false,
+      "anomaly_score": 0.063
     }
   ]
 }
 ```
 
 **Notes:**
-- `records` is ordered newest-first
+- Each record mirrors the `inference-output` format
+- Caller may optionally include a `limit` field in the request (default TBD)
+
+---
+
+## 6. get_active_nodes
+
+**Request:**
+```json
+{
+  "m_type": "get-active-nodes",
+  "m_id": "ui_00001"
+}
+```
+
+**Response:**
+```json
+{
+  "m_type": "get-active-nodes-response",
+  "m_id": "db_00006",
+  "responding_to": "ui_00001",
+  "nodes": [
+    "node_001",
+    "node_002"
+  ]
+}
+```
+
+---
+
+## 7. get_node_info(node_id)
+
+**Request:**
+```json
+{
+  "m_type": "get-node-info",
+  "m_id": "ui_00001",
+  "node_id": "node_001"
+}
+```
+
+**Response:**
+```json
+{
+  "m_type": "get-node-info-response",
+  "m_id": "db_00007",
+  "responding_to": "ui_00001",
+  "node_id": "node_001",
+  "status": "active",
+  "first_seen": "2026-01-22T18:52:14.818400",
+  "last_seen": "2026-01-22T19:10:03.224100",
+  "location": {
+    "lat_deg": 40.713923,
+    "lon_deg": -74.004764,
+    "altitude_m": 50.1
+  }
+}
+```
+**Notes:**
+- Gets `node` returns `status`, `first_seen`, and `last_seen` from the `Node` table
 - Caller may optionally include a `limit` field in the request (default TBD)
 
 ---

@@ -1,0 +1,20 @@
+{
+  "m_type": "inference-output",
+  "m_id": "ml_{seq}",
+  "event_id": "{node_id}_{timestamp}",
+  "node_id": "node_001",
+  "timestamp": "2026-01-22T18:52:14.818400",
+  "classification": "IDLE",
+  "confidence": {
+    "IDLE": 0.72,
+    "TERRESTRIAL": 0.08,
+    "MARITIME": 0.05,
+    "LIFT": 0.03,
+    "IDLE_ANOM": 0.06,
+    "TERRESTRIAL_ANOM": 0.03,
+    "MARITIME_ANOM": 0.02,
+    "LIFT_ANOM": 0.01
+  },
+  "is_anomaly": false,
+  "anomaly_score": 0.063
+}
