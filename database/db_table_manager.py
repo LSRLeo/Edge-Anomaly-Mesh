@@ -21,15 +21,21 @@ class TableManager:
                 node_id=msg["node_id"],
                 timestamp=self.iso_to_unix_timestamp(msg["timestamp"]),
                 seq=msg["seq"],
-                accel_x=msg["accel_mss"]["x"],
-                accel_y=msg["accel_mss"]["y"],
-                accel_z=msg["accel_mss"]["z"],
-                gyro_x=msg["gyro_rads"]["x"],
-                gyro_y=msg["gyro_rads"]["y"],
-                gyro_z=msg["gyro_rads"]["z"],
-                gps_lat=msg["gps"]["lat_deg"],
-                gps_lon=msg["gps"]["lon_deg"],
-                gps_altitude_m=msg["gps"]["altitude_m"]
+
+                gps_lat_deg=msg["gps"]["lat_deg"],
+                gps_lon_deg=msg["gps"]["lon_deg"],
+                gps_altitude_m=msg["gps"]["altitude_m"],
+
+                accel_x_mss=msg["accel_mss"]["x"],
+                accel_y_mss=msg["accel_mss"]["y"],
+                accel_z_mss=msg["accel_mss"]["z"],
+
+                gyro_x_rads=msg["gyro_rads"]["x"],
+                gyro_y_rads=msg["gyro_rads"]["y"],
+                gyro_z_rads=msg["gyro_rads"]["z"],
+
+                sim_mode=msg["meta"]["sim_mode"],
+                sim_anomaly=msg["meta"]["sim_anomaly"]
             )
             self.session.add(record)
             self.insert_node(msg)
@@ -72,23 +78,16 @@ class TableManager:
             record = InferenceResults(
                 node_id=msg["node_id"],
                 timestamp=self.iso_to_unix_timestamp(msg["timestamp"]),
-                window_start=self.iso_to_unix_timestamp(msg["window"]["start"]),
-                window_end=self.iso_to_unix_timestamp(msg["window"]["end"]),
-                window_samples=msg["window"]["samples"],
-                location_state=msg["location_state"],
-                motion_class=msg["motion_class"],
-                confidence=msg["confidence"],
-                anomaly_detected=msg["anomaly"]["detected"],
-                anomaly_score=msg["anomaly"]["score"],
-                anomaly_type=msg["anomaly"]["type"],
-                nearest_hub_id=msg["nearest_hub"]["hub_id"],
-                nearest_hub_distance=msg["nearest_hub"]["distance_m"],
-                feature_vector=json.dumps(msg["features"]),
-                processing_time_ms=msg["processing_time_ms"]
+
+                classification=msg["classification"],
+                confidence=json.dumps(msg["confidence"]),
+
+                is_anomaly=msg["is_anomaly"],
+                anomaly_score=msg["anomaly_score"],
             )
             self.session.add(record)
             self.session.flush()  # Flush to get the record ID for anomaly event insertion
-            if msg["anomaly"]["detected"]:
+            if msg["is_anomaly"]:
                 self.insert_anomaly_event(record)
         try:
             self.session.commit()
@@ -105,8 +104,7 @@ class TableManager:
         anomaly_record = AnomalyEvents(
             inference_id=inference_record.id,
             node_id=inference_record.node_id,
-            start_timestamp=inference_record.window_start,
-            end_timestamp=inference_record.window_end,
+            timestamp=inference_record.timestamp,
             severity='CRITICAL' if inference_record.anomaly_score >= 0.75 else 'HIGH' if inference_record.anomaly_score >= 0.5 else 'MEDIUM' if inference_record.anomaly_score >= 0.25 else 'LOW',
             description=f"Anomaly detected with score {inference_record.anomaly_score} and type {inference_record.anomaly_type}",
         )
@@ -143,23 +141,23 @@ def load_json(file_path: Path):
     return data
     
 def main():
-    # Example usage
+    # Example usage, uncomment chunk "if isinstance(raw_data)...", change raw_data filepath
     manager = TableManager()
-    raw_data = load_json(Path("simulator/raw_data.json"))
-    inference_data = load_json(Path("data/examples/inference_results/example_inference_results.json"))
+    raw_data = load_json(Path("database/example_raw.json"))
+    inference_data = load_json(Path("database/example_inference.json"))
     
     TableManager().clear_tables()
-    # if isinstance(raw_data, list):
-    #     success = manager.insert_raw_data(raw_data)
-    #     print(f"Inserted {len(raw_data)} records: {success}")
-    # else:
-    #     print("Invalid JSON format. Expected a list of records.")
+    if isinstance(raw_data, list):
+        success = manager.insert_raw_data(raw_data)
+        print(f"Inserted {len(raw_data)} records: {success}")
+    else:
+        print("Invalid JSON format. Expected a list of records.")
     
-    # if isinstance(inference_data, list):
-    #     success = manager.insert_inference_results(inference_data)
-    #     print(f"Inserted {len(inference_data)} inference records: {success}")
-    # else:
-    #     print("Invalid JSON format. Expected a list of records.")
+    if isinstance(inference_data, list):
+        success = manager.insert_inference_results(inference_data)
+        print(f"Inserted {len(inference_data)} inference records: {success}")
+    else:
+        print("Invalid JSON format. Expected a list of records.")
 
 if __name__ == "__main__":
     main()

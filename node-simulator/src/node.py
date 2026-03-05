@@ -325,7 +325,7 @@ class Node:
             
             """
             if self.data_mode == "live":
-                label = {
+                meta = {
                     "motion_type": mode,
                     "is_anomaly": "",
                     "anomaly_type": "",
@@ -335,28 +335,31 @@ class Node:
                 # NOTE: This is where we will add the anomaly label
                 # Messages from motion classes only have 'anomalous' when inject_anomalies was applied (e.g. at-hub IDLE); in-transit or unmodified messages do not.
                 anomaly_type = message.get('anomalous', "False")
-                label = {
+                meta = {
                     "motion_type": mode,
                     "is_anomaly": anomaly_type,
                     "anomaly_type": "",
                     "location": "hub_denver_01"
                 }
             polished_message = {
+                "m_type": "raw-data",
+                "m_id": self.node_id + "_" + str(self.seq),
+                "event_id": self.node_id + "_" + self.timestamp.isoformat(),
                 "node_id": self.node_id,
                 "timestamp": self.timestamp.isoformat(),
                 "seq": self.seq,
                 "gps": gps,
-                "accel": {
+                "accel_mss": {
                     "x": message['accel_x'],
                     "y": message['accel_y'],
                     "z": message['accel_z']
                 },
-                "gyro": {
+                "gyro_rads": {
                     "x": message['gyro_x'],
                     "y": message['gyro_y'],
                     "z": message['gyro_z']
                 },
-                "label": label
+                "meta": meta
             }
             self.seq += 1
             self.timestamp += timedelta(1 / self.sample_rate_hz)

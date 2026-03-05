@@ -3,12 +3,17 @@ import tkinter as tk
 from tkinter import ttk
 from datetime import datetime, timedelta
 from abc import ABC, abstractmethod
+from typing import Optional
+
+from redis_reader import RedisReader
 
 class DashboardParents():
-    def __init__(self, redis_reader, parent: ttk.Notebook, dashboard: 'DashboardApp'):
-
+    def __init__(self, redis_reader: Optional[RedisReader], parent: ttk.Notebook, dashboard: 'DashboardApp', test_mode=False):
+        if redis_reader is None:
+            redis_reader = None
         self.redis_reader = redis_reader
         self. dashboard = dashboard
+        self.test_mode = test_mode
     
     @abstractmethod
     def refresh(self):
@@ -21,7 +26,7 @@ class DashboardParents():
 
 class Node:
     motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-    def __init__(self, node_id: str, timestamp, seq, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, lat: float, lon: float, motion_class: int, anomaly: bool, confidence: float):
+    def __init__(self, node_id: str, timestamp:str, seq, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, lat: float, lon: float, motion_class: int, anomaly: bool, confidence: float):
         self.node_id = node_id
         self.timestamp = timestamp
         self.seq = seq
@@ -37,8 +42,6 @@ class Node:
         self.anomaly = anomaly
         self.confidence = confidence
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-    def updateTimestamp(self):
-        self.timestamp = datetime.now()
     def updateMotion(self, motion_class, confidence: float):
         if isinstance(motion_class, int):
             self.motion_class = motion_class
@@ -53,10 +56,8 @@ class Node:
         return self.node_id
     def getCoords(self):
         return (self.lat, self.lon)
-    def getTimestamp(self):
+    def getTimestamp(self)->str:
         return self.timestamp
-    def timestampToStr(self):
-        return self.timestamp.strftime("%Y-%m-%d %H:%M:%S")
     def getMotion(self):
         return (self.motion_class, self.confidence)
     def toDict(self): #returns a dictionary representation of the node for easy access
