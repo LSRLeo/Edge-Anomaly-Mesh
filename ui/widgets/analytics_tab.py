@@ -363,6 +363,9 @@ class AnalyticsTab(ttk.Frame):
         self._setup_ui()
         self.refresh()
     
+    def parse_json(self) -> List[Dict[str, Any]]:
+        return load_ml_json("../sample_data/sample_anomaly_data.json")
+    
     def _setup_ui(self):
         """
         Create the tab layout.
