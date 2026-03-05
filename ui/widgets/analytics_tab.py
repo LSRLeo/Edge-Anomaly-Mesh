@@ -342,21 +342,26 @@ class AnalyticsTab(ttk.Frame):
     and anomaly patterns.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp'):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[Any] = None, test_mode: bool = True):
         """
         Initialize the Analytics tab.
         
         Args:
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
+            redis_reader: Optional Redis reader for fetching data
+            test_mode: If True, runs in test mode with mock data
         """
         super().__init__(parent)
         
         self.dashboard = dashboard
+        self.redis_reader = redis_reader
+        self.test_mode = test_mode
         self.components: List[AnalyticsComponent] = []
         
         # Build UI
         self._setup_ui()
+        self.refresh()
     
     def _setup_ui(self):
         """
