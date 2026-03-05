@@ -41,17 +41,21 @@ class RawSensorData(Base):
     timestamp = Column(Float, nullable=False)  # Unix timestamp
     seq = Column(Integer, nullable=False)  # Sequence number for ordering
 
-    accel_x = Column(Float, nullable=False)
-    accel_y = Column(Float, nullable=False)
-    accel_z = Column(Float, nullable=False)
-
-    gyro_x = Column(Float, nullable=False)
-    gyro_y = Column(Float, nullable=False)
-    gyro_z = Column(Float, nullable=False)
-
-    gps_lat = Column(Float, nullable=False)
-    gps_lon = Column(Float, nullable=False)
+    gps_lat_deg = Column(Float, nullable=False)
+    gps_lon_deg = Column(Float, nullable=False)
     gps_altitude_m = Column(Float, nullable=False)
+
+    accel_x_mss = Column(Float, nullable=False)
+    accel_y_mss = Column(Float, nullable=False)
+    accel_z_mss = Column(Float, nullable=False)
+
+    gyro_x_rads = Column(Float, nullable=False)
+    gyro_y_rads = Column(Float, nullable=False)
+    gyro_z_rads = Column(Float, nullable=False)
+
+    # TABLES FOR ML TEAM ONLY
+    sim_mode = Column(String, CheckConstraint("sim_mode IN ('IDLE','TERRESTRIAL','MARITIME','LIFT','UNKNOWN')"), nullable=False, default='UNKNOWN')
+    sim_anomaly = Column(Boolean, nullable=False)
 
     ingested_at = Column(
         Float,
@@ -83,24 +87,14 @@ class InferenceResults(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String, nullable=False)
     timestamp = Column(Float, nullable=False)
-    window_start = Column(Float, nullable=False)
-    window_end = Column(Float, nullable=False)
-    window_samples = Column(Integer, nullable=False)
-
-    location_state = Column(String, nullable=False)
-    motion_class = Column(String, CheckConstraint("motion_class IN ('IDLE','TERRESTRIAL','MARITIME','LIFT','UNKNOWN')"), nullable=False)
-    confidence = Column(Float, CheckConstraint("confidence >= 0.0 AND confidence <= 1.0"), nullable=False)
-    anomaly_detected = Column(Boolean, nullable=False)
-    anomaly_score = Column(Float, CheckConstraint("anomaly_score >= 0.0 AND anomaly_score <= 1.0"), nullable=False)
-    anomaly_type = Column(String, nullable=True)  # Optional field for anomaly type
-
-    nearest_hub_id = Column(String, nullable=False)
-    nearest_hub_distance = Column(Float, nullable=False)
-    feature_vector = Column(String, nullable=False)  # Store as JSON string
+    classification = Column(String, CheckConstraint("classification IN ('IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT', 'UNKNOWN')"), nullable=False)
+    confidences = Column(String, nullable=False)  # JSON string of confidence scores for each class
+    is_anomaly = Column(Boolean, nullable=False)
+    anomaly_score = Column(Float, nullable=False)
 
     processing_time_ms = Column(Integer, nullable=False)
     ingested_at = Column(Float, default=lambda: datetime.utcnow().timestamp(), nullable=False)
-    __table_args__ = (UniqueConstraint('node_id', 'window_start', 'window_end', name='uq_node_window'),)  # Ensure no duplicate entries for the same node and time window
+    __table_args__ = (UniqueConstraint('node_id', 'timestamp', name='uq_node_timestamp'),)  # Ensure no duplicate entries for the same node and time window
 
 class AnomalyEvents(Base):
     """
@@ -112,8 +106,6 @@ class AnomalyEvents(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String, nullable=False)
-    start_timestamp = Column(Float, nullable=False)
-    end_timestamp = Column(Float)
     severity = Column(String, CheckConstraint("severity IN ('LOW','MEDIUM','HIGH', 'CRITICAL')"), nullable=False)
     description = Column(String)
     acknowledged = Column(Boolean, default=False)
