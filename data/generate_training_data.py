@@ -1153,6 +1153,123 @@ class TrainingDataGenerator:
         return all_metadata
 
 
+    def generate_balanced_dataset(
+        self,
+        output_dir: str,
+        samples_per_class: int = 500,
+    ) -> Dict[str, Any]:
+        """
+        Generate a balanced dataset with exactly samples_per_class samples for each of
+        the 8 classes: IDLE, TERRESTRIAL, MARITIME, LIFT × (normal, anomaly).
+
+        Each class is written to its own file so the ML loader sees equal representation.
+        Anomaly samples randomly cycle through all 4 anomaly types.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+
+        hub_ids = list(self.network.hubs.keys())
+        terrestrial_hub = next(
+            (self.network.get_hub(h) for h in hub_ids
+             if self.network.get_hub(h).hub_type != "seaport"),
+            self.network.get_hub(hub_ids[0])
+        )
+        maritime_hub = next(
+            (self.network.get_hub(h) for h in hub_ids
+             if self.network.get_hub(h).hub_type == "seaport"),
+            terrestrial_hub
+        )
+
+        start_time = datetime.now()
+        anomaly_types = ["spike", "dropout", "drift", "motion_mismatch"]
+
+        classes = [
+            ("IDLE",         False),
+            ("TERRESTRIAL",  False),
+            ("MARITIME",     False),
+            ("LIFT",         False),
+            ("IDLE",         True),
+            ("TERRESTRIAL",  True),
+            ("MARITIME",     True),
+            ("LIFT",         True),
+        ]
+
+        all_metadata = {
+            "generated_at": start_time.isoformat(),
+            "mode": "balanced",
+            "samples_per_class": samples_per_class,
+            "files": [],
+            "total_samples": 0
+        }
+
+        for motion_type, is_anomaly_class in classes:
+            samples = []
+            hub = maritime_hub if motion_type == "MARITIME" else terrestrial_hub
+
+            for i in range(samples_per_class):
+                t = float(i)
+                timestamp = (start_time + timedelta(seconds=i)).isoformat()
+                accel, gyro = MotionPhysics.generate(motion_type, t)
+
+                anomaly_type_used = ""
+                if is_anomaly_class:
+                    anomaly_type_used = anomaly_types[i % len(anomaly_types)]
+                    if anomaly_type_used == "spike":
+                        accel = AnomalyInjector.inject_spike(accel)
+                    elif anomaly_type_used == "dropout":
+                        accel = AnomalyInjector.inject_dropout(accel)
+                    elif anomaly_type_used == "drift":
+                        accel = AnomalyInjector.inject_drift(accel)
+                    elif anomaly_type_used == "motion_mismatch":
+                        accel, gyro = AnomalyInjector.inject_motion_mismatch(t, motion_type)
+
+                sample = {
+                    "m_type": "raw-data",
+                    "m_id": f"node_balanced_{i}",
+                    "event_id": f"node_balanced_{timestamp}",
+                    "node_id": "node_balanced",
+                    "timestamp": timestamp,
+                    "seq": i,
+                    "gps": {
+                        "lat_deg": round(hub.lat + random.gauss(0, 0.0001), 6),
+                        "lon_deg": round(hub.lon + random.gauss(0, 0.0001), 6),
+                        "altitude_m": round(hub.altitude_m + random.gauss(0, 2.0), 1)
+                    },
+                    "accel_mss": accel,
+                    "gyro_rads": gyro,
+                    "meta": {
+                        "motion_type": motion_type,
+                        "is_anomaly": str(is_anomaly_class),
+                        "anomaly_type": anomaly_type_used,
+                        "location": hub.hub_id
+                    }
+                }
+                samples.append(sample)
+
+            suffix = "anomaly" if is_anomaly_class else "normal"
+            filename = f"balanced_{motion_type.lower()}_{suffix}.json"
+            filepath = os.path.join(output_dir, filename)
+
+            with open(filepath, 'w') as f:
+                json.dump(samples, f, indent=2)
+
+            label = f"{motion_type}_ANOM" if is_anomaly_class else motion_type
+            print(f"  [{label:<20s}] {samples_per_class} samples -> {filename}")
+
+            all_metadata["files"].append({
+                "file": filename,
+                "motion_type": motion_type,
+                "is_anomaly": is_anomaly_class,
+                "num_samples": len(samples)
+            })
+            all_metadata["total_samples"] += len(samples)
+
+        metadata_path = os.path.join(output_dir, "metadata.json")
+        with open(metadata_path, 'w') as f:
+            json.dump(all_metadata, f, indent=2)
+
+        return all_metadata
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -1172,13 +1289,7 @@ def main():
         "--samples",
         type=int,
         default=500,
-        help="Samples per route segment"
-    )
-    parser.add_argument(
-        "--anomaly-rate",
-        type=float,
-        default=0.6,
-        help="Anomaly injection rate (0.0-1.0)"
+        help="Samples per class (8 classes total)"
     )
 
     args = parser.parse_args()
@@ -1197,32 +1308,26 @@ def main():
 
     print(f"Loading hub configuration from: {config_path}")
     print(f"Output directory: {output_dir}")
-    print(f"Samples per segment: {args.samples}")
-    print(f"Anomaly rate: {args.anomaly_rate}")
+    print(f"Samples per class: {args.samples}")
     print()
 
-    # Generate training data
     generator = TrainingDataGenerator(config_path)
 
-    print("Generating training data for all routes...")
-    metadata = generator.generate_all_routes(
+    print("Generating balanced training data (equal samples per class)...")
+    metadata = generator.generate_balanced_dataset(
         output_dir=output_dir,
-        samples_per_segment=args.samples,
-        anomaly_rate=args.anomaly_rate
+        samples_per_class=args.samples,
     )
 
     print()
     print("=" * 60)
     print("Training Data Generation Complete")
     print("=" * 60)
-    print(f"Total routes generated: {len(metadata['routes'])}")
+    print(f"Total classes: {len(metadata['files'])}")
+    print(f"Samples per class: {metadata['samples_per_class']}")
     print(f"Total samples: {metadata['total_samples']}")
     print(f"Output directory: {output_dir}")
     print(f"Metadata file: {os.path.join(output_dir, 'metadata.json')}")
-    print()
-    print("Files generated:")
-    for route in metadata['routes']:
-        print(f"  - {route['file']}: {route['total_samples']} samples")
 
 
 if __name__ == "__main__":
