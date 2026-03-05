@@ -254,14 +254,11 @@ class RawDataMessage(MessageData):
     def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
         Process the raw data and store it in the database.
-        
-        Args:
-            db_manager: The database manager instance to interact with the database.
         """
-        
         try:
             db_manager.insert_raw_data(self.records) 
             logging.info(f"Successfully stored raw data")
+
             return None  # Indicate successful execution
         
         except Exception as e:
@@ -270,10 +267,24 @@ class RawDataMessage(MessageData):
 class InferenceOutputMessage(MessageData):
     M_TYPE = "inference-output"
 
-    def __init__(self, m_id: str, inference_output: Dict[str, Any]):
-        super().__init__(m_id, inference_output)
+    def __init__(self, m_id: str, msg: Dict[str, Any]):
+        super().__init__(m_id, msg)
+        
+        try:
+            self.records = msg.get("records", None)  # Expecting a list of raw data records under "records" key
+            if self.records is None:
+                #just no records field wrap msg in a list and treat as single record
+                logging.warning(f"No 'records' field found in inference output message. Treating entire message as a single record.")
+                self.records = [msg]
 
+            elif not isinstance(self.records, list):
+                logging.warning(f"'records' field is not a list. Wrapping it in a list.")
+                self.records = [self.records]
 
+        except Exception as e:
+            logging.error(f"Error processing inference output message content: {e}")
+            self.records = [msg]  # Default to treating entire message as a single record
+                
     def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
         Process the inference output data and store it in the database.
@@ -281,49 +292,40 @@ class InferenceOutputMessage(MessageData):
         Args:
             db_manager: The database manager instance to interact with the database.
         """
-        logging.info(f"Executing inference-output storage for event: {self.event_id}")
-        logging.info(f"Executing node storage for node: {self.node_id}")
+    
 
         try:
-            if not self.event_id or not self.node_id:
-                logging.error("Missing event_id or node_id in inference output data")
-                raise ValueError("Missing event_id or node_id in inference output data")
-            # Store the processed data in the database
-            #call correct methods to store in Anomaly Table and InferenceOutput Table
-            db_manager.insert_inference_results([self.m_content])
+            db_manager.insert_inference_results(self.records)
             logging.info(f"Successfully stored inference output for event: {self.event_id} and node: {self.node_id}")
             return None  # Indicate successful execution
         
         except Exception as e:
             logging.error(f"Error storing inference output: {e}")
+
+
 class GetNodesRequest(MessageRequest):
     M_TYPE = "get-nodes"
     
-    def execute(self, db_manager) -> MessageResponse:
+    def execute(self) -> MessageResponse:
         """
-        Execute the get-nodes request and return the result.
-        
-        Args:
-            db_manager: The database manager instance to interact with the database.
-        
-        Returns:
-            MessageResponse containing the list of nodes or an ErrorResponse if execution fails.
+        Execute the get-nodes query and return the result. Returns: MessageResponse containing the list of nodes or an ErrorResponse if execution fails.
         """
         
         logging.info("Executing get-nodes request")
 
         try: 
-            #TODO: Implement the actual logic to retrieve nodes from the database using db_manager
-            node_ids = get_nodes()  # Example function call to get nodes from the database
+            node_ids = get_nodes()  
             logging.info(f"Retrieved nodes: {node_ids}")
             logging.info("Executing get-nodes request")
+
             return MessageResponse(
-                m_id=M_ID_DB,
                 m_type="get-nodes-response",
+                m_id=M_ID_DB, #TODO: generate unique message ID for response instead of using M_ID_DB
                 responding_to=self.m_id,
                 results={"nodes": node_ids})
         
         except Exception as e:
+            logging.error(f"get-nodes request failed: {e}")
             return ErrorResponse(
                 m_id=M_ID_DB,
                 responding_to=self.m_id,
@@ -341,8 +343,6 @@ class GetNodeDataIdsRequest(MessageRequest):
         self.node_id = m_content.get("node_id", None)
 
     def execute(self):
-        
-            
         logging.info(f"Executing get-node-data-ids for node: {self.node_id}")
 
         try:
