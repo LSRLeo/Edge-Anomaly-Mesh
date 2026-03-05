@@ -895,7 +895,7 @@ class TrainingDataGenerator:
         self,
         output_dir: str,
         samples_per_segment: int = 500,
-        anomaly_rate: float = 0.1,
+        anomaly_rate: float = 0.6,
         include_lift_variants: bool = True,
         include_maritime: bool = True
     ) -> Dict[str, Any]:
@@ -1177,7 +1177,7 @@ def main():
     parser.add_argument(
         "--anomaly-rate",
         type=float,
-        default=0.1,
+        default=0.6,
         help="Anomaly injection rate (0.0-1.0)"
     )
 
