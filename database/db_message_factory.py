@@ -63,7 +63,7 @@ class MessageFactory:
         Returns:
             Message object of appropriate type, or None if creation fails
         """
-        
+        #TODO: Handle if rawdata comes in as a list
         #Validate m_id and m_type
         is_valid, error_message = cls.validate_message_dict(msg)
 

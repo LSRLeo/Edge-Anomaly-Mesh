@@ -4,15 +4,27 @@ Message Class
 from typing import Dict, Any, Optional
 from abc import ABC, abstractmethod
 import logging
-from db_table_manager import TableManager
-from queries import get_nodes,get_nodes,get_node_data_ids,get_datum, get_recent_inference, get_recent_raw_data,get_recent_raw_data
 import json
 from datetime import datetime
+
+from db_table_manager import TableManager
+from queries import get_nodes,get_nodes,get_node_data_ids,get_datum, get_recent_inference, get_recent_raw_data,get_recent_raw_data
 
 ERROR_CODES = ["NOT_FOUND", "INVALID_REQUEST", "INTERNAL_ERROR"]
 M_ID_DB = "db_message_id" #temp id for DB messages, to be replaced by actual message ID generation logic
 
 
+"""
+MESSAGE FORMAT:
+{
+"m_type": 
+"m_id":
+"responding_to":
+...
+}
+"""
+
+#TODO change this: 
 def _serialize_inference_full(inf) -> Optional[Dict[str, Any]]:
     """
     Serialize an InferenceResults ORM row to the full get-recent-inference record format.
@@ -77,21 +89,21 @@ class Message(ABC):
     
     Args: message_id (str): The unique identifier for the message.
         message_id (str): The unique identifier for the message.
-        content (Dict[str, Any], optional): The content of the message. Defaults to None.
+        msg (Dict[str, Any], optional): The original message dictionary. Defaults to None.
         M_TYPE (str): m_type of message, class constant, to be defined in subclasses. Handle Error if not defined in constructor.
         _m_type (str): m_type of message, private instance variable, initialized to M_TYPE in constructor.
     """
     M_TYPE: str = None 
 
 
-    def __init__(self, m_id: str, m_content: Dict[str, Any] = None):
+    def __init__(self, m_id: str, msg: Dict[str, Any] = None):
 
         if self.M_TYPE is None:
             raise NotImplementedError("M_TYPE must be defined in subclasses")
         
         self._m_type = self.M_TYPE #private
         self.m_id = m_id 
-        self.m_content = m_content #
+        self.m_content = msg #original message 
 
 
     @property
@@ -108,8 +120,6 @@ class Message(ABC):
             A dictionary representation of the message.
         """
         return {
-            "m_id": self.m_id,
-            "m_type": self.m_type,
             **self.m_content
         }
     
@@ -132,25 +142,21 @@ class MessageResponse(Message):
     """
 
 
-    def __init__(self, m_id: str, m_type: str, responding_to: str,results: Dict[str, Any]):
-        self.responding_to = responding_to 
-        self.results = results
+    def __init__(self, m_type:str, m_id: str, responding_to: str, results: Dict[str, Any]):
         self.M_TYPE = m_type #override M_TYPE in constructor
+        self.m_content = {
+            "m_type": self.m_type,
+            "m_id": m_id,
+            "responding_to": responding_to,
+            **results
+        }
         
-        super().__init__(m_id, self.results)
+        super().__init__(m_id, self.m_content)
 
     
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert response to dictionary for publishing"""
-        return {
-            "m_id": self.m_id,
-            "m_type": self.m_type,
-            "responding_to": self.responding_to,
-            **self.results
-        }
 
 
-class ErrorResponse(MessageResponse):
+class ErrorResponse(Message):
     M_TYPE = "error"  # Fixed type for all errors
     """
     {
@@ -180,33 +186,24 @@ class ErrorResponse(MessageResponse):
             logging.warning(f"Invalid error code '{error_code}' provided. Defaulting to 'INTERNAL_ERROR'.")
             error_code = "INTERNAL_ERROR"
 
-        results = {
+        self.m_content = {
+            "m_type": self.M_TYPE,
+            "m_id": m_id,
+            "responding_to": responding_to,
             "original_request": original_request,
             "error_code": error_code,
             "error_message": error_message
         }
         
-        super().__init__(m_id, responding_to, self.M_TYPE, results)
-        # self.original_request = original_request
-        # self.error_code = error_code
-        # self.error_message = error_message
-    # def to_dict(self) -> Dict[str, Any]:
-    #     """Convert error response to dictionary for publishing"""
-    #     return {
-    #         "m_id": self.m_id,
-    #         "m_type": self.m_type,
-    #         "responding_to": self.responding_to,
-    #         "original_request": self.original_request,
-    #         "error_code": self.error_code,
-    #         "error_message": self.error_message
-    #     }
+        super().__init__(self.M_TYPE, m_id, self.m_content)
+
 
 class MessageRequest(Message):
     '''
     Abstract class for message requests.
     '''   
     @abstractmethod
-    def execute(self, db_manager: TableManager) -> MessageResponse:
+    def execute(self) -> MessageResponse | ErrorResponse:
         """
         Execute the message and return the result.
         
@@ -218,7 +215,7 @@ class MessageRequest(Message):
 
 class MessageData(Message):
     '''
-    Abstract class for message data.
+    Abstract class for message data. Messages that do not return any response. 
     '''   
     @abstractmethod
     def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
@@ -234,13 +231,26 @@ class MessageData(Message):
 class RawDataMessage(MessageData):
     M_TYPE = "raw-data"
 
-    def __init__(self, m_id: str, raw_data: Dict[str, Any]):
-        self.data = raw_data
-        super().__init__(m_id, self.data)
-        #Try to get event_id and node_id
-        self.event_id = raw_data.get("event_id", None)
-        self.node_id = raw_data.get("node_id", None)
+    def __init__(self, m_id: str, msg: Dict[str, Any]):
+        #confirm if there is multiple raw data records. For now, just pass the whole messge dict
+        super().__init__(m_id, msg)
+        #TODO: confirm if msg has muliple data records or just one
+        
+        try:
+            self.records = msg.get("records", None)  # Expecting a list of raw data records under "records" key
+            if self.records is None:
+                #just no records field wrap msg in a list and treat as single record
+                logging.warning(f"No 'records' field found in raw data message. Treating entire message as a single record.")
+                self.records = [msg]
 
+            elif not isinstance(self.records, list):
+                logging.warning(f"'records' field is not a list. Wrapping it in a list.")
+                self.records = [self.records]
+
+        except Exception as e:
+            logging.error(f"Error processing raw data message content: {e}")
+            self.records = [msg]  # Default to treating entire message as a single record
+                
     def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
         Process the raw data and store it in the database.
@@ -248,38 +258,21 @@ class RawDataMessage(MessageData):
         Args:
             db_manager: The database manager instance to interact with the database.
         """
-        logging.info(f"Executing raw-data storage for event: {self.event_id}")
-        logging.info(f"Executing node storage for node: {self.node_id}")
-
+        
         try:
-            if not self.event_id or not self.node_id:
-                logging.error("Missing event_id or node_id in raw data")
-                raise ValueError("Missing event_id or node_id in raw data")
-            
-            db_manager.insert_raw_data([self.data]) 
-            logging.info(f"Successfully stored raw data for event: {self.event_id} and node: {self.node_id}")
+            db_manager.insert_raw_data(self.records) 
+            logging.info(f"Successfully stored raw data")
             return None  # Indicate successful execution
         
         except Exception as e:
-            return ErrorResponse(
-                m_id=M_ID_DB,
-                responding_to=self.m_id,
-                original_request=self.m_type,
-                error_message=str(e),
-                error_code="INVALID_REQUEST"
-            )
-
+            logging.error(f"Error storing raw data: {e}")
 
 class InferenceOutputMessage(MessageData):
     M_TYPE = "inference-output"
 
     def __init__(self, m_id: str, inference_output: Dict[str, Any]):
-        
         super().__init__(m_id, inference_output)
-        #Try to get event_id and node_id
-        self.event_id = inference_output.get("event_id", None)
-        self.node_id = inference_output.get("node_id", None)
-        self.classification = inference_output.get("classification", None)
+
 
     def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
@@ -302,14 +295,7 @@ class InferenceOutputMessage(MessageData):
             return None  # Indicate successful execution
         
         except Exception as e:
-            return ErrorResponse(
-                m_id=M_ID_DB,
-                responding_to=self.m_id,
-                original_request=self.m_type,
-                error_message=str(e),
-                error_code="INVALID_REQUEST"
-            )
-        
+            logging.error(f"Error storing inference output: {e}")
 class GetNodesRequest(MessageRequest):
     M_TYPE = "get-nodes"
     
@@ -354,7 +340,7 @@ class GetNodeDataIdsRequest(MessageRequest):
         super().__init__(m_id,m_content)
         self.node_id = m_content.get("node_id", None)
 
-    def execute(self, db_manager):
+    def execute(self):
         
             
         logging.info(f"Executing get-node-data-ids for node: {self.node_id}")
