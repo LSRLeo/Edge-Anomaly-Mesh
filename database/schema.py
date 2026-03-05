@@ -88,11 +88,10 @@ class InferenceResults(Base):
     node_id = Column(String, nullable=False)
     timestamp = Column(Float, nullable=False)
     classification = Column(String, CheckConstraint("classification IN ('IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT', 'UNKNOWN')"), nullable=False)
-    confidences = Column(String, nullable=False)  # JSON string of confidence scores for each class
+    confidence = Column(String, nullable=False)  # JSON string of confidence scores for each class
     is_anomaly = Column(Boolean, nullable=False)
     anomaly_score = Column(Float, nullable=False)
 
-    processing_time_ms = Column(Integer, nullable=False)
     ingested_at = Column(Float, default=lambda: datetime.utcnow().timestamp(), nullable=False)
     __table_args__ = (UniqueConstraint('node_id', 'timestamp', name='uq_node_timestamp'),)  # Ensure no duplicate entries for the same node and time window
 
@@ -106,6 +105,7 @@ class AnomalyEvents(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String, nullable=False)
+    timestamp = Column(Float, nullable=False)
     severity = Column(String, CheckConstraint("severity IN ('LOW','MEDIUM','HIGH', 'CRITICAL')"), nullable=False)
     description = Column(String)
     acknowledged = Column(Boolean, default=False)
