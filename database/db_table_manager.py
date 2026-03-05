@@ -143,9 +143,9 @@ def load_json(file_path: Path):
     return data
     
 def main():
-    # Example usage
+    # Example usage, uncomment chunk "if isinstance(raw_data)...", change raw_data filepath
     manager = TableManager()
-    raw_data = load_json(Path("simulator/raw_data.json"))
+    raw_data = load_json(Path("test_data/raw-data-001.json"))
     inference_data = load_json(Path("data/examples/inference_results/example_inference_results.json"))
     
     TableManager().clear_tables()
