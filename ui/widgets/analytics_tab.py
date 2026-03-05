@@ -41,6 +41,7 @@ MOTION_COLORS = {
 # Chart sizing constants
 CHART_FIGSIZE = (6, 4)  # Width, height in inches
 CHART_DPI = 100         # Dots per inch for chart resolution
+DEFAULT_TEST_JSON_PATH = "../sample_data/sample_anomaly_data.json"
 
 # Avoid circular import
 if TYPE_CHECKING:
@@ -364,7 +365,7 @@ class AnalyticsTab(ttk.Frame):
         self.refresh()
     
     def parse_json(self) -> List[Dict[str, Any]]:
-        return load_ml_json("../sample_data/sample_anomaly_data.json")
+        return load_ml_json(DEFAULT_TEST_JSON_PATH)
     
     def _setup_ui(self):
         """
