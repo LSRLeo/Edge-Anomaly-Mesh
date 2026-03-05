@@ -338,15 +338,12 @@ class GetNodesRequest(MessageRequest):
 class GetNodeDataIdsRequest(MessageRequest):
     M_TYPE = "get-node-data-ids"
 
-    def __init__(self, m_id: str, m_content: Dict[str,Any]):
-        super().__init__(m_id,m_content)
-        self.node_id = m_content.get("node_id", None)
-
     def execute(self):
-        logging.info(f"Executing get-node-data-ids for node: {self.node_id}")
-
         try:
-            if not self.node_id:
+            self.node_id = self.m_content.get("node_id", None)
+            logging.info(f"Executing get-node-data-ids for node: {self.node_id}")
+
+            if self.node_id is None:
                 raise ValueError("Missing required field: node_id")
 
             data_ids = get_node_data_ids(self.node_id)
@@ -361,8 +358,8 @@ class GetNodeDataIdsRequest(MessageRequest):
                 )
 
             return MessageResponse(
-                m_id=M_ID_DB,
                 m_type="get-node-data-ids-response",
+                m_id=M_ID_DB,
                 responding_to=self.m_id,
                 results={"node_id": self.node_id, "data_ids": data_ids},
             )
@@ -377,6 +374,7 @@ class GetNodeDataIdsRequest(MessageRequest):
             )
         except Exception as e:
             logging.error(f"get-node-data-ids failed: {e}")
+
             return ErrorResponse(
                 m_id=M_ID_DB,
                 responding_to=self.m_id,
@@ -388,15 +386,12 @@ class GetNodeDataIdsRequest(MessageRequest):
 class GetDatumRequest(MessageRequest):
     M_TYPE = "get-datum"
 
-    def __init__(self, m_id: str, m_content: Dict[str,Any]):
-        super().__init__(m_id,m_content)
-        self.event_id = self.m_content.get("event_id")
-
-    def execute(self, db_manager):
+    def execute(self):
         logging.info(f"Executing get-datum for event: {self.event_id}")
 
         try:
-            if not self.event_id:
+            self.event_id = self.m_content.get("event_id", None)
+            if self.event_id is None:
                 raise ValueError("Missing required field: event_id")
 
             result = get_datum(self.event_id)
