@@ -54,8 +54,8 @@ class RawSensorData(Base):
     gyro_z_rads = Column(Float, nullable=False)
 
     # TABLES FOR ML TEAM ONLY
-    sim_mode = Column(String, CheckConstraint("sim_mode IN ('IDLE','TERRESTRIAL','MARITIME','LIFT','UNKNOWN')"), nullable=False, default='UNKNOWN')
-    sim_anomaly = Column(Boolean, nullable=False)
+    motion_type = Column(String, CheckConstraint("motion_type IN ('IDLE','TERRESTRIAL','MARITIME','LIFT','UNKNOWN')"), nullable=False, default='UNKNOWN')
+    is_anomaly = Column(Boolean, nullable=False)
 
     ingested_at = Column(
         Float,
