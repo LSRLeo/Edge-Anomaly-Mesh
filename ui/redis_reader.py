@@ -4,8 +4,9 @@ import time
 import ast
 import threading
 class RedisReader:
-    def __init__(self, channel_name, publisher, subscriber):
-        self.channel_name = channel_name
+    def __init__(self, q_channel_name, r_channel_name, publisher, subscriber):
+        self.q_channel_name = q_channel_name
+        self.r_channel_name = r_channel_name
         self.nodes = [] #list of nodes available in the system, will be populated by get-nodes response from redis
         self.subscriber = subscriber
         self.publisher = publisher
@@ -55,7 +56,7 @@ class RedisReader:
             'm_type': 'get-nodes', 
             'm_id': f'ui_{self.message_counter:05d}'}
         self.message_counter += 1
-        self.publisher.publish(self.channel_name, json.dumps(request))
+        self.publisher.publish(self.q_channel_name, json.dumps(request))
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -80,7 +81,7 @@ class RedisReader:
             'm_id': f'ui_{self.message_counter:05d}',
             'node_id': node_id}
         self.message_counter += 1
-        self.publisher.publish(self.channel_name, json.dumps(request))
+        self.publisher.publish(self.q_channel_name, json.dumps(request))
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -107,7 +108,7 @@ class RedisReader:
             'node_id': node_id
         }
         self.message_counter += 1
-        self.publisher.publish(self.channel_name, json.dumps(request))
+        self.publisher.publish(self.q_channel_name, json.dumps(request))
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
