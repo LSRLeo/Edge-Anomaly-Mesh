@@ -343,7 +343,7 @@ class AnalyticsTab(ttk.Frame):
     and anomaly patterns.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[Any] = None, test_mode: bool = True):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[Any] = None, test_mode: bool = False):
         """
         Initialize the Analytics tab.
         
@@ -453,7 +453,7 @@ def demo():
     notebook = ttk.Notebook(root)
     notebook.pack(fill='both', expand=True)
     
-    tab = AnalyticsTab(notebook, dashboard=MockDashboard())
+    tab = AnalyticsTab(notebook, dashboard=MockDashboard(), test_mode=True)
     notebook.add(tab, text='Analytics')
     
     tab.refresh()
