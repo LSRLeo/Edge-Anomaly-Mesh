@@ -203,7 +203,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
             if not is_anomalous:
                 mini_canvas.create_oval(2, 2, 18, 18, fill=color, outline='black')
             else:
-                mini_canvas.create_oval(2, 2, 18, 18, fill=color, outline='red')
+                mini_canvas.create_polygon(10, 18, 1, 2, 19, 2, fill=color, outline='red', width=2)
             mini_canvas.grid(row=row, column=col, padx=(10, 2), pady=2)
             ttk.Label(legend_frame, text=motion).grid(row=row, column=col+1, padx=(0, 10), pady=2)
 
