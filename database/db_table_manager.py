@@ -34,10 +34,11 @@ class TableManager:
                 gyro_y_rads=msg["gyro_rads"]["y"],
                 gyro_z_rads=msg["gyro_rads"]["z"],
 
-                sim_mode=msg["meta"]["sim_mode"],
-                sim_anomaly=msg["meta"]["sim_anomaly"]
+                motion_type=msg["meta"]["motion_type"],
+                is_anomaly=bool(msg["meta"]["is_anomaly"])
             )
             self.session.add(record)
+            self.session.flush()  # Flush to get the record ID for node insertion
             self.insert_node(msg)
         try:
             self.session.commit()
@@ -82,7 +83,7 @@ class TableManager:
                 classification=msg["classification"],
                 confidence=json.dumps(msg["confidence"]),
 
-                is_anomaly=msg["is_anomaly"],
+                is_anomaly=bool(msg["is_anomaly"]),
                 anomaly_score=msg["anomaly_score"],
             )
             self.session.add(record)
@@ -153,7 +154,7 @@ def load_json(file_path: Path):
 def main():
     # Example usage, uncomment chunk "if isinstance(raw_data)...", change raw_data filepath
     manager = TableManager()
-    raw_data = load_json(Path("database/example_raw.json"))
+    raw_data = load_json(Path("test_data/raw-data-001.json"))
     inference_data = load_json(Path("database/example_inference.json"))
     
     TableManager().clear_tables()
