@@ -7,7 +7,7 @@ Message request/response pairs for DB query functions.
 ## Input Message Formats
 
 ### raw-data
-
+**Singular:**
 ```json
 {
   "m_type": "raw-data",
@@ -50,13 +50,104 @@ Message request/response pairs for DB query functions.
 }
 ```
 
+**Batch:**
+```json
+{
+  "m_type": "raw-data",
+  "m_id": "node_001_batch_001",
+  "records": [
+    {
+      "event_id": "node_001_2026-01-22T18:52:14.818400",
+      "node_id": "node_001",
+      "timestamp": "2026-01-22T18:52:14.818400",
+      "seq": 12345,
+      "gps": {
+        "lat_deg": 40.713923,
+        "lon_deg": -74.004764,
+        "altitude_m": 50.1
+      },
+      "accel_mss": {
+        "x": 0.05,
+        "y": 0.02,
+        "z": 9.81
+      },
+      "gyro_rads": {
+        "x": 0.01,
+        "y": 0.01,
+        "z": 0.01
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 95,
+        "sim_mode": "IDLE",
+        "sim_anomaly": false
+      },
+      "origin": {
+        "lat_deg": 40.712776,
+        "lon_deg": -74.005974,
+        "altitude_m": 10.0
+      },
+      "dest": {
+        "lat_deg": 41.878113,
+        "lon_deg": -87.629799,
+        "altitude_m": 180.0
+      }
+    },
+    {
+      "event_id": "node_001_2026-01-22T18:52:14.838400",
+      "node_id": "node_001",
+      "timestamp": "2026-01-22T18:52:14.838400",
+      "seq": 12346,
+      "gps": {
+        "lat_deg": 40.713923,
+        "lon_deg": -74.004764,
+        "altitude_m": 50.1
+      },
+      "accel_mss": {
+        "x": 0.04,
+        "y": 0.03,
+        "z": 9.82
+      },
+      "gyro_rads": {
+        "x": 0.01,
+        "y": 0.01,
+        "z": 0.01
+      },
+      "meta": {
+        "sample_rate_hz": 50,
+        "battery_pct": 95,
+        "sim_mode": "IDLE",
+        "sim_anomaly": false
+      },
+      "origin": {
+        "lat_deg": 40.712776,
+        "lon_deg": -74.005974,
+        "altitude_m": 10.0
+      },
+      "dest": {
+        "lat_deg": 41.878113,
+        "lon_deg": -87.629799,
+        "altitude_m": 180.0
+      }
+    }
+  ]
+}
+```
+
+**Notes:**
+- Singular: data fields at top level alongside `m_type` and `m_id`
+- Batch: data fields moved into `records` list; top level contains only `m_type`, `m_id`, and `records`
+
+---
+
 ### inference-output
 
+**Singular:**
 ```json
 {
   "m_type": "inference-output",
-  "m_id": "ml_{seq}",
-  "event_id": "{node_id}_{timestamp}",
+  "m_id": "ml_00001",
+  "event_id": "node_001_2026-01-22T18:52:14.818400",
   "node_id": "node_001",
   "timestamp": "2026-01-22T18:52:14.818400",
   "classification": "IDLE",
@@ -75,10 +166,58 @@ Message request/response pairs for DB query functions.
 }
 ```
 
+**Batch:**
+```json
+{
+  "m_type": "inference-output",
+  "m_id": "ml_batch_001",
+  "records": [
+    {
+      "event_id": "node_001_2026-01-22T18:52:14.818400",
+      "node_id": "node_001",
+      "timestamp": "2026-01-22T18:52:14.818400",
+      "classification": "IDLE",
+      "confidence": {
+        "IDLE": 0.72,
+        "TERRESTRIAL": 0.08,
+        "MARITIME": 0.05,
+        "LIFT": 0.03,
+        "IDLE_ANOM": 0.06,
+        "TERRESTRIAL_ANOM": 0.03,
+        "MARITIME_ANOM": 0.02,
+        "LIFT_ANOM": 0.01
+      },
+      "is_anomaly": false,
+      "anomaly_score": 0.063
+    },
+    {
+      "event_id": "node_001_2026-01-22T18:52:14.838400",
+      "node_id": "node_001",
+      "timestamp": "2026-01-22T18:52:14.838400",
+      "classification": "TERRESTRIAL",
+      "confidence": {
+        "IDLE": 0.05,
+        "TERRESTRIAL": 0.81,
+        "MARITIME": 0.03,
+        "LIFT": 0.02,
+        "IDLE_ANOM": 0.04,
+        "TERRESTRIAL_ANOM": 0.03,
+        "MARITIME_ANOM": 0.01,
+        "LIFT_ANOM": 0.01
+      },
+      "is_anomaly": false,
+      "anomaly_score": 0.041
+    }
+  ]
+}
+```
+
 **Field notes:**
 - `classification`: one of `IDLE`, `TERRESTRIAL`, `MARITIME`, `LIFT`, `UNKNOWN` (uppercase)
 - `confidence`: per-class softmax probabilities summing to 1.0
 - `anomaly_score`: range `[0.0, 1.0]`
+- Singular: data fields at top level alongside `m_type` and `m_id`
+- Batch: data fields moved into `records` list; top level contains only `m_type`, `m_id`, and `records`
 
 ---
 
