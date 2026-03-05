@@ -367,6 +367,33 @@ class AnalyticsTab(ttk.Frame):
     def parse_json(self) -> List[Dict[str, Any]]:
         return load_ml_json(DEFAULT_TEST_JSON_PATH)
     
+    def parse_redis(self) -> List[Dict[str, Any]]:
+        if self.redis_reader is None:
+            raise ValueError("Redis mode enabled but redis_reader is not configured.")
+        
+        rddict, mldict = self.redis_reader.getDicts()
+        records: List[Dict[str, Any]] = []
+        
+        for node_id, state_confidence in mldict.items():
+            if not isinstance(state_confidence, list) or len(state_confidence) != 8:
+                continue
+            
+            raw_entry = rddict.get(node_id, {}) if isinstance(rddict, dict) else {}
+            timestamp = raw_entry.get("timestamp") if isinstance(raw_entry, dict) else None
+            if not timestamp:
+                timestamp = datetime.utcnow().isoformat()
+                
+            records.append(
+                {
+                    "node_id": node_id,
+                    "timestamp": timestamp,
+                    "state_confidence": state_confidence,
+                }
+            )
+        
+        return records
+            
+                
     def _setup_ui(self):
         """
         Create the tab layout.
