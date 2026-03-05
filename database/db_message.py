@@ -103,7 +103,7 @@ class Message(ABC):
         
         self._m_type = self.M_TYPE #private
         self.m_id = m_id 
-        self.m_content = msg #original message 
+        self.msg = msg #original message 
 
 
     @property
@@ -120,7 +120,7 @@ class Message(ABC):
             A dictionary representation of the message.
         """
         return {
-            **self.m_content
+            **self.msg
         }
     
 
@@ -136,22 +136,22 @@ class MessageResponse(Message):
             m_id: Response message ID
             m_type: Response message type (e.g., 'get-nodes-response')
             responding_to: Original request message ID
-            results: Dictionary containing query results
+            result: Dictionary containing query results
         
     Message Response does not have a fixed M_TYPE, (it can be either get-nodes-response or get-datum-response or others)
     """
 
 
-    def __init__(self, m_type:str, m_id: str, responding_to: str, results: Dict[str, Any]):
+    def __init__(self, m_type:str, m_id: str, responding_to: str, result: Dict[str, Any]):
         self.M_TYPE = m_type #override M_TYPE in constructor
-        self.m_content = {
+        self.msg = {
             "m_type": self.m_type,
             "m_id": m_id,
             "responding_to": responding_to,
-            **results
+            **result
         }
         
-        super().__init__(m_id, self.m_content)
+        super().__init__(m_id, self.msg)
 
     
 
@@ -186,7 +186,7 @@ class ErrorResponse(Message):
             logging.warning(f"Invalid error code '{error_code}' provided. Defaulting to 'INTERNAL_ERROR'.")
             error_code = "INTERNAL_ERROR"
 
-        self.m_content = {
+        self.msg = {
             "m_type": self.M_TYPE,
             "m_id": m_id,
             "responding_to": responding_to,
@@ -195,7 +195,7 @@ class ErrorResponse(Message):
             "error_message": error_message
         }
         
-        super().__init__(self.M_TYPE, m_id, self.m_content)
+        super().__init__(m_id, self.msg)
 
 
 class MessageRequest(Message):
@@ -292,8 +292,6 @@ class InferenceOutputMessage(MessageData):
         Args:
             db_manager: The database manager instance to interact with the database.
         """
-    
-
         try:
             db_manager.insert_inference_results(self.records)
             logging.info(f"Successfully stored inference output for event: {self.event_id} and node: {self.node_id}")
@@ -322,7 +320,7 @@ class GetNodesRequest(MessageRequest):
                 m_type="get-nodes-response",
                 m_id=M_ID_DB, #TODO: generate unique message ID for response instead of using M_ID_DB
                 responding_to=self.m_id,
-                results={"nodes": node_ids})
+                result={"nodes": node_ids})
         
         except Exception as e:
             logging.error(f"get-nodes request failed: {e}")
@@ -340,7 +338,7 @@ class GetNodeDataIdsRequest(MessageRequest):
 
     def execute(self):
         try:
-            self.node_id = self.m_content.get("node_id", None)
+            self.node_id = self.msg.get("node_id", None)
             logging.info(f"Executing get-node-data-ids for node: {self.node_id}")
 
             if self.node_id is None:
@@ -361,7 +359,7 @@ class GetNodeDataIdsRequest(MessageRequest):
                 m_type="get-node-data-ids-response",
                 m_id=M_ID_DB,
                 responding_to=self.m_id,
-                results={"node_id": self.node_id, "data_ids": data_ids},
+                result={"node_id": self.node_id, "data_ids": data_ids},
             )
 
         except ValueError as e:
@@ -390,7 +388,7 @@ class GetDatumRequest(MessageRequest):
         logging.info(f"Executing get-datum for event: {self.event_id}")
 
         try:
-            self.event_id = self.m_content.get("event_id", None)
+            self.event_id = self.msg.get("event_id", None)
             if self.event_id is None:
                 raise ValueError("Missing required field: event_id")
 
@@ -407,10 +405,10 @@ class GetDatumRequest(MessageRequest):
 
 
             return MessageResponse(
-                m_id=M_ID_DB,
                 m_type="get-datum-response",
+                m_id=M_ID_DB,
                 responding_to=self.m_id,
-                results=result
+                result=result
             )
 
         except ValueError as e:
@@ -434,17 +432,13 @@ class GetDatumRequest(MessageRequest):
 
 #TODO: Implement GetRecentRawDataRequest and GetRecentInferenceRequest classes
 class GetRecentRawDataRequest(MessageRequest):
-
     M_TYPE = "get-recent-raw-data"
 
-    def __init__(self, m_id: str, m_content: Dict[str, Any]):
-        super().__init__(m_id, m_content)
-        self.node_id = m_content.get("node_id", None)
-
-    def execute(self, db_manager: TableManager) -> MessageResponse:
+    def execute(self) -> MessageResponse:
         logging.info(f"Executing get-recent-raw-data for node: {self.node_id}")
 
         try:
+            self.node_id = self.msg.get("node_id", None)
             if not self.node_id:
                 raise ValueError("Missing required field: node_id")
 
@@ -458,14 +452,16 @@ class GetRecentRawDataRequest(MessageRequest):
                     error_message=f"No raw data found for node: {self.node_id}",
                     error_code="NOT_FOUND",
                 )
-
-            records = [_serialize_raw(row)]
+            if not isinstance(row, list):
+                result = {"node_id": self.node_id, **row}
+            else:
+                result = {"node_id": self.node_id, "records": row}
 
             return MessageResponse(
-                m_id=M_ID_DB,
                 m_type="get-recent-raw-data-response",
+                m_id=M_ID_DB,
                 responding_to=self.m_id,
-                results={"node_id": self.node_id, "records": records},
+                result=result,
             )
         except ValueError as e:
             return ErrorResponse(
@@ -490,9 +486,9 @@ class GetRecentInferenceRequest(MessageRequest):
 
     M_TYPE = "get-recent-inference"
 
-    def __init__(self, m_id: str, m_content: Dict[str, Any]):
-        super().__init__(m_id, m_content)
-        self.node_id = m_content.get("node_id", None)
+    def __init__(self, m_id: str, msg: Dict[str, Any]):
+        super().__init__(m_id, msg)
+        self.node_id = msg.get("node_id", None)
 
     def execute(self, db_manager: TableManager) -> MessageResponse:
         logging.info(f"Executing get-recent-inference for node: {self.node_id}")
@@ -518,7 +514,7 @@ class GetRecentInferenceRequest(MessageRequest):
                 m_id=M_ID_DB,
                 m_type="get-recent-inference-response",
                 responding_to=self.m_id,
-                results={"node_id": self.node_id, "records": records},
+                result={"node_id": self.node_id, "records": records},
             )
 
         except ValueError as e:
