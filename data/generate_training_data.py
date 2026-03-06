@@ -897,10 +897,18 @@ class TrainingDataGenerator:
         samples_per_segment: int = 500,
         anomaly_rate: float = 0.6,
         include_lift_variants: bool = True,
-        include_maritime: bool = True
+        include_maritime: bool = True,
+        dwell_duration: int = None,
+        lift_duration: int = None,
     ) -> Dict[str, Any]:
         """Generate training data for all possible routes between hubs."""
         os.makedirs(output_dir, exist_ok=True)
+
+        # Default dwell and lift durations to match transit for balanced class counts
+        if dwell_duration is None:
+            dwell_duration = samples_per_segment
+        if lift_duration is None:
+            lift_duration = samples_per_segment
 
         hub_ids = list(self.network.hubs.keys())
         all_metadata = {
@@ -946,7 +954,9 @@ class TrainingDataGenerator:
                     node_id=node_id,
                     samples_per_segment=samples_per_segment,
                     anomaly_rate=0.0,
-                    include_lift=False
+                    include_lift=False,
+                    dwell_duration=dwell_duration,
+                    lift_duration=lift_duration,
                 )
 
                 filename = f"route_{from_hub}_to_{to_hub}.json"
@@ -970,7 +980,9 @@ class TrainingDataGenerator:
                         samples_per_segment=samples_per_segment,
                         anomaly_rate=anomaly_rate,
                         anomaly_type=anomaly_type,
-                        include_lift=False
+                        include_lift=False,
+                        dwell_duration=dwell_duration,
+                        lift_duration=lift_duration,
                     )
 
                     anomaly_filename = f"route_{from_hub}_to_{to_hub}_{anomaly_type}.json"
@@ -996,7 +1008,9 @@ class TrainingDataGenerator:
                         node_id=lift_node_id,
                         samples_per_segment=samples_per_segment,
                         anomaly_rate=0.0,
-                        include_lift=True
+                        include_lift=True,
+                        dwell_duration=dwell_duration,
+                        lift_duration=lift_duration,
                     )
 
                     lift_filename = f"route_{from_hub}_to_{to_hub}_with_lift.json"
@@ -1020,7 +1034,9 @@ class TrainingDataGenerator:
                             samples_per_segment=samples_per_segment,
                             anomaly_rate=anomaly_rate,
                             anomaly_type=anomaly_type,
-                            include_lift=True
+                            include_lift=True,
+                            dwell_duration=dwell_duration,
+                            lift_duration=lift_duration,
                         )
 
                         anomaly_filename = f"route_{from_hub}_to_{to_hub}_with_lift_{anomaly_type}.json"
@@ -1056,7 +1072,9 @@ class TrainingDataGenerator:
                         node_id=node_id,
                         samples_per_segment=samples_per_segment,
                         anomaly_rate=0.0,
-                        include_lift=False
+                        include_lift=False,
+                        dwell_duration=dwell_duration,
+                        lift_duration=lift_duration,
                     )
 
                     filename = f"route_{from_hub}_to_{to_hub}_maritime.json"
@@ -1106,7 +1124,9 @@ class TrainingDataGenerator:
                             node_id=lift_node_id,
                             samples_per_segment=samples_per_segment,
                             anomaly_rate=0.0,
-                            include_lift=True
+                            include_lift=True,
+                            dwell_duration=dwell_duration,
+                            lift_duration=lift_duration,
                         )
 
                         lift_filename = f"route_{from_hub}_to_{to_hub}_maritime_with_lift.json"
@@ -1290,7 +1310,13 @@ def main():
         "--samples",
         type=int,
         default=500,
-        help="Samples per class (8 classes total)"
+        help="Samples per route segment (dwell and lift durations match this for balance)"
+    )
+    parser.add_argument(
+        "--anomaly-rate",
+        type=float,
+        default=0.6,
+        help="Anomaly injection rate for anomaly route files (0.0-1.0)"
     )
 
     args = parser.parse_args()
@@ -1309,26 +1335,31 @@ def main():
 
     print(f"Loading hub configuration from: {config_path}")
     print(f"Output directory: {output_dir}")
-    print(f"Samples per class: {args.samples}")
+    print(f"Samples per segment: {args.samples}")
+    print(f"Anomaly rate: {args.anomaly_rate}")
     print()
 
     generator = TrainingDataGenerator(config_path)
 
-    print("Generating balanced training data (equal samples per class)...")
-    metadata = generator.generate_balanced_dataset(
+    print("Generating training data for all routes (balanced class distribution)...")
+    metadata = generator.generate_all_routes(
         output_dir=output_dir,
-        samples_per_class=args.samples,
+        samples_per_segment=args.samples,
+        anomaly_rate=args.anomaly_rate,
     )
 
     print()
     print("=" * 60)
     print("Training Data Generation Complete")
     print("=" * 60)
-    print(f"Total classes: {len(metadata['files'])}")
-    print(f"Samples per class: {metadata['samples_per_class']}")
+    print(f"Total routes generated: {len(metadata['routes'])}")
     print(f"Total samples: {metadata['total_samples']}")
     print(f"Output directory: {output_dir}")
     print(f"Metadata file: {os.path.join(output_dir, 'metadata.json')}")
+    print()
+    print("Files generated:")
+    for route in metadata['routes']:
+        print(f"  - {route['file']}: {route['total_samples']} samples")
 
 
 if __name__ == "__main__":
