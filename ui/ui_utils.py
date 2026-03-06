@@ -75,10 +75,10 @@ def configure_accessibility_styles(root: tk.Tk, scale: float = 1.0):
 
 
 # Configures treeview style
-def configure_treeview_style():
+def configure_treeview_style(scale: float = 1.0):
     style = ttk.Style()
-    style.configure("Treeview", font=("Arial", 24), rowheight=24)
-    style.configure("Treeview.Heading", font=("Arial", 24, "bold"))
+    style.configure("Treeview", font=get_group_font("treeview", scale), rowheight=24)
+    style.configure("Treeview.Heading", font=get_group_font("treeview_heading", scale))
     
 # Window sizing constants
 WINDOW_WIDTH = 1100
