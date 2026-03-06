@@ -76,7 +76,7 @@ def get_recent_inference(node_id: str) -> Optional[Dict[str, Any]]:
 	"""Return the most recent inference_results row for a node."""
 	session = Session()
 	try:
-		row = session.query(InferenceResults).filter(InferenceResults.node_id == node_id).order_by(desc(InferenceResults.window_end)).first()
+		row = session.query(InferenceResults).filter(InferenceResults.node_id == node_id).order_by(desc(InferenceResults.timestamp)).first()
 		return orm_to_dict(row)
 	finally:
 		session.close()
