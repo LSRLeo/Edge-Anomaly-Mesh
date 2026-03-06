@@ -124,6 +124,16 @@ class RedisReader:
         except Exception as e:
             print(f"Error requesting inference output for node {node_id}: {e}")
             return None
+    def updateNode(self, node_id, anomaly_value, user): # Pings db with updated node anomaly status, node id, and user making changes
+        request = {
+            'm_type': 'update-node',
+            'm_id': f'ui_{self.message_counter:05d}',
+            'node_id': node_id,
+            'anomaly_value': anomaly_value,
+            'user': user
+        }
+        self.message_counter += 1
+        self.publisher.publish(self.channel_name, json.dumps(request))
     def getDicts(self): #returns both dictionaries as a tuple
         with self.refresh_lock: #acquire lock to ensure thread safety when accessing dictionaries
             return dict(self.rddict), dict(self.mldict) #return copies of the dictionaries to prevent external modification
