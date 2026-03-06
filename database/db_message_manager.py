@@ -22,9 +22,9 @@ from schema import create_schema
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
 #default file paths for sample messages
-SAMPLE_DATA_FILE = Path(__file__).parent / "sample_message_data.json"
-SAMPLE_REQUEST_FILE  = Path(__file__).parent / "sample_message_requests.json"
-SAMPLE_RESPONSE_FILE = Path(__file__).parent / "sample_message_responses.json"
+SAMPLE_DATA_FILE = Path(__file__).parent / "example-data/sample_message_data.json"
+SAMPLE_REQUEST_FILE  = Path(__file__).parent / "example-data/sample_message_requests.json"
+SAMPLE_RESPONSE_FILE = Path(__file__).parent / "example-data/sample_message_responses.json"
 NO_RESPONSE = ["raw-data", "inference-output"] #message types that do not generate responses 
 class DBMessageManager:
     '''
@@ -208,9 +208,9 @@ if __name__ == "__main__":
     elif args.infile or args.outfile:
         # Only one flag — that's an error
         parser.error("Both --infile and --outfile must be supplied together.")
-    else:
+    
         # No flags → built-in sample usage
-        run_sample_usage()
+        #run_sample_usage()
 
 
 
