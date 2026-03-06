@@ -30,6 +30,14 @@ VALUE_LABEL_STYLE = "UiValue.TLabel"
 ACTION_BUTTON_STYLE = "UiAction.TButton"
 INPUT_COMBO_STYLE = "UiInput.TCombobox"
 
+def _scaled_font(font_spec, scale: float):
+    family, size, *rest = font_spec
+    scaled_size = max(8, int(round(size * scale)))
+    if rest:
+        return (family, scaled_size, *rest)
+    return (family, scaled_size)
+
+
 # Configures treeview style
 def configure_treeview_style():
     style = ttk.Style()
