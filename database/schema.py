@@ -53,10 +53,6 @@ class RawSensorData(Base):
     gyro_y_rads = Column(Float, nullable=False)
     gyro_z_rads = Column(Float, nullable=False)
 
-    # TABLES FOR ML TEAM ONLY
-    motion_type = Column(String, CheckConstraint("motion_type IN ('IDLE','TERRESTRIAL','MARITIME','LIFT','UNKNOWN')"), nullable=False, default='UNKNOWN')
-    is_anomaly = Column(Boolean, nullable=False)
-
     ingested_at = Column(
         Float,
         default=lambda: datetime.utcnow().timestamp()
