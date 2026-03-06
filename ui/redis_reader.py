@@ -4,12 +4,12 @@ import time
 import ast
 import threading
 class RedisReader:
-    def __init__(self, q_channel_name, r_channel_name, psubscriber):
+    def __init__(self, q_channel_name, r_channel_name, r, psubscriber):
         self.q_channel_name = q_channel_name
         self.r_channel_name = r_channel_name
         self.nodes = [] #list of nodes available in the system, will be populated by get-nodes response from redis
         self.subscriber = psubscriber
-        self.publisher = psubscriber
+        self.publisher = r
         self.mldict = {} #machine learning dictionary
         self.rddict = {} #raw data dictionary
         self.message_counter = 1 #counter for m_id
