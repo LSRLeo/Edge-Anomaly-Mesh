@@ -17,15 +17,17 @@ from typing import Dict, Any, Optional, List
 from db_message_factory import MessageFactory
 from db_table_manager import TableManager
 from schema import create_schema
+from db_message import MessageData
+from db_message import MessageResponse
 
 #logging for debugging purposes
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
 #default file paths for sample messages
-SAMPLE_DATA_FILE = Path(__file__).parent / "example-data/sample_message_data.json"
-SAMPLE_REQUEST_FILE  = Path(__file__).parent / "example-data/sample_message_requests.json"
-SAMPLE_RESPONSE_FILE = Path(__file__).parent / "example-data/sample_message_responses.json"
-NO_RESPONSE = ["raw-data", "inference-output"] #message types that do not generate responses 
+SAMPLE_DATA_FILE = Path(__file__).parent / "sample_message_data.json"
+SAMPLE_REQUEST_FILE  = Path(__file__).parent / "sample_message_requests.json"
+SAMPLE_RESPONSE_FILE = Path(__file__).parent / "sample_message_responses.json"
+
 class DBMessageManager:
     '''
     DB Message Manager class to handle incoming messages related to database operations. It registers handlers for different message types and processes them accordingly.
@@ -60,12 +62,13 @@ class DBMessageManager:
                 ),
             }
         #GET RESULTS
-        if message_obj.M_TYPE in NO_RESPONSE:
-            message_obj.execute(self.table_manager)
-            return None
+        # Find type of the message, if message type inherits from MessageData, then use tablemanager
+        # If message type inherits from messagerequest, do not take self.table_manager
+        if isinstance(message_obj, MessageData):
+            results = message_obj.execute(self.table_manager)
         else:
             results = message_obj.execute()
-            return results.to_dict() if results else None
+        return results.to_dict() if results else None
 
     def read_file(self, infile: str | Path, outfile: str | Path):
         """Processes messages from an input file and writes responses to an output file."""
@@ -208,9 +211,9 @@ if __name__ == "__main__":
     elif args.infile or args.outfile:
         # Only one flag — that's an error
         parser.error("Both --infile and --outfile must be supplied together.")
-    
+    else:
         # No flags → built-in sample usage
-        #run_sample_usage()
+        run_sample_usage()
 
 
 
