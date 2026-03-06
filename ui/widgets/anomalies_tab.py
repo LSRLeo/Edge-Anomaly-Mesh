@@ -26,7 +26,7 @@ from matplotlib import style
 from redis_reader import RedisReader
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
-from ui_utils import ACTION_BUTTON_STYLE, CAPTION_LABEL_STYLE, HEADING_LABEL_STYLE
+from ui_utils import ACTION_BUTTON_STYLE, CAPTION_LABEL_STYLE, HEADING_LABEL_STYLE, UI_COLORS
 
 # from ui.ui_utils import (
 #     SEVERITY_COLORS, STATUS_COLORS,
@@ -104,7 +104,7 @@ class RedisMonitorSection(ttk.Frame):
         outer.columnconfigure(0, weight=1)
         outer.rowconfigure(0, weight=1)
 
-        self._canvas = tk.Canvas(outer, highlightthickness=0)
+        self._canvas = tk.Canvas(outer, highlightthickness=0, bg=UI_COLORS["bg"])
         self._canvas.grid(row=0, column=0, sticky="nsew")
 
         vscroll = ttk.Scrollbar(outer, orient="vertical", command=self._canvas.yview)
@@ -170,7 +170,7 @@ class AnomalySection(ttk.Frame):
         outer.columnconfigure(0, weight=1)
         outer.rowconfigure(0, weight=1)
 
-        self._canvas = tk.Canvas(outer, highlightthickness=0)
+        self._canvas = tk.Canvas(outer, highlightthickness=0, bg=UI_COLORS["bg"])
         self._canvas.grid(row=0, column=0, sticky="nsew")
 
         vscroll = ttk.Scrollbar(outer, orient="vertical", command=self._canvas.yview)

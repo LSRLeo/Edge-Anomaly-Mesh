@@ -32,7 +32,7 @@ import math
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
 from redis_reader import RedisReader
-from ui_utils import ACTION_BUTTON_STYLE, FONT_GROUPS
+from ui_utils import ACTION_BUTTON_STYLE, FONT_GROUPS, UI_COLORS
 
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
@@ -200,7 +200,13 @@ class NetworkTab(ttk.Frame, DashboardParents):
         for idx, (motion, color, is_anomalous) in enumerate(filtered_items):
             row = idx // items_per_row
             col = (idx % items_per_row) * 2
-            mini_canvas = tk.Canvas(legend_frame, width=20, height=20, highlightthickness=0)
+            mini_canvas = tk.Canvas(
+                legend_frame,
+                width=20,
+                height=20,
+                highlightthickness=0,
+                bg=UI_COLORS["bg"],
+            )
             if not is_anomalous:
                 mini_canvas.create_oval(2, 2, 18, 18, fill=color, outline='black')
             else:
@@ -224,8 +230,12 @@ class NetworkTab(ttk.Frame, DashboardParents):
         canvas_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
         canvas_frame.columnconfigure(0, weight=1)
         canvas_frame.rowconfigure(0, weight=1)
-        self.canvas = tk.Canvas(canvas_frame, bg='white', highlightthickness=1,
-                                highlightbackground='gray')
+        self.canvas = tk.Canvas(
+            canvas_frame,
+            bg=UI_COLORS["bg"],
+            highlightthickness=1,
+            highlightbackground=UI_COLORS["border"],
+        )
         self.canvas.grid(row=0, column=0, sticky='nsew')
         # Scrollbars (optional)
         v_scroll = ttk.Scrollbar(canvas_frame, orient='vertical', 
