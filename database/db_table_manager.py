@@ -33,10 +33,8 @@ class TableManager:
                 gyro_x_rads=msg["gyro_rads"]["x"],
                 gyro_y_rads=msg["gyro_rads"]["y"],
                 gyro_z_rads=msg["gyro_rads"]["z"],
-
-                motion_type=msg["meta"]["motion_type"],
-                is_anomaly=bool(msg["meta"]["is_anomaly"])
             )
+            
             self.session.add(record)
             self.session.flush()  # Flush to get the record ID for node insertion
             self.insert_node(msg)
