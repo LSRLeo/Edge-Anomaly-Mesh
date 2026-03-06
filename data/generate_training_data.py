@@ -1201,9 +1201,10 @@ class TrainingDataGenerator:
             "total_samples": 0
         }
 
-        for motion_type, is_anomaly_class in classes:
+        for idx, (motion_type, is_anomaly_class) in enumerate(classes):
             samples = []
             hub = maritime_hub if motion_type == "MARITIME" else terrestrial_hub
+            node_id = f"node_{idx + 1:03d}"
 
             for i in range(samples_per_class):
                 t = float(i)
@@ -1224,9 +1225,9 @@ class TrainingDataGenerator:
 
                 sample = {
                     "m_type": "raw-data",
-                    "m_id": f"node_balanced_{i}",
-                    "event_id": f"node_balanced_{timestamp}",
-                    "node_id": "node_balanced",
+                    "m_id": f"{node_id}_{i}",
+                    "event_id": f"{node_id}_{timestamp}",
+                    "node_id": node_id,
                     "timestamp": timestamp,
                     "seq": i,
                     "gps": {

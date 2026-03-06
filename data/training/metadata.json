@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-03-05T17:00:34.134821",
+  "mode": "balanced",
+  "samples_per_class": 500,
+  "files": [
+    {
+      "file": "balanced_idle_normal.json",
+      "motion_type": "IDLE",
+      "is_anomaly": false,
+      "num_samples": 500
+    },
+    {
+      "file": "balanced_terrestrial_normal.json",
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": false,
+      "num_samples": 500
+    },
+    {
+      "file": "balanced_maritime_normal.json",
+      "motion_type": "MARITIME",
+      "is_anomaly": false,
+      "num_samples": 500
+    },
+    {
+      "file": "balanced_lift_normal.json",
+      "motion_type": "LIFT",
+      "is_anomaly": false,
+      "num_samples": 500
+    },
+    {
+      "file": "balanced_idle_anomaly.json",
+      "motion_type": "IDLE",
+      "is_anomaly": true,
+      "num_samples": 500
+    },
+    {
+      "file": "balanced_terrestrial_anomaly.json",
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": true,
+      "num_samples": 500
+    },
+    {
+      "file": "balanced_maritime_anomaly.json",
+      "motion_type": "MARITIME",
+      "is_anomaly": true,
+      "num_samples": 500
+    },
+    {
+      "file": "balanced_lift_anomaly.json",
+      "motion_type": "LIFT",
+      "is_anomaly": true,
+      "num_samples": 500
+    }
+  ],
+  "total_samples": 4000
+}
