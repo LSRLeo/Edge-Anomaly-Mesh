@@ -37,6 +37,8 @@ def _scaled_font(font_spec, scale: float):
         return (family, scaled_size, *rest)
     return (family, scaled_size)
 
+def get_group_font(group: str, scale: float = 1.0):
+    return _scaled_font(FONT_GROUPS[group], scale)
 
 # Configures treeview style
 def configure_treeview_style():
