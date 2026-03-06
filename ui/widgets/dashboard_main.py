@@ -274,10 +274,10 @@ def main():
     """
     toggle_test_mode = True # Set to True to enable test mode with mock data
     if not toggle_test_mode:
-        pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
-        sub = pub.pubsub()
+        r = redis.Redis(host="localhost",port=6379, decode_responses=True)
+        sub = r.pubsub()
         sub.subscribe(CHANNELNAME_RESPONSE) #subscribe to response channel for receiving data from redis
-        redis_reader = RedisReader(CHANNELNAME_QUERY, CHANNELNAME_RESPONSE, pub, sub)
+        redis_reader = RedisReader(CHANNELNAME_QUERY, CHANNELNAME_RESPONSE, r, sub)
     
         redis_reader.refresh(instant=True) #initial refresh to populate data from redis before starting dashboard
         RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
