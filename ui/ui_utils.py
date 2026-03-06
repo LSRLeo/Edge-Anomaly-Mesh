@@ -8,6 +8,20 @@ used across the UI components.
 import tkinter as tk
 from tkinter import ttk
 
+
+# Centralized, grouped UI font definitions for accessibility tuning.
+# Update these values to change all widgets in a group at once.
+FONT_GROUPS = {
+    "label": ("Arial", 11),
+    "button": ("Arial", 11),
+    "input": ("Arial", 11),
+    "heading": ("Arial", 12, "bold"),
+    "caption": ("Arial", 9),
+    "menu": ("Arial", 11),
+    "treeview": ("Arial", 11),
+    "treeview_heading": ("Arial", 11, "bold"),
+}
+
 # Configures treeview style
 def configure_treeview_style():
     style = ttk.Style()
