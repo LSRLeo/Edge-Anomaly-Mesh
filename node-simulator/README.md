@@ -25,13 +25,13 @@ Run the simulator from node and route config files. This generates the raw_data.
 **Live data:**
 
 ```bash
-python3 simulation.py sim -l -n nodeConfig.json -r routes/exampleHub.json
+python3 node-simulator/simulation.py sim -l -n nodeConfig.json -r routes/exampleHub.json
 ```
 
 **Training data:**
 
 ```bash
-python3 simulation.py sim -t -n nodeConfig.json -r routes/exampleHub.json
+python3 node-simulator/simulation.py sim -t -n nodeConfig.json -r routes/exampleHub.json
 ```
 
 **`sim` arguments:**
@@ -53,14 +53,14 @@ You must pass exactly one of `-l` or `-t`; omitting both will error.
 Run with Redis (publish to a channel). This required the raw_data.json file to already be generated with `sim` as all it does is take those messages and publish them to a Redis channel. It batches messages and publishes 1 message/sec and publishes any messages that are generated within that 1 second.
 
 ```bash
-python3 simulation.py redis [--host HOST] [--port PORT] CHANNEL_NAME
+python3 node-simulator/simulation.py redis [--host HOST] [--port PORT] CHANNEL_NAME
 ```
 
 **Examples:**
 
 ```bash
-python3 simulation.py redis sensor:raw
-python3 simulation.py redis --host localhost --port 6379 sensor:raw
+python3 node-simulator/simulation.py redis sensor:raw
+python3 node-simulator/simulation.py redis --host localhost --port 6379 sensor:raw
 ```
 
 **`redis` arguments:**
