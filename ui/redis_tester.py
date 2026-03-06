@@ -9,7 +9,7 @@ def main():
     print("Connected to Redis") #CYA measure to ensure connection is successful before proceeding
     sub = r.pubsub()
     print("Created Redis PubSub object") #CYA measure to ensure PubSub object is created successfully before proceeding
-    sub.psubscribe(CHANNELNAME_QUERY,CHANNELNAME_RESPONSE) #subscribe to response channel for receiving data from redis
+    sub.subscribe(CHANNELNAME_RESPONSE) #subscribe to response channel for receiving data from redis
     redis_reader = RedisReader(CHANNELNAME_QUERY, CHANNELNAME_RESPONSE, r, sub)
     print('Testing publish..')
     redis_reader.test_publish() #test publish method to send a message to redis

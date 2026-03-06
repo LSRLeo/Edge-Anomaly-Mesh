@@ -144,7 +144,9 @@ class RedisReader:
         """
         Test method to subscribe to a channel and print messages.
         """
+        print("Starting test subscribe, listening for messages...")
         for msg in self.subscriber.listen():
+            print("Listening for messages...")
             if msg['type'] == 'message':
                 print(f"Received message: {msg['data']}")
     
