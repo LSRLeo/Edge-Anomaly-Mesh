@@ -13,7 +13,8 @@ def main():
     redis_reader = RedisReader(CHANNELNAME_QUERY, CHANNELNAME_RESPONSE, r, sub)
     print('Testing publish..')
     redis_reader.test_publish() #test publish method to send a message to redis
-    # redis_reader.test_subscribe() #test subscribe method to listen for messages from redis and print them
+    print('Testing subscribe..')
+    redis_reader.test_subscribe() #test subscribe method to listen for messages from redis and print them
     sub.close() #close the subscriber connection when done
 
 if __name__ == "__main__":
