@@ -29,6 +29,7 @@ matplotlib.use('TkAgg')  # Must be before importing pyplot
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from ui_utils import CAPTION_LABEL_STYLE, UI_COLORS, VALUE_LABEL_STYLE
 
 # Motion class color scheme for charts
 MOTION_COLORS = {
@@ -58,6 +59,16 @@ STATE_INDEX = {
     6: ("MARITIME", True),
     7: ("LIFT", True),
 }
+
+def _apply_light_axes_style(fig: Figure, ax):
+    fig.patch.set_facecolor(UI_COLORS["surface"])
+    ax.set_facecolor(UI_COLORS["surface"])
+    ax.tick_params(colors=UI_COLORS["text"])
+    for spine in ax.spines.values():
+        spine.set_color(UI_COLORS["border"])
+    ax.title.set_color(UI_COLORS["text"])
+    ax.xaxis.label.set_color(UI_COLORS["text"])
+    ax.yaxis.label.set_color(UI_COLORS["text"])
 
 
 
@@ -121,6 +132,7 @@ class PieChartComponent(AnalyticsComponent):
         # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
+        _apply_light_axes_style(self.fig, self.ax)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
         
@@ -131,6 +143,7 @@ class PieChartComponent(AnalyticsComponent):
         
         # Clear and fully redraw the pie chart on each refresh.
         self.ax.clear()
+        _apply_light_axes_style(self.fig, self.ax)
         labels = list(distribution.keys())
         sizes = list(distribution.values())
         colors = [MOTION_COLORS.get(label, "#808080") for label in labels]
@@ -183,6 +196,7 @@ class LineChartComponent(AnalyticsComponent):
         # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
+        _apply_light_axes_style(self.fig, self.ax)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
     
@@ -193,6 +207,7 @@ class LineChartComponent(AnalyticsComponent):
         
         # Clear and fully redraw the chart on each refresh.
         self.ax.clear()
+        _apply_light_axes_style(self.fig, self.ax)
         times = [t[0] for t in trend_data]
         rates = [t[1] for t in trend_data]
         
@@ -205,7 +220,7 @@ class LineChartComponent(AnalyticsComponent):
         self.ax.set_ylabel("Anomaly Rate")
         # Rotate/align datetime tick labels so they fit in the embedded canvas.
         self.fig.autofmt_xdate()
-        self.ax.grid(True, linestyle="--", alpha=0.7)
+        self.ax.grid(True, linestyle="--", alpha=0.7, color=UI_COLORS["border"])
         self.fig.tight_layout()
         self.canvas.draw()
 
@@ -238,6 +253,7 @@ class BarChartComponent(AnalyticsComponent):
         # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
+        _apply_light_axes_style(self.fig, self.ax)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
         
@@ -248,6 +264,7 @@ class BarChartComponent(AnalyticsComponent):
         
         # Clear and fully redraw the bar chart on each refresh.
         self.ax.clear()
+        _apply_light_axes_style(self.fig, self.ax)
         nodes = [d[0] for d in node_data]
         counts = [d[1] for d in node_data]
         
@@ -306,11 +323,11 @@ class StatsComponent(AnalyticsComponent):
         ]
         
         for i, (key, label_text) in enumerate(stats_config):
-            ttk.Label(self.frame, text=label_text, font=("Arial", 11)).grid(
+            ttk.Label(self.frame, text=label_text, style=CAPTION_LABEL_STYLE).grid(
                 row=i, column=0, sticky="w", padx=10, pady=8
             )
             # Store value labels by key so update() can target them directly.
-            value_label = ttk.Label(self.frame, text="--", font=("Arial", 11, "bold"))
+            value_label = ttk.Label(self.frame, text="--", style=VALUE_LABEL_STYLE)
             value_label.grid(row=i, column=1, sticky="e", padx=10, pady=8)
             self.labels[key] = value_label
         
