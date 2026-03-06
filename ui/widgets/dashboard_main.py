@@ -24,7 +24,8 @@ from redis_reader import RedisReader
 # redis reader object, sub and pub on a thread
 # redis reader connect
 # Add parent directory to path for imports
-CHANNELNAME = "Test"
+CHANNELNAME_QUERY = "ui:query"
+CHANNELNAME_RESPONSE = "ui:responses"
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ui_utils import (
@@ -275,8 +276,8 @@ def main():
     if not toggle_test_mode:
         pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
         sub = pub.pubsub()
-        sub.subscribe(CHANNELNAME)
-        redis_reader = RedisReader(CHANNELNAME,pub,sub)
+        sub.subscribe(CHANNELNAME_RESPONSE) #subscribe to response channel for receiving data from redis
+        redis_reader = RedisReader(CHANNELNAME_QUERY, CHANNELNAME_RESPONSE, pub, sub)
     
         redis_reader.refresh(instant=True) #initial refresh to populate data from redis before starting dashboard
         RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
