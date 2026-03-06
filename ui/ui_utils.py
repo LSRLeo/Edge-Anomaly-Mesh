@@ -196,8 +196,25 @@ def configure_accessibility_styles(root: tk.Tk, scale: float = 1.0):
 # Configures treeview style
 def configure_treeview_style(scale: float = 1.0):
     style = ttk.Style()
-    style.configure("Treeview", font=get_group_font("treeview", scale), rowheight=24)
-    style.configure("Treeview.Heading", font=get_group_font("treeview_heading", scale))
+    style.configure(
+        "Treeview",
+        font=get_group_font("treeview", scale),
+        background=UI_COLORS["surface"],
+        fieldbackground=UI_COLORS["surface"],
+        foreground=UI_COLORS["text"],
+        rowheight=24,
+    )
+    style.configure(
+        "Treeview.Heading",
+        font=get_group_font("treeview_heading", scale),
+        background=UI_COLORS["surface_alt"],
+        foreground=UI_COLORS["text"],
+    )
+    style.map(
+        "Treeview",
+        background=[("selected", UI_COLORS["selection_bg"])],
+        foreground=[("selected", UI_COLORS["selection_text"])],
+    )
     
 # Window sizing constants
 WINDOW_WIDTH = 1067
