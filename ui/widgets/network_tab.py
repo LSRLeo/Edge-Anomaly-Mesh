@@ -32,6 +32,7 @@ import math
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
 from redis_reader import RedisReader
+from ui_utils import ACTION_BUTTON_STYLE, FONT_GROUPS
 
 #from ui.ui_utils import (
 #    MOTION_COLORS, NODE_RADIUS, NODE_BORDER_WIDTH,
@@ -174,7 +175,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         controls_frame.grid(row=2, column=0, sticky='ew', padx=10, pady=5)
 
         # Button
-        ttk.Button(controls_frame, text="Refresh", command=self.refresh).pack(side='left', padx=5)
+        ttk.Button(controls_frame, text="Refresh", command=self.refresh, style=ACTION_BUTTON_STYLE).pack(side='left', padx=5)
     def _setup_legend(self):
         """
         Create the legend showing motion state colors.
@@ -316,7 +317,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.canvas.create_text(
             px, py + r + 10,
             text=node_id,
-            font=('Arial', 8),
+            font=FONT_GROUPS["caption"],
             tags=('node', f'{node_id}_label -- anomaly: {is_anomaly} motion_class: {motion_class}'),
             fill='white'
         )

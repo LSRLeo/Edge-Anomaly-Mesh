@@ -29,6 +29,7 @@ matplotlib.use('TkAgg')  # Must be before importing pyplot
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from ui_utils import CAPTION_LABEL_STYLE, VALUE_LABEL_STYLE
 
 # Motion class color scheme for charts
 MOTION_COLORS = {
@@ -306,11 +307,11 @@ class StatsComponent(AnalyticsComponent):
         ]
         
         for i, (key, label_text) in enumerate(stats_config):
-            ttk.Label(self.frame, text=label_text, font=("Arial", 11)).grid(
+            ttk.Label(self.frame, text=label_text, style=CAPTION_LABEL_STYLE).grid(
                 row=i, column=0, sticky="w", padx=10, pady=8
             )
             # Store value labels by key so update() can target them directly.
-            value_label = ttk.Label(self.frame, text="--", font=("Arial", 11, "bold"))
+            value_label = ttk.Label(self.frame, text="--", style=VALUE_LABEL_STYLE)
             value_label.grid(row=i, column=1, sticky="e", padx=10, pady=8)
             self.labels[key] = value_label
         

@@ -26,6 +26,7 @@ from matplotlib import style
 from redis_reader import RedisReader
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
+from ui_utils import ACTION_BUTTON_STYLE, CAPTION_LABEL_STYLE, HEADING_LABEL_STYLE
 
 # from ui.ui_utils import (
 #     SEVERITY_COLORS, STATUS_COLORS,
@@ -249,24 +250,20 @@ class AnomalySection(ttk.Frame):
     # Top line: node_id (bold) left, timestamp right
         top = ttk.Frame(container)
         top.pack(fill="x")
-        node_lbl = ttk.Label(top, text=anomaly.getNodeID())
-        try:
-            node_lbl.configure(font=("TkDefaultFont", 10, "bold"))
-        except Exception:
-            pass
+        node_lbl = ttk.Label(top, text=anomaly.getNodeID(), style=HEADING_LABEL_STYLE)
         node_lbl.pack(side="left")
-        ttk.Label(top, text=anomaly.getTimestamp()).pack(side="right")
+        ttk.Label(top, text=anomaly.getTimestamp(), style=CAPTION_LABEL_STYLE).pack(side="right")
 
 
         # Second line: anomaly type
         mid = ttk.Frame(container)
         mid.pack(fill="x", pady=(4, 0))
-        ttk.Label(mid, text=f"Type: {anomaly.getMotionString()}").pack(side="left")
+        ttk.Label(mid, text=f"Type: {anomaly.getMotionString()}", style=CAPTION_LABEL_STYLE).pack(side="left")
 
         # Actions
         actions = ttk.Frame(container)
         actions.pack(fill="x", pady=(6, 0))
-        ttk.Button(actions, text="Open node", command=lambda r=anomaly.getNodeID(): self._open_node(r)).pack(side="left")
+        ttk.Button(actions, text="Open node", command=lambda r=anomaly.getNodeID(): self._open_node(r), style=ACTION_BUTTON_STYLE).pack(side="left")
 
         # Make row clickable to open node
         container.bind("<Button-1>", lambda _e, r=anomaly.getNodeID(): self._open_node(r))

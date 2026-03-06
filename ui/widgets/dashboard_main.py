@@ -29,7 +29,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ui_utils import (
     WINDOW_WIDTH, WINDOW_HEIGHT, REFRESH_INTERVAL_MS,
-    configure_treeview_style
+    configure_accessibility_styles, configure_treeview_style
 )
 from widgets.network_tab import NetworkTab
 from widgets.anomalies_tab import AnomaliesTab
@@ -68,6 +68,7 @@ class DashboardApp:
         self.root.rowconfigure(0, weight=1)
         
         # Configure global styles
+        configure_accessibility_styles(self.root)
         configure_treeview_style()
         
         # Initialize components
