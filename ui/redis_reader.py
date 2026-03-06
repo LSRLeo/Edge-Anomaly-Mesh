@@ -4,11 +4,12 @@ import time
 import ast
 import threading
 class RedisReader:
-    def __init__(self, channel_name, publisher, subscriber):
-        self.channel_name = channel_name
+    def __init__(self, q_channel_name, r_channel_name, psubscriber):
+        self.q_channel_name = q_channel_name
+        self.r_channel_name = r_channel_name
         self.nodes = [] #list of nodes available in the system, will be populated by get-nodes response from redis
-        self.subscriber = subscriber
-        self.publisher = publisher
+        self.subscriber = psubscriber
+        self.publisher = psubscriber
         self.mldict = {} #machine learning dictionary
         self.rddict = {} #raw data dictionary
         self.message_counter = 1 #counter for m_id
@@ -55,7 +56,7 @@ class RedisReader:
             'm_type': 'get-nodes', 
             'm_id': f'ui_{self.message_counter:05d}'}
         self.message_counter += 1
-        self.publisher.publish(self.channel_name, json.dumps(request))
+        self.publisher.publish(self.q_channel_name, json.dumps(request))
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -80,7 +81,7 @@ class RedisReader:
             'm_id': f'ui_{self.message_counter:05d}',
             'node_id': node_id}
         self.message_counter += 1
-        self.publisher.publish(self.channel_name, json.dumps(request))
+        self.publisher.publish(self.q_channel_name, json.dumps(request))
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -107,7 +108,7 @@ class RedisReader:
             'node_id': node_id
         }
         self.message_counter += 1
-        self.publisher.publish(self.channel_name, json.dumps(request))
+        self.publisher.publish(self.q_channel_name, json.dumps(request))
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -131,4 +132,19 @@ class RedisReader:
         Signal the refresh thread to stop.
         """
         self._stop_refresh.set()
+    def test_publish(self):
+        """
+        Test method to publish a message to a channel.
+        """
+        message1 = {
+            'm_type': 'get-nodes', 
+            'm_id': f'ui_00005'}
+        self.publisher.publish(self.q_channel_name, json.dumps(message1))
+    def test_subscribe(self):
+        """
+        Test method to subscribe to a channel and print messages.
+        """
+        for msg in self.subscriber.listen():
+            if msg['type'] == 'message':
+                print(f"Received message: {msg['data']}")
     

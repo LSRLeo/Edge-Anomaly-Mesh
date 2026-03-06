@@ -10,15 +10,15 @@ REDIS_PORT = 6379
 # ADD MORE BASED ON UI TEAM AND OTHER SPECIFICATIONS
 # ================================================
 SUBSCRIBE_CHANNELS = [
-    "sensor:raw:*",
-    "inference:results:*",
-    "ui:query:*" # placeholder
+    "sensor:raw",
+    "inference:results",
+    "ui:query"
 ]
 
 def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     pubsub = r.pubsub()
-    pubsub.psubscribe(*SUBSCRIBE_CHANNELS)
+    pubsub.psubscribe(SUBSCRIBE_CHANNELS)
 
     manager = DBMessageManager()
 
@@ -33,11 +33,7 @@ def main():
             # If this is a query request, publish response to UI channels
             if data.get("m_type", "").startswith("get-"):
                 node_id = data.get("node_id", "all")
-                # Choose the correct channel based on query type
-                if "anomaly" in data.get("m_type", ""):
-                    channel = f"dashboard:anomalies:{node_id}"
-                else:
-                    channel = f"dashboard:updates:{node_id}"
+                channel = f"ui:responses"
                 r.publish(channel, json.dumps(response))
                 print(f"Published response to {channel}")
         except Exception as e:

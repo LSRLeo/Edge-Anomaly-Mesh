@@ -253,7 +253,7 @@ def load_json_data(filepath):
     for event in events:
         meta = event.get("meta", {})
         label_field = event.get("label", {})
-        terrain_str = (meta.get("sim_mode") or meta.get("mode") or
+        terrain_str = (meta.get("sim_mode") or meta.get("mode") or meta.get("motion_type") or
                        event.get("mode") or label_field.get("motion_type"))
         if terrain_str is None:
             terrain_idx = None
@@ -262,8 +262,9 @@ def load_json_data(filepath):
             if terrain_idx is None:
                 raise ValueError(f"Unknown terrain type: {terrain_str}")
 
-        has_anomaly = (meta.get("anomaly", False) or meta.get("has_anomaly", False) or
-                       event.get("anomaly", False) or label_field.get("is_anomaly", False))
+        raw_anomaly = (meta.get("anomaly") or meta.get("has_anomaly") or meta.get("is_anomaly") or
+                       event.get("anomaly") or label_field.get("is_anomaly"))
+        has_anomaly = str(raw_anomaly).lower() == "true" if raw_anomaly is not None else False
         if terrain_idx is not None:
             combined_label = terrain_idx + (4 if has_anomaly else 0)
         else:
