@@ -59,8 +59,8 @@ python3 simulation.py redis [--host HOST] [--port PORT] CHANNEL_NAME
 **Examples:**
 
 ```bash
-python3 simulation.py redis my-channel
-python3 simulation.py redis --host localhost --port 6379 my-channel
+python3 simulation.py redis sensor:raw
+python3 simulation.py redis --host localhost --port 6379 sensor:raw
 ```
 
 **`redis` arguments:**
@@ -69,7 +69,7 @@ python3 simulation.py redis --host localhost --port 6379 my-channel
 |----------|---------|-------------|
 | `--host` | `localhost` | Redis server hostname. |
 | `--port` | `6379` | Redis server port. |
-| `channel_name` | (required) | Name of the channel to monitor/publish to. |
+| `sensor:raw:*` | (required) | Name of the channel to monitor/publish to. |
 
 ---
 
