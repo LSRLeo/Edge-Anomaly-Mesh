@@ -10,15 +10,15 @@ REDIS_PORT = 6379
 # ADD MORE BASED ON UI TEAM AND OTHER SPECIFICATIONS
 # ================================================
 SUBSCRIBE_CHANNELS = [
-    "sensor:raw:*",
-    "inference:results:*",
-    "ui:query:*" # placeholder
+    "sensor:raw",
+    "inference:results",
+    "ui:query"
 ]
 
 def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     pubsub = r.pubsub()
-    pubsub.psubscribe(*SUBSCRIBE_CHANNELS)
+    pubsub.psubscribe(SUBSCRIBE_CHANNELS)
 
     manager = DBMessageManager()
 
