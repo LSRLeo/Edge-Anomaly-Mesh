@@ -68,24 +68,128 @@ def configure_accessibility_styles(root: tk.Tk, scale: float = 1.0):
         scale: Font scale multiplier for larger/smaller UI text.
     """
     style = ttk.Style(root)
+    style.theme_use("clam")
+
+    root.configure(bg=UI_COLORS["bg"])
 
     # Global defaults by widget type.
-    style.configure("TLabel", font=get_group_font("label", scale))
-    style.configure("TButton", font=get_group_font("button", scale))
-    style.configure("TCombobox", font=get_group_font("input", scale))
-    style.configure("TNotebook.Tab", font=get_group_font("button", scale))
-    style.configure("TLabelframe.Label", font=get_group_font("heading", scale))
+    style.configure("TFrame", background=UI_COLORS["bg"])
+    style.configure(
+        "TLabel",
+        font=get_group_font("label", scale),
+        background=UI_COLORS["bg"],
+        foreground=UI_COLORS["text"],
+    )
+    style.configure(
+        "TButton",
+        font=get_group_font("button", scale),
+        background=UI_COLORS["surface_alt"],
+        foreground=UI_COLORS["text"],
+        bordercolor=UI_COLORS["border"],
+        focuscolor=UI_COLORS["accent"],
+        padding=(10, 6),
+    )
+    style.map(
+        "TButton",
+        background=[("active", UI_COLORS["accent"]), ("pressed", UI_COLORS["accent"])],
+        foreground=[("active", UI_COLORS["selection_text"]), ("pressed", UI_COLORS["selection_text"])],
+    )
+    style.configure(
+        "TCombobox",
+        font=get_group_font("input", scale),
+        foreground=UI_COLORS["text"],
+        fieldbackground=UI_COLORS["input_bg"],
+        background=UI_COLORS["surface_alt"],
+        bordercolor=UI_COLORS["border"],
+        arrowcolor=UI_COLORS["text"],
+        lightcolor=UI_COLORS["border"],
+        darkcolor=UI_COLORS["border"],
+    )
+    style.map(
+        "TCombobox",
+        fieldbackground=[("readonly", UI_COLORS["input_bg"])],
+        foreground=[("readonly", UI_COLORS["text"])],
+        selectbackground=[("readonly", UI_COLORS["selection_bg"])],
+        selectforeground=[("readonly", UI_COLORS["selection_text"])],
+    )
+    style.configure("TNotebook", background=UI_COLORS["bg"], bordercolor=UI_COLORS["border"])
+    style.configure(
+        "TNotebook.Tab",
+        font=get_group_font("button", scale),
+        background=UI_COLORS["surface"],
+        foreground=UI_COLORS["text_muted"],
+        bordercolor=UI_COLORS["border"],
+        padding=(12, 8),
+    )
+    style.map(
+        "TNotebook.Tab",
+        background=[("selected", UI_COLORS["surface_alt"])],
+        foreground=[("selected", UI_COLORS["text"])],
+    )
+    style.configure(
+        "TLabelframe",
+        background=UI_COLORS["surface"],
+        bordercolor=UI_COLORS["border"],
+        relief="solid",
+    )
+    style.configure(
+        "TLabelframe.Label",
+        font=get_group_font("heading", scale),
+        background=UI_COLORS["surface"],
+        foreground=UI_COLORS["text"],
+    )
+    style.configure(
+        "Vertical.TScrollbar",
+        background=UI_COLORS["surface_alt"],
+        troughcolor=UI_COLORS["bg"],
+        bordercolor=UI_COLORS["border"],
+        arrowcolor=UI_COLORS["text"],
+    )
+    style.configure(
+        "Horizontal.TScrollbar",
+        background=UI_COLORS["surface_alt"],
+        troughcolor=UI_COLORS["bg"],
+        bordercolor=UI_COLORS["border"],
+        arrowcolor=UI_COLORS["text"],
+    )
 
     # Semantic styles for targeted widgets.
-    style.configure(TEXT_LABEL_STYLE, font=get_group_font("label", scale))
-    style.configure(HEADING_LABEL_STYLE, font=get_group_font("heading", scale))
-    style.configure(CAPTION_LABEL_STYLE, font=get_group_font("caption", scale))
-    style.configure(VALUE_LABEL_STYLE, font=get_group_font("label", scale))
+    style.configure(
+        TEXT_LABEL_STYLE,
+        font=get_group_font("label", scale),
+        background=UI_COLORS["bg"],
+        foreground=UI_COLORS["text"],
+    )
+    style.configure(
+        HEADING_LABEL_STYLE,
+        font=get_group_font("heading", scale),
+        background=UI_COLORS["bg"],
+        foreground=UI_COLORS["text"],
+    )
+    style.configure(
+        CAPTION_LABEL_STYLE,
+        font=get_group_font("caption", scale),
+        background=UI_COLORS["bg"],
+        foreground=UI_COLORS["text_muted"],
+    )
+    style.configure(
+        VALUE_LABEL_STYLE,
+        font=get_group_font("label", scale),
+        background=UI_COLORS["bg"],
+        foreground=UI_COLORS["text"],
+    )
     style.configure(ACTION_BUTTON_STYLE, font=get_group_font("button", scale))
     style.configure(INPUT_COMBO_STYLE, font=get_group_font("input", scale))
 
     # tk widgets (for example Menu/Canvas text) use option database.
     root.option_add("*Menu.Font", get_group_font("menu", scale))
+    root.option_add("*Menu.Background", UI_COLORS["surface"])
+    root.option_add("*Menu.Foreground", UI_COLORS["text"])
+    root.option_add("*Menu.ActiveBackground", UI_COLORS["accent"])
+    root.option_add("*Menu.ActiveForeground", UI_COLORS["selection_text"])
+    root.option_add("*Canvas.Background", UI_COLORS["bg"])
+    root.option_add("*Canvas.HighlightBackground", UI_COLORS["border"])
+    root.option_add("*Canvas.HighlightColor", UI_COLORS["accent"])
     root.option_add("*Font", get_group_font("label", scale))
 
 
