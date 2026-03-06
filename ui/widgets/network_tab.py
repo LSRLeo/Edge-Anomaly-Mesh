@@ -123,6 +123,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         # Track drawn node items: {node_id: canvas_item_id}
         self.node_items: Dict[str, int] = {}
         
+        self.changed_nodes: Dict[str, bool] = {} # Track which nodes have been changed by user for refreshing purposes (node_id: anomaly_value)
         # Currently selected node
         self.selected_node: Optional[str] = None
         
@@ -175,6 +176,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         # Button
         ttk.Button(controls_frame, text="Refresh", command=self.refresh).pack(side='left', padx=5)
+        ttk.Button(controls_frame, text="Update Node", command=self.update_node(self.changed_nodes)).pack(side='left', padx=5)
+
     def _setup_legend(self):
         """
         Create the legend showing motion state colors.
@@ -443,6 +446,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         elif node is not None and event.num == 2 or event.num==3:
             node['anomaly'] = not node.get('anomaly')
+            self.changed_nodes[node_id] = node['anomaly']
             # Redraw just this node
             self._draw_single_node(node)
         
@@ -520,6 +524,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         self.draw_nodes(list(self.test_nodes.values()))
     
+    
 
     def refresh(self):
         
@@ -533,7 +538,33 @@ class NetworkTab(ttk.Frame, DashboardParents):
             self._setup_canvas()
         except:
             print(f'Error refreshing UI and Data, Exception:{Exception}')
-
+    def update_node(self,node_id, anomaly_value):
+        """
+        Update a node's anomaly status in the database.
+        
+        Args:
+            node_id: ID of the node to update
+            anomaly_value: New anomaly status (True/False)
+            user: User making the change (for auditing)
+        """
+        try:
+            #popout windor with input for user name
+            user_window = tk.Toplevel()
+            user_window.title("Identify User Making Change")
+            user_window.geometry('300x150')
+            ttk.Label(user_window, text="Enter your name:").pack(pady=10)
+            user_entry = ttk.Entry(user_window)
+            user_entry.pack(pady=5)
+            def submit_user():
+                user = user_entry.get()
+                if user:
+                    self.redis_reader.updateNode(node_id, anomaly_value, user)
+                    user_window.destroy()
+                else:
+                    tk.messagebox.showerror("Input Error", "Please enter your name.")
+            ttk.Button(user_window, text="Submit", command=submit_user).pack(pady=10)
+        except Exception as e:
+            print(f"Error updating node {node_id}: {e}")
 
 
        
