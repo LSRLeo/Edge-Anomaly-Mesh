@@ -22,6 +22,14 @@ FONT_GROUPS = {
     "treeview_heading": ("Arial", 11, "bold"),
 }
 
+# Named ttk styles by semantic role.
+TEXT_LABEL_STYLE = "UiText.TLabel"
+HEADING_LABEL_STYLE = "UiHeading.TLabel"
+CAPTION_LABEL_STYLE = "UiCaption.TLabel"
+VALUE_LABEL_STYLE = "UiValue.TLabel"
+ACTION_BUTTON_STYLE = "UiAction.TButton"
+INPUT_COMBO_STYLE = "UiInput.TCombobox"
+
 # Configures treeview style
 def configure_treeview_style():
     style = ttk.Style()
