@@ -29,6 +29,7 @@ matplotlib.use('TkAgg')  # Must be before importing pyplot
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from ui_utils import CAPTION_LABEL_STYLE, UI_COLORS, VALUE_LABEL_STYLE
 
 # Motion class color scheme for charts
 MOTION_COLORS = {
@@ -41,6 +42,7 @@ MOTION_COLORS = {
 # Chart sizing constants
 CHART_FIGSIZE = (6, 4)  # Width, height in inches
 CHART_DPI = 100         # Dots per inch for chart resolution
+DEFAULT_TEST_JSON_PATH = "sample_data/sample_anomaly_data.json"
 
 # Avoid circular import
 if TYPE_CHECKING:
@@ -57,6 +59,16 @@ STATE_INDEX = {
     6: ("MARITIME", True),
     7: ("LIFT", True),
 }
+
+def _apply_light_axes_style(fig: Figure, ax):
+    fig.patch.set_facecolor(UI_COLORS["surface"])
+    ax.set_facecolor(UI_COLORS["surface"])
+    ax.tick_params(colors=UI_COLORS["text"])
+    for spine in ax.spines.values():
+        spine.set_color(UI_COLORS["border"])
+    ax.title.set_color(UI_COLORS["text"])
+    ax.xaxis.label.set_color(UI_COLORS["text"])
+    ax.yaxis.label.set_color(UI_COLORS["text"])
 
 
 
@@ -120,6 +132,7 @@ class PieChartComponent(AnalyticsComponent):
         # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
+        _apply_light_axes_style(self.fig, self.ax)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
         
@@ -130,6 +143,7 @@ class PieChartComponent(AnalyticsComponent):
         
         # Clear and fully redraw the pie chart on each refresh.
         self.ax.clear()
+        _apply_light_axes_style(self.fig, self.ax)
         labels = list(distribution.keys())
         sizes = list(distribution.values())
         colors = [MOTION_COLORS.get(label, "#808080") for label in labels]
@@ -182,6 +196,7 @@ class LineChartComponent(AnalyticsComponent):
         # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
+        _apply_light_axes_style(self.fig, self.ax)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
     
@@ -192,6 +207,7 @@ class LineChartComponent(AnalyticsComponent):
         
         # Clear and fully redraw the chart on each refresh.
         self.ax.clear()
+        _apply_light_axes_style(self.fig, self.ax)
         times = [t[0] for t in trend_data]
         rates = [t[1] for t in trend_data]
         
@@ -204,7 +220,7 @@ class LineChartComponent(AnalyticsComponent):
         self.ax.set_ylabel("Anomaly Rate")
         # Rotate/align datetime tick labels so they fit in the embedded canvas.
         self.fig.autofmt_xdate()
-        self.ax.grid(True, linestyle="--", alpha=0.7)
+        self.ax.grid(True, linestyle="--", alpha=0.7, color=UI_COLORS["border"])
         self.fig.tight_layout()
         self.canvas.draw()
 
@@ -237,6 +253,7 @@ class BarChartComponent(AnalyticsComponent):
         # Embed a Matplotlib figure inside the Tkinter frame once at setup time.
         self.fig = Figure(figsize=CHART_FIGSIZE, dpi=CHART_DPI)
         self.ax = self.fig.add_subplot(111)
+        _apply_light_axes_style(self.fig, self.ax)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
         
@@ -247,6 +264,7 @@ class BarChartComponent(AnalyticsComponent):
         
         # Clear and fully redraw the bar chart on each refresh.
         self.ax.clear()
+        _apply_light_axes_style(self.fig, self.ax)
         nodes = [d[0] for d in node_data]
         counts = [d[1] for d in node_data]
         
@@ -305,11 +323,11 @@ class StatsComponent(AnalyticsComponent):
         ]
         
         for i, (key, label_text) in enumerate(stats_config):
-            ttk.Label(self.frame, text=label_text, font=("Arial", 11)).grid(
+            ttk.Label(self.frame, text=label_text, style=CAPTION_LABEL_STYLE).grid(
                 row=i, column=0, sticky="w", padx=10, pady=8
             )
             # Store value labels by key so update() can target them directly.
-            value_label = ttk.Label(self.frame, text="--", font=("Arial", 11, "bold"))
+            value_label = ttk.Label(self.frame, text="--", style=VALUE_LABEL_STYLE)
             value_label.grid(row=i, column=1, sticky="e", padx=10, pady=8)
             self.labels[key] = value_label
         
@@ -342,22 +360,57 @@ class AnalyticsTab(ttk.Frame):
     and anomaly patterns.
     """
     
-    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp'):
+    def __init__(self, parent: ttk.Notebook, dashboard: 'DashboardApp', redis_reader: Optional[Any] = None, test_mode: bool = False):
         """
         Initialize the Analytics tab.
         
         Args:
             parent: Parent notebook widget
             dashboard: Reference to main dashboard for callbacks
+            redis_reader: Optional Redis reader for fetching data
+            test_mode: If True, runs in test mode with mock data
         """
         super().__init__(parent)
         
         self.dashboard = dashboard
+        self.redis_reader = redis_reader
+        self.test_mode = test_mode
         self.components: List[AnalyticsComponent] = []
         
         # Build UI
         self._setup_ui()
+        self.refresh()
     
+    def parse_json(self) -> List[Dict[str, Any]]:
+        return load_ml_json(DEFAULT_TEST_JSON_PATH)
+    
+    def parse_redis(self) -> List[Dict[str, Any]]:
+        if self.redis_reader is None:
+            raise ValueError("Redis mode enabled but redis_reader is not configured.")
+        
+        rddict, mldict = self.redis_reader.getDicts()
+        records: List[Dict[str, Any]] = []
+        
+        for node_id, state_confidence in mldict.items():
+            if not isinstance(state_confidence, list) or len(state_confidence) != 8:
+                continue
+            
+            raw_entry = rddict.get(node_id, {}) if isinstance(rddict, dict) else {}
+            timestamp = raw_entry.get("timestamp") if isinstance(raw_entry, dict) else None
+            if not timestamp:
+                timestamp = datetime.utcnow().isoformat()
+                
+            records.append(
+                {
+                    "node_id": node_id,
+                    "timestamp": timestamp,
+                    "state_confidence": state_confidence,
+                }
+            )
+        
+        return records
+            
+                
     def _setup_ui(self):
         """
         Create the tab layout.
@@ -390,8 +443,8 @@ class AnalyticsTab(ttk.Frame):
         Refresh all charts with latest data from ML JSON.
         """
         try:
-            records = load_ml_json("../sample_data/sample_anomaly_data.json")
-
+            records = self.parse_json() if self.test_mode else self.parse_redis()
+            
             for component in self.components:
                 component.update(records)
 
@@ -417,7 +470,7 @@ def demo():
     notebook = ttk.Notebook(root)
     notebook.pack(fill='both', expand=True)
     
-    tab = AnalyticsTab(notebook, dashboard=MockDashboard())
+    tab = AnalyticsTab(notebook, dashboard=MockDashboard(), test_mode=True)
     notebook.add(tab, text='Analytics')
     
     tab.refresh()

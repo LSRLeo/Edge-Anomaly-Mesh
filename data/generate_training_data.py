@@ -7,12 +7,16 @@ Uses BFS pathfinding and Bezier curve interpolation for realistic paths.
 
 Output format matches actual simulator format:
 {
+  "m_type": "raw-data",
+  "m_id": "node_001_8",
+  "event_id": "node_001_2026-02-12T21:19:19.000000",
   "node_id": "node_001",
-  "timestamp": "2026-02-12T21:19:19.000Z",
+  "timestamp": "2026-02-12T21:19:19.000000",
   "seq": 8,
-  "gps": {"lat": 39.673702, "lon": -104.961197, "altitude_m": 1657.4, "satellites": 8, "fix": true},
-  "accel": {"x": 0.363, "y": 0.301, "z": 9.287},
-  "gyro": {"x": -0.0565, "y": -0.1307, "z": -0.0242}
+  "gps": {"lat_deg": 39.673702, "lon_deg": -104.961197, "altitude_m": 1657.4},
+  "accel_mss": {"x": 0.363, "y": 0.301, "z": 9.287},
+  "gyro_rads": {"x": -0.0565, "y": -0.1307, "z": -0.0242},
+  "meta": {"motion_type": "IDLE", "is_anomaly": "False", "anomaly_type": "", "location": "hub_denver_01"}
 }
 
 Usage:
@@ -722,26 +726,28 @@ class TrainingDataGenerator:
         samples = []
 
         for i in range(duration):
-            timestamp = (start_time + timedelta(seconds=i)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            seq = start_seq + i
+            timestamp = (start_time + timedelta(seconds=i)).isoformat()
             accel, gyro = MotionPhysics.idle()
 
             sample = {
+                "m_type": "raw-data",
+                "m_id": f"{node_id}_{seq}",
+                "event_id": f"{node_id}_{timestamp}",
                 "node_id": node_id,
                 "timestamp": timestamp,
-                "seq": start_seq + i,
+                "seq": seq,
                 "gps": {
-                    "lat": round(hub.lat + random.gauss(0, 0.000001), 6),
-                    "lon": round(hub.lon + random.gauss(0, 0.000001), 6),
-                    "altitude_m": round(hub.altitude_m + random.gauss(0, 0.5), 1),
-                    "satellites": random.randint(6, 12),
-                    "fix": True
+                    "lat_deg": round(hub.lat + random.gauss(0, 0.000001), 6),
+                    "lon_deg": round(hub.lon + random.gauss(0, 0.000001), 6),
+                    "altitude_m": round(hub.altitude_m + random.gauss(0, 0.5), 1)
                 },
-                "accel": accel,
-                "gyro": gyro,
-                "label": {
+                "accel_mss": accel,
+                "gyro_rads": gyro,
+                "meta": {
                     "motion_type": "IDLE",
-                    "is_anomaly": False,
-                    "anomaly_type": "none",
+                    "is_anomaly": "False",
+                    "anomaly_type": "",
                     "location": hub.hub_id
                 }
             }
@@ -763,13 +769,14 @@ class TrainingDataGenerator:
         samples = []
 
         for i in range(duration):
-            timestamp = (start_time + timedelta(seconds=i)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            seq = start_seq + i
+            timestamp = (start_time + timedelta(seconds=i)).isoformat()
             t = i  # Time in seconds
             accel, gyro = MotionPhysics.lift(t)
 
             # Maybe inject anomaly
             is_anomaly = random.random() < anomaly_rate
-            current_anomaly = "none"
+            current_anomaly = ""
 
             if is_anomaly and anomaly_type:
                 current_anomaly = anomaly_type
@@ -783,21 +790,22 @@ class TrainingDataGenerator:
                     accel, gyro = AnomalyInjector.inject_motion_mismatch(t, "LIFT")
 
             sample = {
+                "m_type": "raw-data",
+                "m_id": f"{node_id}_{seq}",
+                "event_id": f"{node_id}_{timestamp}",
                 "node_id": node_id,
                 "timestamp": timestamp,
-                "seq": start_seq + i,
+                "seq": seq,
                 "gps": {
-                    "lat": round(hub.lat + random.gauss(0, 0.000005), 6),
-                    "lon": round(hub.lon + random.gauss(0, 0.000005), 6),
-                    "altitude_m": round(hub.altitude_m + random.gauss(0, 1.0), 1),
-                    "satellites": random.randint(6, 12),
-                    "fix": True
+                    "lat_deg": round(hub.lat + random.gauss(0, 0.000005), 6),
+                    "lon_deg": round(hub.lon + random.gauss(0, 0.000005), 6),
+                    "altitude_m": round(hub.altitude_m + random.gauss(0, 1.0), 1)
                 },
-                "accel": accel,
-                "gyro": gyro,
-                "label": {
+                "accel_mss": accel,
+                "gyro_rads": gyro,
+                "meta": {
                     "motion_type": "LIFT",
-                    "is_anomaly": is_anomaly,
+                    "is_anomaly": str(is_anomaly),
                     "anomaly_type": current_anomaly,
                     "location": hub.hub_id
                 }
@@ -836,7 +844,8 @@ class TrainingDataGenerator:
             lon = wp1.lon + (wp2.lon - wp1.lon) * wp_frac
             alt = wp1.altitude_m + (wp2.altitude_m - wp1.altitude_m) * wp_frac
 
-            timestamp = (start_time + timedelta(seconds=i)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            seq = start_seq + i
+            timestamp = (start_time + timedelta(seconds=i)).isoformat()
 
             # Generate sensor data
             t = i  # Time in seconds
@@ -844,7 +853,7 @@ class TrainingDataGenerator:
 
             # Maybe inject anomaly
             is_anomaly = random.random() < anomaly_rate
-            current_anomaly = "none"
+            current_anomaly = ""
 
             if is_anomaly and anomaly_type:
                 current_anomaly = anomaly_type
@@ -858,23 +867,24 @@ class TrainingDataGenerator:
                     accel, gyro = AnomalyInjector.inject_motion_mismatch(t, motion_type)
 
             sample = {
+                "m_type": "raw-data",
+                "m_id": f"{node_id}_{seq}",
+                "event_id": f"{node_id}_{timestamp}",
                 "node_id": node_id,
                 "timestamp": timestamp,
-                "seq": start_seq + i,
+                "seq": seq,
                 "gps": {
-                    "lat": round(lat + random.gauss(0, 0.000005), 6),
-                    "lon": round(lon + random.gauss(0, 0.000005), 6),
-                    "altitude_m": round(alt + random.gauss(0, 2), 1),
-                    "satellites": random.randint(6, 12),
-                    "fix": True
+                    "lat_deg": round(lat + random.gauss(0, 0.000005), 6),
+                    "lon_deg": round(lon + random.gauss(0, 0.000005), 6),
+                    "altitude_m": round(alt + random.gauss(0, 2), 1)
                 },
-                "accel": accel,
-                "gyro": gyro,
-                "label": {
+                "accel_mss": accel,
+                "gyro_rads": gyro,
+                "meta": {
                     "motion_type": motion_type,
-                    "is_anomaly": is_anomaly,
+                    "is_anomaly": str(is_anomaly),
                     "anomaly_type": current_anomaly,
-                    "segment_progress": round(progress, 3)
+                    "location": ""
                 }
             }
             samples.append(sample)
@@ -885,12 +895,20 @@ class TrainingDataGenerator:
         self,
         output_dir: str,
         samples_per_segment: int = 500,
-        anomaly_rate: float = 0.1,
+        anomaly_rate: float = 0.6,
         include_lift_variants: bool = True,
-        include_maritime: bool = True
+        include_maritime: bool = True,
+        dwell_duration: int = None,
+        lift_duration: int = None,
     ) -> Dict[str, Any]:
         """Generate training data for all possible routes between hubs."""
         os.makedirs(output_dir, exist_ok=True)
+
+        # Default dwell and lift durations to match transit for balanced class counts
+        if dwell_duration is None:
+            dwell_duration = samples_per_segment
+        if lift_duration is None:
+            lift_duration = samples_per_segment
 
         hub_ids = list(self.network.hubs.keys())
         all_metadata = {
@@ -936,7 +954,9 @@ class TrainingDataGenerator:
                     node_id=node_id,
                     samples_per_segment=samples_per_segment,
                     anomaly_rate=0.0,
-                    include_lift=False
+                    include_lift=False,
+                    dwell_duration=dwell_duration,
+                    lift_duration=lift_duration,
                 )
 
                 filename = f"route_{from_hub}_to_{to_hub}.json"
@@ -960,7 +980,9 @@ class TrainingDataGenerator:
                         samples_per_segment=samples_per_segment,
                         anomaly_rate=anomaly_rate,
                         anomaly_type=anomaly_type,
-                        include_lift=False
+                        include_lift=False,
+                        dwell_duration=dwell_duration,
+                        lift_duration=lift_duration,
                     )
 
                     anomaly_filename = f"route_{from_hub}_to_{to_hub}_{anomaly_type}.json"
@@ -986,7 +1008,9 @@ class TrainingDataGenerator:
                         node_id=lift_node_id,
                         samples_per_segment=samples_per_segment,
                         anomaly_rate=0.0,
-                        include_lift=True
+                        include_lift=True,
+                        dwell_duration=dwell_duration,
+                        lift_duration=lift_duration,
                     )
 
                     lift_filename = f"route_{from_hub}_to_{to_hub}_with_lift.json"
@@ -1010,7 +1034,9 @@ class TrainingDataGenerator:
                             samples_per_segment=samples_per_segment,
                             anomaly_rate=anomaly_rate,
                             anomaly_type=anomaly_type,
-                            include_lift=True
+                            include_lift=True,
+                            dwell_duration=dwell_duration,
+                            lift_duration=lift_duration,
                         )
 
                         anomaly_filename = f"route_{from_hub}_to_{to_hub}_with_lift_{anomaly_type}.json"
@@ -1046,7 +1072,9 @@ class TrainingDataGenerator:
                         node_id=node_id,
                         samples_per_segment=samples_per_segment,
                         anomaly_rate=0.0,
-                        include_lift=False
+                        include_lift=False,
+                        dwell_duration=dwell_duration,
+                        lift_duration=lift_duration,
                     )
 
                     filename = f"route_{from_hub}_to_{to_hub}_maritime.json"
@@ -1096,7 +1124,9 @@ class TrainingDataGenerator:
                             node_id=lift_node_id,
                             samples_per_segment=samples_per_segment,
                             anomaly_rate=0.0,
-                            include_lift=True
+                            include_lift=True,
+                            dwell_duration=dwell_duration,
+                            lift_duration=lift_duration,
                         )
 
                         lift_filename = f"route_{from_hub}_to_{to_hub}_maritime_with_lift.json"
@@ -1143,6 +1173,124 @@ class TrainingDataGenerator:
         return all_metadata
 
 
+    def generate_balanced_dataset(
+        self,
+        output_dir: str,
+        samples_per_class: int = 500,
+    ) -> Dict[str, Any]:
+        """
+        Generate a balanced dataset with exactly samples_per_class samples for each of
+        the 8 classes: IDLE, TERRESTRIAL, MARITIME, LIFT × (normal, anomaly).
+
+        Each class is written to its own file so the ML loader sees equal representation.
+        Anomaly samples randomly cycle through all 4 anomaly types.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+
+        hub_ids = list(self.network.hubs.keys())
+        terrestrial_hub = next(
+            (self.network.get_hub(h) for h in hub_ids
+             if self.network.get_hub(h).hub_type != "seaport"),
+            self.network.get_hub(hub_ids[0])
+        )
+        maritime_hub = next(
+            (self.network.get_hub(h) for h in hub_ids
+             if self.network.get_hub(h).hub_type == "seaport"),
+            terrestrial_hub
+        )
+
+        start_time = datetime.now()
+        anomaly_types = ["spike", "dropout", "drift", "motion_mismatch"]
+
+        classes = [
+            ("IDLE",         False),
+            ("TERRESTRIAL",  False),
+            ("MARITIME",     False),
+            ("LIFT",         False),
+            ("IDLE",         True),
+            ("TERRESTRIAL",  True),
+            ("MARITIME",     True),
+            ("LIFT",         True),
+        ]
+
+        all_metadata = {
+            "generated_at": start_time.isoformat(),
+            "mode": "balanced",
+            "samples_per_class": samples_per_class,
+            "files": [],
+            "total_samples": 0
+        }
+
+        for idx, (motion_type, is_anomaly_class) in enumerate(classes):
+            samples = []
+            hub = maritime_hub if motion_type == "MARITIME" else terrestrial_hub
+            node_id = f"node_{idx + 1:03d}"
+
+            for i in range(samples_per_class):
+                t = float(i)
+                timestamp = (start_time + timedelta(seconds=i)).isoformat()
+                accel, gyro = MotionPhysics.generate(motion_type, t)
+
+                anomaly_type_used = ""
+                if is_anomaly_class:
+                    anomaly_type_used = anomaly_types[i % len(anomaly_types)]
+                    if anomaly_type_used == "spike":
+                        accel = AnomalyInjector.inject_spike(accel)
+                    elif anomaly_type_used == "dropout":
+                        accel = AnomalyInjector.inject_dropout(accel)
+                    elif anomaly_type_used == "drift":
+                        accel = AnomalyInjector.inject_drift(accel)
+                    elif anomaly_type_used == "motion_mismatch":
+                        accel, gyro = AnomalyInjector.inject_motion_mismatch(t, motion_type)
+
+                sample = {
+                    "m_type": "raw-data",
+                    "m_id": f"{node_id}_{i}",
+                    "event_id": f"{node_id}_{timestamp}",
+                    "node_id": node_id,
+                    "timestamp": timestamp,
+                    "seq": i,
+                    "gps": {
+                        "lat_deg": round(hub.lat + random.gauss(0, 0.0001), 6),
+                        "lon_deg": round(hub.lon + random.gauss(0, 0.0001), 6),
+                        "altitude_m": round(hub.altitude_m + random.gauss(0, 2.0), 1)
+                    },
+                    "accel_mss": accel,
+                    "gyro_rads": gyro,
+                    "meta": {
+                        "motion_type": motion_type,
+                        "is_anomaly": str(is_anomaly_class),
+                        "anomaly_type": anomaly_type_used,
+                        "location": hub.hub_id
+                    }
+                }
+                samples.append(sample)
+
+            suffix = "anomaly" if is_anomaly_class else "normal"
+            filename = f"balanced_{motion_type.lower()}_{suffix}.json"
+            filepath = os.path.join(output_dir, filename)
+
+            with open(filepath, 'w') as f:
+                json.dump(samples, f, indent=2)
+
+            label = f"{motion_type}_ANOM" if is_anomaly_class else motion_type
+            print(f"  [{label:<20s}] {samples_per_class} samples -> {filename}")
+
+            all_metadata["files"].append({
+                "file": filename,
+                "motion_type": motion_type,
+                "is_anomaly": is_anomaly_class,
+                "num_samples": len(samples)
+            })
+            all_metadata["total_samples"] += len(samples)
+
+        metadata_path = os.path.join(output_dir, "metadata.json")
+        with open(metadata_path, 'w') as f:
+            json.dump(all_metadata, f, indent=2)
+
+        return all_metadata
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -1162,13 +1310,13 @@ def main():
         "--samples",
         type=int,
         default=500,
-        help="Samples per route segment"
+        help="Samples per route segment (dwell and lift durations match this for balance)"
     )
     parser.add_argument(
         "--anomaly-rate",
         type=float,
-        default=0.1,
-        help="Anomaly injection rate (0.0-1.0)"
+        default=0.6,
+        help="Anomaly injection rate for anomaly route files (0.0-1.0)"
     )
 
     args = parser.parse_args()
@@ -1191,14 +1339,13 @@ def main():
     print(f"Anomaly rate: {args.anomaly_rate}")
     print()
 
-    # Generate training data
     generator = TrainingDataGenerator(config_path)
 
-    print("Generating training data for all routes...")
+    print("Generating training data for all routes (balanced class distribution)...")
     metadata = generator.generate_all_routes(
         output_dir=output_dir,
         samples_per_segment=args.samples,
-        anomaly_rate=args.anomaly_rate
+        anomaly_rate=args.anomaly_rate,
     )
 
     print()

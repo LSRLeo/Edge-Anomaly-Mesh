@@ -17,6 +17,8 @@ from typing import Dict, Any, Optional, List
 from db_message_factory import MessageFactory
 from db_table_manager import TableManager
 from schema import create_schema
+from db_message import MessageData
+from db_message import MessageResponse
 
 #logging for debugging purposes
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -41,8 +43,9 @@ class DBMessageManager:
     def process_message(self, message:Dict[str, Any]):
         """Processes incoming message and creates message objects"""
 
-        #Could validate message here too and then remove m_id and m_type before passing to message factory, but message factory already does validation and we want to avoid copying the dict if possible, so we'll just pass the original dict to the message factory and let it handle validation and object creation.
+     
         message_obj = MessageFactory.create_message(message)
+        
         if message_obj is None:
             m_id   = message.get("m_id",   "unknown") if isinstance(message, dict) else "unknown"
             m_type = message.get("m_type", "unknown") if isinstance(message, dict) else "unknown"
@@ -59,7 +62,12 @@ class DBMessageManager:
                 ),
             }
         #GET RESULTS
-        results = message_obj.execute(self.table_manager)
+        # Find type of the message, if message type inherits from MessageData, then use tablemanager
+        # If message type inherits from messagerequest, do not take self.table_manager
+        if isinstance(message_obj, MessageData):
+            results = message_obj.execute(self.table_manager)
+        else:
+            results = message_obj.execute()
         return results.to_dict() if results else None
 
     def read_file(self, infile: str | Path, outfile: str | Path):

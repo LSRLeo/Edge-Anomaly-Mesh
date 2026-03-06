@@ -33,11 +33,10 @@ class TableManager:
                 gyro_x_rads=msg["gyro_rads"]["x"],
                 gyro_y_rads=msg["gyro_rads"]["y"],
                 gyro_z_rads=msg["gyro_rads"]["z"],
-
-                sim_mode=msg["meta"]["sim_mode"],
-                sim_anomaly=msg["meta"]["sim_anomaly"]
             )
+            
             self.session.add(record)
+            self.session.flush()  # Flush to get the record ID for node insertion
             self.insert_node(msg)
         try:
             self.session.commit()
@@ -82,13 +81,14 @@ class TableManager:
                 classification=msg["classification"],
                 confidence=json.dumps(msg["confidence"]),
 
-                is_anomaly=msg["is_anomaly"],
+                is_anomaly=bool(msg["is_anomaly"]),
                 anomaly_score=msg["anomaly_score"],
             )
             self.session.add(record)
             self.session.flush()  # Flush to get the record ID for anomaly event insertion
             if msg["is_anomaly"]:
                 self.insert_anomaly_event(record)
+            self.update_node_status(msg["node_id"], msg["classification"])
         try:
             self.session.commit()
             self.session.close()
@@ -110,6 +110,15 @@ class TableManager:
         )
         self.session.add(anomaly_record)
         return
+
+    def update_node_status(self, node_id: str, classification: str) -> bool:
+        node = self.session.query(Node).filter_by(node_id=node_id).first()
+        if node:
+            node.status = 'inactive' if classification == 'IDLE' else 'active'
+            self.session.add(node)
+        else:
+            print(f"Node with ID {node_id} not found.")
+            return False
     
 
     def iso_to_unix_timestamp(self, iso_str: str) -> int:
@@ -143,21 +152,21 @@ def load_json(file_path: Path):
 def main():
     # Example usage, uncomment chunk "if isinstance(raw_data)...", change raw_data filepath
     manager = TableManager()
-    raw_data = load_json(Path("database/example_raw.json"))
+    raw_data = load_json(Path("test_data/raw-data-001.json"))
     inference_data = load_json(Path("database/example_inference.json"))
     
     TableManager().clear_tables()
-    if isinstance(raw_data, list):
-        success = manager.insert_raw_data(raw_data)
-        print(f"Inserted {len(raw_data)} records: {success}")
-    else:
-        print("Invalid JSON format. Expected a list of records.")
+    # if isinstance(raw_data, list):
+    #     success = manager.insert_raw_data(raw_data)
+    #     print(f"Inserted {len(raw_data)} records: {success}")
+    # else:
+    #     print("Invalid JSON format. Expected a list of records.")
     
-    if isinstance(inference_data, list):
-        success = manager.insert_inference_results(inference_data)
-        print(f"Inserted {len(inference_data)} inference records: {success}")
-    else:
-        print("Invalid JSON format. Expected a list of records.")
+    # if isinstance(inference_data, list):
+    #     success = manager.insert_inference_results(inference_data)
+    #     print(f"Inserted {len(inference_data)} inference records: {success}")
+    # else:
+    #     print("Invalid JSON format. Expected a list of records.")
 
 if __name__ == "__main__":
     main()

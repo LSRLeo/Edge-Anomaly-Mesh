@@ -24,12 +24,13 @@ from redis_reader import RedisReader
 # redis reader object, sub and pub on a thread
 # redis reader connect
 # Add parent directory to path for imports
-CHANNELNAME = "Test"
+CHANNELNAME_QUERY = "ui:query"
+CHANNELNAME_RESPONSE = "ui:responses"
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ui_utils import (
     WINDOW_WIDTH, WINDOW_HEIGHT, REFRESH_INTERVAL_MS,
-    configure_treeview_style
+    configure_accessibility_styles, configure_treeview_style
 )
 from widgets.network_tab import NetworkTab
 from widgets.anomalies_tab import AnomaliesTab
@@ -68,6 +69,7 @@ class DashboardApp:
         self.root.rowconfigure(0, weight=1)
         
         # Configure global styles
+        configure_accessibility_styles(self.root)
         configure_treeview_style()
         
         # Initialize components
@@ -149,7 +151,7 @@ class DashboardApp:
         # Create each tab, passing reference to self for callbacks
         self.network_tab = NetworkTab(self.notebook, dashboard=self, redis_reader=self.redis_reader, test_mode=self.test_mode)
         self.anomalies_tab = AnomaliesTab(self.notebook, dashboard=self, redis_reader=self.redis_reader, test_mode=self.test_mode)
-        self.analytics_tab = AnalyticsTab(self.notebook, dashboard=self)
+        self.analytics_tab = AnalyticsTab(self.notebook, dashboard=self, redis_reader=self.redis_reader, test_mode=self.test_mode)
         self.node_details_tab = NodeDetailsTab(self.notebook, dashboard=self, redis_reader=self.redis_reader, test_mode=self.test_mode)
         
         # Add tabs to notebook
@@ -273,10 +275,10 @@ def main():
     """
     toggle_test_mode = True # Set to True to enable test mode with mock data
     if not toggle_test_mode:
-        pub = redis.Redis(host="localhost",port=6379, decode_responses=True)
-        sub = pub.pubsub()
-        sub.subscribe(CHANNELNAME)
-        redis_reader = RedisReader(CHANNELNAME,pub,sub)
+        r = redis.Redis(host="localhost",port=6379, decode_responses=True)
+        sub = r.pubsub()
+        sub.subscribe(CHANNELNAME_RESPONSE) #subscribe to response channel for receiving data from redis
+        redis_reader = RedisReader(CHANNELNAME_QUERY, CHANNELNAME_RESPONSE, r, sub)
     
         redis_reader.refresh(instant=True) #initial refresh to populate data from redis before starting dashboard
         RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 

@@ -105,8 +105,8 @@ class Node:
     def calculate_gps(self, current_point, next_point, mode, message_index, total_messages, accel_x=0.0, accel_y=0.0, accel_z=0.0):
         if mode == "IDLE":
             return {
-                "lat": current_point.lat,
-                "lon": current_point.lon,
+                "lat_deg": current_point.lat,
+                "lon_deg": current_point.lon,
                 "altitude_m": current_point.alt
             }
         elif mode == "LIFT":
@@ -120,8 +120,8 @@ class Node:
             return self._calculate_gps_from_accel_maritime(current_point, next_point, accel_x, accel_y, accel_z)
         else:
             return {
-                "lat": current_point.lat,
-                "lon": current_point.lon,
+                "lat_deg": current_point.lat,
+                "lon_deg": current_point.lon,
                 "altitude_m": current_point.alt
             }
     

@@ -25,6 +25,13 @@ from datetime import datetime, timedelta
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
 from redis_reader import RedisReader
+from ui_utils import (
+    ACTION_BUTTON_STYLE,
+    CAPTION_LABEL_STYLE,
+    HEADING_LABEL_STYLE,
+    INPUT_COMBO_STYLE,
+    VALUE_LABEL_STYLE,
+)
 
 # Matplotlib imports
 import matplotlib
@@ -149,16 +156,16 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         selector_frame = ttk.Frame(self)
         selector_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
         
-        ttk.Label(selector_frame, text="Node:", font=('Arial', 12)).pack(side='left', padx=(0, 10))
+        ttk.Label(selector_frame, text="Node:", style=HEADING_LABEL_STYLE).pack(side='left', padx=(0, 10))
         
         self.node_selector = ttk.Combobox(selector_frame, values=list(self.nodes.keys()),
-                                           state='readonly', width=20, font=('Arial', 12))
+                                           state='readonly', width=20, style=INPUT_COMBO_STYLE)
         self.node_selector.pack(side='left')
         self.node_selector.bind('<<ComboboxSelected>>', self._on_node_select)
         
         # Refresh button
         ttk.Button(selector_frame, text="Refresh",
-                   command=self.refresh).pack(side='right', padx=10)
+                   command=self.refresh, style=ACTION_BUTTON_STYLE).pack(side='right', padx=10)
         
 
     
@@ -200,7 +207,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         content.columnconfigure(1, weight=1)
 
         # Title
-        ttk.Label(content, text="Node Details", font=("TkDefaultFont", 11, "bold")).grid(
+        ttk.Label(content, text="Node Details", style=HEADING_LABEL_STYLE).grid(
             row=0, column=0, columnspan=2, sticky="w", pady=(0, 8)
         )
 
@@ -223,8 +230,8 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
 
         # Helper to add a labeled row
         def add_row(r, label_text, var):
-            lbl = ttk.Label(content, text=f"{label_text}:", anchor="w")
-            val = ttk.Label(content, textvariable=var, anchor="w")
+            lbl = ttk.Label(content, text=f"{label_text}:", anchor="w", style=CAPTION_LABEL_STYLE)
+            val = ttk.Label(content, textvariable=var, anchor="w", style=VALUE_LABEL_STYLE)
             lbl.grid(row=r, column=0, sticky="w", padx=(0, 12), pady=6)
             val.grid(row=r, column=1, sticky="w", pady=6)
 
