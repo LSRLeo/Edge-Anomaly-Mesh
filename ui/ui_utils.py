@@ -8,6 +8,21 @@ used across the UI components.
 import tkinter as tk
 from tkinter import ttk
 
+# High-contrast light palette (optimized for readability).
+UI_COLORS = {
+    "bg": "#F4F7FB",
+    "surface": "#FFFFFF",
+    "surface_alt": "#E8EEF5",
+    "border": "#B6C2CF",
+    "text": "#111827",
+    "text_muted": "#4B5563",
+    "accent": "#1D4ED8",
+    "accent_hover": "#1E40AF",
+    "danger": "#C62828",
+    "input_bg": "#FFFFFF",
+    "selection_bg": "#2563EB",
+    "selection_text": "#FFFFFF",
+}
 
 # Centralized, grouped UI font definitions for accessibility tuning.
 # Update these values to change all widgets in a group at once.
