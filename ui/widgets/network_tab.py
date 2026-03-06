@@ -176,7 +176,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         # Button
         ttk.Button(controls_frame, text="Refresh", command=self.refresh).pack(side='left', padx=5)
-        ttk.Button(controls_frame, text="Update Node", command=self.update_node(self.changed_nodes)).pack(side='left', padx=5)
+        ttk.Button(controls_frame, text="Update Node", command=self.update_node).pack(side='left', padx=5)
 
     def _setup_legend(self):
         """
@@ -538,7 +538,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
             self._setup_canvas()
         except:
             print(f'Error refreshing UI and Data, Exception:{Exception}')
-    def update_node(self,node_id, anomaly_value):
+    def update_node(self):
         """
         Update a node's anomaly status in the database.
         
@@ -558,7 +558,9 @@ class NetworkTab(ttk.Frame, DashboardParents):
             def submit_user():
                 user = user_entry.get()
                 if user:
-                    self.redis_reader.updateNode(node_id, anomaly_value, user)
+                    for node_id, anomaly_value in self.changed_nodes.items():
+                        self.redis_reader.updateNode(node_id, anomaly_value, user)
+                    self.changed_nodes.clear() # Clear changes after updating
                     user_window.destroy()
                 else:
                     tk.messagebox.showerror("Input Error", "Please enter your name.")
