@@ -12,14 +12,14 @@ from tkinter import ttk
 # Centralized, grouped UI font definitions for accessibility tuning.
 # Update these values to change all widgets in a group at once.
 FONT_GROUPS = {
-    "label": ("Arial", 11),
-    "button": ("Arial", 11),
-    "input": ("Arial", 11),
-    "heading": ("Arial", 12, "bold"),
-    "caption": ("Arial", 9),
-    "menu": ("Arial", 11),
-    "treeview": ("Arial", 11),
-    "treeview_heading": ("Arial", 11, "bold"),
+    "label": ("Arial", 14),
+    "button": ("Arial", 14),
+    "input": ("Arial", 14),
+    "heading": ("Arial", 18, "bold"),
+    "caption": ("Arial", 12),
+    "menu": ("Arial", 14),
+    "treeview": ("Arial", 14),
+    "treeview_heading": ("Arial", 14, "bold"),
 }
 
 
@@ -81,8 +81,8 @@ def configure_treeview_style(scale: float = 1.0):
     style.configure("Treeview.Heading", font=get_group_font("treeview_heading", scale))
     
 # Window sizing constants
-WINDOW_WIDTH = 1100
-WINDOW_HEIGHT = 1000
+WINDOW_WIDTH = 1067
+WINDOW_HEIGHT = 850
 
 # Refresh Rate
 REFRESH_INTERVAL_MS = 10000
