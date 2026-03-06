@@ -77,16 +77,15 @@ class MessageResponse(Message):
     Message Response does not have a fixed M_TYPE, (it can be either get-nodes-response or get-datum-response or others)
     """
 
-    def __init__(self, m_type:str, m_id: str, responding_to: str, result: Dict[str, Any]):
-        self.M_TYPE = m_type #override M_TYPE in constructor
+    def __init__(self, m_type: str, m_id: str, responding_to: str, result: Dict[str, Any]):
+        self.M_TYPE = m_type  # override M_TYPE in constructor
+        super().__init__(m_id)  # sets self.m_type
         self.msg = {
             "m_type": self.m_type,
             "m_id": m_id,
             "responding_to": responding_to,
             **result
         }
-        
-        super().__init__(m_id, self.msg)
 
 
 class ErrorResponse(Message):
