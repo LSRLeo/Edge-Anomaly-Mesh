@@ -120,6 +120,21 @@ def create_windows(data, window_size=100, overlap=0.0, labels=None):
         - Loop: for start in range(0, n_samples - window_size + 1, step)
         - Use np.column_stack() to combine the 6 axes
     """
+    # Type check and cast
+    try:
+        window_size = int(window_size)
+        overlap = float(overlap)
+    except (ValueError, TypeError):
+        raise ValueError("window_size must be int and overlap must be float.")
+    
+    # Validate overlap
+    if overlap < 0 or overlap >= 1:
+        raise ValueError("Overlap must be between 0 (inclusive) and 1 (exclusive).")
+    
+    # Validate window_size
+    if window_size < 1:
+        raise ValueError("Window size must be at least 1.")
+    
     # Stack sensor axes into (n_samples, 6) array
     stacked = np.column_stack([
         data['accel_x'],
