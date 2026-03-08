@@ -294,29 +294,33 @@ def json_events_to_numpy(events):
     """
     Convert a list of sensor dicts to NumPy arrays for each axis.
     Handles both nested ('accel', 'gyro') and flat ('accel_x', ...) formats.
+    Handles partial nested keys and non-numeric values gracefully.
     """
+    def safe_get(event, nested, flat):
+        val = None
+        if nested and isinstance(nested, dict):
+            val = nested.get(flat[-1], None)
+        if val is None:
+            val = event.get(flat, 0)
+        # Treat "NaN" (case-insensitive) as 0
+        if isinstance(val, str) and val.strip().lower() == "nan":
+            return 0.0
+        try:
+            return float(val)
+        except (TypeError, ValueError):
+            return 0.0
+
     accel_x, accel_y, accel_z = [], [], []
     gyro_x, gyro_y, gyro_z = [], [], []
     for event in events:
-        # Try nested first, then flat, then fallback to 0
         accel = event.get("accel_mss") or event.get("accel")
         gyro = event.get("gyro_rads") or event.get("gyro")
-        if accel:
-            accel_x.append(accel.get("x", 0))
-            accel_y.append(accel.get("y", 0))
-            accel_z.append(accel.get("z", 0))
-        else:
-            accel_x.append(event.get("accel_x", 0))
-            accel_y.append(event.get("accel_y", 0))
-            accel_z.append(event.get("accel_z", 0))
-        if gyro:
-            gyro_x.append(gyro.get("x", 0))
-            gyro_y.append(gyro.get("y", 0))
-            gyro_z.append(gyro.get("z", 0))
-        else:
-            gyro_x.append(event.get("gyro_x", 0))
-            gyro_y.append(event.get("gyro_y", 0))
-            gyro_z.append(event.get("gyro_z", 0))
+        accel_x.append(safe_get(event, accel, "accel_x"))
+        accel_y.append(safe_get(event, accel, "accel_y"))
+        accel_z.append(safe_get(event, accel, "accel_z"))
+        gyro_x.append(safe_get(event, gyro, "gyro_x"))
+        gyro_y.append(safe_get(event, gyro, "gyro_y"))
+        gyro_z.append(safe_get(event, gyro, "gyro_z"))
     return {
         "accel_x": np.array(accel_x, dtype=np.float32),
         "accel_y": np.array(accel_y, dtype=np.float32),
@@ -413,13 +417,16 @@ def demo(args):
         # Step 5: Print the shapes of the features and the labels
         print(f"Features shape: {features.shape}")
         print(f"Window labels (first 5): {window_labels[:5]}")
-        print(f"First feature vector (first 5 values): {features[0][:5]}")
-        
-        # Step 6: Print feature statistics (min, max, mean)
-        print("Feature statistics (min, max, mean):")
-        print(f"  Min values: {features.min (axis=0)}")
-        print(f"  Max values: {features.max(axis=0)}")
-        print(f"  Mean values: {features.mean(axis=0)}")
+        if features.shape[0] > 0:
+            print(f"First feature vector (first 5 values): {features[0][:5]}")
+            
+            # Step 6: Print feature statistics (min, max, mean)
+            print("Feature statistics (min, max, mean):")
+            print(f"  Min values: {features.min(axis=0)}")
+            print(f"  Max values: {features.max(axis=0)}")
+            print(f"  Mean values: {features.mean(axis=0)}")
+        else:
+            print("No features extracted from this file.")
         
         # Step 7: Check for the unique motion labels in this file
         unique_labels = np.unique(window_labels)
