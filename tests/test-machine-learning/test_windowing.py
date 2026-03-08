@@ -1,0 +1,13 @@
+import sys
+from pathlib import Path
+import numpy as np
+import pytest
+
+ML_DIR = Path(__file__).parent.parent.parent / "ml"
+sys.path.insert(0, str(ML_DIR))
+
+from data_pipeline import create_windows  # noqa: E402
+
+# ---------------------------------------------------------------------------
+# Tests
+# ---------------------------------------------------------------------------
