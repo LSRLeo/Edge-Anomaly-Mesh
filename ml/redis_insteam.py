@@ -122,15 +122,17 @@ class RedisSubscriber:
 
     def insert_event_in_order(self, buffer, event):
         seq = event.get("seq")
-        if seq is None:
-            buffer.append(event)
+        # Only process events with valid integer seq
+        if not isinstance(seq, int):
+            logging.warning(f"Discarding event with invalid seq: {seq} | event: {event}")
             return
-        # Skip duplicates (already handled by seen_seqs, but double check)
+        # Skip duplicates
         if any(e.get("seq") == seq for e in buffer):
             return
         # Insert in order
         for i, existing in enumerate(buffer):
-            if existing.get("seq", -1) > seq:
+            existing_seq = existing.get("seq")
+            if isinstance(existing_seq, int) and existing_seq > seq:
                 buffer.insert(i, event)
                 return
         buffer.append(event)
