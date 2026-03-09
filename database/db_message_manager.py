@@ -40,7 +40,7 @@ class DBMessageManager:
         logging.info("DBMessageManager initialized and database schema created")
 
 
-    def process_message(self, message:Dict[str, Any]):
+    def process_message(self, message:Dict[str, Any]) -> Dict[str, Any] | None:
         """Processes incoming message and creates message objects"""
 
      
@@ -156,7 +156,7 @@ def run_sample_usage():
 
 
 #CLI
-def send_message(infile: str, outfile: str) -> None:
+def send_message_with_file(infile: str, outfile: str) -> None:
     """
     Process all messages in infile and write responses to outfile.
 
@@ -207,7 +207,7 @@ if __name__ == "__main__":
 
     if args.infile and args.outfile:
         # CLI / send_message mode
-        send_message(args.infile, args.outfile)
+        send_message_with_file(args.infile, args.outfile)
     elif args.infile or args.outfile:
         # Only one flag — that's an error
         parser.error("Both --infile and --outfile must be supplied together.")
