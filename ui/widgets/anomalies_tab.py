@@ -89,14 +89,12 @@ class RedisMonitorSection(ttk.Frame):
         self._rows: List[Dict[str, Any]] = []
         
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
-        
         self._build_ui()
     def _build_ui(self):
         # --- Top bar ---
         top = ttk.Frame(self)
         top.pack(fill="x", padx=10, pady=10)
 
-        ttk.Button(top, text="Refresh", command=self.parent.refresh()).pack(side="left")
 
         # --- Scrollable area ---
         outer = ttk.Frame(self)
@@ -135,7 +133,35 @@ class RedisMonitorSection(ttk.Frame):
             self._canvas.itemconfig(self._inner_window, width=event.width)
         return
     def _build_rows(self):
-        pass #placeholder for building rows of redis messages
+        if self.parent.redis_reader is None:
+            return
+        if len(self.parent.messages) != 0:
+            # Clear existing rows
+            for row in self._rows:
+                row['frame'].destroy()
+            self._rows.clear()
+        # Build new rows
+        for message in self.parent.messages:
+            container = ttk.Frame(self._inner, padding=(10, 8))
+            container.pack(fill="x", pady=4)
+
+            # Optional subtle border style
+            try:
+                style = ttk.Style(container)
+                style.configure("MsgRow.TFrame", relief="groove", borderwidth=1)
+                container.configure(style="MsgRow.TFrame")
+            except Exception:
+                pass
+            
+            # Message content
+            m_type = message.get("m_type", "Unknown")
+            m_id = message.get("m_id", "Unknown")
+            responding_to = message.get("responding_to", "Unknown")
+            node_id = message.get("node_id", "Unknown")
+            strmsg = f'Type: {m_type}, ID: {m_id}, Responding to: {responding_to}, Node ID: {node_id}'
+            msg_lbl = ttk.Label(container, text=strmsg, style=CAPTION_LABEL_STYLE)
+            msg_lbl.pack(side="left")
+        
     
 class AnomalySection(ttk.Frame):
     """
@@ -324,6 +350,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         self.test_mode = test_mode
 
         self.redis_reader = redis_reader
+        self.messages = [] #list to store received messages for display
         self.nodes = {}  # Store Node objects keyed by node_id
         self.rddict = {} #raw data dictionary
         self.mldict = {} #machine learning dictionary
@@ -339,8 +366,8 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         print("Inner notebook style:", self._sections_nb.cget("style"))
         # Create and add the initial anomalies list section
         self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
-        # if not self.test_mode: #not used yet
-        #     self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
+        if not self.test_mode:
+            self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
         self._sections_nb.add(self._list_section, text=self._list_section.title)
     def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
@@ -438,7 +465,10 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         else:
             try:
                 self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
+                self.messages = self.redis_reader.drain_log_queue() #get latest log messages from redis reader
                 self._parse_nodes() #parse raw data and ml output into Node objects
+                self._redis_section._build_rows() #rebuild the anomaly rows with updated node data
+
                 
             except Exception as e:
                 print(f"Error refreshing anomalies tab: {e}")
