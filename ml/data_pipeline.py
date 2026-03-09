@@ -40,6 +40,19 @@ import json
 from feature_extraction import FeatureExtractor
 
 # ============================================================================
+# TERRAIN CONSTANTS (shared with redis_insteam.py)
+# ============================================================================
+
+TERRAIN_MAP = {
+    "IDLE": 0,
+    "TERRESTRIAL": 1,
+    "TRANSIT": 1,  # TRANSIT is the same as TERRESTRIAL
+    "MARITIME": 2,
+    "LIFT": 3
+}
+TERRAIN_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT']
+
+# ============================================================================
 # ARGUMENT PARSING
 # ============================================================================
 
@@ -255,15 +268,6 @@ def load_json_data(filepath):
 
     data = json_events_to_numpy(events)
     labels = []
-
-    # Mapping from terrain type strings to indices
-    TERRAIN_MAP = {
-        "IDLE": 0,
-        "TERRESTRIAL": 1,
-        "TRANSIT": 1,  # TRANSIT is the same as TERRESTRIAL
-        "MARITIME": 2,
-        "LIFT": 3
-    }
 
     for event in events:
         meta = event.get("meta", {})
