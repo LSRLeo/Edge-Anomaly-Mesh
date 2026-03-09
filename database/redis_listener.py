@@ -12,8 +12,8 @@ REDIS_PORT = 6379
 # ADD MORE BASED ON UI TEAM AND OTHER SPECIFICATIONS
 # ================================================
 SUBSCRIBE_CHANNELS = [
-    "sensor:raw",
-    "inference:results",
+    "sensor:raw:*",
+    "inference:results:*",
     "ui:query"
 ]
 #map responding to prefixes to channels for responses
