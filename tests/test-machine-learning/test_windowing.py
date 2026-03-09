@@ -161,3 +161,100 @@ class TestWindowingEdgeCases:
         data = {k: np.arange(100) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
         with pytest.raises(ValueError):
             create_windows(data, window_size=50, overlap=-0.1)
+
+class TestWindowCountAccuracy:
+    def test_window_count_zero_overlap(self):
+        """Window count matches expected for overlap=0.0."""
+        data = {k: np.arange(250) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.0
+        expected_count = 250 // window_size  # 2 windows (0-99, 100-199)
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_half_overlap(self):
+        """Window count matches expected for overlap=0.5."""
+        data = {k: np.arange(250) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.5
+        step = int(window_size * (1 - overlap))  # step = 50
+        expected_count = ((250 - window_size) // step) + 1  # 4 windows: [0-99], [50-149], [100-199], [150-249]
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+        
+    def test_window_count_overlap_25_percent(self):
+        """Window count matches expected for overlap=0.25."""
+        data = {k: np.arange(400) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.25
+        step = int(window_size * (1 - overlap))  # step = 75
+        expected_count = ((400 - window_size) // step) + 1  # 5 windows
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_overlap_75_percent(self):
+        """Window count matches expected for overlap=0.75."""
+        data = {k: np.arange(400) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.75
+        step = int(window_size * (1 - overlap))  # step = 25
+        expected_count = ((400 - window_size) // step) + 1  # 13 windows
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_exact_fit(self):
+        """Window count matches expected when sample size is exact multiple of window size."""
+        data = {k: np.arange(300) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.0
+        expected_count = 3
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_small_overlap(self):
+        """Window count matches expected for small overlap (0.1)."""
+        data = {k: np.arange(500) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.1
+        step = int(window_size * (1 - overlap))  # step = 90
+        expected_count = ((500 - window_size) // step) + 1  # 5 windows
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_large_overlap(self):
+        """Window count matches expected for large overlap (0.9)."""
+        data = {k: np.arange(500) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.9
+        step = int(window_size * (1 - overlap))  # step = 10
+        expected_count = ((500 - window_size) // step) + 1  # 41 windows
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_single_window(self):
+        """Window count is 1 if sample size == window size, regardless of overlap."""
+        data = {k: np.arange(100) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.5
+        expected_count = 1
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_no_windows(self):
+        """Window count is 0 if sample size < window size, regardless of overlap."""
+        data = {k: np.arange(50) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.5
+        expected_count = 0
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
+
+    def test_window_count_non_integer_step(self):
+        """Window count matches expected for non-integer step size (overlap=0.33)."""
+        data = {k: np.arange(400) for k in ['accel_x','accel_y','accel_z','gyro_x','gyro_y','gyro_z']}
+        window_size = 100
+        overlap = 0.33
+        step = int(window_size * (1 - overlap))  # step = 67
+        expected_count = ((400 - window_size) // step) + 1  # 5 windows
+        windows = create_windows(data, window_size=window_size, overlap=overlap)
+        assert windows.shape[0] == expected_count
