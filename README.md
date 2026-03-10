@@ -28,6 +28,9 @@ cd ../database/
 pip3 install -r requirements.txt
 ```
 
+Now we have to run these in a few seperate terminals. Make sure you activate the SAME virtual environment for all of your terminals 
+
+### Terminal 1
 
 Start Database schema, from root directory:
 
@@ -41,11 +44,15 @@ Start Database listener, from root directory:
 python3 database/redis_listener.py
 ```
 
+### Terminal 2
+
 Start ML model, from root directory:
 
 ```
 python3 ml/redis_insteam.py --window-size 100 --stride 100 --model-path ml/models/motion_classifier.pt
 ```
+
+### Terminal 3
 
 Create a simulation file, from root directory:
 ```
