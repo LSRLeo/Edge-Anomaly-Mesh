@@ -630,7 +630,8 @@ class TrainingDataGenerator:
             # Add dwell at start hub (IDLE)
             if include_dwell and i == 0:
                 dwell_samples, seq = self._generate_dwell_samples(
-                    from_hub_obj, node_id, start_time, seq, dwell_duration
+                    from_hub_obj, node_id, start_time, seq, dwell_duration,
+                    anomaly_rate, anomaly_type
                 )
                 all_samples.extend(dwell_samples)
                 start_time += timedelta(seconds=dwell_duration)
@@ -686,7 +687,8 @@ class TrainingDataGenerator:
             # Add dwell at intermediate hubs
             if include_dwell and i < len(path) - 2:
                 dwell_samples, seq = self._generate_dwell_samples(
-                    to_hub_obj, node_id, start_time, seq, dwell_duration
+                    to_hub_obj, node_id, start_time, seq, dwell_duration,
+                    anomaly_rate, anomaly_type
                 )
                 all_samples.extend(dwell_samples)
                 start_time += timedelta(seconds=dwell_duration)
@@ -696,7 +698,8 @@ class TrainingDataGenerator:
             dest_hub = self.network.get_hub(path[-1])
             if dest_hub:
                 dwell_samples, seq = self._generate_dwell_samples(
-                    dest_hub, node_id, start_time, seq, dwell_duration
+                    dest_hub, node_id, start_time, seq, dwell_duration,
+                    anomaly_rate, anomaly_type
                 )
                 all_samples.extend(dwell_samples)
 
@@ -720,7 +723,9 @@ class TrainingDataGenerator:
         node_id: str,
         start_time: datetime,
         start_seq: int,
-        duration: int
+        duration: int,
+        anomaly_rate: float = 0.0,
+        anomaly_type: Optional[str] = None
     ) -> Tuple[List[Dict], int]:
         """Generate IDLE samples at a hub."""
         samples = []
@@ -728,7 +733,22 @@ class TrainingDataGenerator:
         for i in range(duration):
             seq = start_seq + i
             timestamp = (start_time + timedelta(seconds=i)).isoformat()
+            t = i
             accel, gyro = MotionPhysics.idle()
+
+            is_anomaly = random.random() < anomaly_rate
+            current_anomaly = ""
+
+            if is_anomaly and anomaly_type:
+                current_anomaly = anomaly_type
+                if anomaly_type == "spike":
+                    accel = AnomalyInjector.inject_spike(accel)
+                elif anomaly_type == "dropout":
+                    accel = AnomalyInjector.inject_dropout(accel)
+                elif anomaly_type == "drift":
+                    accel = AnomalyInjector.inject_drift(accel)
+                elif anomaly_type == "motion_mismatch":
+                    accel, gyro = AnomalyInjector.inject_motion_mismatch(t, "IDLE")
 
             sample = {
                 "m_type": "raw-data",
@@ -746,8 +766,8 @@ class TrainingDataGenerator:
                 "gyro_rads": gyro,
                 "meta": {
                     "motion_type": "IDLE",
-                    "is_anomaly": "False",
-                    "anomaly_type": "",
+                    "is_anomaly": str(is_anomaly),
+                    "anomaly_type": current_anomaly,
                     "location": hub.hub_id
                 }
             }
