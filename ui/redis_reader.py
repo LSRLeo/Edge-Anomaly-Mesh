@@ -3,8 +3,6 @@ import json
 import time
 import ast
 import threading
-from queue import Queue
-from queue import Full
 class RedisReader:
     def __init__(self, q_channel_name, r_channel_name, r, psubscriber):
         self.q_channel_name = q_channel_name
@@ -17,9 +15,6 @@ class RedisReader:
         self.message_counter = 1 #counter for m_id
         self.refresh_lock = threading.Lock() #lock for refreshing dataframes to prevent
         self._stop_refresh = threading.Event() #event to signal refresh thread to stop
-        self.logQueue = Queue(50) #queue for logging messages
-        self.logLock = threading.Lock() #lock for logging
-        
     def refresh(self, instant=False): #refreshes the dataframes with new data from redis, thread for subscribing to redis will be created in main dashboard loop
 
         """
@@ -62,7 +57,6 @@ class RedisReader:
             'm_id': f'ui_{self.message_counter:05d}'}
         self.message_counter += 1
         self.publisher.publish(self.q_channel_name, json.dumps(request))
-        self.log_message(request) #log request for debugging
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -70,7 +64,6 @@ class RedisReader:
                     raise TimeoutError("Timeout waiting for node IDs")
                 if msg['type'] == 'message':
                     data = json.loads(msg['data'])
-                    self.log_message(data) #log received message for debugging
                     if data.get('responding_to') == request['m_id']:
                         return data.get('nodes', [])
                 if time.monotonic() - start > 5: #timeout after 5 seconds
@@ -89,14 +82,12 @@ class RedisReader:
             'node_id': node_id}
         self.message_counter += 1
         self.publisher.publish(self.q_channel_name, json.dumps(request))
-        self.log_message(request) #log request for debugging
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
                 if time.monotonic() - start > 3: #timeout after 3 seconds
                     raise TimeoutError(f"Timeout waiting for raw data for node {node_id}")
                 if msg['type'] == 'message':
-                    self.log_message(msg['data']) #log received message for debugging
                     data = json.loads(msg['data'])
                     if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
                         return data.get('records', {})
@@ -118,7 +109,6 @@ class RedisReader:
         }
         self.message_counter += 1
         self.publisher.publish(self.q_channel_name, json.dumps(request))
-        self.log_message(request) #log request for debugging
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -126,7 +116,6 @@ class RedisReader:
                     raise TimeoutError(f"Timeout waiting for inference output for node {node_id}")
                 if msg['type'] == 'message':
                     data = json.loads(msg['data'])
-                    self.log_message(data) #log received message for debugging
                     if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
                         return data.get('inference_output', []) #assumes list of probabilities, might change depending on team discourse. (2/27/2026) -TE
                 if time.monotonic() - start > 5: #timeout after 5 seconds
@@ -144,19 +133,7 @@ class RedisReader:
             'user': user
         }
         self.message_counter += 1
-        self.publisher.publish(self.q_channel_name, json.dumps(request))
-    def log_message(self, message): # Logs a message to the console, can be expanded to log to a file or other logging system if needed
-        """
-        logs a message to the log queue, if the queue is full it will remove the oldest message to make room for the new message
-    
-        """
-        with self.logLock: # Acquire lock to ensure thread safety when accessing the log queue
-            try:
-                self.logQueue.put_nowait(message) # Add message to the log queue
-            except Full:
-                _ = self.logQueue.get_nowait() # Remove oldest message if queue is full
-                self.logQueue.put_nowait(message) # Add new message to the log queue
-            
+        self.publisher.publish(self.channel_name, json.dumps(request))
     def getDicts(self): #returns both dictionaries as a tuple
         with self.refresh_lock: #acquire lock to ensure thread safety when accessing dictionaries
             return dict(self.rddict), dict(self.mldict) #return copies of the dictionaries to prevent external modification
@@ -182,13 +159,4 @@ class RedisReader:
             print("Listening for messages...")
             if msg['type'] == 'message':
                 print(f"Received message: {msg['data']}")
-    def drain_log_queue(self):
-        """
-        Drain the log queue and return a list of log messages.
-        """
-        logs = []
-        with self.logLock: # Acquire lock to ensure thread safety when accessing the log queue
-            while not self.logQueue.empty():
-                logs.append(self.logQueue.get_nowait())
-        return logs
     
