@@ -96,7 +96,7 @@ class Terrestrial:
 
             x_bound = uniform(0.03, 0.07)
             y_bound = uniform(0.06, 0.14)
-            z_bound = uniform(0.04, 0.95)
+            z_bound = uniform(0.01, 0.05)
 
             x_jitter = uniform(-x_bound, x_bound)
             y_jitter = uniform(-y_bound, y_bound)
@@ -108,9 +108,9 @@ class Terrestrial:
                 y_acceleration = self.y_acc + y_jitter
                 z_acceleration = self.z_acc + z_jitter
             elif t < p1_time + p2_time:
-                x_acc = 0 + x_jitter
-                y_acc = 0 + y_jitter
-                z_acc = 9.81 + z_jitter
+                x_acceleration= 0 + x_jitter
+                y_acceleration = 0 + y_jitter
+                z_acceleration = 9.81 + z_jitter
 
             else:
                 x_acceleration = -self.x_acc + x_jitter
