@@ -118,6 +118,13 @@ def create_schema():
     """
     Base.metadata.create_all(engine)
 
+def drop_schema():
+    """
+    Drops all tables in the database.
+    """
+    Base.metadata.drop_all(engine)
+
 
 if __name__ == "__main__":
+    drop_schema()  # Use with caution - this will delete all data
     create_schema()
