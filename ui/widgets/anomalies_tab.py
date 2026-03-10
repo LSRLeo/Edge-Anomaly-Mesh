@@ -356,7 +356,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         self.mldict = {} #machine learning dictionary
         self._nav = ttk.Frame(self)
         self._nav.pack(fill="x", padx=10, pady=10)
-
+        self._redis_section = None
         style.configure("Nav.TButton")
         style.configure("Nav.Active.TButton")
         ttk.Button(self._nav, text="Refresh", command=self.refresh).pack(side="left")
@@ -467,7 +467,9 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
                 self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
                 self.messages = self.redis_reader.drain_log_queue() #get latest log messages from redis reader
                 self._parse_nodes() #parse raw data and ml output into Node objects
-                self._redis_section._build_rows() #rebuild the anomaly rows with updated node data
+                if self._list_section:
+                    self._list_section._build_rows() #rebuild the anomaly rows with updated node data
+                
 
                 
             except Exception as e:

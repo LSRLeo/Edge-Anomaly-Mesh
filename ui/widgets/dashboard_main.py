@@ -273,7 +273,7 @@ def main():
     
     Creates the root window and starts the dashboard.
     """
-    toggle_test_mode = True # Set to True to enable test mode with mock data
+    toggle_test_mode = False # Set to True to enable test mode with mock data
     if not toggle_test_mode:
         r = redis.Redis(host="localhost",port=6379, decode_responses=True)
         sub = r.pubsub()

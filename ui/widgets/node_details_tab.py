@@ -101,7 +101,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             self.selected_node_id = selected_node_id
         else:
             self.selected_node_id = None
-        
+        self.redis_reader = redis_reader
         # # Chart components
         # self.trend_fig: Optional[Figure] = None
         # self.trend_ax = None
@@ -254,9 +254,11 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         content.rowconfigure(r, weight=1)
         if self.selected_node_id is not None:
             self.display_node(self.selected_node_id)
-        else:
+        elif len(self.nodes) > 0:
             self.selected_node_id = list(self.nodes.keys())[0]
             self.display_node(self.selected_node_id)
+        else:
+            self.selected_node_id = None
 
     
     def load_json(self, filename):
