@@ -511,7 +511,6 @@ class NetworkTab(ttk.Frame, DashboardParents):
         with open(filename, 'r') as file:
             return json.load(file)
     def populate_test_nodes(self):
-        
         if self.test_mode:
             raw_file = self.load_json('widgets/raw_data.json')
             ml_file = self.load_json('widgets/ml_data.json')
@@ -521,18 +520,18 @@ class NetworkTab(ttk.Frame, DashboardParents):
             except Exception as e:
                 print(f'Error refreshing: {e}')
                 return
-        # Sort ml dict using node_id as key for quick indexing
 
-        #self.test_nodes.clear()
+        ml_lookup = {ml_file["node_id"]: ml_file}
+
         self.node_dict.clear()
         for node_id, node_data in raw_file.items():
             node_id = node_data["node_id"]
-            ml = ml_file.get(node_id)
-
+            ml = ml_lookup.get(node_id)
             if ml is None:
                 print(f'No contents in ML {node_id}')
                 continue
-            seq=node_data.get("seq", 0),
+
+            seq = node_data.get("seq", 0)
             accel = node_data.get("accel_mss")
             accel_x = accel.get("x", 0) if accel else 0
             accel_y = accel.get("y", 0) if accel else 0
@@ -541,42 +540,34 @@ class NetworkTab(ttk.Frame, DashboardParents):
             gyro_x = gyro.get("x", 0) if gyro else 0
             gyro_y = gyro.get("y", 0) if gyro else 0
             gyro_z = gyro.get("z", 0) if gyro else 0
-            
 
+            classification = ml["classification"]
             node = Node(
-            node_id=node_id,
-            timestamp=datetime.fromisoformat(node_data["timestamp"]),
-            seq=seq,
-            accel_x=accel_x,
-            accel_y=accel_y,
-            accel_z=accel_z,
-            gyro_x=gyro_x,
-            gyro_y=gyro_y,
-            gyro_z=gyro_z,
-            lat=node_data.get("gps", {}).get("lat_deg"),
-            lon=node_data.get("gps", {}).get("lon_deg"),
-            motion_class=Node.motion_states.index(ml["motion_class"]),
-            anomaly=ml["anomaly_flag"],
-            confidence=ml["motion_confidence"]
-        )
-                
-            
-            # Append newly created node to dict of nodes, key node_id
+                node_id=node_id,
+                timestamp=datetime.fromisoformat(node_data["timestamp"]),
+                seq=seq,
+                accel_x=accel_x,
+                accel_y=accel_y,
+                accel_z=accel_z,
+                gyro_x=gyro_x,
+                gyro_y=gyro_y,
+                gyro_z=gyro_z,
+                lat=node_data.get("gps", {}).get("lat_deg"),
+                lon=node_data.get("gps", {}).get("lon_deg"),
+                motion_class=Node.motion_states.index(classification),
+                anomaly=ml["is_anomaly"],
+                confidence=ml["confidence"].get(classification, 0.0),
+            )
             self.node_dict[node_id] = node
-            
-            #Drawable dict, only what tkinter needs
             self.test_nodes[node_id] = {
                 "node_id": node_id,
                 "lat": node_data["gps"]["lat_deg"],
                 "lon": node_data["gps"]["lon_deg"],
-                "motion_class": ml["motion_class"],
-                "anomaly": ml["anomaly_flag"]
+                "motion_class": classification,
+                "anomaly": ml["is_anomaly"],
             }
 
-            
-
         self.draw_nodes(list(self.test_nodes.values()))
-    
     
 
     def refresh(self):
