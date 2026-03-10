@@ -353,8 +353,8 @@ class Node:
                 anomaly_type = message.get('anomalous', "False")
                 meta = {
                     "motion_type": mode,
-                    "is_anomaly": anomaly_type,
-                    "anomaly_type": "",
+                    "is_anomaly": anomaly_type, #anomalous = True
+                    "anomaly_type": "", #do we need this?
                     "location": "hub_denver_01"
                 }
             polished_message = {
