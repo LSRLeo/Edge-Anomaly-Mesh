@@ -120,6 +120,12 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.node_dict: Dict[str, object] = {}
         # Canvas for drawing nodes
         self.canvas: Optional[tk.Canvas] = None
+        self.canvas_frame: Optional[ttk.Frame] = None
+        self.base_map_image: Optional[Image.Image] = None
+        self.map_photo: Optional[ImageTk.PhotoImage] = None
+        self.map_item_id: Optional[int] = None
+        self.map_offset_x = 0
+        self.map_offset_y = 0
         
         # Track drawn node items: {node_id: canvas_item_id}
         self.node_items: Dict[str, int] = {}
@@ -169,6 +175,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self._setup_legend()
         self._setup_canvas()
         self._setup_controls()
+        self.populate_test_nodes()
        
      
     def _setup_controls(self):
@@ -229,32 +236,30 @@ class NetworkTab(ttk.Frame, DashboardParents):
         """
 
        
-        canvas_frame = ttk.Frame(self)
-        canvas_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
-        canvas_frame.columnconfigure(0, weight=1)
-        canvas_frame.rowconfigure(0, weight=1)
+        self.canvas_frame = ttk.Frame(self)
+        self.canvas_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
+        self.canvas_frame.columnconfigure(0, weight=1)
+        self.canvas_frame.rowconfigure(0, weight=1)
         self.canvas = tk.Canvas(
-            canvas_frame,
+            self.canvas_frame,
             bg=UI_COLORS["bg"],
             highlightthickness=1,
             highlightbackground=UI_COLORS["border"],
         )
         self.canvas.grid(row=0, column=0, sticky='nsew')
         # Scrollbars (optional)
-        v_scroll = ttk.Scrollbar(canvas_frame, orient='vertical', 
+        v_scroll = ttk.Scrollbar(self.canvas_frame, orient='vertical', 
                                  command=self.canvas.yview)
         v_scroll.grid(row=0, column=1, sticky='ns')
-        h_scroll = ttk.Scrollbar(canvas_frame, orient='horizontal',
+        h_scroll = ttk.Scrollbar(self.canvas_frame, orient='horizontal',
                                  command=self.canvas.xview)
         h_scroll.grid(row=1, column=0, sticky='ew')
         self.canvas.configure(yscrollcommand=v_scroll.set,
                               xscrollcommand=h_scroll.set)
-        # Implement Background
-        # Load Map
-        map_image = Image.open("widgets/widgetextras/mercator.jpg")
-        self.map_photo = ImageTk.PhotoImage(map_image)
-        self.projection = MercatorProjection(map_image.width, map_image.height)
-        self.canvas.create_image(0,0,image=self.map_photo, anchor='nw')
+        # Load map image once; it will be dynamically resized with the canvas.
+        self.base_map_image = Image.open("widgets/widgetextras/mercator.jpg")
+        self.projection = MercatorProjection(self.base_map_image.width, self.base_map_image.height)
+        self.canvas.bind("<Configure>", self._on_canvas_resize)
 
         # Draw Nodes
 
@@ -263,9 +268,42 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.canvas.bind('<Button-3>', self._on_canvas_click)
 
         self.canvas.bind('<Button-1>', self._on_canvas_click)
-        self.populate_test_nodes()
-
-
+        
+    def _on_canvas_resize(self, event):
+        self._render_map_and_nodes(event.width, event.height)
+    
+    def _render_map_and_nodes(self, canvas_width: int, canvas_height: int):
+        if not self.canvas or not self.base_map_image:
+            return
+        if canvas_width <= 1 or canvas_height <= 1:
+            return
+        
+        # Fit map inside canvas while maintaining aspect ratio and centering
+        src_w, src_h = self.base_map_image.size
+        scale = min(canvas_width / src_w, canvas_height / src_h)
+        draw_w = max(1, int(src_w * scale))
+        draw_h = max(1, int(src_h * scale))
+        self.map_offset_x = (canvas_width - draw_w) // 2
+        self.map_offset_y = (canvas_height - draw_h) // 2
+        
+        resized = self.base_map_image.resize((draw_w, draw_h), Image.Resampling.LANCZOS)
+        self.map_photo = ImageTk.PhotoImage(resized)
+        if self.map_item_id is None:
+            self.map_item_id = self.canvas.create_image(
+                self.map_offset_x, self.map_offset_y, image=self.map_photo,anchor='nw'
+            )
+        else:
+            self.canvas.coords(self.map_item_id, self.map_offset_x, self.map_offset_y)
+            self.canvas.itemconfig(self.map_item_id, image=self.map_photo)
+            
+        self.canvas.tag_lower(self.map_item_id)  # Ensure map is below nodes
+        self.canvas.config(scrollregion=(0, 0, canvas_width, canvas_height))
+        self.projection = MercatorProjection(draw_w, draw_h)
+        
+        if self.test_nodes:
+            self.draw_nodes(list(self.test_nodes.values()))
+            
+            
     
     def draw_nodes(self, nodes: List[Dict[str, Any]]):
         """
@@ -284,6 +322,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.node_items.clear()
         for node in nodes:
             self._draw_single_node(node)
+        if self.selected_node and self.selected_node in self.test_nodes:
+            self.select_node(self.selected_node)
 
     
     def _draw_single_node(self, node: Dict[str, Any]):
@@ -299,6 +339,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             self.canvas.delete(old_item)
             self.canvas.delete(f'{node_id}_label')
         px, py = self.projection.latlong_to_pixel(node['lat'], node['lon'])
+        px += self.map_offset_x
+        py += self.map_offset_y
         motion_class = node.get('motion_class','UNKNOWN')
         is_anomaly = node.get('anomaly', False)
         
@@ -546,7 +588,9 @@ class NetworkTab(ttk.Frame, DashboardParents):
         Fetches current node states from database and redraws.
         """
         try:
-            self._setup_canvas()
+            self.populate_test_nodes()
+            if self.canvas:
+                self._render_map_and_nodes(self.canvas.winfo_width(), self.canvas.winfo_height())
         except:
             print(f'Error refreshing UI and Data, Exception:{Exception}')
     def update_node(self):
