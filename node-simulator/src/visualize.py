@@ -37,6 +37,7 @@ def load_lat_lon(json_path: Path):
     lons = []
     alts = []
     motion_types = []
+    anomaly_flags = []
     for msg in data:
         gps = msg.get("gps") or {}
         lat = gps.get("lat_deg")
@@ -48,8 +49,18 @@ def load_lat_lon(json_path: Path):
             alts.append(alt)
             meta = msg.get("meta") or {}
             motion_types.append(meta.get("motion_type"))
+            # Treat anything truthy and not an explicit "False" string as anomalous
+            raw_flag = meta.get("is_anomaly")
+            is_anom = False
+            if isinstance(raw_flag, bool):
+                is_anom = raw_flag
+            elif isinstance(raw_flag, str):
+                is_anom = raw_flag.lower() not in ("", "false", "0", "none")
+            elif raw_flag is not None:
+                is_anom = True
+            anomaly_flags.append(is_anom)
 
-    return lats, lons, alts, motion_types
+    return lats, lons, alts, motion_types, anomaly_flags
 
 
 def _compute_square_limits(xs, ys):
@@ -75,7 +86,7 @@ def _compute_square_limits(xs, ys):
     return (center_x - half_span, center_x + half_span), (center_y - half_span, center_y + half_span)
 
 
-def plot_views(lats, lons, alts, motion_types, title: str):
+def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str):
     if not lats or not lons or not alts:
         print("No GPS latitude/longitude/altitude data found to plot.")
         return
@@ -86,6 +97,12 @@ def plot_views(lats, lons, alts, motion_types, title: str):
         "TERRESTRIAL": "green",
         "MARITIME": "blue",
         "LIFT": "purple",
+    }
+    anomaly_color_map = {
+        "IDLE": "#ff69b4",         # pink
+        "TERRESTRIAL": "#800080",  # purple
+        "MARITIME": "#ff0000",     # red
+        "LIFT": "#8a2be2",         # violet
     }
 
     # Full-page style figure
@@ -100,27 +117,42 @@ def plot_views(lats, lons, alts, motion_types, title: str):
     else:
         start_idx = 0
         current_type = motion_types[0]
+        current_anom = anomaly_flags[0]
         for i in range(1, len(lats)):
-            if motion_types[i] != current_type:
+            if motion_types[i] != current_type or anomaly_flags[i] != current_anom:
                 segment_lons = lons[start_idx:i]
                 segment_lats = lats[start_idx:i]
-                color = color_map.get(current_type, "red")
+                if current_anom:
+                    color = anomaly_color_map.get(current_type, "red")
+                else:
+                    color = color_map.get(current_type, "red")
                 if len(segment_lats) > 1:
                     ax1.plot(segment_lons, segment_lats, "-", linewidth=1.0, alpha=0.8, color=color)
                 start_idx = i
                 current_type = motion_types[i]
+                current_anom = anomaly_flags[i]
 
         segment_lons = lons[start_idx:]
         segment_lats = lats[start_idx:]
-        color = color_map.get(current_type, "red")
+        if current_anom:
+            color = anomaly_color_map.get(current_type, "red")
+        else:
+            color = color_map.get(current_type, "red")
         if len(segment_lats) > 1:
             ax1.plot(segment_lons, segment_lats, "-", linewidth=1.0, alpha=0.8, color=color)
 
-        for mt, color in color_map.items():
-            xs = [lon for lon, m in zip(lons, motion_types) if m == mt]
-            ys = [lat for lat, m in zip(lats, motion_types) if m == mt]
+        # Scatter all points, colored by motion type and anomaly status
+        for mt in color_map.keys():
+            # Non-anomalous points for this motion type
+            xs = [lon for lon, m, a in zip(lons, motion_types, anomaly_flags) if m == mt and not a]
+            ys = [lat for lat, m, a in zip(lats, motion_types, anomaly_flags) if m == mt and not a]
             if xs:
-                ax1.scatter(xs, ys, s=5, alpha=0.6, color=color, label=mt)
+                ax1.scatter(xs, ys, s=5, alpha=0.6, color=color_map[mt], label=f"{mt}")
+            # Anomalous points for this motion type
+            xs_a = [lon for lon, m, a in zip(lons, motion_types, anomaly_flags) if m == mt and a]
+            ys_a = [lat for lat, m, a in zip(lats, motion_types, anomaly_flags) if m == mt and a]
+            if xs_a:
+                ax1.scatter(xs_a, ys_a, s=8, alpha=0.8, color=anomaly_color_map[mt], label=f"{mt} (anom)")
 
         xs_unknown = [lon for lon, m in zip(lons, motion_types) if m not in color_map and m is not None]
         ys_unknown = [lat for lat, m in zip(lats, motion_types) if m not in color_map and m is not None]
@@ -143,30 +175,42 @@ def plot_views(lats, lons, alts, motion_types, title: str):
         ax2.plot(lats, alts, "-", linewidth=1.0, alpha=0.8, color="black")
         ax2.scatter(lats, alts, s=5, alpha=0.6, color="black")
     else:
-        # Draw line segments per contiguous motion_type run
+        # Draw line segments per contiguous (motion_type, anomaly) run
         start_idx = 0
         current_type = motion_types[0]
+        current_anom = anomaly_flags[0]
         for i in range(1, len(lats)):
-            if motion_types[i] != current_type:
+            if motion_types[i] != current_type or anomaly_flags[i] != current_anom:
                 segment_lats = lats[start_idx:i]
                 segment_alts = alts[start_idx:i]
-                color = color_map.get(current_type, "red")
+                if current_anom:
+                    color = anomaly_color_map.get(current_type, "red")
+                else:
+                    color = color_map.get(current_type, "red")
                 if len(segment_lats) > 1:
                     ax2.plot(segment_lats, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
                 start_idx = i
                 current_type = motion_types[i]
+                current_anom = anomaly_flags[i]
 
         segment_lats = lats[start_idx:]
         segment_alts = alts[start_idx:]
-        color = color_map.get(current_type, "red")
+        if current_anom:
+            color = anomaly_color_map.get(current_type, "red")
+        else:
+            color = color_map.get(current_type, "red")
         if len(segment_lats) > 1:
             ax2.plot(segment_lats, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
 
-        for mt, color in color_map.items():
-            xs = [lat for lat, m in zip(lats, motion_types) if m == mt]
-            ys = [alt for alt, m in zip(alts, motion_types) if m == mt]
+        for mt in color_map.keys():
+            xs = [lat for lat, m, a in zip(lats, motion_types, anomaly_flags) if m == mt and not a]
+            ys = [alt for alt, m, a in zip(alts, motion_types, anomaly_flags) if m == mt and not a]
             if xs:
-                ax2.scatter(xs, ys, s=5, alpha=0.6, color=color)
+                ax2.scatter(xs, ys, s=5, alpha=0.6, color=color_map[mt])
+            xs_a = [lat for lat, m, a in zip(lats, motion_types, anomaly_flags) if m == mt and a]
+            ys_a = [alt for alt, m, a in zip(alts, motion_types, anomaly_flags) if m == mt and a]
+            if xs_a:
+                ax2.scatter(xs_a, ys_a, s=5, alpha=0.8, color=anomaly_color_map[mt])
     ax2.set_xlabel("Latitude (deg)")
     ax2.set_ylabel("Altitude (m)")
     ax2.set_title("Lat vs Alt")
@@ -179,27 +223,39 @@ def plot_views(lats, lons, alts, motion_types, title: str):
     else:
         start_idx = 0
         current_type = motion_types[0]
+        current_anom = anomaly_flags[0]
         for i in range(1, len(lons)):
-            if motion_types[i] != current_type:
+            if motion_types[i] != current_type or anomaly_flags[i] != current_anom:
                 segment_lons = lons[start_idx:i]
                 segment_alts = alts[start_idx:i]
-                color = color_map.get(current_type, "red")
+                if current_anom:
+                    color = anomaly_color_map.get(current_type, "red")
+                else:
+                    color = color_map.get(current_type, "red")
                 if len(segment_lons) > 1:
                     ax3.plot(segment_lons, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
                 start_idx = i
                 current_type = motion_types[i]
+                current_anom = anomaly_flags[i]
 
         segment_lons = lons[start_idx:]
         segment_alts = alts[start_idx:]
-        color = color_map.get(current_type, "red")
+        if current_anom:
+            color = anomaly_color_map.get(current_type, "red")
+        else:
+            color = color_map.get(current_type, "red")
         if len(segment_lons) > 1:
             ax3.plot(segment_lons, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
 
-        for mt, color in color_map.items():
-            xs = [lon for lon, m in zip(lons, motion_types) if m == mt]
-            ys = [alt for alt, m in zip(alts, motion_types) if m == mt]
+        for mt in color_map.keys():
+            xs = [lon for lon, m, a in zip(lons, motion_types, anomaly_flags) if m == mt and not a]
+            ys = [alt for alt, m, a in zip(alts, motion_types, anomaly_flags) if m == mt and not a]
             if xs:
-                ax3.scatter(xs, ys, s=5, alpha=0.6, color=color)
+                ax3.scatter(xs, ys, s=5, alpha=0.6, color=color_map[mt])
+            xs_a = [lon for lon, m, a in zip(lons, motion_types, anomaly_flags) if m == mt and a]
+            ys_a = [alt for alt, m, a in zip(alts, motion_types, anomaly_flags) if m == mt and a]
+            if xs_a:
+                ax3.scatter(xs_a, ys_a, s=5, alpha=0.8, color=anomaly_color_map[mt])
     ax3.set_xlabel("Longitude (deg)")
     ax3.set_ylabel("Altitude (m)")
     ax3.set_title("Lon vs Alt")
@@ -212,30 +268,43 @@ def plot_views(lats, lons, alts, motion_types, title: str):
     else:
         start_idx = 0
         current_type = motion_types[0]
+        current_anom = anomaly_flags[0]
         for i in range(1, len(lons)):
-            if motion_types[i] != current_type:
+            if motion_types[i] != current_type or anomaly_flags[i] != current_anom:
                 segment_lons = lons[start_idx:i]
                 segment_lats = lats[start_idx:i]
                 segment_alts = alts[start_idx:i]
-                color = color_map.get(current_type, "red")
+                if current_anom:
+                    color = anomaly_color_map.get(current_type, "red")
+                else:
+                    color = color_map.get(current_type, "red")
                 if len(segment_lons) > 1:
                     ax4.plot(segment_lons, segment_lats, segment_alts, linewidth=0.8, alpha=0.9, color=color)
                 start_idx = i
                 current_type = motion_types[i]
+                current_anom = anomaly_flags[i]
 
         segment_lons = lons[start_idx:]
         segment_lats = lats[start_idx:]
         segment_alts = alts[start_idx:]
-        color = color_map.get(current_type, "red")
+        if current_anom:
+            color = anomaly_color_map.get(current_type, "red")
+        else:
+            color = color_map.get(current_type, "red")
         if len(segment_lons) > 1:
             ax4.plot(segment_lons, segment_lats, segment_alts, linewidth=0.8, alpha=0.9, color=color)
 
-        for mt, color in color_map.items():
-            xs = [lon for lon, m in zip(lons, motion_types) if m == mt]
-            ys = [lat for lat, m in zip(lats, motion_types) if m == mt]
-            zs = [alt for alt, m in zip(alts, motion_types) if m == mt]
+        for mt in color_map.keys():
+            xs = [lon for lon, m, a in zip(lons, motion_types, anomaly_flags) if m == mt and not a]
+            ys = [lat for lat, m, a in zip(lats, motion_types, anomaly_flags) if m == mt and not a]
+            zs = [alt for alt, m, a in zip(alts, motion_types, anomaly_flags) if m == mt and not a]
             if xs:
-                ax4.scatter(xs, ys, zs, s=4, alpha=0.6, color=color)
+                ax4.scatter(xs, ys, zs, s=4, alpha=0.6, color=color_map[mt])
+            xs_a = [lon for lon, m, a in zip(lons, motion_types, anomaly_flags) if m == mt and a]
+            ys_a = [lat for lat, m, a in zip(lats, motion_types, anomaly_flags) if m == mt and a]
+            zs_a = [alt for alt, m, a in zip(alts, motion_types, anomaly_flags) if m == mt and a]
+            if xs_a:
+                ax4.scatter(xs_a, ys_a, zs_a, s=6, alpha=0.85, color=anomaly_color_map[mt])
     ax4.set_xlabel("Longitude (deg)")
     ax4.set_ylabel("Latitude (deg)")
     ax4.set_zlabel("Altitude (m)")
@@ -255,13 +324,13 @@ def main():
     json_path = (project_root / args.filename).resolve()
 
     try:
-        lats, lons, alts, motion_types = load_lat_lon(json_path)
+        lats, lons, alts, motion_types, anomaly_flags = load_lat_lon(json_path)
     except (FileNotFoundError, ValueError, json.JSONDecodeError) as e:
         print(f"Error: {e}")
         return
 
     title = f"GPS track from {json_path.name}"
-    plot_views(lats, lons, alts, motion_types, title)
+    plot_views(lats, lons, alts, motion_types, anomaly_flags, title)
 
 
 if __name__ == "__main__":
