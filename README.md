@@ -9,6 +9,12 @@ This is a simulation-based project.
 ---
 ## Running the program
 
+Start up docker and redis
+
+Start up your virtual environment
+
+Make sure you are in the root directory just edge-anomaly-mesh/
+
 Install all requirements, copy paste this in your activated environment make sure you start in the entire root directory .
 
 ```
@@ -35,15 +41,10 @@ Start Database listener, from root directory:
 python3 database/redis_listener.py
 ```
 
-Start ML Redis, from root directory:
-
-```
-python3 ml/redis_insteam.py --window-size 3 --stride 3 --model-path ml/models/motion_classifier.pt
-```
-
 Start ML model, from root directory:
+
 ```
-python3 ml/redis_insteam.py --model-path ml/models/motion_classifier.pt --window-size 100
+python3 ml/redis_insteam.py --window-size 100 --stride 100 --model-path ml/models/motion_classifier.pt
 ```
 
 Create a simulation file, from root directory:
