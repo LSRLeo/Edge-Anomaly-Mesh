@@ -141,7 +141,7 @@ class RedisReader:
             'user': user
         }
         self.message_counter += 1
-        self.publisher.publish(self.channel_name, json.dumps(request))
+        self.publisher.publish(self.q_channel_name, json.dumps(request))
     def getDicts(self): #returns both dictionaries as a tuple
         with self.refresh_lock: #acquire lock to ensure thread safety when accessing dictionaries
             return dict(self.rddict), dict(self.mldict) #return copies of the dictionaries to prevent external modification
