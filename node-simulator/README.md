@@ -5,7 +5,7 @@ Quick rundown of what's here and how to run it.
 ## Layout
 
 - **`simulation.py`** — Entry point (supports `sim` and `redis` commands).
-- **`src/`** — Core logic (node, route, motion classes).
+- **`src/`** — Core logic (node, route, motion classes, visualization).
 - **`routes/`** — Example route JSONs (e.g. `exampleHub.json`, `exampleHubLabel.json`).
 - **`nodeConfig.json`** — Example node config (node_id, sample_rate_hz).
 - **`redisFiles/`** — Redis support used by the `redis` command
@@ -43,6 +43,7 @@ python3 node-simulator/simulation.py sim -t -n nodeConfig.json -r routes/example
 | `--training` | `-t` | | Use training data. |
 | `--node` | `-n` | Yes | Path to node config JSON (e.g. `nodeConfig.json`). |
 | `--route` | `-r` | Yes | Path to route JSON (e.g. `routes/exampleHub.json`). |
+| `--no-a` | | No | Disable anomaly injection (default: anomalies are injected). |
 
 You must pass exactly one of `-l` or `-t`; omitting both will error.
 
@@ -80,6 +81,26 @@ python3 simulation.py -h
 python3 simulation.py sim -h
 python3 simulation.py redis -h
 ```
+
+---
+
+### Visualization (`visualize.py`)
+
+After running a simulation (which writes `raw_data.json` in the `node-simulator` directory), you can visualize the GPS track (latitude/longitude) and motion types:
+
+```bash
+cd node-simulator
+python3 -m src.visualize            # uses raw_data.json by default
+python3 -m src.visualize raw_data.json
+```
+
+Behavior:
+
+- Plots longitude vs latitude, using a square axis so the path is not stretched.
+- Draws a connected line to show the route.
+- Colors by `meta.motion_type` when available:
+  - IDLE, TERRESTRIAL, MARITIME, LIFT all get distinct colors.
+  - Falls back to a single-color plot if motion types are missing.
 
 ---
 

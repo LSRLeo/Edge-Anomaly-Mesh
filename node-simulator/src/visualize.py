@@ -1,0 +1,269 @@
+import argparse
+import json
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Visualize latitude/longitude from a simulator raw data JSON file.\n\n"
+            "The filename is interpreted relative to the node-simulator directory.\n"
+            "If omitted, defaults to 'raw_data.json'."
+        )
+    )
+    parser.add_argument(
+        "filename",
+        nargs="?",
+        default="raw_data.json",
+        help="Name or path of the simulation JSON file (relative to node-simulator).",
+    )
+    return parser.parse_args()
+
+
+def load_lat_lon(json_path: Path):
+    if not json_path.exists():
+        raise FileNotFoundError(f"Simulation file not found: {json_path}")
+
+    with json_path.open("r") as f:
+        data = json.load(f)
+
+    if not isinstance(data, list):
+        raise ValueError(f"Expected a list of messages in {json_path}, got {type(data)}")
+
+    lats = []
+    lons = []
+    alts = []
+    motion_types = []
+    for msg in data:
+        gps = msg.get("gps") or {}
+        lat = gps.get("lat_deg")
+        lon = gps.get("lon_deg")
+        alt = gps.get("altitude_m")
+        if lat is not None and lon is not None and alt is not None:
+            lats.append(lat)
+            lons.append(lon)
+            alts.append(alt)
+            meta = msg.get("meta") or {}
+            motion_types.append(meta.get("motion_type"))
+
+    return lats, lons, alts, motion_types
+
+
+def _compute_square_limits(xs, ys):
+    min_x, max_x = min(xs), max(xs)
+    min_y, max_y = min(ys), max(ys)
+
+    if min_x == max_x:
+        span_x = 1e-4
+    else:
+        span_x = max_x - min_x
+
+    if min_y == max_y:
+        span_y = 1e-4
+    else:
+        span_y = max_y - min_y
+
+    full_span = max(span_x, span_y)
+    half_span = full_span / 2.0
+
+    center_x = (max_x + min_x) / 2.0
+    center_y = (max_y + min_y) / 2.0
+
+    return (center_x - half_span, center_x + half_span), (center_y - half_span, center_y + half_span)
+
+
+def plot_views(lats, lons, alts, motion_types, title: str):
+    if not lats or not lons or not alts:
+        print("No GPS latitude/longitude/altitude data found to plot.")
+        return
+
+    has_motion_types = any(mt is not None for mt in motion_types)
+    color_map = {
+        "IDLE": "orange",
+        "TERRESTRIAL": "green",
+        "MARITIME": "blue",
+        "LIFT": "purple",
+    }
+
+    # Full-page style figure
+    fig = plt.figure(figsize=(12, 10))
+
+    # 1) Lat vs Lon (top-left)
+    ax1 = fig.add_subplot(2, 2, 1)
+
+    if not has_motion_types:
+        ax1.plot(lons, lats, "-", linewidth=1.0, alpha=0.8, color="black")
+        ax1.scatter(lons, lats, s=5, alpha=0.6, color="black")
+    else:
+        start_idx = 0
+        current_type = motion_types[0]
+        for i in range(1, len(lats)):
+            if motion_types[i] != current_type:
+                segment_lons = lons[start_idx:i]
+                segment_lats = lats[start_idx:i]
+                color = color_map.get(current_type, "red")
+                if len(segment_lats) > 1:
+                    ax1.plot(segment_lons, segment_lats, "-", linewidth=1.0, alpha=0.8, color=color)
+                start_idx = i
+                current_type = motion_types[i]
+
+        segment_lons = lons[start_idx:]
+        segment_lats = lats[start_idx:]
+        color = color_map.get(current_type, "red")
+        if len(segment_lats) > 1:
+            ax1.plot(segment_lons, segment_lats, "-", linewidth=1.0, alpha=0.8, color=color)
+
+        for mt, color in color_map.items():
+            xs = [lon for lon, m in zip(lons, motion_types) if m == mt]
+            ys = [lat for lat, m in zip(lats, motion_types) if m == mt]
+            if xs:
+                ax1.scatter(xs, ys, s=5, alpha=0.6, color=color, label=mt)
+
+        xs_unknown = [lon for lon, m in zip(lons, motion_types) if m not in color_map and m is not None]
+        ys_unknown = [lat for lat, m in zip(lats, motion_types) if m not in color_map and m is not None]
+        if xs_unknown:
+            ax1.scatter(xs_unknown, ys_unknown, s=5, alpha=0.6, color="red", label="OTHER")
+
+        ax1.legend(loc="best", fontsize="x-small")
+
+    ax1.set_xlabel("Longitude (deg)")
+    ax1.set_ylabel("Latitude (deg)")
+    ax1.set_title("Lat vs Lon")
+    xlim, ylim = _compute_square_limits(lons, lats)
+    ax1.set_xlim(*xlim)
+    ax1.set_ylim(*ylim)
+    ax1.set_aspect("equal", adjustable="box")
+
+    # 2) Lat vs Alt (top-right)
+    ax2 = fig.add_subplot(2, 2, 2)
+    if not has_motion_types:
+        ax2.plot(lats, alts, "-", linewidth=1.0, alpha=0.8, color="black")
+        ax2.scatter(lats, alts, s=5, alpha=0.6, color="black")
+    else:
+        # Draw line segments per contiguous motion_type run
+        start_idx = 0
+        current_type = motion_types[0]
+        for i in range(1, len(lats)):
+            if motion_types[i] != current_type:
+                segment_lats = lats[start_idx:i]
+                segment_alts = alts[start_idx:i]
+                color = color_map.get(current_type, "red")
+                if len(segment_lats) > 1:
+                    ax2.plot(segment_lats, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
+                start_idx = i
+                current_type = motion_types[i]
+
+        segment_lats = lats[start_idx:]
+        segment_alts = alts[start_idx:]
+        color = color_map.get(current_type, "red")
+        if len(segment_lats) > 1:
+            ax2.plot(segment_lats, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
+
+        for mt, color in color_map.items():
+            xs = [lat for lat, m in zip(lats, motion_types) if m == mt]
+            ys = [alt for alt, m in zip(alts, motion_types) if m == mt]
+            if xs:
+                ax2.scatter(xs, ys, s=5, alpha=0.6, color=color)
+    ax2.set_xlabel("Latitude (deg)")
+    ax2.set_ylabel("Altitude (m)")
+    ax2.set_title("Lat vs Alt")
+
+    # 3) Lon vs Alt (bottom-left)
+    ax3 = fig.add_subplot(2, 2, 3)
+    if not has_motion_types:
+        ax3.plot(lons, alts, "-", linewidth=1.0, alpha=0.8, color="black")
+        ax3.scatter(lons, alts, s=5, alpha=0.6, color="black")
+    else:
+        start_idx = 0
+        current_type = motion_types[0]
+        for i in range(1, len(lons)):
+            if motion_types[i] != current_type:
+                segment_lons = lons[start_idx:i]
+                segment_alts = alts[start_idx:i]
+                color = color_map.get(current_type, "red")
+                if len(segment_lons) > 1:
+                    ax3.plot(segment_lons, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
+                start_idx = i
+                current_type = motion_types[i]
+
+        segment_lons = lons[start_idx:]
+        segment_alts = alts[start_idx:]
+        color = color_map.get(current_type, "red")
+        if len(segment_lons) > 1:
+            ax3.plot(segment_lons, segment_alts, "-", linewidth=1.0, alpha=0.8, color=color)
+
+        for mt, color in color_map.items():
+            xs = [lon for lon, m in zip(lons, motion_types) if m == mt]
+            ys = [alt for alt, m in zip(alts, motion_types) if m == mt]
+            if xs:
+                ax3.scatter(xs, ys, s=5, alpha=0.6, color=color)
+    ax3.set_xlabel("Longitude (deg)")
+    ax3.set_ylabel("Altitude (m)")
+    ax3.set_title("Lon vs Alt")
+
+    # 4) 3D Lon, Lat, Alt (bottom-right)
+    ax4 = fig.add_subplot(2, 2, 4, projection="3d")
+    if not has_motion_types:
+        ax4.plot(lons, lats, alts, linewidth=0.8, alpha=0.9, color="black")
+        ax4.scatter(lons, lats, alts, s=4, alpha=0.6, color="black")
+    else:
+        start_idx = 0
+        current_type = motion_types[0]
+        for i in range(1, len(lons)):
+            if motion_types[i] != current_type:
+                segment_lons = lons[start_idx:i]
+                segment_lats = lats[start_idx:i]
+                segment_alts = alts[start_idx:i]
+                color = color_map.get(current_type, "red")
+                if len(segment_lons) > 1:
+                    ax4.plot(segment_lons, segment_lats, segment_alts, linewidth=0.8, alpha=0.9, color=color)
+                start_idx = i
+                current_type = motion_types[i]
+
+        segment_lons = lons[start_idx:]
+        segment_lats = lats[start_idx:]
+        segment_alts = alts[start_idx:]
+        color = color_map.get(current_type, "red")
+        if len(segment_lons) > 1:
+            ax4.plot(segment_lons, segment_lats, segment_alts, linewidth=0.8, alpha=0.9, color=color)
+
+        for mt, color in color_map.items():
+            xs = [lon for lon, m in zip(lons, motion_types) if m == mt]
+            ys = [lat for lat, m in zip(lats, motion_types) if m == mt]
+            zs = [alt for alt, m in zip(alts, motion_types) if m == mt]
+            if xs:
+                ax4.scatter(xs, ys, zs, s=4, alpha=0.6, color=color)
+    ax4.set_xlabel("Longitude (deg)")
+    ax4.set_ylabel("Latitude (deg)")
+    ax4.set_zlabel("Altitude (m)")
+    ax4.set_title("3D Lon/Lat/Alt")
+
+    fig.suptitle(title, fontsize=14)
+    fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+    plt.show()
+
+
+def main():
+    args = parse_args()
+
+    # Resolve path relative to node-simulator directory regardless of CWD
+    project_root = Path(__file__).resolve().parents[1]
+    json_path = (project_root / args.filename).resolve()
+
+    try:
+        lats, lons, alts, motion_types = load_lat_lon(json_path)
+    except (FileNotFoundError, ValueError, json.JSONDecodeError) as e:
+        print(f"Error: {e}")
+        return
+
+    title = f"GPS track from {json_path.name}"
+    plot_views(lats, lons, alts, motion_types, title)
+
+
+if __name__ == "__main__":
+    main()
+
