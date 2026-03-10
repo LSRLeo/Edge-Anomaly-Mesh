@@ -107,15 +107,17 @@ class Terrestrial:
                 x_acceleration = self.x_acc + x_jitter
                 y_acceleration = self.y_acc + y_jitter
                 z_acceleration = self.z_acc + z_jitter
-            elif t < p1_time + p2_time:
+
+            elif t < p1_time + p2_time: #crusing phase, no acceleration
+
                 x_acceleration= 0 + x_jitter
-                y_acceleration = 0 + y_jitter
-                z_acceleration = 9.81 + z_jitter
+                y_acceleration = self.y_acc + y_jitter
+                z_acceleration = self.z_acc + z_jitter
 
             else:
                 x_acceleration = -self.x_acc + x_jitter
-                y_acceleration = -self.y_acc + y_jitter
-                z_acceleration = -self.z_acc + z_jitter
+                y_acceleration = self.y_acc + y_jitter
+                z_acceleration = self.z_acc + z_jitter
 
             messages.append({
                 "accel_x": x_acceleration,
