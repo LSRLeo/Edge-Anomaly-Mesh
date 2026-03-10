@@ -18,7 +18,7 @@ import torch
 import time
 from datetime import datetime
 
-from data_pipeline import stream_window_to_features
+from data_pipeline import stream_window_to_features, TERRAIN_MAP, TERRAIN_NAMES
 from feature_extraction import normalize_features
 from train_classifier import MotionClassifier
 from redis_outstream import build_inference_output, InferenceRedisPublisher
@@ -122,15 +122,17 @@ class RedisSubscriber:
 
     def insert_event_in_order(self, buffer, event):
         seq = event.get("seq")
-        if seq is None:
-            buffer.append(event)
+        # Only process events with valid integer seq
+        if not isinstance(seq, int):
+            logging.warning(f"Discarding event with invalid seq: {seq} | event: {event}")
             return
-        # Skip duplicates (already handled by seen_seqs, but double check)
+        # Skip duplicates
         if any(e.get("seq") == seq for e in buffer):
             return
         # Insert in order
         for i, existing in enumerate(buffer):
-            if existing.get("seq", -1) > seq:
+            existing_seq = existing.get("seq")
+            if isinstance(existing_seq, int) and existing_seq > seq:
                 buffer.insert(i, event)
                 return
         buffer.append(event)
@@ -206,13 +208,12 @@ class RedisSubscriber:
         if len(node_state['buffer']) >= self.window_size and node_state['stride_count'] >= self.stride:
             window = node_state['buffer'][:self.window_size]
             # Extract metadata for the window and reconstruct ground truth
-            terrain_map = {"IDLE": 0, "TERRESTRIAL": 1, "TRANSIT": 1, "MARITIME": 2, "LIFT": 3}
             window_metadata = []
             for event in window:
                 meta = event.get("meta", {})
                 terrain_str = meta.get("sim_mode") or meta.get("mode") or event.get("mode")
                 anomaly = meta.get("anomaly", False) or meta.get("has_anomaly", False) or event.get("anomaly", False)
-                terrain_idx = terrain_map.get(terrain_str.upper()) if terrain_str else None
+                terrain_idx = TERRAIN_MAP.get(terrain_str.upper()) if terrain_str else None
                 ground_truth = terrain_idx + (4 if anomaly else 0) if terrain_idx is not None else None
                 window_metadata.append({
                     "node_id": event.get("node_id"),
@@ -257,9 +258,7 @@ class RedisSubscriber:
 
         Publishes a standardized inference-output message to Redis.
         """
-        TERRAIN_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT']
-
-        # Latency monitoring: calculate time difference from earliest receipt_time
+        # Use shared TERRAIN_NAMES
         receipt_times = [event.get('receipt_time', None) for event in window]
         earliest_receipt_time = min([t for t in receipt_times if t is not None], default=None)
         latency = None

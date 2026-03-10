@@ -3,11 +3,12 @@ from src.node import Node
 from src.route import Route
 from redisFiles import redis_setup, redis_pub
 
-def run_simulation(node_file, route_file, data_mode):
+
+def run_simulation(node_file, route_file, data_mode, inject_anomalies: bool = True):
     route = Route(route_file)
     route.load_route()
 
-    node = Node(node_file, route, data_mode)
+    node = Node(node_file, route, data_mode, inject_anomalies=inject_anomalies)
     node.generate()
     node.publish()
 
@@ -46,6 +47,12 @@ def main():
         required=True,
         help="JSON file name for route configuration",
     )
+    sim_parser.add_argument(
+        "--no-a",
+        action="store_true",
+        dest="no_anomalies",
+        help="Disable anomaly injection (default is to inject anomalies)",
+    )
 
     redis_parser = subparsers.add_parser("redis", help="Run with Redis (placeholder)")
     redis_parser.add_argument(
@@ -68,7 +75,8 @@ def main():
 
     if args.command == "sim":
         data_mode = "live" if args.live else "training"
-        run_simulation(args.node, args.route, data_mode)
+        inject_anomalies = not args.no_anomalies
+        run_simulation(args.node, args.route, data_mode, inject_anomalies=inject_anomalies)
     elif args.command == "redis":
         rdis = redis_setup.connect(args.host, args.port)
         run_redis(rdis, args.channel_name)

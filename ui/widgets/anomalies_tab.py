@@ -26,6 +26,7 @@ from matplotlib import style
 from redis_reader import RedisReader
 from widgets.parent_classes import Node
 from widgets.parent_classes import DashboardParents
+from ui_utils import ACTION_BUTTON_STYLE, CAPTION_LABEL_STYLE, HEADING_LABEL_STYLE, UI_COLORS
 
 # from ui.ui_utils import (
 #     SEVERITY_COLORS, STATUS_COLORS,
@@ -103,7 +104,7 @@ class RedisMonitorSection(ttk.Frame):
         outer.columnconfigure(0, weight=1)
         outer.rowconfigure(0, weight=1)
 
-        self._canvas = tk.Canvas(outer, highlightthickness=0)
+        self._canvas = tk.Canvas(outer, highlightthickness=0, bg=UI_COLORS["bg"])
         self._canvas.grid(row=0, column=0, sticky="nsew")
 
         vscroll = ttk.Scrollbar(outer, orient="vertical", command=self._canvas.yview)
@@ -169,7 +170,7 @@ class AnomalySection(ttk.Frame):
         outer.columnconfigure(0, weight=1)
         outer.rowconfigure(0, weight=1)
 
-        self._canvas = tk.Canvas(outer, highlightthickness=0)
+        self._canvas = tk.Canvas(outer, highlightthickness=0, bg=UI_COLORS["bg"])
         self._canvas.grid(row=0, column=0, sticky="nsew")
 
         vscroll = ttk.Scrollbar(outer, orient="vertical", command=self._canvas.yview)
@@ -249,24 +250,20 @@ class AnomalySection(ttk.Frame):
     # Top line: node_id (bold) left, timestamp right
         top = ttk.Frame(container)
         top.pack(fill="x")
-        node_lbl = ttk.Label(top, text=anomaly.getNodeID())
-        try:
-            node_lbl.configure(font=("TkDefaultFont", 10, "bold"))
-        except Exception:
-            pass
+        node_lbl = ttk.Label(top, text=anomaly.getNodeID(), style=HEADING_LABEL_STYLE)
         node_lbl.pack(side="left")
-        ttk.Label(top, text=anomaly.getTimestamp()).pack(side="right")
+        ttk.Label(top, text=anomaly.getTimestamp(), style=CAPTION_LABEL_STYLE).pack(side="right")
 
 
         # Second line: anomaly type
         mid = ttk.Frame(container)
         mid.pack(fill="x", pady=(4, 0))
-        ttk.Label(mid, text=f"Type: {anomaly.getMotionString()}").pack(side="left")
+        ttk.Label(mid, text=f"Type: {anomaly.getMotionString()}", style=CAPTION_LABEL_STYLE).pack(side="left")
 
         # Actions
         actions = ttk.Frame(container)
         actions.pack(fill="x", pady=(6, 0))
-        ttk.Button(actions, text="Open node", command=lambda r=anomaly.getNodeID(): self._open_node(r)).pack(side="left")
+        ttk.Button(actions, text="Open node", command=lambda r=anomaly.getNodeID(): self._open_node(r), style=ACTION_BUTTON_STYLE).pack(side="left")
 
         # Make row clickable to open node
         container.bind("<Button-1>", lambda _e, r=anomaly.getNodeID(): self._open_node(r))
@@ -332,7 +329,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         self.mldict = {} #machine learning dictionary
         self._nav = ttk.Frame(self)
         self._nav.pack(fill="x", padx=10, pady=10)
-
+        self._redis_section = None
         style.configure("Nav.TButton")
         style.configure("Nav.Active.TButton")
         ttk.Button(self._nav, text="Refresh", command=self.refresh).pack(side="left")
@@ -342,9 +339,12 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         print("Inner notebook style:", self._sections_nb.cget("style"))
         # Create and add the initial anomalies list section
         self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
-        # if not self.test_mode: #not used yet
-        #     self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
         self._sections_nb.add(self._list_section, text=self._list_section.title)
+
+        if not self.test_mode:
+            self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
+            self._sections_nb.add(self._redis_section, text=self._redis_section.title)
+
     def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
         Load data for a specific node.
@@ -440,8 +440,13 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
             return
         else:
             try:
+                # print("Refreshing anomalies tab data from Redis...") #CYA measure to indicate refresh is running
                 self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
                 self._parse_nodes() #parse raw data and ml output into Node objects
+                if self._redis_section:
+                    self._redis_section._build_rows() #rebuild the anomaly rows with updated node data
+                
+
                 
             except Exception as e:
                 print(f"Error refreshing anomalies tab: {e}")

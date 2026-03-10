@@ -17,6 +17,8 @@ from typing import Dict, Any, Optional, List
 from db_message_factory import MessageFactory
 from db_table_manager import TableManager
 from schema import create_schema
+from db_message import MessageData
+from db_message import MessageResponse
 
 #logging for debugging purposes
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -60,7 +62,12 @@ class DBMessageManager:
                 ),
             }
         #GET RESULTS
-        results = message_obj.execute(self.table_manager)
+        # Find type of the message, if message type inherits from MessageData, then use tablemanager
+        # If message type inherits from messagerequest, do not take self.table_manager
+        if isinstance(message_obj, MessageData):
+            results = message_obj.execute(self.table_manager)
+        else:
+            results = message_obj.execute()
         return results.to_dict() if results else None
 
     def read_file(self, infile: str | Path, outfile: str | Path):

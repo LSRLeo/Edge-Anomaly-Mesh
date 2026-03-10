@@ -31,7 +31,7 @@ class Message(ABC):
         message_id (str): The unique identifier for the message.
         msg (Dict[str, Any], optional): The original message dictionary. Defaults to None.
         M_TYPE (str): m_type of message, class constant, to be defined in subclasses. Handle Error if not defined in constructor.
-        _m_type (str): m_type of message, private instance variable, initialized to M_TYPE in constructor.
+        m_type (str): m_type of message, instance variable, initialized to M_TYPE in constructor.
     """
     M_TYPE: str = None 
 
@@ -41,21 +41,17 @@ class Message(ABC):
         if self.M_TYPE is None:
             raise NotImplementedError("M_TYPE must be defined in subclasses")
         
-        self._m_type = self.M_TYPE #private
+        self.m_type = self.M_TYPE
         self.m_id = m_id 
         self.msg = msg #original message 
 
 
-    @property
-    def m_type(self) -> str:
-        """Get the m_type of the message.""" 
-        return self._m_type
+    # m_type is now a direct attribute
     
 
     def to_dict(self) -> Dict[str, Any]:
         """
         Convert the message to a dictionary.
-        
         Returns:
             A dictionary representation of the message.
         """
@@ -81,10 +77,9 @@ class MessageResponse(Message):
     Message Response does not have a fixed M_TYPE, (it can be either get-nodes-response or get-datum-response or others)
     """
 
-    def __init__(self, m_type:str, m_id: str, responding_to: str, result: Dict[str, Any]):
-        self.M_TYPE = m_type #override M_TYPE in constructor
-        self.m_id = m_id
-        self.responding_to = responding_to
+    def __init__(self, m_type: str, m_id: str, responding_to: str, result: Dict[str, Any]):
+        self.M_TYPE = m_type  # override M_TYPE in constructor
+        super().__init__(m_id)
         self.msg = {
             "m_type": self.m_type,
             "m_id": m_id,
@@ -92,7 +87,7 @@ class MessageResponse(Message):
             **result
         }
         
-        super().__init__(m_id, self.msg)
+        #super().__init__(m_id, self.msg)
         
     def get_responding_to(self) -> str:
         """Get the ID of the original message that this is responding to."""
@@ -173,11 +168,11 @@ class RawDataMessage(MessageData):
             self.records = msg.get("records", None)  # Expecting a list of raw data records under "records" key
             if self.records is None:
                 #just no records field wrap msg in a list and treat as single record
-                logging.warning(f"No 'records' field found in raw data message. Treating entire message as a single record.")
+                #logging.warning(f"No 'records' field found in raw data message. Treating entire message as a single record.")
                 self.records = [msg]
 
             elif not isinstance(self.records, list):
-                logging.warning(f"'records' field is not a list. Wrapping it in a list.")
+                #logging.warning(f"'records' field is not a list. Wrapping it in a list.")
                 self.records = [self.records]
 
         except Exception as e:
@@ -203,20 +198,20 @@ class InferenceOutputMessage(MessageData):
 
     def __init__(self, m_id: str, msg: Dict[str, Any]):
         super().__init__(m_id, msg)
-        
+        self.log = logging.getLogger(f"{self.__class__.__module__}.{self.__class__.__name__}")
         try:
             self.records = msg.get("records", None)  # Expecting a list of raw data records under "records" key
             if self.records is None:
                 #just no records field wrap msg in a list and treat as single record
-                logging.warning(f"No 'records' field found in inference output message. Treating entire message as a single record.")
+                #self.log.info(f"No 'records' field found in inference output message. Treating entire message as a single record.")
                 self.records = [msg]
 
             elif not isinstance(self.records, list):
-                logging.warning(f"'records' field is not a list. Wrapping it in a list.")
+                #self.log.info(f"'records' field is not a list. Wrapping it in a list.")
                 self.records = [self.records]
 
         except Exception as e:
-            logging.error(f"Error processing inference output message content: {e}")
+            self.log.error(f"Error processing inference output message content: {e}")
             self.records = [msg]  # Default to treating entire message as a single record
                 
     def execute(self, db_manager: TableManager) -> None:
@@ -224,14 +219,13 @@ class InferenceOutputMessage(MessageData):
         Process the inference output data and store it in the database. Args: db_manager: The database manager instance to interact with the database.
         """
         try:
+            #store_inference_result(self.records)
             db_manager.insert_inference_results(self.records)
-            logging.info(f"Successfully stored inference output for event: {self.event_id} and node: {self.node_id}")
-
+            self.log.info(f"Successfully stored inference output for {self.msg.get('node_id')} at timestamp {self.msg.get('timestamp')}")
             return None  # Indicate successful execution
         
         except Exception as e:
-            logging.error(f"Error storing inference output: {e}")
-
+            self.log.error(f"Error storing inference output: {e}")
 
 class GetNodesRequest(MessageRequest):
     M_TYPE = "get-nodes"

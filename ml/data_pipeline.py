@@ -40,6 +40,19 @@ import json
 from feature_extraction import FeatureExtractor
 
 # ============================================================================
+# TERRAIN CONSTANTS (shared with redis_insteam.py)
+# ============================================================================
+
+TERRAIN_MAP = {
+    "IDLE": 0,
+    "TERRESTRIAL": 1,
+    "TRANSIT": 1,  # TRANSIT is the same as TERRESTRIAL
+    "MARITIME": 2,
+    "LIFT": 3
+}
+TERRAIN_NAMES = ['IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT']
+
+# ============================================================================
 # ARGUMENT PARSING
 # ============================================================================
 
@@ -120,6 +133,21 @@ def create_windows(data, window_size=100, overlap=0.0, labels=None):
         - Loop: for start in range(0, n_samples - window_size + 1, step)
         - Use np.column_stack() to combine the 6 axes
     """
+    # Type check and cast
+    try:
+        window_size = int(window_size)
+        overlap = float(overlap)
+    except (ValueError, TypeError):
+        raise ValueError("window_size must be int and overlap must be float.")
+    
+    # Validate overlap
+    if overlap < 0 or overlap >= 1:
+        raise ValueError("Overlap must be between 0 (inclusive) and 1 (exclusive).")
+    
+    # Validate window_size
+    if window_size < 1:
+        raise ValueError("Window size must be at least 1.")
+    
     # Stack sensor axes into (n_samples, 6) array
     stacked = np.column_stack([
         data['accel_x'],
@@ -150,7 +178,13 @@ def create_windows(data, window_size=100, overlap=0.0, labels=None):
             for label in label_slice:
                 label_counts[label] = label_counts.get(label, 0) + 1
 
-            majority_label = max(label_counts, key=label_counts.get)
+            max_count = max(label_counts.values())
+            candidates = [label for label, count in label_counts.items() if count == max_count]
+            # Tie-breaker: pick the first label in the window among candidates
+            for label in label_slice:
+                if label in candidates:
+                    majority_label = label
+                    break
             window_labels.append(majority_label)
 
     windows = np.array(windows)
@@ -241,19 +275,10 @@ def load_json_data(filepath):
     data = json_events_to_numpy(events)
     labels = []
 
-    # Mapping from terrain type strings to indices
-    TERRAIN_MAP = {
-        "IDLE": 0,
-        "TERRESTRIAL": 1,
-        "TRANSIT": 1,  # TRANSIT is the same as TERRESTRIAL
-        "MARITIME": 2,
-        "LIFT": 3
-    }
-
     for event in events:
         meta = event.get("meta", {})
         label_field = event.get("label", {})
-        terrain_str = (meta.get("sim_mode") or meta.get("mode") or
+        terrain_str = (meta.get("sim_mode") or meta.get("mode") or meta.get("motion_type") or
                        event.get("mode") or label_field.get("motion_type"))
         if terrain_str is None:
             terrain_idx = None
@@ -262,8 +287,9 @@ def load_json_data(filepath):
             if terrain_idx is None:
                 raise ValueError(f"Unknown terrain type: {terrain_str}")
 
-        has_anomaly = (meta.get("anomaly", False) or meta.get("has_anomaly", False) or
-                       event.get("anomaly", False) or label_field.get("is_anomaly", False))
+        raw_anomaly = (meta.get("anomaly") or meta.get("has_anomaly") or meta.get("is_anomaly") or
+                       event.get("anomaly") or label_field.get("is_anomaly"))
+        has_anomaly = str(raw_anomaly).lower() == "true" if raw_anomaly is not None else False
         if terrain_idx is not None:
             combined_label = terrain_idx + (4 if has_anomaly else 0)
         else:
@@ -278,29 +304,33 @@ def json_events_to_numpy(events):
     """
     Convert a list of sensor dicts to NumPy arrays for each axis.
     Handles both nested ('accel', 'gyro') and flat ('accel_x', ...) formats.
+    Handles partial nested keys and non-numeric values gracefully.
     """
+    def safe_get(event, nested, flat):
+        val = None
+        if nested and isinstance(nested, dict):
+            val = nested.get(flat[-1], None)
+        if val is None:
+            val = event.get(flat, 0)
+        # Treat "NaN" (case-insensitive) as 0
+        if isinstance(val, str) and val.strip().lower() == "nan":
+            return 0.0
+        try:
+            return float(val)
+        except (TypeError, ValueError):
+            return 0.0
+
     accel_x, accel_y, accel_z = [], [], []
     gyro_x, gyro_y, gyro_z = [], [], []
     for event in events:
-        # Try nested first, then flat, then fallback to 0
         accel = event.get("accel_mss") or event.get("accel")
         gyro = event.get("gyro_rads") or event.get("gyro")
-        if accel:
-            accel_x.append(accel.get("x", 0))
-            accel_y.append(accel.get("y", 0))
-            accel_z.append(accel.get("z", 0))
-        else:
-            accel_x.append(event.get("accel_x", 0))
-            accel_y.append(event.get("accel_y", 0))
-            accel_z.append(event.get("accel_z", 0))
-        if gyro:
-            gyro_x.append(gyro.get("x", 0))
-            gyro_y.append(gyro.get("y", 0))
-            gyro_z.append(gyro.get("z", 0))
-        else:
-            gyro_x.append(event.get("gyro_x", 0))
-            gyro_y.append(event.get("gyro_y", 0))
-            gyro_z.append(event.get("gyro_z", 0))
+        accel_x.append(safe_get(event, accel, "accel_x"))
+        accel_y.append(safe_get(event, accel, "accel_y"))
+        accel_z.append(safe_get(event, accel, "accel_z"))
+        gyro_x.append(safe_get(event, gyro, "gyro_x"))
+        gyro_y.append(safe_get(event, gyro, "gyro_y"))
+        gyro_z.append(safe_get(event, gyro, "gyro_z"))
     return {
         "accel_x": np.array(accel_x, dtype=np.float32),
         "accel_y": np.array(accel_y, dtype=np.float32),
@@ -397,13 +427,16 @@ def demo(args):
         # Step 5: Print the shapes of the features and the labels
         print(f"Features shape: {features.shape}")
         print(f"Window labels (first 5): {window_labels[:5]}")
-        print(f"First feature vector (first 5 values): {features[0][:5]}")
-        
-        # Step 6: Print feature statistics (min, max, mean)
-        print("Feature statistics (min, max, mean):")
-        print(f"  Min values: {features.min (axis=0)}")
-        print(f"  Max values: {features.max(axis=0)}")
-        print(f"  Mean values: {features.mean(axis=0)}")
+        if features.shape[0] > 0:
+            print(f"First feature vector (first 5 values): {features[0][:5]}")
+            
+            # Step 6: Print feature statistics (min, max, mean)
+            print("Feature statistics (min, max, mean):")
+            print(f"  Min values: {features.min(axis=0)}")
+            print(f"  Max values: {features.max(axis=0)}")
+            print(f"  Mean values: {features.mean(axis=0)}")
+        else:
+            print("No features extracted from this file.")
         
         # Step 7: Check for the unique motion labels in this file
         unique_labels = np.unique(window_labels)

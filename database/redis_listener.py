@@ -14,7 +14,7 @@ REDIS_PORT = 6379
 SUBSCRIBE_CHANNELS = [
     "sensor:raw:*",
     "inference:results:*",
-    "ui:query:*" # placeholder
+    "ui:query"
 ]
 RESPONSE_CHANNELS_MAP = {
     "ui:query": "ui:responses",
@@ -50,7 +50,7 @@ def process_data(channel:str, data: Dict[str, Any]):
 def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     pubsub = r.pubsub()
-    pubsub.psubscribe(*SUBSCRIBE_CHANNELS)
+    pubsub.psubscribe(SUBSCRIBE_CHANNELS)
 
     logging.info("Redis listener started. Waiting for messages...")
     for msg in pubsub.listen():
@@ -71,6 +71,14 @@ def main():
                 process_data(channel, data)
                     
             # If this is a query request, publish response to UI channels
+<<<<<<< 476-update-db-redis-listener
+=======
+            if data.get("m_type", "").startswith("get-"):
+                node_id = data.get("node_id", "all")
+                channel = f"ui:responses"
+                r.publish(channel, json.dumps(response))
+                logging.info(f"Published response to {channel}")
+>>>>>>> sprint-3
         except Exception as e:
             logging.error(f"Error processing message: {e}")
 
