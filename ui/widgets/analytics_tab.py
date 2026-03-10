@@ -388,18 +388,51 @@ class AnalyticsTab(ttk.Frame):
         if self.redis_reader is None:
             raise ValueError("Redis mode enabled but redis_reader is not configured.")
         
-        rddict, mldict = self.redis_reader.getDicts()
+        _, mldict = self.redis_reader.getDicts()
         records: List[Dict[str, Any]] = []
-        
-        for node_id, state_confidence in mldict.items():
-            if not isinstance(state_confidence, list) or len(state_confidence) != 8:
+
+        if not isinstance(mldict, dict):
+            return records
+
+        # Ordered mapping from confidence-map keys to the 8-state array expected
+        # by the chart components.
+        confidence_key_order = [
+            ("IDLE", ("IDLE",)),
+            ("TERRESTRIAL", ("TERRESTRIAL",)),
+            ("MARITIME", ("MARITIME",)),
+            ("LIFT", ("LIFT",)),
+            ("IDLE_ANOM", ("IDLE_ANOM", "IDLE_ANOMALY")),
+            ("TERRESTRIAL_ANOM", ("TERRESTRIAL_ANOM", "TERRESTRIAL_ANOMALY")),
+            ("MARITIME_ANOM", ("MARITIME_ANOM", "MARITIME_ANOMALY")),
+            ("LIFT_ANOM", ("LIFT_ANOM", "LIFT_ANOMALY")),
+        ]
+
+        for node_id, ml_entry in mldict.items():
+            if not isinstance(ml_entry, dict):
                 continue
-            
-            raw_entry = rddict.get(node_id, {}) if isinstance(rddict, dict) else {}
-            timestamp = raw_entry.get("timestamp") if isinstance(raw_entry, dict) else None
-            if not timestamp:
+
+            confidence_map = ml_entry.get("confidence", {})
+            if not isinstance(confidence_map, dict):
+                continue
+
+            state_confidence: List[float] = []
+            for _, aliases in confidence_key_order:
+                value = 0.0
+                for key in aliases:
+                    raw_value = confidence_map.get(key)
+                    if isinstance(raw_value, (int, float)):
+                        value = float(raw_value)
+                        break
+                state_confidence.append(value)
+
+            timestamp = ml_entry.get("timestamp")
+
+            # Normalize timestamps so downstream line-chart parsing is consistent.
+            if isinstance(timestamp, (int, float)):
+                timestamp = datetime.utcfromtimestamp(timestamp).isoformat()
+            elif not isinstance(timestamp, str) or not timestamp:
                 timestamp = datetime.utcnow().isoformat()
-                
+
             records.append(
                 {
                     "node_id": node_id,
