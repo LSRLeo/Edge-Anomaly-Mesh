@@ -7,6 +7,54 @@ Edge-anomly-mesh is a hybrid mesh network simulation system for detecting anomal
 This is a simulation-based project.
 
 ---
+## Running the program
+
+Install all requirements, copy paste this in your activated environment make sure you start in the entire root directory .
+
+```
+cd node-simulator/
+pip3 install -r requirements.txt
+cd ../ui/
+pip3 install -r requirements.txt
+cd ../ml/
+pip3 install -r requirements.txt
+cd ../database/
+pip3 install -r requirements.txt
+```
+
+
+Start Database schema, from root directory:
+
+```
+python3 database/schema.py
+```
+
+Start Database listener, from root directory:
+
+```
+python3 database/redis_listener.py
+```
+
+Start ML Redis, from root directory:
+
+```
+python3 ml/redis_insteam.py --window-size 3 --stride 3 --model-path models/motion_classifier.pt
+```
+
+Start ML model, from root directory:
+```
+python3 ml/redis_insteam.py --model-path models/motion_classifier.pt --window-size 100
+```
+
+Create a simulation file, from root directory:
+```
+python3 node-simulator/simulation.py sim -t -n node-simulator/nodeConfig.json -r node-simulator/routes/compactAllModes.json --no-a
+```
+
+Send messages, from root directory:
+```
+python3 node-simulator/simulation.py redis sensor:raw:
+```
 
 ## Background & Motivation
 
