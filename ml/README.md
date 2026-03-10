@@ -300,6 +300,186 @@ ml/
 
 ---
 
+# ML Module — Sprint 2 Summary
+
+**Team 2: Motion Classification & Anomaly Detection**
+
+This document describes everything completed during `ml-team-sprint-2`.
+
+---
+
+## Sprint 2 Goals
+
+Build the live inference pipeline that connects the trained Sprint 1 model to the Redis pub/sub system:
+- Subscribe to raw sensor data from the node-simulator in real-time
+- Buffer and window incoming data per node
+- Run trained classifier inference on each window
+- Publish standardized inference-output messages to Redis for the database team
+- Harden the data pipeline with duplicate filtering, out-of-order handling, and input validation
+
+---
+
+## Deliverables Completed
+
+### 1. Redis Subscriber & Live Inference Pipeline — `redis_insteam.py`
+
+Fully implemented `RedisSubscriber` class for real-time ingestion and inference.
+
+**Issues: #235, #236, #238, #240, #241, #242, #274**
+
+| Feature | Description |
+|---------|-------------|
+| Node-specific hash map (`node_states`) | Per-node buffer, stride counter, and last-active timestamp (Issue #236) |
+| Sliding window with stride | Triggers inference every `--stride` samples once `--window-size` samples are buffered (Issue #238) |
+| Duplicate packet filtering | `seen_seqs` set per node skips repeated sequence numbers (Issue #274) |
+| Out-of-order packet handling | `insert_event_in_order()` inserts packets into the buffer by sequence number (Issue #240) |
+| Ground truth metadata preservation | `window_metadata` carries per-sample terrain type, anomaly flag, and ground truth label through inference (Issue #241) |
+| Inactive node cleanup | `cleanup_inactive_nodes()` prunes buffers and seen-seq sets for nodes silent beyond an inactivity threshold (Issue #242) |
+| Full inference trigger | `trigger_inference()` calls `stream_window_to_features()` → normalization → `MotionClassifier.predict()` and logs results |
+
+CLI usage:
+```bash
+python ml/redis_insteam.py --window-size 100 --stride 50 --model-path models/motion_classifier.pt
+```
+
+---
+
+### 2. Redis Inference Publisher — `redis_outstream.py`
+
+New file implementing standardized output from ML to the database team.
+
+**Issues: #259, #265, #307, #311**
+
+| Component | Description |
+|-----------|-------------|
+| `build_inference_output()` | Constructs a dict matching the `inference-output` schema from CLAUDE.md |
+| `InferenceRedisPublisher` | Wraps Redis client; publishes to `inference:results:{node_id}` channel |
+| `validate_inference_output()` | Validates all required fields, type constraints, and value ranges before publish |
+| `publish_inference_result()` | Convenience wrapper: validate → publish in one call |
+
+Inference output schema:
+```json
+{
+  "m_type": "inference-output",
+  "m_id": "ml_{seq}",
+  "event_id": "{node_id}_{timestamp}",
+  "node_id": "node_{number}",
+  "timestamp": "YYYY-MM-DDTHH:MM:SS.ffffff",
+  "classification": "IDLE|TERRESTRIAL|MARITIME|LIFT|UNKNOWN",
+  "confidence": 0.95,
+  "is_anomaly": false,
+  "anomaly_score": 0.12
+}
+```
+
+---
+
+### 3. Model Output Fixed to 4 Classes — `train_classifier.py`
+
+**Issue: #208**
+
+- Changed `MotionClassifier` output from 8 classes (combined terrain + anomaly) to **4 classes** (IDLE, TERRESTRIAL, MARITIME, LIFT)
+- Anomaly detection is now a separate concern handled at the output layer rather than embedded in the class index
+
+---
+
+### 4. Dynamic Hidden Layer Architecture — `train_classifier.py`
+
+**Issue: #314**
+
+- `MotionClassifier.__init__()` refactored to accept a `hidden_dims` list of arbitrary length
+- Layers are built dynamically in a loop rather than hard-coded to `[64, 32]`
+- Enables hyperparameter search over network depth without code changes
+
+---
+
+### 5. Full Checkpoint Save/Load — `train_classifier.py`
+
+**Issue: #232**
+
+- `torch.save()` now persists a **checkpoint bundle** containing:
+  - `model_state_dict` — PyTorch weights
+  - `scaler` — `(mean, std)` tuple from `normalize_features()`
+  - `model_config` — `input_dim`, `hidden_dims`, `dropout`, `num_classes`
+  - `class_names`, `best_val_acc`, `trained_at` metadata
+- `torch.load()` updated to unpack the checkpoint bundle at inference time
+
+---
+
+### 6. Normalization Stats Persistence — `train_classifier.py` + `classifier/normalization_stats.json`
+
+**Issue: #316**
+
+- `save_normalization_stats(scaler, out_path)` writes `mean` and `std` arrays to JSON after training
+- Saved automatically during `main()` to `ml/classifier/normalization_stats.json`
+- `--norm-stats-output` CLI arg controls output path
+- Enables the live inference pipeline to load the scaler independently of the checkpoint bundle
+
+---
+
+### 7. Data Pipeline Refactoring for Reusability — `data_pipeline.py`
+
+**Issue: #239**
+
+| New function | Purpose |
+|-------------|---------|
+| `json_events_to_numpy(events)` | Converts a list of sensor dicts to per-axis NumPy arrays; handles both nested (`accel_mss`/`gyro_rads`) and flat (`accel_x`, ...) formats |
+| `stream_window_to_features(buffer, window_size)` | Extracts a single feature vector `(1, n_features)` from a live buffer of sensor dicts; used by `trigger_inference()` in `redis_insteam.py` |
+
+`load_json_data()` updated to use `json_events_to_numpy()` internally and to accept additional label fields (`label.motion_type`, `label.is_anomaly`, top-level `mode`).
+
+---
+
+### 8. Data Validation & Filtering — `data_pipeline.py`
+
+**Issue: #255**
+
+- `load_all_data()` now filters windows whose label is `None` or `NaN` before training
+- Prints a per-file warning with the count of dropped windows
+- Raises `ValueError` if all files produce zero valid windows, with a clear message
+- Labels are cast to `int` before being passed to PyTorch
+
+---
+
+### 9. Training Data Expansion
+
+- Added new training JSON files for **MARITIME** and **LIFT** motion types
+- `load_all_data()` updated to glob all JSON files under `data/training/` (excluding `metadata.json`) instead of only terrestrial data
+- `--data-dir` default changed from `data/generated_data` to `data/training`
+
+---
+
+## Updated File Structure
+
+```
+ml/
+├── README.md                      # This file
+├── requirements.txt               # Python dependencies
+├── feature_extraction.py          # FeatureExtractor, normalize_features() (unchanged in sprint 2)
+├── data_pipeline.py               # + json_events_to_numpy(), stream_window_to_features()
+├── train_classifier.py            # + dynamic hidden layers, 4-class output, checkpoint save, norm stats
+├── visualize_motion_data.py       # Unchanged in sprint 2
+├── redis_insteam.py               # Fully implemented: subscribe, buffer, dedup, OOO, infer
+├── redis_outstream.py             # New: InferenceRedisPublisher, build_inference_output, validation
+└── classifier/
+    ├── __init__.py
+    └── normalization_stats.json   # New: persisted mean/std from training
+```
+
+---
+
+## Design Decisions
+
+**4-class output** — Moving from 8 combined classes to 4 terrain classes simplifies the classification objective and decouples anomaly detection from terrain classification. The inference output schema carries `is_anomaly` and `anomaly_score` as separate fields.
+
+**Reusable numpy converter** — Extracting `json_events_to_numpy()` as a shared helper ensures the same parsing logic (including both nested and flat key formats) is used identically during offline training and live streaming, preventing train/serve skew.
+
+**Checkpoint bundle** — Saving the scaler alongside model weights as a single file eliminates the risk of using mismatched normalization parameters at inference time. The bundle is self-describing through the embedded `model_config`.
+
+**Per-node state isolation** — Each node gets its own buffer, stride counter, sequence set, and activity timestamp. This ensures that a bursty node cannot corrupt inference timing for quieter nodes sharing the same subscriber process.
+
+---
+
 # Setup Instructions for Each Terminal (Node simulator -> ML -> DB)
 
 *If python command doesn't work try python3 for all*
