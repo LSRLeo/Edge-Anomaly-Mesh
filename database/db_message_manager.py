@@ -35,9 +35,9 @@ class DBMessageManager:
 
 
     def __init__(self):
-        create_schema()  # Ensure database schema is created - caused issue so lets assume it is already created
-        self.table_manager = TableManager()
-        logging.info("DBMessageManager initialized and database schema created")
+        
+        
+        
 
 
     def process_message(self, message:Dict[str, Any]) -> Dict[str, Any] | None:
@@ -65,7 +65,7 @@ class DBMessageManager:
         # Find type of the message, if message type inherits from MessageData, then use tablemanager
         # If message type inherits from messagerequest, do not take self.table_manager
         if isinstance(message_obj, MessageData):
-            results = message_obj.execute(self.table_manager)
+            results = message_obj.execute()
         else:
             results = message_obj.execute()
         return results.to_dict() if results else None
