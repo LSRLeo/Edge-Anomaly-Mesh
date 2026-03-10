@@ -175,6 +175,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self._setup_legend()
         self._setup_canvas()
         self._setup_controls()
+        self.populate_test_nodes()
        
      
     def _setup_controls(self):
@@ -235,32 +236,30 @@ class NetworkTab(ttk.Frame, DashboardParents):
         """
 
        
-        canvas_frame = ttk.Frame(self)
-        canvas_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
-        canvas_frame.columnconfigure(0, weight=1)
-        canvas_frame.rowconfigure(0, weight=1)
+        self.canvas_frame = ttk.Frame(self)
+        self.canvas_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
+        self.canvas_frame.columnconfigure(0, weight=1)
+        self.canvas_frame.rowconfigure(0, weight=1)
         self.canvas = tk.Canvas(
-            canvas_frame,
+            self.canvas_frame,
             bg=UI_COLORS["bg"],
             highlightthickness=1,
             highlightbackground=UI_COLORS["border"],
         )
         self.canvas.grid(row=0, column=0, sticky='nsew')
         # Scrollbars (optional)
-        v_scroll = ttk.Scrollbar(canvas_frame, orient='vertical', 
+        v_scroll = ttk.Scrollbar(self.canvas_frame, orient='vertical', 
                                  command=self.canvas.yview)
         v_scroll.grid(row=0, column=1, sticky='ns')
-        h_scroll = ttk.Scrollbar(canvas_frame, orient='horizontal',
+        h_scroll = ttk.Scrollbar(self.canvas_frame, orient='horizontal',
                                  command=self.canvas.xview)
         h_scroll.grid(row=1, column=0, sticky='ew')
         self.canvas.configure(yscrollcommand=v_scroll.set,
                               xscrollcommand=h_scroll.set)
-        # Implement Background
-        # Load Map
-        map_image = Image.open("widgets/widgetextras/mercator.jpg")
-        self.map_photo = ImageTk.PhotoImage(map_image)
-        self.projection = MercatorProjection(map_image.width, map_image.height)
-        self.canvas.create_image(0,0,image=self.map_photo, anchor='nw')
+        # Load map image once; it will be dynamically resized with the canvas.
+        self.base_map_image = Image.open("widgets/widgetextras/mercator.jpg")
+        self.projection = MercatorProjection(self.base_map_image.width, self.base_map_image.height)
+        self.canvas.bind("<Configure>", self._on_canvas_resize)
 
         # Draw Nodes
 
