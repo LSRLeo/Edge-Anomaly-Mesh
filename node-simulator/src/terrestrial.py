@@ -123,9 +123,9 @@ class Terrestrial:
                 "accel_x": x_acceleration,
                 "accel_y": y_acceleration,
                 "accel_z": z_acceleration,
-                "gyro_x": 0.0,
-                "gyro_y": 0.0,
-                "gyro_z": 0.0,
+                "gyro_x": uniform(-0.01, 0.01),  # small random jitter for gyroscope readings
+                "gyro_y": uniform(-0.01, 0.01),
+                "gyro_z": uniform(-0.01, 0.01),
             })
         return messages
     
