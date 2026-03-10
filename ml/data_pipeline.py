@@ -178,7 +178,13 @@ def create_windows(data, window_size=100, overlap=0.0, labels=None):
             for label in label_slice:
                 label_counts[label] = label_counts.get(label, 0) + 1
 
-            majority_label = max(label_counts, key=label_counts.get)
+            max_count = max(label_counts.values())
+            candidates = [label for label, count in label_counts.items() if count == max_count]
+            # Tie-breaker: pick the first label in the window among candidates
+            for label in label_slice:
+                if label in candidates:
+                    majority_label = label
+                    break
             window_labels.append(majority_label)
 
     windows = np.array(windows)
