@@ -19,7 +19,10 @@ class Node:
         self.destination = route.points[-1]
         self.messages = []
         self.data_mode = data_mode
-        self.inject_anomalies = inject_anomalies
+        # self.inject_anomalies = inject_anomalies 
+        #Save this? Do we still need to use?
+        self.inject_anomalies = False  # Start with no anomalies injected
+        self._anomaly_triggered = False  # Internal flag to track if anomaly mode is on
         try:
             with open(node_file, 'r') as f:
                 node_config = json.load(f)
@@ -56,11 +59,17 @@ class Node:
             raise ValueError(f"Error decoding node configuration file {node_file}")
     
     def generate(self):
+        import random
         recent_hub_mode = None
         for i in range(len(self.route.points)):
             if i < len(self.route.points) - 1:
                 current_point = self.route.points[i]
                 next_point = self.route.points[i + 1]
+                # At each new waypoint, if anomaly mode hasn't started, roll for 10% chance to start
+                if not self._anomaly_triggered:
+                    if random.random() < 0.10:
+                        self._anomaly_triggered = True
+                        self.inject_anomalies = True
                 #route always start with hub and waypoint take the mode that the most recent hub has
                 if hasattr(current_point, "mode"):
                     recent_hub_mode = current_point.mode.lower()
@@ -73,7 +82,6 @@ class Node:
                         processed_idle = idleResults
                     idleResults_noisy = [apply_idle_node_noise(message) for message in processed_idle]
                     self.messages += self.add_metadata(idleResults_noisy, "IDLE", current_point, current_point)
-                
                 #Hub doesn't currently carry IDLE mode at all, so the following if statment will not run
                 if recent_hub_mode == "idle":
                     if hasattr(current_point, "time_at_hub"):
