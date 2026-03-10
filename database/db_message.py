@@ -79,7 +79,7 @@ class MessageResponse(Message):
 
     def __init__(self, m_type: str, m_id: str, responding_to: str, result: Dict[str, Any]):
         self.M_TYPE = m_type  # override M_TYPE in constructor
-        
+        super().__init__(m_id)
         self.msg = {
             "m_type": self.m_type,
             "m_id": m_id,
@@ -87,7 +87,7 @@ class MessageResponse(Message):
             **result
         }
         
-        super().__init__(m_id, self.msg)
+        #super().__init__(m_id, self.msg)
         
     def get_responding_to(self) -> str:
         """Get the ID of the original message that this is responding to."""
