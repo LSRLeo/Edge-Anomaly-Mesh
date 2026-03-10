@@ -173,11 +173,11 @@ class RawDataMessage(MessageData):
             self.records = msg.get("records", None)  # Expecting a list of raw data records under "records" key
             if self.records is None:
                 #just no records field wrap msg in a list and treat as single record
-                logging.warning(f"No 'records' field found in raw data message. Treating entire message as a single record.")
+                #logging.warning(f"No 'records' field found in raw data message. Treating entire message as a single record.")
                 self.records = [msg]
 
             elif not isinstance(self.records, list):
-                logging.warning(f"'records' field is not a list. Wrapping it in a list.")
+                #logging.warning(f"'records' field is not a list. Wrapping it in a list.")
                 self.records = [self.records]
 
         except Exception as e:
@@ -203,20 +203,20 @@ class InferenceOutputMessage(MessageData):
 
     def __init__(self, m_id: str, msg: Dict[str, Any]):
         super().__init__(m_id, msg)
-        
+        self.log = logging.getLogger(f"{self.__class__.__module__}.{self.__class__.__name__}")
         try:
             self.records = msg.get("records", None)  # Expecting a list of raw data records under "records" key
             if self.records is None:
                 #just no records field wrap msg in a list and treat as single record
-                logging.warning(f"No 'records' field found in inference output message. Treating entire message as a single record.")
+                #self.log.info(f"No 'records' field found in inference output message. Treating entire message as a single record.")
                 self.records = [msg]
 
             elif not isinstance(self.records, list):
-                logging.warning(f"'records' field is not a list. Wrapping it in a list.")
+                #self.log.info(f"'records' field is not a list. Wrapping it in a list.")
                 self.records = [self.records]
 
         except Exception as e:
-            logging.error(f"Error processing inference output message content: {e}")
+            self.log.error(f"Error processing inference output message content: {e}")
             self.records = [msg]  # Default to treating entire message as a single record
                 
     def execute(self, db_manager: TableManager) -> None:
@@ -224,14 +224,13 @@ class InferenceOutputMessage(MessageData):
         Process the inference output data and store it in the database. Args: db_manager: The database manager instance to interact with the database.
         """
         try:
+            #store_inference_result(self.records)
             db_manager.insert_inference_results(self.records)
-            logging.info(f"Successfully stored inference output for event: {self.event_id} and node: {self.node_id}")
-
+            self.log.info(f"Successfully stored inference output for {self.msg.get('node_id')} at timestamp {self.msg.get('timestamp')}")
             return None  # Indicate successful execution
         
         except Exception as e:
-            logging.error(f"Error storing inference output: {e}")
-
+            self.log.error(f"Error storing inference output: {e}")
 
 class GetNodesRequest(MessageRequest):
     M_TYPE = "get-nodes"
