@@ -281,8 +281,8 @@ def main():
         redis_reader = RedisReader(CHANNELNAME_QUERY, CHANNELNAME_RESPONSE, r, sub)
     
         redis_reader.refresh(instant=True) #initial refresh to populate data from redis before starting dashboard
-        RedisThread = threading.Thread(target=redis_reader.refresh, daemon=True) 
-        RedisThread.start
+        RedisThread = threading.Thread(target=redis_reader.run, daemon=True) 
+        RedisThread.start()
         root = tk.Tk()
     
         # Optional: Set application icon
@@ -290,10 +290,7 @@ def main():
         
         # Create dashboard
         app = DashboardApp(root, redis_reader=redis_reader)
-        # Create Thread for main DashBoard
-
-
-        # Create listener and pub on RedisThread
+        
         
 
         
@@ -304,6 +301,7 @@ def main():
 
         # close redis conn
         redis_reader.stop()
+        RedisThread.join()
     else:
         # Test mode with mock data
         root = tk.Tk()

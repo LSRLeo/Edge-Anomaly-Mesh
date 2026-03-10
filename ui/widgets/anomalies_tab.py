@@ -368,7 +368,9 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
         if not self.test_mode:
             self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
+            self._sections_nb.add(self._redis_section, text=self._redis_section.title)
         self._sections_nb.add(self._list_section, text=self._list_section.title)
+
     def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
         Load data for a specific node.
@@ -464,11 +466,12 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
             return
         else:
             try:
+                # print("Refreshing anomalies tab data from Redis...") #CYA measure to indicate refresh is running
                 self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
                 self.messages = self.redis_reader.drain_log_queue() #get latest log messages from redis reader
                 self._parse_nodes() #parse raw data and ml output into Node objects
-                if self._list_section:
-                    self._list_section._build_rows() #rebuild the anomaly rows with updated node data
+                if self._redis_section:
+                    self._redis_section._build_rows() #rebuild the anomaly rows with updated node data
                 
 
                 

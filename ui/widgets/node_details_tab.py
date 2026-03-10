@@ -112,7 +112,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
         # self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
         self.refresh() #initial refresh to populate data from redis
-        print(len(self.nodes))
+        
         # Build UI
         self._setup_ui()
         
@@ -416,6 +416,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         """
         Refresh data for the currently selected node.
         """
+        
         if self.test_mode or self.redis_reader is None:
             self._parse_nodes_json() #load from json for testing
             self.refresh_dropdown() #refresh dropdown with loaded nodes
@@ -423,6 +424,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
                 self.display_node(self.current_node_id) #refresh displayed node
         else:
             try:
+                # print("Refreshing node_details tab data from Redis...") #CYA measure to indicate refresh is running
                 self.rddict, self.mldict = self.redis_reader.getDicts() #get latest data from redis reader
                 self._parse_nodes()
                 self.refresh_dropdown()
