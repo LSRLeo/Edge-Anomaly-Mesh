@@ -157,7 +157,18 @@ class RedisReader:
         message1 = {
             'm_type': 'get-nodes', 
             'm_id': f'ui_00005'}
-        self.publisher.publish(self.q_channel_name, json.dumps(message1))
+        message2 = {
+            'm_type': 'get-recent-inference', 
+            'm_id': f'ui_00006',
+            'node_id': 'node_001'
+            }
+        message3= {          
+            'm_type': 'get-recent-raw-data', 
+            'm_id': f'ui_00009',
+            'node_id': 'node_001'
+            }
+            
+        self.publisher.publish(self.q_channel_name, json.dumps(message2))
     def test_subscribe(self):
         """
         Test method to subscribe to a channel and print messages.
