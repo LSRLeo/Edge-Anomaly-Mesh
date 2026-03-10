@@ -322,6 +322,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.node_items.clear()
         for node in nodes:
             self._draw_single_node(node)
+        if self.selected_node and self.selected_node in self.test_nodes:
+            self.select_node(self.selected_node)
 
     
     def _draw_single_node(self, node: Dict[str, Any]):
@@ -337,6 +339,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             self.canvas.delete(old_item)
             self.canvas.delete(f'{node_id}_label')
         px, py = self.projection.latlong_to_pixel(node['lat'], node['lon'])
+        px += self.map_offset_x
+        py += self.map_offset_y
         motion_class = node.get('motion_class','UNKNOWN')
         is_anomaly = node.get('anomaly', False)
         
@@ -584,7 +588,9 @@ class NetworkTab(ttk.Frame, DashboardParents):
         Fetches current node states from database and redraws.
         """
         try:
-            self._setup_canvas()
+            self.populate_test_nodes()
+            if self.canvas:
+                self._render_map_and_nodes(self.canvas.winfo_width(), self.canvas.winfo_height())
         except:
             print(f'Error refreshing UI and Data, Exception:{Exception}')
     def update_node(self):
