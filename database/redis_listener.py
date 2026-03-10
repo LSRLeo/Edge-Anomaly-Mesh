@@ -23,21 +23,34 @@ RESPONSE_CHANNELS_MAP = {
 
 
 def publish_response(channel:str, message: Dict[str, Any]) -> None:
-    # Implement the logic to send a message, use responding_to field to determine the channel to publish to
-    #TODO: used to send response to UI channels, can expand to other channels as needed
+    #used to send response to UI channels, can expand to other channels as needed
     try:
         r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
         r.publish(channel, json.dumps(message))
     except Exception as e:
         logging.error(f"Error sending message to {channel}: {e}")
 
+def process_data(channel:str, data: Dict[str, Any]):
+    manager = DBMessageManager()
+    try:
+        response = manager.process_message(data)
+        
+        if response:
+            #send response to correct channel
+            logging.info(f"Processed message, response: {response}")
+                
+            if channel:
+                publish_response(channel, response)
+                logging.info(f"Published response to {channel}")
+
+    except Exception as e:
+        logging.error(f"Error processing message: {e}")
+        return None
 
 def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     pubsub = r.pubsub()
     pubsub.psubscribe(*SUBSCRIBE_CHANNELS)
-
-    manager = DBMessageManager()
 
     logging.info("Redis listener started. Waiting for messages...")
     for msg in pubsub.listen():
@@ -51,26 +64,11 @@ def main():
             if isinstance(data, list):
                 logging.info(f"Received list of messages, processing each one...")
                 for item in data:
-                    item_response = manager.process_message(item)
-                    if item_response:
-                        logging.info(f"Processed message, response: {item_response}")
-                        #send response to correct channel
-                        if channel:
-                            r.publish(channel, json.dumps(item_response))
-                            logging.info(f"Published response to {channel}")
-
+                    process_data(channel, item)
 
             else:
                 logging.info(f"Received on {msg['channel']}: {data}")
-                response = manager.process_message(data)
-                if response:
-                    #send response to correct channel
-                    logging.info(f"Processed message, response: {response}")
-                    channel = RESPONSE_CHANNELS_MAP.get(incoming_channel)
-                    if channel:
-                        r.publish(channel, json.dumps(response))
-                        logging.info(f"Published response to {channel}")
-                
+                process_data(channel, data)
                     
             # If this is a query request, publish response to UI channels
         except Exception as e:
