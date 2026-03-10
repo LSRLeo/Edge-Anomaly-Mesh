@@ -19,22 +19,18 @@ SUBSCRIBE_CHANNELS = [
 RESPONSE_CHANNELS_MAP = {
     "ui:query": "ui:responses",
 } #CAN ADD MORE CHANNELS LATER
+#TODO map m-types to channels as needed or based on responding_to field in message
 
 
-
-def send_message(channel:str, message: Dict[str, Any]) -> None:
+def publish_response(channel:str, message: Dict[str, Any]) -> None:
     # Implement the logic to send a message, use responding_to field to determine the channel to publish to
     #TODO: used to send response to UI channels, can expand to other channels as needed
-    responding_to = message.get("responding_to")
-    if responding_to:
-        
+    try:
         r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
         r.publish(channel, json.dumps(message))
+    except Exception as e:
+        logging.error(f"Error sending message to {channel}: {e}")
 
-
-def validate_response(response: Dict[str, Any]) -> bool:
-    # Implement the logic to validate a response
-    return True
 
 def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
