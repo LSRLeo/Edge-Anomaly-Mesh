@@ -48,6 +48,14 @@ class RedisReader:
         with self.refresh_lock: #acquire lock to ensure thread safety when updating dataframes
             self.rddict = newrddict #update raw data dictionary with new data
             self.mldict = newmldict #update machine learning dictionary with new data
+    def run(self):
+        """
+        Run the refresh loop until stop event is set.
+        """
+        while not self._stop_refresh.is_set():
+            print("Refreshing data from Redis...") #CYA measure to indicate refresh is running
+            self.refresh()
+        print("Refresh thread stopping...") #CYA measure to indicate refresh thread is stopping
     def request_node_ids(self):
         """
         Request list of node IDs from Redis.
