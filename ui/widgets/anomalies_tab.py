@@ -366,10 +366,11 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         print("Inner notebook style:", self._sections_nb.cget("style"))
         # Create and add the initial anomalies list section
         self._list_section = AnomalySection(self, self.dashboard, title="Anomalies")
+        self._sections_nb.add(self._list_section, text=self._list_section.title)
+
         if not self.test_mode:
             self._redis_section = RedisMonitorSection(self, self.dashboard, title="Redis Monitor")
             self._sections_nb.add(self._redis_section, text=self._redis_section.title)
-        self._sections_nb.add(self._list_section, text=self._list_section.title)
 
     def load_node(self, node_id: str, rdentry: Dict[str, Any], mlentry):
         """
