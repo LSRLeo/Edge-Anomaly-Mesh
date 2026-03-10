@@ -120,6 +120,12 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.node_dict: Dict[str, object] = {}
         # Canvas for drawing nodes
         self.canvas: Optional[tk.Canvas] = None
+        self.canvas_frame: Optional[ttk.Frame] = None
+        self.base_map_image: Optional[Image.Image] = None
+        self.map_photo: Optional[ImageTk.PhotoImage] = None
+        self.map_item_id: Optional[int] = None
+        self.map_offset_x = 0
+        self.map_offset_y = 0
         
         # Track drawn node items: {node_id: canvas_item_id}
         self.node_items: Dict[str, int] = {}
