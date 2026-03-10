@@ -156,8 +156,10 @@ class Maritime:
             accel_y = self.gravity * math.sin(roll)
             
             # Vertical acceleration (z-axis)
-            # Gravity component + pitch effect
-            accel_z = self.gravity * math.cos(pitch) * math.cos(roll)
+            # Gravity component + pitch effect + wave-induced vertical acceleration
+            heave = 0.2 * math.sin(2 * math.pi * t / self.wave_period)
+            accel_z = self.gravity * math.cos(pitch) * math.cos(roll) + heave
+            
             
             # Gyroscope readings (angular velocities)
             # Roll rate (x-axis rotation)
