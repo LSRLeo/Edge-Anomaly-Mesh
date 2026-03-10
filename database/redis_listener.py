@@ -30,8 +30,7 @@ def publish_response(channel:str, message: Dict[str, Any]) -> None:
     except Exception as e:
         logging.error(f"Error sending message to {channel}: {e}")
 
-def process_data(channel:str, data: Dict[str, Any]):
-    manager = DBMessageManager()
+def process_data(manager: DBMessageManager, channel:str, data: Dict[str, Any]):
     try:
         response = manager.process_message(data)
         

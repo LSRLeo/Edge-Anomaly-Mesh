@@ -35,7 +35,7 @@ class DBMessageManager:
 
 
     def __init__(self):
-        
+        logging.info("Initializing DBMessageManager")
         
         
 
