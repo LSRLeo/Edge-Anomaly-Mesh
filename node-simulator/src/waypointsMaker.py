@@ -77,7 +77,8 @@ class WaypointMaker:
                 lat=round(lat, 6),
                 lon=round(lon, 6),
                 alt=round(altitude, 1),
-                progress=progress
+                progress=progress,
+                hub_id=from_hub.hub_id
             ))
 
         return waypoints

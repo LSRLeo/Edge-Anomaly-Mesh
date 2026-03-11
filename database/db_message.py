@@ -216,7 +216,7 @@ class InferenceOutputMessage(MessageData):
                 
     def execute(self, db_manager: TableManager) -> None:
         """
-        Process the inference output data and store it in the database. Args: db_manager: The database manager instance to interact with the database.
+        Process the inference output data and store it in the database.
         """
         try:
             #store_inference_result(self.records)

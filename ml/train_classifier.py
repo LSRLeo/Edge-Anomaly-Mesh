@@ -682,7 +682,7 @@ def print_confusion_matrix(matrix, class_names):
     print("=" * 80)
 
     # Print header row
-    print(f"{'True \\ Pred':<20}", end="")
+    print(f"{'True -- Pred':<20}", end="")
     for name in class_names:
         print(f"{name:>12}", end="")
     print()

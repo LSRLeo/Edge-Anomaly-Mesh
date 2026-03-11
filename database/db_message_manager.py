@@ -35,9 +35,10 @@ class DBMessageManager:
 
 
     def __init__(self):
-        create_schema()  # Ensure database schema is created - caused issue so lets assume it is already created
+        logging.info("Initializing DBMessageManager")
         self.table_manager = TableManager()
-        logging.info("DBMessageManager initialized and database schema created")
+        
+        
 
 
     def process_message(self, message:Dict[str, Any]) -> Dict[str, Any] | None:

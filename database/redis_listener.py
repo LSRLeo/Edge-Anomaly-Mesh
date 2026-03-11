@@ -16,31 +16,40 @@ SUBSCRIBE_CHANNELS = [
     "inference:results:*",
     "ui:query"
 ]
-#map responding to prefixes to channels for responses
+RESPONSE_CHANNELS_MAP = {
+    "ui:query": "ui:responses",
+} #CAN ADD MORE CHANNELS LATER
+#TODO map m-types to channels as needed or based on responding_to field in message
 
-def send_message(message: dict) -> None:
-    # Implement the logic to send a message, use responding_to field to determine the channel to publish to
-    responding_to = message.get("responding_to")
-    if responding_to:
-        channel = f"response:{responding_to}"
+
+def publish_response(channel:str, message: Dict[str, Any]) -> None:
+    #used to send response to UI channels, can expand to other channels as needed
+    try:
         r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
         r.publish(channel, json.dumps(message))
+    except Exception as e:
+        logging.error(f"Error sending message to {channel}: {e}")
 
+def process_data(manager: DBMessageManager, channel:str, data: Dict[str, Any]):
+    try:
+        response = manager.process_message(data)
+        
+        if response:
+            #send response to correct channel
+            logging.info(f"Processed message, response: {response}")
+                
+            if channel:
+                publish_response(channel, response)
+                logging.info(f"Published response to {channel}")
 
-def validate_response(response: Dict[str, Any]) -> bool:
-    # Implement the logic to validate a response
-    return True
-def get_response_channel(message: Dict[str, Any]) -> Optional[str]:
-    # Implement the logic to determine the correct channel to publish the response to based on the original message
-    responding_to = message.get("responding_to")
-    if responding_to:
-        return f"response:{responding_to}"
-    return None
+    except Exception as e:
+        logging.error(f"Error processing message: {e}")
+        return None
+
 def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     pubsub = r.pubsub()
     pubsub.psubscribe(SUBSCRIBE_CHANNELS)
-
     manager = DBMessageManager()
 
     logging.info("Redis listener started. Waiting for messages...")
@@ -48,24 +57,22 @@ def main():
         if msg["type"] != "pmessage":
             continue
         try:
+            incoming_channel = msg["channel"]
+            channel = RESPONSE_CHANNELS_MAP.get(incoming_channel)
             data = json.loads(msg["data"])
-            logging.info(f"Received on {msg['channel']}: {data}")
+            
             if isinstance(data, list):
                 logging.info(f"Received list of messages, processing each one...")
                 for item in data:
-                    item_response = manager.process_message(item)
-                    logging.info(f"Processed message: {item_response}")
+                    process_data(manager, channel, item)
+
             else:
-                response = manager.process_message(data)
-                logging.info(f"Processed message: {response}")
+                logging.info(f"Received on {msg['channel']}: {data}")
+                process_data(manager, channel, data)
+                    
             # If this is a query request, publish response to UI channels
-            if data.get("m_type", "").startswith("get-"):
-                node_id = data.get("node_id", "all")
-                channel = f"ui:responses"
-                r.publish(channel, json.dumps(response))
-                logging.info(f"Published response to {channel}")
         except Exception as e:
-            print(f"Error processing message: {e}")
+            logging.error(f"Error processing message: {e}")
 
 if __name__ == "__main__":
     main()
