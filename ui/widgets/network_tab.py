@@ -300,12 +300,12 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.canvas.config(scrollregion=(0, 0, canvas_width, canvas_height))
         self.projection = MercatorProjection(draw_w, draw_h)
         
-        if self.test_nodes:
-            self.draw_nodes(list(self.test_nodes.values()))
+        if self.node_dict:
+            self.draw_nodes(self.node_dict)
             
             
     
-    def draw_nodes(self, nodes: List[Dict[str, Any]]):
+    def draw_nodes(self, nodes: Dict[str, object]):
         """
         Draw all nodes on the canvas.
         
@@ -320,34 +320,34 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         self.canvas.delete('node')
         self.node_items.clear()
-        for node in nodes:
+        for node in nodes.values():
             self._draw_single_node(node)
-        if self.selected_node and self.selected_node in self.test_nodes:
+        if self.selected_node and self.selected_node in self.node_items:
             self.select_node(self.selected_node)
 
     
-    def _draw_single_node(self, node: Dict[str, Any]):
+    def _draw_single_node(self, node: object):
         """
         Draw a single node on the canvas.
         
         Args:
             node: Node dictionary with position and state info
         """
-        node_id = node.get('node_id', 'unknown')
+        node_id = node.node_id
         old_item = self.node_items.get(node_id)
         if old_item:
             self.canvas.delete(old_item)
             self.canvas.delete(f'{node_id}_label')
-        px, py = self.projection.latlong_to_pixel(node['lat'], node['lon'])
+        px, py = self.projection.latlong_to_pixel(node.lat, node.lon)
         px += self.map_offset_x
         py += self.map_offset_y
-        motion_class = node.get('motion_class','UNKNOWN')
-        is_anomaly = node.get('anomaly', False)
+        motion_class = node.motion_class
+        is_anomaly = node.anomaly
         
         fill_color = self.get_motion_color(motion_class)
         r = 10
 
-        if is_anomaly:
+        if node.anomaly:
             outline_col = 'red'
             outline_width = self.ANOMALY_BORDER_WIDTH
             item_id = self.canvas.create_polygon(px,py+10,px-10,py-10,px+10,py-10,
@@ -394,8 +394,9 @@ class NetworkTab(ttk.Frame, DashboardParents):
         
 
     def get_motion_color(self, motion_class):
+        if isinstance(motion_class, int):
+            motion_class = Node.motion_states[motion_class]
         color_tuple = self.MOTION_COLORS.get(motion_class, ('gray', False))
-        # Always return just the color string
         return color_tuple[0]
     
     def highlight_anomaly(self, node_id: str, is_anomaly: bool):
@@ -490,7 +491,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             return
         # Toggle anomaly status in self.test_nodes only if right clicked
 
-        node = self.test_nodes.get(node_id)
+        node = self.node_dict.get(node_id)
+        print(node)
 
         if node is not None and event.num == 1:
             self.select_node(node_id)
@@ -498,8 +500,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             self.dashboard.node_details_tab.display_node(node_id)
 
         elif node is not None and event.num == 2 or event.num==3:
-            node['anomaly'] = not node.get('anomaly')
-            self.changed_nodes[node_id] = node['anomaly']
+            node.anomaly = not node.anomaly
+            self.changed_nodes[node_id] = node.anomaly
             # Redraw just this node
             self._draw_single_node(node)
         
@@ -570,10 +572,10 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 "lat": node_data.get("gps_lat_deg", 0.0),
                 "lon": node_data.get("gps_lon_deg", 0.0),
                 "motion_class": classification,
-                "anomaly": ml["is_anomaly"],
+                "is_anomaly": ml["is_anomaly"],
             }
 
-        self.draw_nodes(list(self.test_nodes.values()))
+        self.draw_nodes(self.node_dict)
     
 
     def refresh(self):
@@ -590,8 +592,22 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 self._render_map_and_nodes(self.canvas.winfo_width(), self.canvas.winfo_height())
         except:
             print(f'Error refreshing UI and Data, Exception:{Exception}')
+    def _submit_user(self, user_entry, user_window):
+        user = user_entry.get()
+        print(f'submitting user: {user}, changed_nodes: {self.changed_nodes}')
+        if user:
+            try:
+                for node_id, anomaly_value in self.changed_nodes.items():
+                    self.redis_reader.updateNode(node_id, anomaly_value, user)
+                self.changed_nodes.clear()
+                user_window.destroy()
+            except Exception as e:
+                tk.messagebox.showerror("Update Error", f"Failed to send update: {e}")
+        else:
+            tk.messagebox.showerror("Input Error", "Please enter your name.")
+
     def update_node(self):
-        print(f'debug statement to check changed_nodes: {self.changed_nodes}')
+        print(f'changed_nodes: {self.changed_nodes}')
         if not self.redis_reader:
             tk.messagebox.showerror("Error", "No Redis connection available.")
             return
@@ -605,21 +621,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         ttk.Label(user_window, text="Enter your name:").pack(pady=10)
         user_entry = ttk.Entry(user_window)
         user_entry.pack(pady=5)
-
-        def submit_user():
-            user = user_entry.get()
-            if user:
-                try:
-                    for node_id, anomaly_value in self.changed_nodes.items():
-                        self.redis_reader.updateNode(node_id, anomaly_value, user)
-                    self.changed_nodes.clear()
-                    user_window.destroy()
-                except Exception as e:
-                    tk.messagebox.showerror("Update Error", f"Failed to send update: {e}")
-            else:
-                tk.messagebox.showerror("Input Error", "Please enter your name.")
-
-        ttk.Button(user_window, text="Submit", command=submit_user).pack(pady=10)
+        ttk.Button(user_window, text="Submit", command=lambda: self._submit_user(user_entry, user_window)).pack(pady=10)
 
 
        
