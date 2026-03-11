@@ -354,7 +354,7 @@ class Node:
                     "motion_type": mode,
                     "is_anomaly": "",
                     "anomaly_type": "",
-                    "location": "hub_denver_01"
+                    "location": current_point.hub_id
                 }
             else:
                 # NOTE: This is where we will add the anomaly label
@@ -364,7 +364,7 @@ class Node:
                     "motion_type": mode,
                     "is_anomaly": anomaly_type,
                     "anomaly_type": "",
-                    "location": "hub_denver_01"
+                    "location": current_point.hub_id
                 }
             polished_message = {
                 "m_type": "raw-data",
