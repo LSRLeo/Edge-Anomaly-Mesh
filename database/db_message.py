@@ -152,7 +152,7 @@ class MessageData(Message):
     Abstract class for message data. Messages that do not return any response. 
     '''   
     @abstractmethod
-    def execute(self) -> None:
+    def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """Inserts Data into the DB"""
         pass
 
@@ -179,12 +179,12 @@ class RawDataMessage(MessageData):
             logging.error(f"Error processing raw data message content: {e}")
             self.records = [msg]  # Default to treating entire message as a single record
                 
-    def execute(self) -> None:
+    def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
         """
         Process the raw data and store it in the database.
         """
         try:
-            TableManager.insert_raw_data(self.records) 
+            db_manager.insert_raw_data(self.records) 
             logging.info(f"Successfully stored raw data")
 
             return None  # Indicate successful execution
@@ -214,13 +214,13 @@ class InferenceOutputMessage(MessageData):
             self.log.error(f"Error processing inference output message content: {e}")
             self.records = [msg]  # Default to treating entire message as a single record
                 
-    def execute(self) -> None:
+    def execute(self, db_manager: TableManager) -> None:
         """
         Process the inference output data and store it in the database.
         """
         try:
             #store_inference_result(self.records)
-            TableManager.insert_inference_results(self.records)
+            db_manager.insert_inference_results(self.records)
             self.log.info(f"Successfully stored inference output for {self.msg.get('node_id')} at timestamp {self.msg.get('timestamp')}")
             return None  # Indicate successful execution
         

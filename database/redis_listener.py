@@ -50,6 +50,7 @@ def main():
     r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     pubsub = r.pubsub()
     pubsub.psubscribe(SUBSCRIBE_CHANNELS)
+    manager = DBMessageManager()
 
     logging.info("Redis listener started. Waiting for messages...")
     for msg in pubsub.listen():
@@ -63,11 +64,11 @@ def main():
             if isinstance(data, list):
                 logging.info(f"Received list of messages, processing each one...")
                 for item in data:
-                    process_data(channel, item)
+                    process_data(manager, channel, item)
 
             else:
                 logging.info(f"Received on {msg['channel']}: {data}")
-                process_data(channel, data)
+                process_data(manager, channel, data)
                     
             # If this is a query request, publish response to UI channels
         except Exception as e:
