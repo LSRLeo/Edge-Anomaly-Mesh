@@ -391,6 +391,14 @@ class AnalyticsTab(ttk.Frame):
         _, mldict = self.redis_reader.getDicts()
         records: List[Dict[str, Any]] = []
 
+        if isinstance(mldict, dict):
+            sample_keys = list(mldict.keys())[:3]
+            sample_value = next(iter(mldict.values()), None)
+            print(f"[analytics] mldict type=dict size={len(mldict)} sample_keys={sample_keys}")
+            print(f"[analytics] first mldict value type={type(sample_value).__name__}")
+        else:
+            print(f"[analytics] mldict type={type(mldict).__name__}")
+
         if not isinstance(mldict, dict):
             return records
 
@@ -409,10 +417,15 @@ class AnalyticsTab(ttk.Frame):
 
         for node_id, ml_entry in mldict.items():
             if not isinstance(ml_entry, dict):
+                print(f"[analytics] skip node={node_id}: ml_entry is {type(ml_entry).__name__}, expected dict")
                 continue
 
             confidence_map = ml_entry.get("confidence", {})
             if not isinstance(confidence_map, dict):
+                print(
+                    f"[analytics] skip node={node_id}: confidence is "
+                    f"{type(confidence_map).__name__}, expected dict"
+                )
                 continue
 
             state_confidence: List[float] = []
@@ -440,6 +453,10 @@ class AnalyticsTab(ttk.Frame):
                     "state_confidence": state_confidence,
                 }
             )
+
+        print(f"[analytics] parsed records: {len(records)}")
+        if records:
+            print(f"[analytics] sample timestamp: {records[0]['timestamp']}")
         
         return records
             
@@ -476,6 +493,7 @@ class AnalyticsTab(ttk.Frame):
         Refresh all charts with latest data from ML JSON.
         """
         try:
+            print(f"[analytics] refresh called (test_mode={self.test_mode})")
             records = self.parse_json() if self.test_mode else self.parse_redis()
             
             for component in self.components:
