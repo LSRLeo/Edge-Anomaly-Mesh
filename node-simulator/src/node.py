@@ -3,6 +3,7 @@ import json
 import math
 from datetime import datetime, timedelta
 from src.hub import Hub
+from src.constants import GRAVITY_MSS
 
 from src.lift import Lift
 from src.maritime import Maritime
@@ -48,7 +49,7 @@ class Node:
             self.maritime_start_hub = None
             self.maritime_bearing = None  # bearing from start to destination
             
-            self.gravity = 9.81  # m/s²
+            self.gravity = GRAVITY_MSS  # m/s² (downward, Z-up frame)
 
         except FileNotFoundError:
             raise FileNotFoundError(f"Node configuration file {node_file} not found")
@@ -123,14 +124,16 @@ class Node:
             return {
                 "lat_deg": current_point.lat,
                 "lon_deg": current_point.lon,
-                "altitude_m": current_point.alt
+                "altitude_m": self._clamp_altitude(current_point.alt)
             }
         elif mode == "LIFT":
             # Calculate GPS from accelerations for LIFT mode
             return self._calculate_gps_from_accel_lift(current_point, accel_x, accel_y, accel_z)
         elif mode == "TERRESTRIAL":
-            # Calculate GPS from accelerations for TERRESTRIAL mode
-            return self._calculate_gps_from_accel_terrestrial(current_point, next_point, accel_x, accel_y, accel_z)
+            # Calculate GPS from accelerations for TERRESTRIAL mode (with smooth altitude transition)
+            return self._calculate_gps_from_accel_terrestrial(
+                current_point, next_point, accel_x, accel_y, accel_z, message_index, total_messages
+            )
         elif mode == "MARITIME":
             # Calculate GPS from accelerations for MARITIME mode
             return self._calculate_gps_from_accel_maritime(current_point, next_point, accel_x, accel_y, accel_z)
@@ -138,7 +141,7 @@ class Node:
             return {
                 "lat_deg": current_point.lat,
                 "lon_deg": current_point.lon,
-                "altitude_m": current_point.alt
+                "altitude_m": self._clamp_altitude(current_point.alt)
             }
     
     def _calculate_bearing(self, start_hub, end_hub):
@@ -171,9 +174,8 @@ class Node:
         # Time step in seconds (works for any sample rate, including < 1 Hz)
         dt = 1.0 / self.sample_rate_hz
         
-        # Calculate net vertical acceleration (subtract gravity since accel_z includes it)
-        # If accel_z > gravity, we're accelerating upward
-        # If accel_z < gravity, we're accelerating downward
+        # Net vertical acceleration: remove gravity (accel_z includes it; at rest accel_z = -9.8)
+        # So net = accel_z - gravity: at rest 0, lifting gives positive, lowering negative
         net_accel_z = accel_z - self.gravity
         
         # Update velocity using Euler integration: v = v0 + a * dt
@@ -192,10 +194,10 @@ class Node:
         lat_offset = self.lift_position["y"] / 111000.0  # Assuming y is North-South
         lon_offset = self.lift_position["x"] / (111000.0 * math.cos(math.radians(start_hub.lat)))  # Assuming x is East-West
         
-        # Calculate new GPS coordinates
+        # Calculate new GPS coordinates; clamp altitude to avoid runaway integration
         new_lat = start_hub.lat + lat_offset
         new_lon = start_hub.lon + lon_offset
-        new_alt = start_hub.alt + self.lift_position["z"]  # z is vertical (altitude)
+        new_alt = self._clamp_altitude(start_hub.alt + self.lift_position["z"])
         
         return {
             "lat_deg": new_lat,
@@ -203,11 +205,16 @@ class Node:
             "altitude_m": new_alt
         }
     
-    def _calculate_gps_from_accel_terrestrial(self, start_hub, end_hub, accel_x, accel_y, accel_z):
+    def _clamp_altitude(self, alt_m: float, min_m: float = -500.0, max_m: float = 15000.0) -> float:
+        """Clamp altitude to a reasonable range to prevent runaway values."""
+        return max(min_m, min(max_m, alt_m))
+    
+    def _calculate_gps_from_accel_terrestrial(self, start_hub, end_hub, accel_x, accel_y, accel_z,
+                                              message_index=0, total_messages=1):
         """
         Calculate GPS from accelerations for TERRESTRIAL mode.
         Terrestrial uses local frame: x=forward (toward destination), y=lateral, z=up.
-        We need to convert to global frame (North/East/Up) based on bearing.
+        Altitude is interpolated smoothly from start_hub.alt to end_hub.alt by segment progress.
         """
         # Reset state if this is the first message in a TERRESTRIAL sequence
         if (self.terrestrial_start_hub is None or 
@@ -235,7 +242,7 @@ class Node:
         self.terrestrial_velocity["east"] += accel_east * dt
         self.terrestrial_velocity["up"] += accel_up * dt
         
-        # Update position using Euler integration: p = p0 + v * dt
+        # Update position using Euler integration: p = p0 + v * dt (north/east only for lat/lon)
         self.terrestrial_position["north"] += self.terrestrial_velocity["north"] * dt
         self.terrestrial_position["east"] += self.terrestrial_velocity["east"] * dt
         self.terrestrial_position["up"] += self.terrestrial_velocity["up"] * dt
@@ -246,10 +253,14 @@ class Node:
         lat_offset = self.terrestrial_position["north"] / 111000.0
         lon_offset = self.terrestrial_position["east"] / (111000.0 * math.cos(math.radians(start_hub.lat)))
         
-        # Calculate new GPS coordinates
+        # Smooth altitude transition from start to end hub (by segment progress)
+        progress = message_index / total_messages if total_messages > 0 else 0.0
+        progress = max(0.0, min(1.0, progress))
+        interp_alt = start_hub.alt + (end_hub.alt - start_hub.alt) * progress
+        
         new_lat = start_hub.lat + lat_offset
         new_lon = start_hub.lon + lon_offset
-        new_alt = start_hub.alt + self.terrestrial_position["up"]
+        new_alt = self._clamp_altitude(interp_alt)
         
         return {
             "lat_deg": new_lat,
@@ -289,21 +300,19 @@ class Node:
         self.maritime_velocity["east"] += accel_east * dt
         self.maritime_velocity["up"] += accel_up * dt
         
-        # Update position using Euler integration: p = p0 + v * dt
+        # Update position using Euler integration: p = p0 + v * dt (north/east only for lat/lon)
         self.maritime_position["north"] += self.maritime_velocity["north"] * dt
         self.maritime_position["east"] += self.maritime_velocity["east"] * dt
         self.maritime_position["up"] += self.maritime_velocity["up"] * dt
         
         # Convert displacement in meters to GPS coordinates
-        # 1 degree latitude ≈ 111,000 meters
-        # 1 degree longitude ≈ 111,000 * cos(latitude) meters
         lat_offset = self.maritime_position["north"] / 111000.0
         lon_offset = self.maritime_position["east"] / (111000.0 * math.cos(math.radians(start_hub.lat)))
         
-        # Calculate new GPS coordinates
+        # Use start hub altitude only (do not integrate vertical accel) to avoid drift/runaway
         new_lat = start_hub.lat + lat_offset
         new_lon = start_hub.lon + lon_offset
-        new_alt = start_hub.alt + self.maritime_position["up"]
+        new_alt = self._clamp_altitude(start_hub.alt)
         
         return {
             "lat_deg": new_lat,

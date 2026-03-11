@@ -1,5 +1,6 @@
 import math
 import random
+from .constants import GRAVITY_MSS
 from .anomalies import *
 
 
@@ -9,9 +10,9 @@ class Maritime:
         # Typical cargo boat parameters
         self.cruise_speed_mean = 6.0  # m/s (~12 knots, typical cargo ship)
         self.cruise_speed_std = 1.0   # variation in speed
-        self.acceleration = 0.3        # m/s² (typical boat acceleration)
+        self.acceleration = 0.3       # m/s² (typical boat acceleration)
         self.deceleration = 0.3       # m/s² (typical boat deceleration)
-        self.gravity = 9.81           # m/s²
+        self.gravity = GRAVITY_MSS    # m/s² (downward, Z-up)
         
         # Wave motion parameters (pitch and roll)
         self.wave_period = 8.0        # seconds (typical ocean wave period)
@@ -151,12 +152,10 @@ class Maritime:
             # Forward acceleration (x-axis)
             accel_x = forward_accel
             
-            # Lateral acceleration from roll (y-axis)
-            # Roll causes lateral component of gravity
+            # Lateral acceleration from roll (y-axis); gravity is negative (Z-up)
             accel_y = self.gravity * math.sin(roll)
             
-            # Vertical acceleration (z-axis)
-            # Gravity component + pitch effect + wave-induced vertical acceleration
+            # Vertical acceleration (z-axis): gravity component + wave heave
             heave = 0.2 * math.sin(2 * math.pi * t / self.wave_period)
             accel_z = self.gravity * math.cos(pitch) * math.cos(roll) + heave
             

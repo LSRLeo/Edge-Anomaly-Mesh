@@ -1,4 +1,6 @@
+from .constants import GRAVITY_MSS
 from .anomalies import *
+
 
 class Idle:
     def __init__(self,sample_rate_hz):
@@ -10,7 +12,7 @@ class Idle:
             messages.append({
                 "accel_x": 0,
                 "accel_y": 0,
-                "accel_z": 9.81,
+                "accel_z": GRAVITY_MSS,
                 "gyro_x": 0,
                 "gyro_y": 0,
                 "gyro_z": 0,

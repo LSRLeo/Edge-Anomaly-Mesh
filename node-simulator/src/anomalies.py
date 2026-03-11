@@ -32,10 +32,10 @@ def apply_package_stolen(node):
 
 def package_dropped(node):
     node = node.copy()
-    # Simulate sudden drop: strong negative z acceleration, random x/y, and random gyro
+    # Simulate free fall: no normal force, so accelerometer reads 0 on Z (gravity convention: at rest -9.8)
     node["accel_x"] += np.random.uniform(-0.2, 0.2)
     node["accel_y"] += np.random.uniform(-0.2, 0.2)
-    node["accel_z"] += -9.8 + np.random.uniform(-1.0, 1.0)  # gravity + noise
+    node["accel_z"] = 0.0 + np.random.uniform(-1.0, 1.0)  # free fall ≈ 0 + noise
     node["gyro_x"] += np.random.uniform(-2.0, 2.0)
     node["gyro_y"] += np.random.uniform(-2.0, 2.0)
     node["gyro_z"] += np.random.uniform(-2.0, 2.0)
