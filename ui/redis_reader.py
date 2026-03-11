@@ -3,6 +3,8 @@ import json
 import time
 import ast
 import threading
+from queue import Queue
+from queue import Full
 class RedisReader:
     def __init__(self, q_channel_name, r_channel_name, r, psubscriber):
         self.q_channel_name = q_channel_name
@@ -15,6 +17,8 @@ class RedisReader:
         self.message_counter = 1 #counter for m_id
         self.refresh_lock = threading.Lock() #lock for refreshing dataframes to prevent
         self._stop_refresh = threading.Event() #event to signal refresh thread to stop
+        self.logQueue = Queue(maxsize=50) #queue for log messages, max size of 50 messages
+        self.logLock = threading.Lock() #lock for log queue to ensure thread safety
     def refresh(self, instant=False): #refreshes the dataframes with new data from redis, thread for subscribing to redis will be created in main dashboard loop
 
         """
@@ -65,6 +69,7 @@ class RedisReader:
             'm_id': f'ui_{self.message_counter:05d}'}
         self.message_counter += 1
         self.publisher.publish(self.q_channel_name, json.dumps(request))
+        self.log_message(request) #log request for debugging
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -72,6 +77,7 @@ class RedisReader:
                     raise TimeoutError("Timeout waiting for node IDs")
                 if msg['type'] == 'message':
                     data = json.loads(msg['data'])
+                    self.log_message(data) #log received message for debugging
                     if data.get('responding_to') == request['m_id']:
                         return data.get('nodes', [])
                 if time.monotonic() - start > 5: #timeout after 5 seconds
@@ -90,6 +96,7 @@ class RedisReader:
             'node_id': node_id}
         self.message_counter += 1
         self.publisher.publish(self.q_channel_name, json.dumps(request))
+        self.log_message(request) #log request for debugging
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -97,6 +104,7 @@ class RedisReader:
                     raise TimeoutError(f"Timeout waiting for raw data for node {node_id}")
                 if msg['type'] == 'message':
                     data = json.loads(msg['data'])
+                    self.log_message(data) #log received message for debugging
                     if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
                         return data
                 if time.monotonic() - start > 5: #timeout after 5 seconds
@@ -117,6 +125,7 @@ class RedisReader:
         }
         self.message_counter += 1
         self.publisher.publish(self.q_channel_name, json.dumps(request))
+        self.log_message(request) #log request for debugging
         start = time.monotonic() #start timer to prevent infinite blocking
         try:
             for msg in self.subscriber.listen():
@@ -124,6 +133,7 @@ class RedisReader:
                     raise TimeoutError(f"Timeout waiting for inference output for node {node_id}")
                 if msg['type'] == 'message':
                     data = json.loads(msg['data'])
+                    self.log_message(data) #log received message for debugging
                     if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
                         return data
                 if time.monotonic() - start > 5: #timeout after 5 seconds
@@ -143,6 +153,7 @@ class RedisReader:
         }
         self.message_counter += 1
         self.publisher.publish(self.q_channel_name, json.dumps(request))
+        self.log_message(request) #log request for debugging
     def getDicts(self): #returns both dictionaries as a tuple
         with self.refresh_lock: #acquire lock to ensure thread safety when accessing dictionaries
             return dict(self.rddict), dict(self.mldict) #return copies of the dictionaries to prevent external modification
@@ -151,6 +162,26 @@ class RedisReader:
         Signal the refresh thread to stop.
         """
         self._stop_refresh.set()
+    def log_message(self, message): # Logs a message to the console, can be expanded to log to a file or other logging system if needed
+        """
+        logs a message to the log queue, if the queue is full it will remove the oldest message to make room for the new message
+    
+        """
+        with self.logLock: # Acquire lock to ensure thread safety when accessing the log queue
+            try:
+                self.logQueue.put_nowait(message) # Add message to the log queue
+            except Full:
+                _ = self.logQueue.get_nowait() # Remove oldest message if queue is full
+                self.logQueue.put_nowait(message) # Add new message to the log queue
+    def drain_log_queue(self):
+        """
+        Drain the log queue and return a list of log messages.
+        """
+        logs = []
+        with self.logLock: # Acquire lock to ensure thread safety when accessing the log queue
+            while not self.logQueue.empty():
+                logs.append(self.logQueue.get_nowait())
+        return logs
     def test_publish(self):
         """
         Test method to publish a message to a channel.
