@@ -136,16 +136,16 @@ class NetworkTab(ttk.Frame, DashboardParents):
         
         #Dict of colors
         self.MOTION_COLORS = {
-        'IDLE' : ('gray', False),
-        'TERRESTRIAL' : ('green', False),
-        'MARITIME' : ('blue', False),
-        'LIFT' : ('red', False),
-        'ANOMALOUS IDLE' : ('gray', True),
-        'ANOMALOUS TERRESTRIAL' : ('green', True),
-        'ANOMALOUS MARITIME' : ('blue', True),
-        'ANOMALOUS LIFT' : ('red', True)
-        #'Anomaly indicator' : 'red'
+        'IDLE':                 ('gray',  False),
+        'TERRESTRIAL':          ('green', False),
+        'MARITIME':             ('blue',  False),
+        'LIFT':                 ('red',   False),
+        'IDLE_ANOM':            ('gray',  True),
+        'TERRESTRIAL_ANOM':     ('green', True),
+        'MARITIME_ANOM':        ('blue',  True),
+        'LIFT_ANOM':            ('red',   True),
         }
+        
         self.ANOMALY_BORDER_COLOR = 'red'
         # Border width for node
         self.ANOMALY_BORDER_WIDTH = 3
@@ -501,6 +501,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
         elif node is not None and event.num == 2 or event.num==3:
             node.anomaly = not node.anomaly
+            node.motion_class = (node.motion_class + 4) % len(Node.motion_states)
+            #print(type(node.motion_class),node.motion_class)
             self.changed_nodes[node_id] = node.anomaly
             # Redraw just this node
             self._draw_single_node(node)
