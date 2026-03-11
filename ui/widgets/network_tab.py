@@ -535,18 +535,19 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 continue
 
             seq = node_data.get("seq", 0)
-            accel = node_data.get("accel_mss")
-            accel_x = accel.get("x", 0) if accel else 0
-            accel_y = accel.get("y", 0) if accel else 0
-            accel_z = accel.get("z", 0) if accel else 0
-            gyro = node_data.get("gyro_rads")
-            gyro_x = gyro.get("x", 0) if gyro else 0
-            gyro_y = gyro.get("y", 0) if gyro else 0
-            gyro_z = gyro.get("z", 0) if gyro else 0
+            # accel = node_data.get("accel_mss")
+            accel_x = node_data.get("accl_x_mss", 0)
+            accel_y = node_data.get("accl_y_mss", 0)
+            accel_z = node_data.get("accl_z_mss", 0)
+            # gyro = node_data.get("gyro_rads")
+            gyro_x = node_data.get("gyro_x_rads", 0)
+            gyro_y = node_data.get("gyro_y_rads", 0)
+            gyro_z = node_data.get("gyro_z_rads", 0)
 
             # classification = ml["classification"]
             classification = ml.get("classification", "UNKNOWN")
-            conf = ml.get("confidence", {})
+            conf = json.loads(ml.get("confidence", "{}")) #workaround, DB stores confidence as a nested string idk why
+            
             node = Node(
                 node_id=node_id,
                 timestamp=node_data.get("timestamp"),
@@ -557,8 +558,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 gyro_x=gyro_x,
                 gyro_y=gyro_y,
                 gyro_z=gyro_z,
-                lat=node_data.get("gps", {}).get("lat_deg"),
-                lon=node_data.get("gps", {}).get("lon_deg"),
+                lat=node_data.get("gps_lat_deg", 0.0),
+                lon=node_data.get("gps_lon_deg", 0.0),
                 motion_class=Node.motion_states.index(classification),
                 anomaly=ml["is_anomaly"],
                 confidence=conf.get(classification, 0.0),
@@ -566,8 +567,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             self.node_dict[node_id] = node
             self.test_nodes[node_id] = {
                 "node_id": node_id,
-                "lat": node_data["gps"]["lat_deg"],
-                "lon": node_data["gps"]["lon_deg"],
+                "lat": node_data.get("gps_lat_deg", 0.0),
+                "lon": node_data.get("gps_lon_deg", 0.0),
                 "motion_class": classification,
                 "anomaly": ml["is_anomaly"],
             }

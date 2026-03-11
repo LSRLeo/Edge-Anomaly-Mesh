@@ -38,7 +38,7 @@ class RedisReader:
             for node in self.nodes: #parse each node as a dict and load into dataframe
                 get_raw_data_message = self.request_raw_node_data(node) #request raw data for node from redis
                 if get_raw_data_message is not None:
-                    raw_data_dict = get_raw_data_message.get("records", {})
+                    raw_data_dict = get_raw_data_message 
                     newrddict[node] = raw_data_dict #store raw data dict in raw data dictionary with node as key
 
                 get_inference_output_message = self.request_inference_output(node) #request inference output for node from redis
@@ -98,7 +98,7 @@ class RedisReader:
                 if msg['type'] == 'message':
                     data = json.loads(msg['data'])
                     if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
-                        return data.get('records', {})
+                        return data
                 if time.monotonic() - start > 5: #timeout after 5 seconds
                     print(f"Timeout waiting for raw data for node {node_id}")
                     return None

@@ -25,7 +25,7 @@ class DashboardParents():
 
 
 class Node:
-    motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+    motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOM", "TERRESTRIAL_ANOM", "MARITIME_ANOM", "LIFT_ANOM"] #key for motion class index to string
     def __init__(self, node_id: str, timestamp:str, seq, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, lat: float, lon: float, motion_class: int, anomaly: bool, confidence: float):
         self.node_id = node_id
         self.timestamp = timestamp
@@ -41,7 +41,7 @@ class Node:
         self.motion_class = motion_class
         self.anomaly = anomaly
         self.confidence = confidence
-        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOM", "TERRESTRIAL_ANOM", "MARITIME_ANOM", "LIFT_ANOM"] #key for motion class index to string
     def updateMotion(self, motion_class, confidence: float):
         if isinstance(motion_class, int):
             self.motion_class = motion_class
