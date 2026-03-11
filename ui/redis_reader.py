@@ -143,7 +143,10 @@ class RedisReader:
             print(f"Error requesting inference output for node {node_id}: {e}")
             return None
 
-    def updateNode(self, node_id, anomaly_value, user): # Pings db with updated node anomaly status, node id, and user making changes
+    def updateNode(self, node_id, anomaly_value, user): 
+        """
+        Pings db with updated node anomaly status, node id, and user making changes
+        """
         request = {
             'm_type': 'update-node',
             'm_id': f'ui_{self.message_counter:05d}',

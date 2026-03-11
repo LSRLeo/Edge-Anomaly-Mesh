@@ -591,34 +591,35 @@ class NetworkTab(ttk.Frame, DashboardParents):
         except:
             print(f'Error refreshing UI and Data, Exception:{Exception}')
     def update_node(self):
-        """
-        Update a node's anomaly status in the database.
-        
-        Args:
-            node_id: ID of the node to update
-            anomaly_value: New anomaly status (True/False)
-            user: User making the change (for auditing)
-        """
-        try:
-            #popout windor with input for user name
-            user_window = tk.Toplevel()
-            user_window.title("Identify User Making Change")
-            user_window.geometry('300x150')
-            ttk.Label(user_window, text="Enter your name:").pack(pady=10)
-            user_entry = ttk.Entry(user_window)
-            user_entry.pack(pady=5)
-            def submit_user():
-                user = user_entry.get()
-                if user:
+        print(f'debug statement to check changed_nodes: {self.changed_nodes}')
+        if not self.redis_reader:
+            tk.messagebox.showerror("Error", "No Redis connection available.")
+            return
+        if not self.changed_nodes:
+            tk.messagebox.showinfo("Nothing to update", "No nodes have been changed.")
+            return
+
+        user_window = tk.Toplevel()
+        user_window.title("Identify User Making Change")
+        user_window.geometry('300x150')
+        ttk.Label(user_window, text="Enter your name:").pack(pady=10)
+        user_entry = ttk.Entry(user_window)
+        user_entry.pack(pady=5)
+
+        def submit_user():
+            user = user_entry.get()
+            if user:
+                try:
                     for node_id, anomaly_value in self.changed_nodes.items():
                         self.redis_reader.updateNode(node_id, anomaly_value, user)
-                    self.changed_nodes.clear() # Clear changes after updating
+                    self.changed_nodes.clear()
                     user_window.destroy()
-                else:
-                    tk.messagebox.showerror("Input Error", "Please enter your name.")
-            ttk.Button(user_window, text="Submit", command=submit_user).pack(pady=10)
-        except Exception as e:
-            print(f"Error updating node {node_id}: {e}")
+                except Exception as e:
+                    tk.messagebox.showerror("Update Error", f"Failed to send update: {e}")
+            else:
+                tk.messagebox.showerror("Input Error", "Please enter your name.")
+
+        ttk.Button(user_window, text="Submit", command=submit_user).pack(pady=10)
 
 
        
