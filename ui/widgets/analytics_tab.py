@@ -421,11 +421,14 @@ class AnalyticsTab(ttk.Frame):
                 continue
 
             confidence_map = ml_entry.get("confidence", {})
+            if isinstance(confidence_map, str):
+                try:
+                    confidence_map = json.loads(confidence_map)
+                except json.JSONDecodeError:
+                    print(f"[analytics] skip node={node_id}: confidence string is not valid JSON")
+                    continue
             if not isinstance(confidence_map, dict):
-                print(
-                    f"[analytics] skip node={node_id}: confidence is "
-                    f"{type(confidence_map).__name__}, expected dict"
-                )
+                print(f"[analytics] skip node={node_id}: confidence is {type(confidence_map).__name__}, expected dict")
                 continue
 
             state_confidence: List[float] = []
