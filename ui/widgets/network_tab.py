@@ -617,7 +617,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
                     tk.messagebox.showerror("Input Error", "Please enter your name.")
             ttk.Button(user_window, text="Submit", command=submit_user).pack(pady=10)
         except Exception as e:
-            print(f"Error updating node {node_id}: {e}")
+            print(f"Error updating node(s): {e}")
 
 
        
