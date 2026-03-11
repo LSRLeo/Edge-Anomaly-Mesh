@@ -125,13 +125,14 @@ class RedisReader:
                 if msg['type'] == 'message':
                     data = json.loads(msg['data'])
                     if data.get('responding_to') == request['m_id'] and data.get('node_id') == node_id:
-                        return data.get('inference_output', []) #assumes list of probabilities, might change depending on team discourse. (2/27/2026) -TE
+                        return data
                 if time.monotonic() - start > 5: #timeout after 5 seconds
                     print(f"Timeout waiting for inference output for node {node_id}")
                     return None
         except Exception as e:
             print(f"Error requesting inference output for node {node_id}: {e}")
             return None
+
     def updateNode(self, node_id, anomaly_value, user): # Pings db with updated node anomaly status, node id, and user making changes
         request = {
             'm_type': 'update-node',

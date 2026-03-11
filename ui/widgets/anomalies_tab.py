@@ -377,10 +377,16 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
         gps = rdentry.get("gps")
         lat = gps.get("lat_deg", 0) if gps else 0
         lon = gps.get("lon_deg", 0) if gps else 0
-        #inference output fields with defaults if missing
-        motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
-        confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
-        anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
+        # #inference output fields with defaults if missing
+        # motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
+        # confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
+        # anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
+        classification = mlentry.get("classification", "UNKNOWN") if mlentry else "UNKNOWN"
+        motion_class=Node.motion_states.index(classification)
+        confidenceDic = mlentry.get("confidence", {}) if mlentry else {}
+        confidence = confidenceDic.get(classification, 0) if confidenceDic else 0
+        anomaly = mlentry.get("is_anomaly", False) if mlentry else False
+
         # Build Node object
         node = Node(
             node_id=node_id,
