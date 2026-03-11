@@ -43,8 +43,8 @@ class RedisReader:
 
                 get_inference_output_message = self.request_inference_output(node) #request inference output for node from redis
                 if get_inference_output_message is not None:
-                    inference_output_list = get_inference_output_message.get("records", []) 
-                    newmldict[node] = inference_output_list #store inference output list in machine learning dictionary with node as key
+                    inference_output = get_inference_output_message #get inference output dict from message 
+                    newmldict[node] = inference_output #store inference output dict
         with self.refresh_lock: #acquire lock to ensure thread safety when updating dataframes
             self.rddict = newrddict #update raw data dictionary with new data
             self.mldict = newmldict #update machine learning dictionary with new data

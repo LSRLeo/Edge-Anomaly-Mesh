@@ -520,12 +520,15 @@ class NetworkTab(ttk.Frame, DashboardParents):
             except Exception as e:
                 print(f'Error refreshing: {e}')
                 return
+        #previous version
+        # ml_lookup = {ml_file["node_id"]: ml_file}
+        #new version
+        ml_lookup = ml_file #just a rename since ml_file is already a dict of node_id: ml_data
 
-        ml_lookup = {ml_file["node_id"]: ml_file}
 
         self.node_dict.clear()
         for node_id, node_data in raw_file.items():
-            node_id = node_data["node_id"]
+            # node_id = node_data["node_id"]
             ml = ml_lookup.get(node_id)
             if ml is None:
                 print(f'No contents in ML {node_id}')
@@ -541,10 +544,12 @@ class NetworkTab(ttk.Frame, DashboardParents):
             gyro_y = gyro.get("y", 0) if gyro else 0
             gyro_z = gyro.get("z", 0) if gyro else 0
 
-            classification = ml["classification"]
+            # classification = ml["classification"]
+            classification = ml.get("classification", "UNKNOWN")
+            conf = ml.get("confidence", {})
             node = Node(
                 node_id=node_id,
-                timestamp=datetime.fromisoformat(node_data["timestamp"]),
+                timestamp=node_data.get("timestamp"),
                 seq=seq,
                 accel_x=accel_x,
                 accel_y=accel_y,
@@ -556,7 +561,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 lon=node_data.get("gps", {}).get("lon_deg"),
                 motion_class=Node.motion_states.index(classification),
                 anomaly=ml["is_anomaly"],
-                confidence=ml["confidence"].get(classification, 0.0),
+                confidence=conf.get(classification, 0.0),
             )
             self.node_dict[node_id] = node
             self.test_nodes[node_id] = {
