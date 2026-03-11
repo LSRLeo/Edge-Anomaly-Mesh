@@ -1,7 +1,6 @@
 from typing import List, Tuple
 from enum import Enum
-
-from typing import List, Tuple
+from .constants import GRAVITY_MSS
 from .anomalies import *
 
 
@@ -16,7 +15,7 @@ class Lift():
         self.sample_rate = sample_rate
         self.cycle_duration = cycle_duration
         self.lift_acceleration = 3.5  # m/s²
-        self.gravity = 9.81  # m/s²
+        self.gravity = GRAVITY_MSS    # m/s² (downward, Z-up)
         self.phase_boundaries = {
             "LIFT_UP": (0.0, 0.15),
             "HOLD_MOVE": (0.15, 0.50),
@@ -74,17 +73,17 @@ class Lift():
 
             accel_x = 0.0
             accel_y = 0.0
-            accel_z = self.gravity
+            accel_z = self.gravity  # at rest: -9.8 (Z-up)
             gyro_x = 0.0
             gyro_y = 0.0
             gyro_z = 0.0
 
             if phase == "LIFT_UP":
-                accel_z = self.gravity + self.lift_acceleration
+                accel_z = self.gravity + self.lift_acceleration   # e.g. -6.3
             elif phase == "HOLD_MOVE":
                 accel_z = self.gravity
             elif phase == "LOWER_DOWN":
-                accel_z = self.gravity - self.lift_acceleration
+                accel_z = self.gravity - self.lift_acceleration   # e.g. -13.3
             elif phase == "REST":
                 accel_z = self.gravity
 

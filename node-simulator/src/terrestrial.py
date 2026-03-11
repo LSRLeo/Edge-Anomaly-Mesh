@@ -2,15 +2,17 @@ from random import random, uniform
 from src.hub import Hub
 import time
 import math
+from .constants import GRAVITY_MSS
 from .anomalies import *
+
 
 class Terrestrial:
 
     def __init__(self, sample_rate: int = 50):
         self.sample_rate = sample_rate  
-        self.x_acc = 1.5 # m/s^2
-        self.y_acc = 0.0 
-        self.z_acc = 9.81
+        self.x_acc = 1.5  # m/s^2
+        self.y_acc = 0.0
+        self.z_acc = GRAVITY_MSS  # at-rest vertical (gravity)
 
         self.max_speed = 125/9 # m/s, which is 50 km/h
         

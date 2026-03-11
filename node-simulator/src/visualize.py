@@ -20,6 +20,12 @@ def parse_args() -> argparse.Namespace:
         default="raw_data.json",
         help="Name or path of the simulation JSON file (relative to node-simulator).",
     )
+    parser.add_argument(
+        "--hubs",
+        metavar="ROUTE_JSON",
+        default=None,
+        help="Path to a route JSON file (e.g. routes/exampleHub.json). Hubs are plotted in black with labels.",
+    )
     return parser.parse_args()
 
 
@@ -63,6 +69,27 @@ def load_lat_lon(json_path: Path):
     return lats, lons, alts, motion_types, anomaly_flags
 
 
+def load_hubs_from_route(route_path: Path):
+    """Load hub lat, lon, altitude_m and label from a route JSON. Returns list of dicts."""
+    if not route_path.exists():
+        raise FileNotFoundError(f"Route file not found: {route_path}")
+    with route_path.open("r") as f:
+        data = json.load(f)
+    hubs = data.get("hubs") or []
+    out = []
+    for h in hubs:
+        lat = h.get("lat")
+        lon = h.get("lon")
+        alt = h.get("altitude_m")
+        if lat is None or lon is None:
+            continue
+        if alt is None:
+            alt = 0.0
+        label = h.get("name") or h.get("hub_id") or "Hub"
+        out.append({"lat": lat, "lon": lon, "alt": alt, "label": str(label)})
+    return out
+
+
 def _compute_square_limits(xs, ys):
     min_x, max_x = min(xs), max(xs)
     min_y, max_y = min(ys), max(ys)
@@ -86,7 +113,38 @@ def _compute_square_limits(xs, ys):
     return (center_x - half_span, center_x + half_span), (center_y - half_span, center_y + half_span)
 
 
-def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str):
+def _plot_hubs(ax, hubs, kind, color="black"):
+    """Plot hubs on an axis. kind is 'lat_lon', 'lat_alt', 'lon_alt', or '3d'."""
+    if not hubs:
+        return
+    if kind == "lat_lon":
+        xs = [h["lon"] for h in hubs]
+        ys = [h["lat"] for h in hubs]
+        ax.scatter(xs, ys, s=80, c=color, marker="s", zorder=5, edgecolors="black", linewidths=1.5, label="Hubs")
+        for h in hubs:
+            ax.annotate(h["label"], (h["lon"], h["lat"]), xytext=(4, 4), textcoords="offset points", fontsize=7, color=color)
+    elif kind == "lat_alt":
+        xs = [h["lat"] for h in hubs]
+        ys = [h["alt"] for h in hubs]
+        ax.scatter(xs, ys, s=80, c=color, marker="s", zorder=5, edgecolors="black", linewidths=1.5, label="Hubs")
+        for h in hubs:
+            ax.annotate(h["label"], (h["lat"], h["alt"]), xytext=(4, 4), textcoords="offset points", fontsize=7, color=color)
+    elif kind == "lon_alt":
+        xs = [h["lon"] for h in hubs]
+        ys = [h["alt"] for h in hubs]
+        ax.scatter(xs, ys, s=80, c=color, marker="s", zorder=5, edgecolors="black", linewidths=1.5, label="Hubs")
+        for h in hubs:
+            ax.annotate(h["label"], (h["lon"], h["alt"]), xytext=(4, 4), textcoords="offset points", fontsize=7, color=color)
+    elif kind == "3d":
+        xs = [h["lon"] for h in hubs]
+        ys = [h["lat"] for h in hubs]
+        zs = [h["alt"] for h in hubs]
+        ax.scatter(xs, ys, zs, s=80, c=color, marker="s", depthshade=False, label="Hubs")
+        for h in hubs:
+            ax.text(h["lon"], h["lat"], h["alt"], h["label"], fontsize=7, color=color)
+
+
+def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str, hubs=None):
     if not lats or not lons or not alts:
         print("No GPS latitude/longitude/altitude data found to plot.")
         return
@@ -168,6 +226,7 @@ def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str):
     ax1.set_xlim(*xlim)
     ax1.set_ylim(*ylim)
     ax1.set_aspect("equal", adjustable="box")
+    _plot_hubs(ax1, hubs or [], "lat_lon", color="black")
 
     # 2) Lat vs Alt (top-right)
     ax2 = fig.add_subplot(2, 2, 2)
@@ -214,6 +273,7 @@ def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str):
     ax2.set_xlabel("Latitude (deg)")
     ax2.set_ylabel("Altitude (m)")
     ax2.set_title("Lat vs Alt")
+    _plot_hubs(ax2, hubs or [], "lat_alt", color="black")
 
     # 3) Lon vs Alt (bottom-left)
     ax3 = fig.add_subplot(2, 2, 3)
@@ -259,6 +319,7 @@ def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str):
     ax3.set_xlabel("Longitude (deg)")
     ax3.set_ylabel("Altitude (m)")
     ax3.set_title("Lon vs Alt")
+    _plot_hubs(ax3, hubs or [], "lon_alt", color="black")
 
     # 4) 3D Lon, Lat, Alt (bottom-right)
     ax4 = fig.add_subplot(2, 2, 4, projection="3d")
@@ -309,6 +370,7 @@ def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str):
     ax4.set_ylabel("Latitude (deg)")
     ax4.set_zlabel("Altitude (m)")
     ax4.set_title("3D Lon/Lat/Alt")
+    _plot_hubs(ax4, hubs or [], "3d", color="black")
 
     fig.suptitle(title, fontsize=14)
     fig.tight_layout(rect=[0, 0.03, 1, 0.95])
@@ -329,8 +391,16 @@ def main():
         print(f"Error: {e}")
         return
 
+    hubs = []
+    if args.hubs:
+        hub_path = (project_root / args.hubs).resolve()
+        try:
+            hubs = load_hubs_from_route(hub_path)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"Warning: could not load hubs from {args.hubs}: {e}")
+
     title = f"GPS track from {json_path.name}"
-    plot_views(lats, lons, alts, motion_types, anomaly_flags, title)
+    plot_views(lats, lons, alts, motion_types, anomaly_flags, title, hubs=hubs)
 
 
 if __name__ == "__main__":
