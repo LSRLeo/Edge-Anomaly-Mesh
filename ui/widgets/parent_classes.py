@@ -78,5 +78,7 @@ class Node:
             'confidence': self.confidence
         }
     def getMotionString(self): #returns the motion class as a string for the user
-        return self.motion_states[self.motion_class]  
+        return self.motion_states[self.motion_class]
+    def getMotionInt(self):
+        return self.motion_states  
 
