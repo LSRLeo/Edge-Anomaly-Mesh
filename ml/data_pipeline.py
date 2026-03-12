@@ -283,7 +283,8 @@ def load_json_data(filepath):
         if terrain_str is None:
             terrain_idx = None
         else:
-            terrain_idx = TERRAIN_MAP.get(terrain_str.upper())
+            base_terrain = terrain_str.upper().replace("_ANOM", "")
+            terrain_idx = TERRAIN_MAP.get(base_terrain)
             if terrain_idx is None:
                 raise ValueError(f"Unknown terrain type: {terrain_str}")
 
