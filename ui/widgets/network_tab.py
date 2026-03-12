@@ -549,9 +549,18 @@ class NetworkTab(ttk.Frame, DashboardParents):
             gyro_z = node_data.get("gyro_z_rads", 0)
 
             # classification = ml["classification"]
-            classification = ml.get("classification", "UNKNOWN")
-            conf = json.loads(ml.get("confidence", "{}")) #workaround, DB stores confidence as a nested string idk why
-            
+            if ml is None or len(ml.keys()) == 0:
+                print(f'No contents in ML for node {node_id}')
+                classification = "UNKNOWN"
+                mot = -1
+                confidence = 0.0
+                anomaly = False
+            else:
+                classification = ml.get("classification", "UNKNOWN")
+                conf = json.loads(ml.get("confidence", "{}")) #workaround, DB stores confidence as a nested string idk why
+                confidence = conf.get(classification, 0.0)
+                mot = Node.motion_states.index(classification)
+                anomaly = ml.get("is_anomaly", False)
             node = Node(
                 node_id=node_id,
                 timestamp=node_data.get("timestamp"),
@@ -564,9 +573,9 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 gyro_z=gyro_z,
                 lat=node_data.get("gps_lat_deg", 0.0),
                 lon=node_data.get("gps_lon_deg", 0.0),
-                motion_class=Node.motion_states.index(classification),
-                anomaly=ml["is_anomaly"],
-                confidence=conf.get(classification, 0.0),
+                motion_class=mot,   
+                anomaly=anomaly,
+                confidence=confidence,
             )
             self.node_dict[node_id] = node
             self.test_nodes[node_id] = {
@@ -574,7 +583,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 "lat": node_data.get("gps_lat_deg", 0.0),
                 "lon": node_data.get("gps_lon_deg", 0.0),
                 "motion_class": classification,
-                "is_anomaly": ml["is_anomaly"],
+                "is_anomaly": anomaly,
             }
 
         self.draw_nodes(self.node_dict)
