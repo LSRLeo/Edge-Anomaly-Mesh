@@ -384,8 +384,6 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
             raise ValueError("Node ID cannot be None")
         if rdentry is None:
             raise ValueError(f"Raw data entry for node {node_id} cannot be None")
-        if mlentry is None:
-            raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
         
         node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
         

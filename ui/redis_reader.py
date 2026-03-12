@@ -97,13 +97,22 @@ class RedisReader:
             print(f"Timeout waiting for inference output for node {node_id}")
         return data
 
-    def updateNode(self, node_id, anomaly_value, user):
-        request = {
-            'm_type': 'update-node',
-            'm_id': self._next_m_id(),
-            'node_id': node_id,
-            'anomaly_value': anomaly_value,
-            'user': user,
+    def updateNode(self, node_id, anomaly_value, user, timestamp):
+        #old request
+        # request = {
+        #     'm_type': 'update-node',
+        #     'm_id': self._next_m_id(),
+        #     'node_id': node_id,
+        #     'anomaly_value': anomaly_value,
+        #     'user': user,
+        # }
+        request ={
+            "m_type": "user-anomaly-feedback",
+            "m_id": self._next_m_id(),
+            "node_id": node_id,
+            "timestamp": timestamp,
+            "acknowledged_by": user,
+            "user_feedback": "DISPUTE" #always Dispute assuming we only make the change if something is wrong.
         }
         self.publisher.publish(self.q_channel_name, json.dumps(request))
         self.log_message(request)
