@@ -62,15 +62,17 @@ python3 -m widgets.dashboard_main
 
 ### Terminal 4
 
-Once you are ready to start sending messages:
+Once you are ready to start sending messages.  Either:
 
-Create a simulation file, from root directory:
+a) create a simulation file, from root directory:
 ```
 python3 node-simulator/simulation.py sim -t -n node-simulator/nodeConfig.json -r node-simulator/routes/compactAllModes.json --no-a
 ```
 
-Copy the pre-configured data:
-```cp node-simulator/sims/halfAnom.json node-simulator/raw_data.json```
+b) copy the pre-configured data:
+```
+cp node-simulator/sims/halfAnom.json node-simulator/raw_data.json
+```
 
 Send messages, from root directory:
 
