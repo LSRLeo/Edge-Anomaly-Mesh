@@ -1,3 +1,14 @@
+"""
+Database table manager for managing all database interactions.
+Handles all CRUD operations for the inference results database, including:
+- Inserting raw sensor data
+- Inserting inference results
+- Inserting anomaly events
+- Updating node status
+- Managing user anomaly feedback and overrides
+- Clearing tables for testing purposes
+"""
+
 import json
 from datetime import datetime
 
@@ -14,6 +25,7 @@ class TableManager:
 
     def __init__(self):
         self.session = Session(engine)
+        self.session.rollback()  # Clear any pending transactions
 
     def insert_raw_data(self, messages: list[dict]) -> bool:
         for msg in messages:
@@ -34,7 +46,7 @@ class TableManager:
                 gyro_y_rads=msg["gyro_rads"]["y"],
                 gyro_z_rads=msg["gyro_rads"]["z"],
             )
-            
+
             self.session.add(record)
             self.session.flush()  # Flush to get the record ID for node insertion
             self.insert_node(msg)
@@ -109,7 +121,7 @@ class TableManager:
             description=f"Anomaly detected with score {inference_record.anomaly_score} and type {inference_record.anomaly_type}",
         )
         self.session.add(anomaly_record)
-        return
+        return anomaly_record
 
     def update_node_status(self, node_id: str, classification: str) -> bool:
         node = self.session.query(Node).filter_by(node_id=node_id).first()
@@ -119,11 +131,41 @@ class TableManager:
         else:
             print(f"Node with ID {node_id} not found.")
             return False
-    
+
+    def user_anomaly_feedback(self, messages: list[dict]) -> bool:
+        for msg in messages:
+            anomaly = self.session.query(AnomalyEvents).filter_by(id=msg["node_id"], timestamp=self.iso_to_unix_timestamp(msg["timestamp"])).first()
+            if anomaly:
+                anomaly.acknowledged = True
+                anomaly.acknowledged_by = msg["acknowledged_by"]
+                anomaly.acknowledged_at = datetime.utcnow().timestamp()
+                anomaly.user_feedback = msg["user_feedback"]
+                self.session.add(anomaly)
+            else:
+                inference = self.session.query(InferenceResults).filter_by(node_id=msg["node_id"], timestamp=self.iso_to_unix_timestamp(msg["timestamp"])).first()
+                if inference:
+                    anomaly = self.insert_anomaly_event(inference)
+                    anomaly.acknowledged = True
+                    anomaly.acknowledged_by = msg["acknowledged_by"]
+                    anomaly.acknowledged_at = datetime.utcnow().timestamp()
+                    anomaly.user_feedback = msg["user_feedback"]
+                    self.session.add(anomaly)
+                else:
+                    print(f"No matching anomaly or inference found for node_id {msg['node_id']} at timestamp {msg['timestamp']}")
+                    continue
+        try:
+            self.session.commit()
+            return True
+        except Exception as e:
+            self.session.rollback()
+            print(f"Error acknowledging anomalies: {e}")
+            return False
 
     def iso_to_unix_timestamp(self, iso_str: str) -> int:
+        if isinstance(iso_str, (int, float)):
+            return iso_str
         dt = datetime.fromisoformat(iso_str)
-        return int(dt.timestamp())
+        return float(dt.timestamp())
     
 
     def clear_tables(self):
