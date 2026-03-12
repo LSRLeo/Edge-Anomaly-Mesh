@@ -33,10 +33,10 @@ from ui_utils import CAPTION_LABEL_STYLE, UI_COLORS, VALUE_LABEL_STYLE
 
 # Motion class color scheme for charts
 MOTION_COLORS = {
-    'IDLE': '#3498db',        # Blue
-    'TERRESTRIAL': '#2ecc71', # Green
-    'MARITIME': '#9b59b6',    # Purple
-    'LIFT': '#e74c3c'         # Red
+    'IDLE': 'gray',        # Gray
+    'TERRESTRIAL': 'green', # Green
+    'MARITIME': 'blue',    # Blue
+    'LIFT': 'red'         # Red
 }
 
 # Chart sizing constants
