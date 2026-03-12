@@ -23,6 +23,7 @@ MESSAGE FORMAT:
 }
 """
 class MIDGenerator:
+    """Generates MID for db responses"""
     counter = 0 #this is the class var (static)
     M_ID_PREFIX = "db_"
 
@@ -252,14 +253,14 @@ class GetNodesRequest(MessageRequest):
 
             return MessageResponse(
                 m_type="get-nodes-response",
-                m_id=M_ID_DB, #TODO: generate unique message ID for response instead of using M_ID_DB
+                m_id=MIDGenerator.generate_m_id(), 
                 responding_to=self.m_id,
                 result={"nodes": node_ids})
         
         except Exception as e:
             logging.error(f"get-nodes request failed: {e}")
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id(),
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -284,7 +285,7 @@ class GetNodeDataIdsRequest(MessageRequest):
             if data_ids is None:
 
                 return ErrorResponse(
-                    m_id=M_ID_DB,
+                    m_id=MIDGenerator.generate_m_id,
                     responding_to=self.m_id,
                     original_request=self.m_type,
                     error_message=f"Node not found: {self.node_id}",
@@ -293,7 +294,7 @@ class GetNodeDataIdsRequest(MessageRequest):
 
             return MessageResponse(
                 m_type="get-node-data-ids-response",
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 result={"node_id": self.node_id, "data_ids": data_ids},
             )
@@ -301,7 +302,7 @@ class GetNodeDataIdsRequest(MessageRequest):
         except ValueError as e:
 
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -312,7 +313,7 @@ class GetNodeDataIdsRequest(MessageRequest):
             logging.error(f"get-node-data-ids failed: {e}")
 
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -335,7 +336,7 @@ class GetDatumRequest(MessageRequest):
 
             if result is None:
                 return ErrorResponse(
-                    m_id=M_ID_DB,
+                    m_id=MIDGenerator.generate_m_id,
                     responding_to=self.m_id,
                     original_request=self.m_type,
                     error_message=f"Event ID not found: {self.event_id}",
@@ -344,7 +345,7 @@ class GetDatumRequest(MessageRequest):
 
             return MessageResponse(
                 m_type="get-datum-response",
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 result=result
             )
@@ -352,7 +353,7 @@ class GetDatumRequest(MessageRequest):
         except ValueError as e:
 
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -363,7 +364,7 @@ class GetDatumRequest(MessageRequest):
             logging.error(f"get-datum failed: {e}")
 
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -390,7 +391,7 @@ class GetRecentRawDataRequest(MessageRequest):
             if row is None:
 
                 return ErrorResponse(
-                    m_id=M_ID_DB,
+                    m_id=MIDGenerator.generate_m_id,
                     responding_to=self.m_id,
                     original_request=self.m_type,
                     error_message=f"No raw data found for node: {self.node_id}",
@@ -405,7 +406,7 @@ class GetRecentRawDataRequest(MessageRequest):
 
             return MessageResponse(
                 m_type="get-recent-raw-data-response",
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 result=result,
             )
@@ -413,7 +414,7 @@ class GetRecentRawDataRequest(MessageRequest):
         except ValueError as e:
 
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -424,7 +425,7 @@ class GetRecentRawDataRequest(MessageRequest):
             logging.error(f"get-recent-raw-data failed: {e}")
 
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -449,7 +450,7 @@ class GetRecentInferenceRequest(MessageRequest):
 
             if row is None:
                 return ErrorResponse(
-                    m_id=M_ID_DB,
+                    m_id=MIDGenerator.generate_m_id,
                     responding_to=self.m_id,
                     original_request=self.m_type,
                     error_message=f"No inference data found for node: {self.node_id}",
@@ -464,14 +465,14 @@ class GetRecentInferenceRequest(MessageRequest):
             
             return MessageResponse(
                 m_type="get-recent-inference-response",
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 result=result,
             )
 
         except ValueError as e:
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
@@ -481,11 +482,11 @@ class GetRecentInferenceRequest(MessageRequest):
         except Exception as e:
             logging.error(f"get-recent-inference failed: {e}")
             return ErrorResponse(
-                m_id=M_ID_DB,
+                m_id=MIDGenerator.generate_m_id,
                 responding_to=self.m_id,
                 original_request=self.m_type,
                 error_message=str(e),
                 error_code="INTERNAL_ERROR",
             )
 
-#TODO: Method for generating unique message IDs instead of using M_ID_DB for all messages
+
