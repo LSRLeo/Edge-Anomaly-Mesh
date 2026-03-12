@@ -503,7 +503,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
             node.anomaly = not node.anomaly
             node.motion_class = (node.motion_class + 4) % len(Node.motion_states)
             #print(type(node.motion_class),node.motion_class)
-            self.changed_nodes[node_id] = node.anomaly
+            self.changed_nodes[node_id] = (node.anomaly, node.timestamp) #store anomaly value and timestamp for refreshing purposes
             # Redraw just this node
             self._draw_single_node(node)
         
@@ -537,7 +537,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
             if ml is None:
                 print(f'No contents in ML {node_id}')
                 continue
-
+            timestamp = node_data.get("timestamp")
             seq = node_data.get("seq", 0)
             # accel = node_data.get("accel_mss")
             accel_x = node_data.get("accl_x_mss", 0)
@@ -561,9 +561,11 @@ class NetworkTab(ttk.Frame, DashboardParents):
                 confidence = conf.get(classification, 0.0)
                 mot = Node.motion_states.index(classification)
                 anomaly = ml.get("is_anomaly", False)
+                timestamp = ml.get("timestamp", timestamp) # overrides timestamp with ML timestamp if available for ML update-node function
+
             node = Node(
                 node_id=node_id,
-                timestamp=node_data.get("timestamp"),
+                timestamp=timestamp,
                 seq=seq,
                 accel_x=accel_x,
                 accel_y=accel_y,
@@ -609,7 +611,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
         if user:
             try:
                 for node_id, anomaly_value in self.changed_nodes.items():
-                    self.redis_reader.updateNode(node_id, anomaly_value, user)
+                    self.redis_reader.updateNode(node_id, anomaly_value[0], user, timestamp=anomaly_value[1]) #use the original timestamp for refreshing purposes
                 self.changed_nodes.clear()
                 user_window.destroy()
             except Exception as e:
