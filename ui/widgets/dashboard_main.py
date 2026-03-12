@@ -88,7 +88,7 @@ class DashboardApp:
         self._setup_tabs()
         
         # Start refresh loop
-        # self.start_refresh_loop()
+        self.start_analytics_refresh_loop()
         
         # Bind window close event
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
@@ -179,6 +179,30 @@ class DashboardApp:
         # TODO: Implement
         self.notebook.select(index)
         # pass
+
+    def start_analytics_refresh_loop(self):
+        """
+        Periodically refresh only the Analytics tab.
+        """
+        def loop():
+            if self.analytics_tab and not self._is_refreshing:
+                self._is_refreshing = True
+                try:
+                    self.analytics_tab.refresh()
+                finally:
+                    self._is_refreshing = False
+            self._refresh_job = self.root.after(REFRESH_INTERVAL_MS, loop)
+
+        loop()
+        
+    def stop_analytics_refresh_loop(self):
+        """
+        Stop the analytics-only refresh loop.
+        """
+        if self._refresh_job:
+            self.root.after_cancel(self._refresh_job)
+            self._refresh_job = None
+        
     
     # def start_refresh_loop(self):
     #     """
@@ -262,7 +286,7 @@ class DashboardApp:
         """
         # TODO: Implement
         
-        # self.stop_refresh_loop()
+        self.stop_analytics_refresh_loop()
         self.root.destroy()
         # self.root.destroy()
 
