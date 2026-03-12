@@ -1,0 +1,7472 @@
+[
+  {
+    "sample_index": 0,
+    "probabilities": {
+      "IDLE": 0.99929,
+      "TERRESTRIAL": 0.000449,
+      "MARITIME": 0.0,
+      "LIFT": 0.00014,
+      "IDLE_ANOM": 0.000121,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 1,
+    "probabilities": {
+      "IDLE": 0.002908,
+      "TERRESTRIAL": 0.001021,
+      "MARITIME": 0.005759,
+      "LIFT": 0.007657,
+      "IDLE_ANOM": 0.093821,
+      "TERRESTRIAL_ANOM": 0.347732,
+      "MARITIME_ANOM": 0.294118,
+      "LIFT_ANOM": 0.246984
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 2,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.00013,
+      "LIFT": 1.7e-05,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 7.3e-05,
+      "MARITIME_ANOM": 0.998477,
+      "LIFT_ANOM": 0.0013
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 3,
+    "probabilities": {
+      "IDLE": 0.002246,
+      "TERRESTRIAL": 8e-05,
+      "MARITIME": 0.103369,
+      "LIFT": 0.004317,
+      "IDLE_ANOM": 0.002794,
+      "TERRESTRIAL_ANOM": 0.007612,
+      "MARITIME_ANOM": 0.871092,
+      "LIFT_ANOM": 0.008491
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 4,
+    "probabilities": {
+      "IDLE": 3e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000487,
+      "LIFT": 2.8e-05,
+      "IDLE_ANOM": 1.4e-05,
+      "TERRESTRIAL_ANOM": 0.00036,
+      "MARITIME_ANOM": 0.998078,
+      "LIFT_ANOM": 0.001029
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 5,
+    "probabilities": {
+      "IDLE": 0.000542,
+      "TERRESTRIAL": 0.003321,
+      "MARITIME": 0.000209,
+      "LIFT": 0.013541,
+      "IDLE_ANOM": 0.027734,
+      "TERRESTRIAL_ANOM": 0.700897,
+      "MARITIME_ANOM": 0.019421,
+      "LIFT_ANOM": 0.234336
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 6,
+    "probabilities": {
+      "IDLE": 0.036368,
+      "TERRESTRIAL": 2.2e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.002122,
+      "IDLE_ANOM": 0.956154,
+      "TERRESTRIAL_ANOM": 0.00064,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.004695
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 7,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000897,
+      "LIFT": 1.6e-05,
+      "IDLE_ANOM": 3e-06,
+      "TERRESTRIAL_ANOM": 9.1e-05,
+      "MARITIME_ANOM": 0.99848,
+      "LIFT_ANOM": 0.00051
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 8,
+    "probabilities": {
+      "IDLE": 0.469123,
+      "TERRESTRIAL": 0.475959,
+      "MARITIME": 2.7e-05,
+      "LIFT": 0.05312,
+      "IDLE_ANOM": 0.001612,
+      "TERRESTRIAL_ANOM": 0.000123,
+      "MARITIME_ANOM": 5e-06,
+      "LIFT_ANOM": 3.2e-05
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 9,
+    "probabilities": {
+      "IDLE": 0.01568,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.8e-05,
+      "IDLE_ANOM": 0.983585,
+      "TERRESTRIAL_ANOM": 0.000435,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000277
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 10,
+    "probabilities": {
+      "IDLE": 0.016948,
+      "TERRESTRIAL": 0.006209,
+      "MARITIME": 0.013998,
+      "LIFT": 0.016041,
+      "IDLE_ANOM": 0.444614,
+      "TERRESTRIAL_ANOM": 0.248182,
+      "MARITIME_ANOM": 0.089555,
+      "LIFT_ANOM": 0.164454
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 11,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001779,
+      "LIFT": 4e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 3e-06,
+      "MARITIME_ANOM": 0.998197,
+      "LIFT_ANOM": 1.6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 12,
+    "probabilities": {
+      "IDLE": 0.014594,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.9e-05,
+      "IDLE_ANOM": 0.983061,
+      "TERRESTRIAL_ANOM": 0.000754,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001561
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 13,
+    "probabilities": {
+      "IDLE": 0.000198,
+      "TERRESTRIAL": 0.000362,
+      "MARITIME": 3.3e-05,
+      "LIFT": 0.003933,
+      "IDLE_ANOM": 0.006947,
+      "TERRESTRIAL_ANOM": 0.77872,
+      "MARITIME_ANOM": 0.005366,
+      "LIFT_ANOM": 0.204441
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 14,
+    "probabilities": {
+      "IDLE": 0.018303,
+      "TERRESTRIAL": 0.097651,
+      "MARITIME": 2.7e-05,
+      "LIFT": 0.870617,
+      "IDLE_ANOM": 0.005306,
+      "TERRESTRIAL_ANOM": 0.002416,
+      "MARITIME_ANOM": 2.3e-05,
+      "LIFT_ANOM": 0.005657
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 15,
+    "probabilities": {
+      "IDLE": 0.998826,
+      "TERRESTRIAL": 0.000852,
+      "MARITIME": 0.0,
+      "LIFT": 0.000262,
+      "IDLE_ANOM": 6e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 16,
+    "probabilities": {
+      "IDLE": 5.9e-05,
+      "TERRESTRIAL": 0.00045,
+      "MARITIME": 2e-06,
+      "LIFT": 0.031982,
+      "IDLE_ANOM": 0.010118,
+      "TERRESTRIAL_ANOM": 0.196886,
+      "MARITIME_ANOM": 0.000489,
+      "LIFT_ANOM": 0.760014
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 17,
+    "probabilities": {
+      "IDLE": 0.998024,
+      "TERRESTRIAL": 0.001506,
+      "MARITIME": 0.0,
+      "LIFT": 0.000398,
+      "IDLE_ANOM": 7.3e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 18,
+    "probabilities": {
+      "IDLE": 0.000286,
+      "TERRESTRIAL": 0.00099,
+      "MARITIME": 1.4e-05,
+      "LIFT": 0.004682,
+      "IDLE_ANOM": 0.035251,
+      "TERRESTRIAL_ANOM": 0.646576,
+      "MARITIME_ANOM": 0.003117,
+      "LIFT_ANOM": 0.309084
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 19,
+    "probabilities": {
+      "IDLE": 0.047911,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 5.5e-05,
+      "IDLE_ANOM": 0.951389,
+      "TERRESTRIAL_ANOM": 0.000207,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000435
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 20,
+    "probabilities": {
+      "IDLE": 0.998975,
+      "TERRESTRIAL": 0.000741,
+      "MARITIME": 0.0,
+      "LIFT": 0.000207,
+      "IDLE_ANOM": 7.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 21,
+    "probabilities": {
+      "IDLE": 0.0006,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.953598,
+      "LIFT": 0.000221,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.04558,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 22,
+    "probabilities": {
+      "IDLE": 0.003943,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 2e-06,
+      "IDLE_ANOM": 0.99132,
+      "TERRESTRIAL_ANOM": 0.0028,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001934
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 23,
+    "probabilities": {
+      "IDLE": 0.000251,
+      "TERRESTRIAL": 0.000279,
+      "MARITIME": 4.3e-05,
+      "LIFT": 0.009903,
+      "IDLE_ANOM": 0.009165,
+      "TERRESTRIAL_ANOM": 0.479046,
+      "MARITIME_ANOM": 0.00429,
+      "LIFT_ANOM": 0.497022
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 24,
+    "probabilities": {
+      "IDLE": 0.051055,
+      "TERRESTRIAL": 0.076606,
+      "MARITIME": 0.001369,
+      "LIFT": 0.267432,
+      "IDLE_ANOM": 0.294438,
+      "TERRESTRIAL_ANOM": 0.119387,
+      "MARITIME_ANOM": 0.004769,
+      "LIFT_ANOM": 0.184942
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 25,
+    "probabilities": {
+      "IDLE": 0.000111,
+      "TERRESTRIAL": 0.000488,
+      "MARITIME": 2.6e-05,
+      "LIFT": 0.011892,
+      "IDLE_ANOM": 0.004503,
+      "TERRESTRIAL_ANOM": 0.648979,
+      "MARITIME_ANOM": 0.003593,
+      "LIFT_ANOM": 0.330408
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 26,
+    "probabilities": {
+      "IDLE": 0.005009,
+      "TERRESTRIAL": 0.002118,
+      "MARITIME": 0.000862,
+      "LIFT": 0.007312,
+      "IDLE_ANOM": 0.43751,
+      "TERRESTRIAL_ANOM": 0.179461,
+      "MARITIME_ANOM": 0.026581,
+      "LIFT_ANOM": 0.341147
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 27,
+    "probabilities": {
+      "IDLE": 4.3e-05,
+      "TERRESTRIAL": 7.4e-05,
+      "MARITIME": 5e-06,
+      "LIFT": 0.002631,
+      "IDLE_ANOM": 0.004115,
+      "TERRESTRIAL_ANOM": 0.622536,
+      "MARITIME_ANOM": 0.002081,
+      "LIFT_ANOM": 0.368514
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 28,
+    "probabilities": {
+      "IDLE": 7.4e-05,
+      "TERRESTRIAL": 5e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.004001,
+      "IDLE_ANOM": 0.007348,
+      "TERRESTRIAL_ANOM": 0.267176,
+      "MARITIME_ANOM": 0.000288,
+      "LIFT_ANOM": 0.721062
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 29,
+    "probabilities": {
+      "IDLE": 0.000133,
+      "TERRESTRIAL": 0.000415,
+      "MARITIME": 8e-06,
+      "LIFT": 0.020611,
+      "IDLE_ANOM": 0.006834,
+      "TERRESTRIAL_ANOM": 0.40232,
+      "MARITIME_ANOM": 0.001315,
+      "LIFT_ANOM": 0.568363
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 30,
+    "probabilities": {
+      "IDLE": 0.056166,
+      "TERRESTRIAL": 0.010888,
+      "MARITIME": 0.189006,
+      "LIFT": 0.048259,
+      "IDLE_ANOM": 0.188261,
+      "TERRESTRIAL_ANOM": 0.092707,
+      "MARITIME_ANOM": 0.337329,
+      "LIFT_ANOM": 0.077384
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 31,
+    "probabilities": {
+      "IDLE": 0.052637,
+      "TERRESTRIAL": 8e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000275,
+      "IDLE_ANOM": 0.945375,
+      "TERRESTRIAL_ANOM": 0.000377,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001328
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 32,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000933,
+      "LIFT": 6e-06,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 4.2e-05,
+      "MARITIME_ANOM": 0.998971,
+      "LIFT_ANOM": 4.6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 33,
+    "probabilities": {
+      "IDLE": 0.025463,
+      "TERRESTRIAL": 7e-06,
+      "MARITIME": 0.0,
+      "LIFT": 4e-05,
+      "IDLE_ANOM": 0.973891,
+      "TERRESTRIAL_ANOM": 0.000352,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000247
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 34,
+    "probabilities": {
+      "IDLE": 0.005777,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.99355,
+      "TERRESTRIAL_ANOM": 0.000352,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00032
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 35,
+    "probabilities": {
+      "IDLE": 0.998642,
+      "TERRESTRIAL": 0.001022,
+      "MARITIME": 0.0,
+      "LIFT": 0.000273,
+      "IDLE_ANOM": 6.3e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 36,
+    "probabilities": {
+      "IDLE": 0.002036,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.853975,
+      "LIFT": 0.001043,
+      "IDLE_ANOM": 1.2e-05,
+      "TERRESTRIAL_ANOM": 5e-06,
+      "MARITIME_ANOM": 0.142912,
+      "LIFT_ANOM": 1.5e-05
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 37,
+    "probabilities": {
+      "IDLE": 0.000447,
+      "TERRESTRIAL": 0.002784,
+      "MARITIME": 0.000156,
+      "LIFT": 0.013303,
+      "IDLE_ANOM": 0.022252,
+      "TERRESTRIAL_ANOM": 0.736239,
+      "MARITIME_ANOM": 0.013798,
+      "LIFT_ANOM": 0.211022
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 38,
+    "probabilities": {
+      "IDLE": 0.000165,
+      "TERRESTRIAL": 0.000146,
+      "MARITIME": 4e-06,
+      "LIFT": 0.005169,
+      "IDLE_ANOM": 0.014982,
+      "TERRESTRIAL_ANOM": 0.428314,
+      "MARITIME_ANOM": 0.000613,
+      "LIFT_ANOM": 0.550607
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 39,
+    "probabilities": {
+      "IDLE": 0.189871,
+      "TERRESTRIAL": 0.403785,
+      "MARITIME": 5.5e-05,
+      "LIFT": 0.399498,
+      "IDLE_ANOM": 0.005189,
+      "TERRESTRIAL_ANOM": 0.000804,
+      "MARITIME_ANOM": 2.1e-05,
+      "LIFT_ANOM": 0.000778
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 40,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000285,
+      "LIFT": 5.9e-05,
+      "IDLE_ANOM": 1.7e-05,
+      "TERRESTRIAL_ANOM": 0.001859,
+      "MARITIME_ANOM": 0.992765,
+      "LIFT_ANOM": 0.005013
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 41,
+    "probabilities": {
+      "IDLE": 0.998889,
+      "TERRESTRIAL": 0.000828,
+      "MARITIME": 0.0,
+      "LIFT": 0.000233,
+      "IDLE_ANOM": 5e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 42,
+    "probabilities": {
+      "IDLE": 0.00985,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8e-06,
+      "IDLE_ANOM": 0.98522,
+      "TERRESTRIAL_ANOM": 0.002353,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.002568
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 43,
+    "probabilities": {
+      "IDLE": 0.015659,
+      "TERRESTRIAL": 0.012794,
+      "MARITIME": 0.000999,
+      "LIFT": 0.031564,
+      "IDLE_ANOM": 0.4964,
+      "TERRESTRIAL_ANOM": 0.19158,
+      "MARITIME_ANOM": 0.009285,
+      "LIFT_ANOM": 0.241718
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 44,
+    "probabilities": {
+      "IDLE": 0.004209,
+      "TERRESTRIAL": 0.000659,
+      "MARITIME": 0.002756,
+      "LIFT": 0.005303,
+      "IDLE_ANOM": 0.338629,
+      "TERRESTRIAL_ANOM": 0.155405,
+      "MARITIME_ANOM": 0.118908,
+      "LIFT_ANOM": 0.374131
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 45,
+    "probabilities": {
+      "IDLE": 0.030145,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000164,
+      "IDLE_ANOM": 0.968365,
+      "TERRESTRIAL_ANOM": 0.000242,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001081
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 46,
+    "probabilities": {
+      "IDLE": 1.2e-05,
+      "TERRESTRIAL": 0.000112,
+      "MARITIME": 0.0,
+      "LIFT": 0.00775,
+      "IDLE_ANOM": 0.005081,
+      "TERRESTRIAL_ANOM": 0.249792,
+      "MARITIME_ANOM": 0.000313,
+      "LIFT_ANOM": 0.736941
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 47,
+    "probabilities": {
+      "IDLE": 1.8e-05,
+      "TERRESTRIAL": 4.3e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.006578,
+      "IDLE_ANOM": 0.008522,
+      "TERRESTRIAL_ANOM": 0.101981,
+      "MARITIME_ANOM": 5.5e-05,
+      "LIFT_ANOM": 0.882803
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 48,
+    "probabilities": {
+      "IDLE": 0.00014,
+      "TERRESTRIAL": 0.000315,
+      "MARITIME": 2.5e-05,
+      "LIFT": 0.01193,
+      "IDLE_ANOM": 0.007383,
+      "TERRESTRIAL_ANOM": 0.487555,
+      "MARITIME_ANOM": 0.003119,
+      "LIFT_ANOM": 0.489534
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 49,
+    "probabilities": {
+      "IDLE": 0.000473,
+      "TERRESTRIAL": 0.003174,
+      "MARITIME": 0.000225,
+      "LIFT": 0.013581,
+      "IDLE_ANOM": 0.022926,
+      "TERRESTRIAL_ANOM": 0.747644,
+      "MARITIME_ANOM": 0.01736,
+      "LIFT_ANOM": 0.194617
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 50,
+    "probabilities": {
+      "IDLE": 0.023661,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.5e-05,
+      "IDLE_ANOM": 0.975475,
+      "TERRESTRIAL_ANOM": 0.000447,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000374
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 51,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001043,
+      "LIFT": 4e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 6e-06,
+      "MARITIME_ANOM": 0.998911,
+      "LIFT_ANOM": 3.5e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 52,
+    "probabilities": {
+      "IDLE": 0.997904,
+      "TERRESTRIAL": 0.001645,
+      "MARITIME": 0.0,
+      "LIFT": 0.000377,
+      "IDLE_ANOM": 7.4e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 53,
+    "probabilities": {
+      "IDLE": 0.998653,
+      "TERRESTRIAL": 0.00101,
+      "MARITIME": 0.0,
+      "LIFT": 0.000278,
+      "IDLE_ANOM": 5.8e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 54,
+    "probabilities": {
+      "IDLE": 0.020827,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 6.6e-05,
+      "IDLE_ANOM": 0.976674,
+      "TERRESTRIAL_ANOM": 0.000906,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001524
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 55,
+    "probabilities": {
+      "IDLE": 0.99878,
+      "TERRESTRIAL": 0.000913,
+      "MARITIME": 0.0,
+      "LIFT": 0.000248,
+      "IDLE_ANOM": 5.9e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 56,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.004021,
+      "LIFT": 8e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 2e-06,
+      "MARITIME_ANOM": 0.995955,
+      "LIFT_ANOM": 1.3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 57,
+    "probabilities": {
+      "IDLE": 5.4e-05,
+      "TERRESTRIAL": 0.00029,
+      "MARITIME": 8e-06,
+      "LIFT": 0.019635,
+      "IDLE_ANOM": 0.004294,
+      "TERRESTRIAL_ANOM": 0.386889,
+      "MARITIME_ANOM": 0.002082,
+      "LIFT_ANOM": 0.586748
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 58,
+    "probabilities": {
+      "IDLE": 0.081542,
+      "TERRESTRIAL": 0.461042,
+      "MARITIME": 0.000904,
+      "LIFT": 0.426006,
+      "IDLE_ANOM": 0.013501,
+      "TERRESTRIAL_ANOM": 0.009257,
+      "MARITIME_ANOM": 0.000939,
+      "LIFT_ANOM": 0.006809
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 59,
+    "probabilities": {
+      "IDLE": 0.029767,
+      "TERRESTRIAL": 0.121339,
+      "MARITIME": 1.2e-05,
+      "LIFT": 0.837886,
+      "IDLE_ANOM": 0.006073,
+      "TERRESTRIAL_ANOM": 0.00157,
+      "MARITIME_ANOM": 9e-06,
+      "LIFT_ANOM": 0.003345
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 60,
+    "probabilities": {
+      "IDLE": 5e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.004413,
+      "LIFT": 1.9e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 4e-06,
+      "MARITIME_ANOM": 0.995519,
+      "LIFT_ANOM": 4e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 61,
+    "probabilities": {
+      "IDLE": 0.010574,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.7e-05,
+      "IDLE_ANOM": 0.988329,
+      "TERRESTRIAL_ANOM": 0.000598,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00048
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 62,
+    "probabilities": {
+      "IDLE": 0.020346,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.6e-05,
+      "IDLE_ANOM": 0.978791,
+      "TERRESTRIAL_ANOM": 0.000359,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000487
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 63,
+    "probabilities": {
+      "IDLE": 0.000117,
+      "TERRESTRIAL": 0.000963,
+      "MARITIME": 2.1e-05,
+      "LIFT": 0.006263,
+      "IDLE_ANOM": 0.014724,
+      "TERRESTRIAL_ANOM": 0.708057,
+      "MARITIME_ANOM": 0.006367,
+      "LIFT_ANOM": 0.263488
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 64,
+    "probabilities": {
+      "IDLE": 0.998094,
+      "TERRESTRIAL": 0.00142,
+      "MARITIME": 0.0,
+      "LIFT": 0.000399,
+      "IDLE_ANOM": 8.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 65,
+    "probabilities": {
+      "IDLE": 0.998252,
+      "TERRESTRIAL": 0.00129,
+      "MARITIME": 0.0,
+      "LIFT": 0.000375,
+      "IDLE_ANOM": 8.3e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 66,
+    "probabilities": {
+      "IDLE": 0.001386,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.920975,
+      "LIFT": 0.000678,
+      "IDLE_ANOM": 3e-06,
+      "TERRESTRIAL_ANOM": 2e-06,
+      "MARITIME_ANOM": 0.076951,
+      "LIFT_ANOM": 4e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 67,
+    "probabilities": {
+      "IDLE": 0.031851,
+      "TERRESTRIAL": 0.015623,
+      "MARITIME": 0.000429,
+      "LIFT": 0.036217,
+      "IDLE_ANOM": 0.666208,
+      "TERRESTRIAL_ANOM": 0.094737,
+      "MARITIME_ANOM": 0.002842,
+      "LIFT_ANOM": 0.152092
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 68,
+    "probabilities": {
+      "IDLE": 0.037359,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000167,
+      "IDLE_ANOM": 0.960754,
+      "TERRESTRIAL_ANOM": 0.000479,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001235
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 69,
+    "probabilities": {
+      "IDLE": 0.043379,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8e-05,
+      "IDLE_ANOM": 0.955719,
+      "TERRESTRIAL_ANOM": 0.00022,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000599
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 70,
+    "probabilities": {
+      "IDLE": 0.019852,
+      "TERRESTRIAL": 0.095487,
+      "MARITIME": 0.000109,
+      "LIFT": 0.840288,
+      "IDLE_ANOM": 0.017168,
+      "TERRESTRIAL_ANOM": 0.009067,
+      "MARITIME_ANOM": 0.000118,
+      "LIFT_ANOM": 0.017912
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 71,
+    "probabilities": {
+      "IDLE": 0.024297,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000153,
+      "IDLE_ANOM": 0.973261,
+      "TERRESTRIAL_ANOM": 0.000514,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00177
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 72,
+    "probabilities": {
+      "IDLE": 0.029457,
+      "TERRESTRIAL": 9e-06,
+      "MARITIME": 0.0,
+      "LIFT": 4.6e-05,
+      "IDLE_ANOM": 0.969742,
+      "TERRESTRIAL_ANOM": 0.000445,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0003
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 73,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000593,
+      "LIFT": 8e-06,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 5.1e-05,
+      "MARITIME_ANOM": 0.999126,
+      "LIFT_ANOM": 0.00022
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 74,
+    "probabilities": {
+      "IDLE": 0.098264,
+      "TERRESTRIAL": 0.558138,
+      "MARITIME": 0.000472,
+      "LIFT": 0.326849,
+      "IDLE_ANOM": 0.008041,
+      "TERRESTRIAL_ANOM": 0.00486,
+      "MARITIME_ANOM": 0.000418,
+      "LIFT_ANOM": 0.002958
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 75,
+    "probabilities": {
+      "IDLE": 0.111988,
+      "TERRESTRIAL": 0.616708,
+      "MARITIME": 0.000172,
+      "LIFT": 0.266509,
+      "IDLE_ANOM": 0.002703,
+      "TERRESTRIAL_ANOM": 0.001211,
+      "MARITIME_ANOM": 9.3e-05,
+      "LIFT_ANOM": 0.000616
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 76,
+    "probabilities": {
+      "IDLE": 0.999067,
+      "TERRESTRIAL": 0.000665,
+      "MARITIME": 0.0,
+      "LIFT": 0.000204,
+      "IDLE_ANOM": 6.3e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 77,
+    "probabilities": {
+      "IDLE": 0.024125,
+      "TERRESTRIAL": 0.044981,
+      "MARITIME": 0.002554,
+      "LIFT": 0.089429,
+      "IDLE_ANOM": 0.363181,
+      "TERRESTRIAL_ANOM": 0.257957,
+      "MARITIME_ANOM": 0.014095,
+      "LIFT_ANOM": 0.203677
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 78,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.002924,
+      "LIFT": 1e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1.2e-05,
+      "MARITIME_ANOM": 0.996991,
+      "LIFT_ANOM": 6.2e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 79,
+    "probabilities": {
+      "IDLE": 0.009722,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 5e-06,
+      "IDLE_ANOM": 0.988812,
+      "TERRESTRIAL_ANOM": 0.000712,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000749
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 80,
+    "probabilities": {
+      "IDLE": 0.003584,
+      "TERRESTRIAL": 0.000828,
+      "MARITIME": 0.002986,
+      "LIFT": 0.003864,
+      "IDLE_ANOM": 0.358857,
+      "TERRESTRIAL_ANOM": 0.245122,
+      "MARITIME_ANOM": 0.10936,
+      "LIFT_ANOM": 0.2754
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 81,
+    "probabilities": {
+      "IDLE": 0.998933,
+      "TERRESTRIAL": 0.000748,
+      "MARITIME": 0.0,
+      "LIFT": 0.00023,
+      "IDLE_ANOM": 8.9e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 82,
+    "probabilities": {
+      "IDLE": 0.001351,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.935103,
+      "LIFT": 0.000585,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 1e-06,
+      "MARITIME_ANOM": 0.062955,
+      "LIFT_ANOM": 2e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 83,
+    "probabilities": {
+      "IDLE": 0.99821,
+      "TERRESTRIAL": 0.00126,
+      "MARITIME": 0.0,
+      "LIFT": 0.000406,
+      "IDLE_ANOM": 0.000124,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 84,
+    "probabilities": {
+      "IDLE": 5e-05,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.004847,
+      "LIFT": 0.000464,
+      "IDLE_ANOM": 4.8e-05,
+      "TERRESTRIAL_ANOM": 0.002539,
+      "MARITIME_ANOM": 0.988896,
+      "LIFT_ANOM": 0.003156
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 85,
+    "probabilities": {
+      "IDLE": 0.005787,
+      "TERRESTRIAL": 0.001306,
+      "MARITIME": 0.009097,
+      "LIFT": 0.007633,
+      "IDLE_ANOM": 0.32399,
+      "TERRESTRIAL_ANOM": 0.235039,
+      "MARITIME_ANOM": 0.166815,
+      "LIFT_ANOM": 0.250331
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 86,
+    "probabilities": {
+      "IDLE": 0.021696,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.7e-05,
+      "IDLE_ANOM": 0.97737,
+      "TERRESTRIAL_ANOM": 0.000309,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000607
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 87,
+    "probabilities": {
+      "IDLE": 0.001661,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.936238,
+      "LIFT": 0.000683,
+      "IDLE_ANOM": 3e-06,
+      "TERRESTRIAL_ANOM": 2e-06,
+      "MARITIME_ANOM": 0.06141,
+      "LIFT_ANOM": 3e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 88,
+    "probabilities": {
+      "IDLE": 0.000102,
+      "TERRESTRIAL": 0.000219,
+      "MARITIME": 1.6e-05,
+      "LIFT": 0.013786,
+      "IDLE_ANOM": 0.003904,
+      "TERRESTRIAL_ANOM": 0.481355,
+      "MARITIME_ANOM": 0.002538,
+      "LIFT_ANOM": 0.49808
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 89,
+    "probabilities": {
+      "IDLE": 0.020443,
+      "TERRESTRIAL": 0.015536,
+      "MARITIME": 0.002059,
+      "LIFT": 0.020118,
+      "IDLE_ANOM": 0.565486,
+      "TERRESTRIAL_ANOM": 0.203215,
+      "MARITIME_ANOM": 0.01353,
+      "LIFT_ANOM": 0.159613
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 90,
+    "probabilities": {
+      "IDLE": 0.001412,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.968899,
+      "TERRESTRIAL_ANOM": 0.019343,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.010346
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 91,
+    "probabilities": {
+      "IDLE": 0.004151,
+      "TERRESTRIAL": 0.002904,
+      "MARITIME": 0.000273,
+      "LIFT": 0.006318,
+      "IDLE_ANOM": 0.462742,
+      "TERRESTRIAL_ANOM": 0.24427,
+      "MARITIME_ANOM": 0.00967,
+      "LIFT_ANOM": 0.269672
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 92,
+    "probabilities": {
+      "IDLE": 0.002942,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 2e-06,
+      "IDLE_ANOM": 0.983369,
+      "TERRESTRIAL_ANOM": 0.007883,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.005804
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 93,
+    "probabilities": {
+      "IDLE": 0.015724,
+      "TERRESTRIAL": 0.013165,
+      "MARITIME": 0.005914,
+      "LIFT": 0.023166,
+      "IDLE_ANOM": 0.414976,
+      "TERRESTRIAL_ANOM": 0.292608,
+      "MARITIME_ANOM": 0.043281,
+      "LIFT_ANOM": 0.191167
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 94,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.004344,
+      "LIFT": 4e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 5e-06,
+      "MARITIME_ANOM": 0.99564,
+      "LIFT_ANOM": 7e-06
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 95,
+    "probabilities": {
+      "IDLE": 0.010142,
+      "TERRESTRIAL": 0.003429,
+      "MARITIME": 0.010315,
+      "LIFT": 0.01224,
+      "IDLE_ANOM": 0.310838,
+      "TERRESTRIAL_ANOM": 0.271978,
+      "MARITIME_ANOM": 0.125668,
+      "LIFT_ANOM": 0.25539
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 96,
+    "probabilities": {
+      "IDLE": 0.99876,
+      "TERRESTRIAL": 0.000908,
+      "MARITIME": 0.0,
+      "LIFT": 0.000272,
+      "IDLE_ANOM": 6e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 97,
+    "probabilities": {
+      "IDLE": 0.023337,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8e-05,
+      "IDLE_ANOM": 0.975452,
+      "TERRESTRIAL_ANOM": 0.000239,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00089
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 98,
+    "probabilities": {
+      "IDLE": 0.007637,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 5e-06,
+      "IDLE_ANOM": 0.991034,
+      "TERRESTRIAL_ANOM": 0.000471,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000852
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 99,
+    "probabilities": {
+      "IDLE": 0.999028,
+      "TERRESTRIAL": 0.000651,
+      "MARITIME": 0.0,
+      "LIFT": 0.00022,
+      "IDLE_ANOM": 0.000101,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 100,
+    "probabilities": {
+      "IDLE": 0.998747,
+      "TERRESTRIAL": 0.000835,
+      "MARITIME": 0.0,
+      "LIFT": 0.000261,
+      "IDLE_ANOM": 0.000157,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 101,
+    "probabilities": {
+      "IDLE": 0.05546,
+      "TERRESTRIAL": 0.116736,
+      "MARITIME": 4.6e-05,
+      "LIFT": 0.812132,
+      "IDLE_ANOM": 0.008982,
+      "TERRESTRIAL_ANOM": 0.001846,
+      "MARITIME_ANOM": 2.4e-05,
+      "LIFT_ANOM": 0.004774
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 102,
+    "probabilities": {
+      "IDLE": 0.004039,
+      "TERRESTRIAL": 0.001048,
+      "MARITIME": 0.001828,
+      "LIFT": 0.004707,
+      "IDLE_ANOM": 0.342379,
+      "TERRESTRIAL_ANOM": 0.218894,
+      "MARITIME_ANOM": 0.085921,
+      "LIFT_ANOM": 0.341184
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 103,
+    "probabilities": {
+      "IDLE": 9e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.015418,
+      "LIFT": 2.4e-05,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 1.6e-05,
+      "MARITIME_ANOM": 0.984501,
+      "LIFT_ANOM": 3.1e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 104,
+    "probabilities": {
+      "IDLE": 0.005909,
+      "TERRESTRIAL": 0.001778,
+      "MARITIME": 0.003546,
+      "LIFT": 0.006962,
+      "IDLE_ANOM": 0.36705,
+      "TERRESTRIAL_ANOM": 0.237866,
+      "MARITIME_ANOM": 0.090408,
+      "LIFT_ANOM": 0.286481
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 105,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 9.8e-05,
+      "LIFT": 1e-05,
+      "IDLE_ANOM": 4e-06,
+      "TERRESTRIAL_ANOM": 0.000333,
+      "MARITIME_ANOM": 0.997853,
+      "LIFT_ANOM": 0.001702
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 106,
+    "probabilities": {
+      "IDLE": 0.002566,
+      "TERRESTRIAL": 0.000875,
+      "MARITIME": 8e-06,
+      "LIFT": 0.003752,
+      "IDLE_ANOM": 0.366885,
+      "TERRESTRIAL_ANOM": 0.438094,
+      "MARITIME_ANOM": 0.000262,
+      "LIFT_ANOM": 0.187557
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 107,
+    "probabilities": {
+      "IDLE": 5.5e-05,
+      "TERRESTRIAL": 1.3e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.0011,
+      "IDLE_ANOM": 0.050693,
+      "TERRESTRIAL_ANOM": 0.127281,
+      "MARITIME_ANOM": 1.1e-05,
+      "LIFT_ANOM": 0.820847
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 108,
+    "probabilities": {
+      "IDLE": 5.6e-05,
+      "TERRESTRIAL": 1.6e-05,
+      "MARITIME": 9.9e-05,
+      "LIFT": 0.00065,
+      "IDLE_ANOM": 0.019021,
+      "TERRESTRIAL_ANOM": 0.141918,
+      "MARITIME_ANOM": 0.393295,
+      "LIFT_ANOM": 0.444944
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 109,
+    "probabilities": {
+      "IDLE": 0.01241,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.4e-05,
+      "IDLE_ANOM": 0.984728,
+      "TERRESTRIAL_ANOM": 0.001013,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001812
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 110,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.00012,
+      "LIFT": 9e-06,
+      "IDLE_ANOM": 3e-06,
+      "TERRESTRIAL_ANOM": 0.000217,
+      "MARITIME_ANOM": 0.998182,
+      "LIFT_ANOM": 0.001469
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 111,
+    "probabilities": {
+      "IDLE": 0.000113,
+      "TERRESTRIAL": 0.000347,
+      "MARITIME": 3.6e-05,
+      "LIFT": 0.008994,
+      "IDLE_ANOM": 0.004353,
+      "TERRESTRIAL_ANOM": 0.628606,
+      "MARITIME_ANOM": 0.00627,
+      "LIFT_ANOM": 0.351282
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 112,
+    "probabilities": {
+      "IDLE": 0.013094,
+      "TERRESTRIAL": 0.006957,
+      "MARITIME": 0.0032,
+      "LIFT": 0.014099,
+      "IDLE_ANOM": 0.484268,
+      "TERRESTRIAL_ANOM": 0.207205,
+      "MARITIME_ANOM": 0.029925,
+      "LIFT_ANOM": 0.241251
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 113,
+    "probabilities": {
+      "IDLE": 0.000181,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.016674,
+      "LIFT": 0.000446,
+      "IDLE_ANOM": 0.000761,
+      "TERRESTRIAL_ANOM": 0.002517,
+      "MARITIME_ANOM": 0.974165,
+      "LIFT_ANOM": 0.005254
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 114,
+    "probabilities": {
+      "IDLE": 0.008092,
+      "TERRESTRIAL": 0.003618,
+      "MARITIME": 0.001794,
+      "LIFT": 0.008105,
+      "IDLE_ANOM": 0.49964,
+      "TERRESTRIAL_ANOM": 0.204516,
+      "MARITIME_ANOM": 0.027314,
+      "LIFT_ANOM": 0.246922
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 115,
+    "probabilities": {
+      "IDLE": 0.024442,
+      "TERRESTRIAL": 0.000485,
+      "MARITIME": 0.713887,
+      "LIFT": 0.016155,
+      "IDLE_ANOM": 0.002982,
+      "TERRESTRIAL_ANOM": 0.001724,
+      "MARITIME_ANOM": 0.238699,
+      "LIFT_ANOM": 0.001625
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 116,
+    "probabilities": {
+      "IDLE": 0.998543,
+      "TERRESTRIAL": 0.001045,
+      "MARITIME": 0.0,
+      "LIFT": 0.000339,
+      "IDLE_ANOM": 7.2e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 117,
+    "probabilities": {
+      "IDLE": 0.99886,
+      "TERRESTRIAL": 0.000642,
+      "MARITIME": 0.0,
+      "LIFT": 0.000248,
+      "IDLE_ANOM": 0.00025,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 118,
+    "probabilities": {
+      "IDLE": 0.000174,
+      "TERRESTRIAL": 0.000167,
+      "MARITIME": 1.5e-05,
+      "LIFT": 0.008975,
+      "IDLE_ANOM": 0.007789,
+      "TERRESTRIAL_ANOM": 0.412973,
+      "MARITIME_ANOM": 0.002034,
+      "LIFT_ANOM": 0.567874
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 119,
+    "probabilities": {
+      "IDLE": 0.010827,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1e-05,
+      "IDLE_ANOM": 0.988688,
+      "TERRESTRIAL_ANOM": 0.0003,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000174
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 120,
+    "probabilities": {
+      "IDLE": 9e-05,
+      "TERRESTRIAL": 5.1e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.009885,
+      "IDLE_ANOM": 0.007671,
+      "TERRESTRIAL_ANOM": 0.134302,
+      "MARITIME_ANOM": 0.000108,
+      "LIFT_ANOM": 0.847892
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 121,
+    "probabilities": {
+      "IDLE": 0.061248,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.9e-05,
+      "IDLE_ANOM": 0.938481,
+      "TERRESTRIAL_ANOM": 0.000124,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000114
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 122,
+    "probabilities": {
+      "IDLE": 0.997503,
+      "TERRESTRIAL": 0.001953,
+      "MARITIME": 0.0,
+      "LIFT": 0.000475,
+      "IDLE_ANOM": 6.9e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 123,
+    "probabilities": {
+      "IDLE": 0.999194,
+      "TERRESTRIAL": 0.000505,
+      "MARITIME": 0.0,
+      "LIFT": 0.000167,
+      "IDLE_ANOM": 0.000133,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 124,
+    "probabilities": {
+      "IDLE": 7.5e-05,
+      "TERRESTRIAL": 0.000466,
+      "MARITIME": 3.3e-05,
+      "LIFT": 0.011052,
+      "IDLE_ANOM": 0.003456,
+      "TERRESTRIAL_ANOM": 0.671568,
+      "MARITIME_ANOM": 0.006903,
+      "LIFT_ANOM": 0.306447
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 125,
+    "probabilities": {
+      "IDLE": 0.013204,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 7e-06,
+      "IDLE_ANOM": 0.986309,
+      "TERRESTRIAL_ANOM": 0.000257,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000221
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 126,
+    "probabilities": {
+      "IDLE": 0.012298,
+      "TERRESTRIAL": 0.005234,
+      "MARITIME": 0.00897,
+      "LIFT": 0.014831,
+      "IDLE_ANOM": 0.372822,
+      "TERRESTRIAL_ANOM": 0.263256,
+      "MARITIME_ANOM": 0.091383,
+      "LIFT_ANOM": 0.231206
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 127,
+    "probabilities": {
+      "IDLE": 0.999007,
+      "TERRESTRIAL": 0.000626,
+      "MARITIME": 0.0,
+      "LIFT": 0.00025,
+      "IDLE_ANOM": 0.000117,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 128,
+    "probabilities": {
+      "IDLE": 7e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.003404,
+      "LIFT": 3.4e-05,
+      "IDLE_ANOM": 3e-06,
+      "TERRESTRIAL_ANOM": 9.1e-05,
+      "MARITIME_ANOM": 0.996237,
+      "LIFT_ANOM": 0.000224
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 129,
+    "probabilities": {
+      "IDLE": 0.997916,
+      "TERRESTRIAL": 0.001561,
+      "MARITIME": 0.0,
+      "LIFT": 0.000445,
+      "IDLE_ANOM": 7.9e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 130,
+    "probabilities": {
+      "IDLE": 0.048867,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.2e-05,
+      "IDLE_ANOM": 0.951,
+      "TERRESTRIAL_ANOM": 6.7e-05,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 5.3e-05
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 131,
+    "probabilities": {
+      "IDLE": 0.003556,
+      "TERRESTRIAL": 0.001459,
+      "MARITIME": 0.000142,
+      "LIFT": 0.004443,
+      "IDLE_ANOM": 0.500435,
+      "TERRESTRIAL_ANOM": 0.173791,
+      "MARITIME_ANOM": 0.007314,
+      "LIFT_ANOM": 0.30886
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 132,
+    "probabilities": {
+      "IDLE": 0.008905,
+      "TERRESTRIAL": 0.000466,
+      "MARITIME": 0.277742,
+      "LIFT": 0.014799,
+      "IDLE_ANOM": 0.010205,
+      "TERRESTRIAL_ANOM": 0.0152,
+      "MARITIME_ANOM": 0.660229,
+      "LIFT_ANOM": 0.012455
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 133,
+    "probabilities": {
+      "IDLE": 0.006716,
+      "TERRESTRIAL": 0.006542,
+      "MARITIME": 0.000685,
+      "LIFT": 0.031958,
+      "IDLE_ANOM": 0.310254,
+      "TERRESTRIAL_ANOM": 0.216006,
+      "MARITIME_ANOM": 0.013016,
+      "LIFT_ANOM": 0.414822
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 134,
+    "probabilities": {
+      "IDLE": 0.003359,
+      "TERRESTRIAL": 0.000364,
+      "MARITIME": 0.004407,
+      "LIFT": 0.00619,
+      "IDLE_ANOM": 0.213488,
+      "TERRESTRIAL_ANOM": 0.110159,
+      "MARITIME_ANOM": 0.263765,
+      "LIFT_ANOM": 0.398268
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 135,
+    "probabilities": {
+      "IDLE": 0.000566,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.959185,
+      "TERRESTRIAL_ANOM": 0.017366,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.022882
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 136,
+    "probabilities": {
+      "IDLE": 0.000116,
+      "TERRESTRIAL": 0.000171,
+      "MARITIME": 3.6e-05,
+      "LIFT": 0.001657,
+      "IDLE_ANOM": 0.007153,
+      "TERRESTRIAL_ANOM": 0.844579,
+      "MARITIME_ANOM": 0.005635,
+      "LIFT_ANOM": 0.140654
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 137,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001105,
+      "LIFT": 6e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1.7e-05,
+      "MARITIME_ANOM": 0.998807,
+      "LIFT_ANOM": 6.3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 138,
+    "probabilities": {
+      "IDLE": 3e-05,
+      "TERRESTRIAL": 0.000136,
+      "MARITIME": 0.0,
+      "LIFT": 0.014407,
+      "IDLE_ANOM": 0.010934,
+      "TERRESTRIAL_ANOM": 0.160256,
+      "MARITIME_ANOM": 8.3e-05,
+      "LIFT_ANOM": 0.814154
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 139,
+    "probabilities": {
+      "IDLE": 1.1e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.012707,
+      "LIFT": 3e-05,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 8e-06,
+      "MARITIME_ANOM": 0.987186,
+      "LIFT_ANOM": 5.8e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 140,
+    "probabilities": {
+      "IDLE": 0.080831,
+      "TERRESTRIAL": 0.169948,
+      "MARITIME": 6.1e-05,
+      "LIFT": 0.733625,
+      "IDLE_ANOM": 0.010105,
+      "TERRESTRIAL_ANOM": 0.001861,
+      "MARITIME_ANOM": 2.6e-05,
+      "LIFT_ANOM": 0.003543
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 141,
+    "probabilities": {
+      "IDLE": 0.000667,
+      "TERRESTRIAL": 0.00491,
+      "MARITIME": 0.000115,
+      "LIFT": 0.031284,
+      "IDLE_ANOM": 0.031134,
+      "TERRESTRIAL_ANOM": 0.626753,
+      "MARITIME_ANOM": 0.007103,
+      "LIFT_ANOM": 0.298034
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 142,
+    "probabilities": {
+      "IDLE": 0.00731,
+      "TERRESTRIAL": 0.000499,
+      "MARITIME": 1.2e-05,
+      "LIFT": 0.005375,
+      "IDLE_ANOM": 0.371589,
+      "TERRESTRIAL_ANOM": 0.355016,
+      "MARITIME_ANOM": 0.000109,
+      "LIFT_ANOM": 0.260088
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 143,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000482,
+      "LIFT": 5e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 9e-06,
+      "MARITIME_ANOM": 0.99938,
+      "LIFT_ANOM": 0.000123
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 144,
+    "probabilities": {
+      "IDLE": 0.002847,
+      "TERRESTRIAL": 0.002643,
+      "MARITIME": 0.000197,
+      "LIFT": 0.008321,
+      "IDLE_ANOM": 0.358484,
+      "TERRESTRIAL_ANOM": 0.270967,
+      "MARITIME_ANOM": 0.008877,
+      "LIFT_ANOM": 0.347662
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 145,
+    "probabilities": {
+      "IDLE": 0.004948,
+      "TERRESTRIAL": 0.002011,
+      "MARITIME": 0.000522,
+      "LIFT": 0.006632,
+      "IDLE_ANOM": 0.448087,
+      "TERRESTRIAL_ANOM": 0.177464,
+      "MARITIME_ANOM": 0.01497,
+      "LIFT_ANOM": 0.345365
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 146,
+    "probabilities": {
+      "IDLE": 0.998582,
+      "TERRESTRIAL": 0.000971,
+      "MARITIME": 0.0,
+      "LIFT": 0.000327,
+      "IDLE_ANOM": 0.00012,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 147,
+    "probabilities": {
+      "IDLE": 0.001092,
+      "TERRESTRIAL": 0.001587,
+      "MARITIME": 0.000107,
+      "LIFT": 0.006679,
+      "IDLE_ANOM": 0.208,
+      "TERRESTRIAL_ANOM": 0.323579,
+      "MARITIME_ANOM": 0.011244,
+      "LIFT_ANOM": 0.447712
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 148,
+    "probabilities": {
+      "IDLE": 0.011417,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.4e-05,
+      "IDLE_ANOM": 0.987207,
+      "TERRESTRIAL_ANOM": 0.000466,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000895
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 149,
+    "probabilities": {
+      "IDLE": 0.99815,
+      "TERRESTRIAL": 0.001362,
+      "MARITIME": 0.0,
+      "LIFT": 0.00039,
+      "IDLE_ANOM": 9.8e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 150,
+    "probabilities": {
+      "IDLE": 0.009617,
+      "TERRESTRIAL": 0.004144,
+      "MARITIME": 0.000907,
+      "LIFT": 0.008071,
+      "IDLE_ANOM": 0.561684,
+      "TERRESTRIAL_ANOM": 0.179252,
+      "MARITIME_ANOM": 0.015314,
+      "LIFT_ANOM": 0.221011
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 151,
+    "probabilities": {
+      "IDLE": 0.001206,
+      "TERRESTRIAL": 4.9e-05,
+      "MARITIME": 0.041691,
+      "LIFT": 0.003201,
+      "IDLE_ANOM": 0.003785,
+      "TERRESTRIAL_ANOM": 0.007678,
+      "MARITIME_ANOM": 0.925788,
+      "LIFT_ANOM": 0.016601
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 152,
+    "probabilities": {
+      "IDLE": 0.009076,
+      "TERRESTRIAL": 0.072272,
+      "MARITIME": 2.7e-05,
+      "LIFT": 0.866277,
+      "IDLE_ANOM": 0.015636,
+      "TERRESTRIAL_ANOM": 0.011542,
+      "MARITIME_ANOM": 6.3e-05,
+      "LIFT_ANOM": 0.025107
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 153,
+    "probabilities": {
+      "IDLE": 0.034778,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000143,
+      "IDLE_ANOM": 0.963791,
+      "TERRESTRIAL_ANOM": 0.000292,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000993
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 154,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000671,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 3e-06,
+      "MARITIME_ANOM": 0.999267,
+      "LIFT_ANOM": 5.6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 155,
+    "probabilities": {
+      "IDLE": 0.018104,
+      "TERRESTRIAL": 0.064843,
+      "MARITIME": 3.5e-05,
+      "LIFT": 0.885733,
+      "IDLE_ANOM": 0.014223,
+      "TERRESTRIAL_ANOM": 0.004375,
+      "MARITIME_ANOM": 3.4e-05,
+      "LIFT_ANOM": 0.012652
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 156,
+    "probabilities": {
+      "IDLE": 0.003687,
+      "TERRESTRIAL": 0.00062,
+      "MARITIME": 0.003661,
+      "LIFT": 0.006312,
+      "IDLE_ANOM": 0.254379,
+      "TERRESTRIAL_ANOM": 0.15127,
+      "MARITIME_ANOM": 0.162241,
+      "LIFT_ANOM": 0.417829
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 157,
+    "probabilities": {
+      "IDLE": 0.014508,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1e-05,
+      "IDLE_ANOM": 0.984142,
+      "TERRESTRIAL_ANOM": 0.000449,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00089
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 158,
+    "probabilities": {
+      "IDLE": 0.009121,
+      "TERRESTRIAL": 0.002582,
+      "MARITIME": 0.012936,
+      "LIFT": 0.01511,
+      "IDLE_ANOM": 0.222001,
+      "TERRESTRIAL_ANOM": 0.24226,
+      "MARITIME_ANOM": 0.211005,
+      "LIFT_ANOM": 0.284985
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 159,
+    "probabilities": {
+      "IDLE": 0.003563,
+      "TERRESTRIAL": 0.020154,
+      "MARITIME": 0.002708,
+      "LIFT": 0.054363,
+      "IDLE_ANOM": 0.074177,
+      "TERRESTRIAL_ANOM": 0.669446,
+      "MARITIME_ANOM": 0.033942,
+      "LIFT_ANOM": 0.141648
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 160,
+    "probabilities": {
+      "IDLE": 0.163804,
+      "TERRESTRIAL": 0.639954,
+      "MARITIME": 0.000297,
+      "LIFT": 0.191575,
+      "IDLE_ANOM": 0.002861,
+      "TERRESTRIAL_ANOM": 0.000981,
+      "MARITIME_ANOM": 0.000117,
+      "LIFT_ANOM": 0.000411
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 161,
+    "probabilities": {
+      "IDLE": 0.003669,
+      "TERRESTRIAL": 0.001195,
+      "MARITIME": 0.001316,
+      "LIFT": 0.004696,
+      "IDLE_ANOM": 0.336611,
+      "TERRESTRIAL_ANOM": 0.209297,
+      "MARITIME_ANOM": 0.070322,
+      "LIFT_ANOM": 0.372895
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 162,
+    "probabilities": {
+      "IDLE": 0.00545,
+      "TERRESTRIAL": 0.002722,
+      "MARITIME": 0.000312,
+      "LIFT": 0.006173,
+      "IDLE_ANOM": 0.558402,
+      "TERRESTRIAL_ANOM": 0.18025,
+      "MARITIME_ANOM": 0.008887,
+      "LIFT_ANOM": 0.237805
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 163,
+    "probabilities": {
+      "IDLE": 0.00079,
+      "TERRESTRIAL": 0.000194,
+      "MARITIME": 1e-05,
+      "LIFT": 0.002793,
+      "IDLE_ANOM": 0.057128,
+      "TERRESTRIAL_ANOM": 0.498348,
+      "MARITIME_ANOM": 0.000475,
+      "LIFT_ANOM": 0.440261
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 164,
+    "probabilities": {
+      "IDLE": 1.6e-05,
+      "TERRESTRIAL": 7.3e-05,
+      "MARITIME": 5e-06,
+      "LIFT": 0.001359,
+      "IDLE_ANOM": 0.001931,
+      "TERRESTRIAL_ANOM": 0.824725,
+      "MARITIME_ANOM": 0.003812,
+      "LIFT_ANOM": 0.168078
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 165,
+    "probabilities": {
+      "IDLE": 0.008715,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 4.7e-05,
+      "IDLE_ANOM": 0.986686,
+      "TERRESTRIAL_ANOM": 0.001037,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.003513
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 166,
+    "probabilities": {
+      "IDLE": 2.3e-05,
+      "TERRESTRIAL": 4.8e-05,
+      "MARITIME": 2e-06,
+      "LIFT": 0.001332,
+      "IDLE_ANOM": 0.003212,
+      "TERRESTRIAL_ANOM": 0.683036,
+      "MARITIME_ANOM": 0.001295,
+      "LIFT_ANOM": 0.311052
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 167,
+    "probabilities": {
+      "IDLE": 1.4e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0078,
+      "LIFT": 5.3e-05,
+      "IDLE_ANOM": 8e-06,
+      "TERRESTRIAL_ANOM": 5.5e-05,
+      "MARITIME_ANOM": 0.99189,
+      "LIFT_ANOM": 0.000181
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 168,
+    "probabilities": {
+      "IDLE": 0.008329,
+      "TERRESTRIAL": 0.005646,
+      "MARITIME": 0.001407,
+      "LIFT": 0.015037,
+      "IDLE_ANOM": 0.408422,
+      "TERRESTRIAL_ANOM": 0.223363,
+      "MARITIME_ANOM": 0.020466,
+      "LIFT_ANOM": 0.31733
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 169,
+    "probabilities": {
+      "IDLE": 0.119924,
+      "TERRESTRIAL": 1.1e-05,
+      "MARITIME": 0.0,
+      "LIFT": 7.9e-05,
+      "IDLE_ANOM": 0.879811,
+      "TERRESTRIAL_ANOM": 8.7e-05,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 8.8e-05
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 170,
+    "probabilities": {
+      "IDLE": 0.015559,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 5e-06,
+      "IDLE_ANOM": 0.983905,
+      "TERRESTRIAL_ANOM": 0.000226,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000304
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 171,
+    "probabilities": {
+      "IDLE": 0.023453,
+      "TERRESTRIAL": 0.136708,
+      "MARITIME": 5.8e-05,
+      "LIFT": 0.820045,
+      "IDLE_ANOM": 0.007791,
+      "TERRESTRIAL_ANOM": 0.004395,
+      "MARITIME_ANOM": 5.8e-05,
+      "LIFT_ANOM": 0.007492
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 172,
+    "probabilities": {
+      "IDLE": 0.015704,
+      "TERRESTRIAL": 0.003631,
+      "MARITIME": 0.04058,
+      "LIFT": 0.014906,
+      "IDLE_ANOM": 0.306409,
+      "TERRESTRIAL_ANOM": 0.219177,
+      "MARITIME_ANOM": 0.255652,
+      "LIFT_ANOM": 0.14394
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 173,
+    "probabilities": {
+      "IDLE": 0.034243,
+      "TERRESTRIAL": 0.135153,
+      "MARITIME": 8e-05,
+      "LIFT": 0.806666,
+      "IDLE_ANOM": 0.010933,
+      "TERRESTRIAL_ANOM": 0.00449,
+      "MARITIME_ANOM": 6.6e-05,
+      "LIFT_ANOM": 0.008369
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 174,
+    "probabilities": {
+      "IDLE": 0.00723,
+      "TERRESTRIAL": 0.003588,
+      "MARITIME": 0.000768,
+      "LIFT": 0.007409,
+      "IDLE_ANOM": 0.495477,
+      "TERRESTRIAL_ANOM": 0.206494,
+      "MARITIME_ANOM": 0.015218,
+      "LIFT_ANOM": 0.263815
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 175,
+    "probabilities": {
+      "IDLE": 0.006902,
+      "TERRESTRIAL": 0.003542,
+      "MARITIME": 0.000862,
+      "LIFT": 0.00799,
+      "IDLE_ANOM": 0.455712,
+      "TERRESTRIAL_ANOM": 0.205733,
+      "MARITIME_ANOM": 0.020742,
+      "LIFT_ANOM": 0.298518
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 176,
+    "probabilities": {
+      "IDLE": 0.002048,
+      "TERRESTRIAL": 0.000191,
+      "MARITIME": 0.047414,
+      "LIFT": 0.004906,
+      "IDLE_ANOM": 0.009908,
+      "TERRESTRIAL_ANOM": 0.033648,
+      "MARITIME_ANOM": 0.876435,
+      "LIFT_ANOM": 0.02545
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 177,
+    "probabilities": {
+      "IDLE": 5.8e-05,
+      "TERRESTRIAL": 0.000813,
+      "MARITIME": 1.4e-05,
+      "LIFT": 0.010943,
+      "IDLE_ANOM": 0.009834,
+      "TERRESTRIAL_ANOM": 0.597054,
+      "MARITIME_ANOM": 0.005694,
+      "LIFT_ANOM": 0.375589
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 178,
+    "probabilities": {
+      "IDLE": 0.998539,
+      "TERRESTRIAL": 0.001089,
+      "MARITIME": 0.0,
+      "LIFT": 0.000283,
+      "IDLE_ANOM": 8.9e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 179,
+    "probabilities": {
+      "IDLE": 3.1e-05,
+      "TERRESTRIAL": 0.000109,
+      "MARITIME": 1e-06,
+      "LIFT": 0.016195,
+      "IDLE_ANOM": 0.002667,
+      "TERRESTRIAL_ANOM": 0.28684,
+      "MARITIME_ANOM": 0.000311,
+      "LIFT_ANOM": 0.693846
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 180,
+    "probabilities": {
+      "IDLE": 0.004631,
+      "TERRESTRIAL": 0.007687,
+      "MARITIME": 0.000237,
+      "LIFT": 0.040943,
+      "IDLE_ANOM": 0.150756,
+      "TERRESTRIAL_ANOM": 0.490144,
+      "MARITIME_ANOM": 0.003917,
+      "LIFT_ANOM": 0.301685
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 181,
+    "probabilities": {
+      "IDLE": 0.038505,
+      "TERRESTRIAL": 0.125822,
+      "MARITIME": 9.4e-05,
+      "LIFT": 0.809339,
+      "IDLE_ANOM": 0.012112,
+      "TERRESTRIAL_ANOM": 0.004531,
+      "MARITIME_ANOM": 7.4e-05,
+      "LIFT_ANOM": 0.009523
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 182,
+    "probabilities": {
+      "IDLE": 0.007363,
+      "TERRESTRIAL": 0.001392,
+      "MARITIME": 0.045014,
+      "LIFT": 0.012933,
+      "IDLE_ANOM": 0.111713,
+      "TERRESTRIAL_ANOM": 0.136281,
+      "MARITIME_ANOM": 0.558049,
+      "LIFT_ANOM": 0.127254
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 183,
+    "probabilities": {
+      "IDLE": 0.998897,
+      "TERRESTRIAL": 0.000704,
+      "MARITIME": 0.0,
+      "LIFT": 0.000261,
+      "IDLE_ANOM": 0.000138,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 184,
+    "probabilities": {
+      "IDLE": 0.042069,
+      "TERRESTRIAL": 1.6e-05,
+      "MARITIME": 0.0,
+      "LIFT": 9.5e-05,
+      "IDLE_ANOM": 0.956807,
+      "TERRESTRIAL_ANOM": 0.000547,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000465
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 185,
+    "probabilities": {
+      "IDLE": 0.014601,
+      "TERRESTRIAL": 0.018587,
+      "MARITIME": 0.003037,
+      "LIFT": 0.029772,
+      "IDLE_ANOM": 0.396531,
+      "TERRESTRIAL_ANOM": 0.295421,
+      "MARITIME_ANOM": 0.023724,
+      "LIFT_ANOM": 0.218327
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 186,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.004115,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1e-06,
+      "MARITIME_ANOM": 0.995873,
+      "LIFT_ANOM": 6e-06
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 187,
+    "probabilities": {
+      "IDLE": 0.000273,
+      "TERRESTRIAL": 0.001574,
+      "MARITIME": 7.5e-05,
+      "LIFT": 0.005262,
+      "IDLE_ANOM": 0.022659,
+      "TERRESTRIAL_ANOM": 0.797515,
+      "MARITIME_ANOM": 0.012994,
+      "LIFT_ANOM": 0.159647
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 188,
+    "probabilities": {
+      "IDLE": 0.017071,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.8e-05,
+      "IDLE_ANOM": 0.982256,
+      "TERRESTRIAL_ANOM": 0.000395,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000256
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 189,
+    "probabilities": {
+      "IDLE": 0.009342,
+      "TERRESTRIAL": 0.00431,
+      "MARITIME": 0.014784,
+      "LIFT": 0.021551,
+      "IDLE_ANOM": 0.192966,
+      "TERRESTRIAL_ANOM": 0.290845,
+      "MARITIME_ANOM": 0.220064,
+      "LIFT_ANOM": 0.246138
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 190,
+    "probabilities": {
+      "IDLE": 0.00637,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 0.992715,
+      "TERRESTRIAL_ANOM": 0.000365,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000547
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 191,
+    "probabilities": {
+      "IDLE": 0.047435,
+      "TERRESTRIAL": 0.109224,
+      "MARITIME": 2.1e-05,
+      "LIFT": 0.828137,
+      "IDLE_ANOM": 0.008842,
+      "TERRESTRIAL_ANOM": 0.001833,
+      "MARITIME_ANOM": 1.1e-05,
+      "LIFT_ANOM": 0.004495
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 192,
+    "probabilities": {
+      "IDLE": 9.2e-05,
+      "TERRESTRIAL": 5.7e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.009419,
+      "IDLE_ANOM": 0.009604,
+      "TERRESTRIAL_ANOM": 0.163625,
+      "MARITIME_ANOM": 0.000135,
+      "LIFT_ANOM": 0.817069
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 193,
+    "probabilities": {
+      "IDLE": 1.1e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.010634,
+      "LIFT": 3.6e-05,
+      "IDLE_ANOM": 4e-06,
+      "TERRESTRIAL_ANOM": 4.1e-05,
+      "MARITIME_ANOM": 0.989201,
+      "LIFT_ANOM": 7.4e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 194,
+    "probabilities": {
+      "IDLE": 0.99818,
+      "TERRESTRIAL": 0.001422,
+      "MARITIME": 0.0,
+      "LIFT": 0.000324,
+      "IDLE_ANOM": 7.3e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 195,
+    "probabilities": {
+      "IDLE": 7e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.015661,
+      "LIFT": 1.7e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 4e-06,
+      "MARITIME_ANOM": 0.984298,
+      "LIFT_ANOM": 1.1e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 196,
+    "probabilities": {
+      "IDLE": 0.039275,
+      "TERRESTRIAL": 3.4e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.000507,
+      "IDLE_ANOM": 0.954578,
+      "TERRESTRIAL_ANOM": 0.001671,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.003935
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 197,
+    "probabilities": {
+      "IDLE": 8e-06,
+      "TERRESTRIAL": 1.6e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.003801,
+      "IDLE_ANOM": 0.002291,
+      "TERRESTRIAL_ANOM": 0.107932,
+      "MARITIME_ANOM": 9.5e-05,
+      "LIFT_ANOM": 0.885857
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 198,
+    "probabilities": {
+      "IDLE": 1.9e-05,
+      "TERRESTRIAL": 4.9e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.008908,
+      "IDLE_ANOM": 0.002797,
+      "TERRESTRIAL_ANOM": 0.202269,
+      "MARITIME_ANOM": 0.000153,
+      "LIFT_ANOM": 0.785806
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 199,
+    "probabilities": {
+      "IDLE": 0.151412,
+      "TERRESTRIAL": 0.591678,
+      "MARITIME": 0.00113,
+      "LIFT": 0.235047,
+      "IDLE_ANOM": 0.0118,
+      "TERRESTRIAL_ANOM": 0.005673,
+      "MARITIME_ANOM": 0.000754,
+      "LIFT_ANOM": 0.002506
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 200,
+    "probabilities": {
+      "IDLE": 0.042352,
+      "TERRESTRIAL": 0.115297,
+      "MARITIME": 4.8e-05,
+      "LIFT": 0.820917,
+      "IDLE_ANOM": 0.012026,
+      "TERRESTRIAL_ANOM": 0.002812,
+      "MARITIME_ANOM": 3.2e-05,
+      "LIFT_ANOM": 0.006517
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 201,
+    "probabilities": {
+      "IDLE": 0.007566,
+      "TERRESTRIAL": 0.00331,
+      "MARITIME": 0.003092,
+      "LIFT": 0.009748,
+      "IDLE_ANOM": 0.376451,
+      "TERRESTRIAL_ANOM": 0.231735,
+      "MARITIME_ANOM": 0.060616,
+      "LIFT_ANOM": 0.307482
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 202,
+    "probabilities": {
+      "IDLE": 3e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001912,
+      "LIFT": 8e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1.2e-05,
+      "MARITIME_ANOM": 0.998006,
+      "LIFT_ANOM": 5.8e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 203,
+    "probabilities": {
+      "IDLE": 0.033504,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 4.4e-05,
+      "IDLE_ANOM": 0.965859,
+      "TERRESTRIAL_ANOM": 0.000179,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000412
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 204,
+    "probabilities": {
+      "IDLE": 0.045272,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000118,
+      "IDLE_ANOM": 0.953247,
+      "TERRESTRIAL_ANOM": 0.000407,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000949
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 205,
+    "probabilities": {
+      "IDLE": 0.011121,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 4e-06,
+      "IDLE_ANOM": 0.988135,
+      "TERRESTRIAL_ANOM": 0.000334,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000406
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 206,
+    "probabilities": {
+      "IDLE": 3e-06,
+      "TERRESTRIAL": 5e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000312,
+      "IDLE_ANOM": 0.007744,
+      "TERRESTRIAL_ANOM": 0.224703,
+      "MARITIME_ANOM": 2.7e-05,
+      "LIFT_ANOM": 0.767206
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 207,
+    "probabilities": {
+      "IDLE": 0.006043,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 4e-06,
+      "IDLE_ANOM": 0.993507,
+      "TERRESTRIAL_ANOM": 0.000291,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000155
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 208,
+    "probabilities": {
+      "IDLE": 0.089113,
+      "TERRESTRIAL": 1.2e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.000311,
+      "IDLE_ANOM": 0.909935,
+      "TERRESTRIAL_ANOM": 0.000151,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000477
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 209,
+    "probabilities": {
+      "IDLE": 0.998385,
+      "TERRESTRIAL": 0.001205,
+      "MARITIME": 0.0,
+      "LIFT": 0.000339,
+      "IDLE_ANOM": 7.1e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 210,
+    "probabilities": {
+      "IDLE": 7.5e-05,
+      "TERRESTRIAL": 9.2e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.007916,
+      "IDLE_ANOM": 0.01912,
+      "TERRESTRIAL_ANOM": 0.107899,
+      "MARITIME_ANOM": 0.000115,
+      "LIFT_ANOM": 0.864782
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 211,
+    "probabilities": {
+      "IDLE": 0.009593,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 5e-06,
+      "IDLE_ANOM": 0.990057,
+      "TERRESTRIAL_ANOM": 0.000219,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000125
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 212,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000171,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 4.6e-05,
+      "MARITIME_ANOM": 0.999635,
+      "LIFT_ANOM": 0.000143
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 213,
+    "probabilities": {
+      "IDLE": 0.060436,
+      "TERRESTRIAL": 0.174128,
+      "MARITIME": 7e-05,
+      "LIFT": 0.748151,
+      "IDLE_ANOM": 0.009649,
+      "TERRESTRIAL_ANOM": 0.002641,
+      "MARITIME_ANOM": 4.3e-05,
+      "LIFT_ANOM": 0.004881
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 214,
+    "probabilities": {
+      "IDLE": 0.000104,
+      "TERRESTRIAL": 0.000581,
+      "MARITIME": 2.3e-05,
+      "LIFT": 0.015932,
+      "IDLE_ANOM": 0.005226,
+      "TERRESTRIAL_ANOM": 0.676982,
+      "MARITIME_ANOM": 0.003536,
+      "LIFT_ANOM": 0.297615
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 215,
+    "probabilities": {
+      "IDLE": 0.000314,
+      "TERRESTRIAL": 0.000189,
+      "MARITIME": 9e-06,
+      "LIFT": 0.001565,
+      "IDLE_ANOM": 0.025457,
+      "TERRESTRIAL_ANOM": 0.713048,
+      "MARITIME_ANOM": 0.001187,
+      "LIFT_ANOM": 0.25823
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 216,
+    "probabilities": {
+      "IDLE": 0.028805,
+      "TERRESTRIAL": 0.13573,
+      "MARITIME": 4.2e-05,
+      "LIFT": 0.813511,
+      "IDLE_ANOM": 0.010248,
+      "TERRESTRIAL_ANOM": 0.004098,
+      "MARITIME_ANOM": 4.2e-05,
+      "LIFT_ANOM": 0.007523
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 217,
+    "probabilities": {
+      "IDLE": 0.001684,
+      "TERRESTRIAL": 0.00682,
+      "MARITIME": 0.000737,
+      "LIFT": 0.013836,
+      "IDLE_ANOM": 0.055287,
+      "TERRESTRIAL_ANOM": 0.733896,
+      "MARITIME_ANOM": 0.033451,
+      "LIFT_ANOM": 0.154287
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 218,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.00166,
+      "LIFT": 7e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1.3e-05,
+      "MARITIME_ANOM": 0.998255,
+      "LIFT_ANOM": 6.3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 219,
+    "probabilities": {
+      "IDLE": 0.001131,
+      "TERRESTRIAL": 2.2e-05,
+      "MARITIME": 0.059876,
+      "LIFT": 0.002132,
+      "IDLE_ANOM": 0.004131,
+      "TERRESTRIAL_ANOM": 0.005067,
+      "MARITIME_ANOM": 0.913266,
+      "LIFT_ANOM": 0.014375
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 220,
+    "probabilities": {
+      "IDLE": 0.032263,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000118,
+      "IDLE_ANOM": 0.966555,
+      "TERRESTRIAL_ANOM": 0.000207,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000854
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 221,
+    "probabilities": {
+      "IDLE": 0.00422,
+      "TERRESTRIAL": 0.000552,
+      "MARITIME": 1.7e-05,
+      "LIFT": 0.004723,
+      "IDLE_ANOM": 0.195462,
+      "TERRESTRIAL_ANOM": 0.469238,
+      "MARITIME_ANOM": 0.000324,
+      "LIFT_ANOM": 0.325464
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 222,
+    "probabilities": {
+      "IDLE": 0.048384,
+      "TERRESTRIAL": 0.088285,
+      "MARITIME": 5.9e-05,
+      "LIFT": 0.834371,
+      "IDLE_ANOM": 0.015751,
+      "TERRESTRIAL_ANOM": 0.0034,
+      "MARITIME_ANOM": 3.4e-05,
+      "LIFT_ANOM": 0.009716
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 223,
+    "probabilities": {
+      "IDLE": 7e-05,
+      "TERRESTRIAL": 9.9e-05,
+      "MARITIME": 4e-06,
+      "LIFT": 0.011903,
+      "IDLE_ANOM": 0.004804,
+      "TERRESTRIAL_ANOM": 0.309358,
+      "MARITIME_ANOM": 0.000594,
+      "LIFT_ANOM": 0.673167
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 224,
+    "probabilities": {
+      "IDLE": 0.053786,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 9e-05,
+      "IDLE_ANOM": 0.94546,
+      "TERRESTRIAL_ANOM": 0.000146,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000513
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 225,
+    "probabilities": {
+      "IDLE": 0.002651,
+      "TERRESTRIAL": 0.007163,
+      "MARITIME": 0.000991,
+      "LIFT": 0.015451,
+      "IDLE_ANOM": 0.079435,
+      "TERRESTRIAL_ANOM": 0.722414,
+      "MARITIME_ANOM": 0.022979,
+      "LIFT_ANOM": 0.148916
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 226,
+    "probabilities": {
+      "IDLE": 0.027602,
+      "TERRESTRIAL": 0.125187,
+      "MARITIME": 5.1e-05,
+      "LIFT": 0.822064,
+      "IDLE_ANOM": 0.01219,
+      "TERRESTRIAL_ANOM": 0.00489,
+      "MARITIME_ANOM": 4.2e-05,
+      "LIFT_ANOM": 0.007974
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 227,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000562,
+      "IDLE_ANOM": 0.006145,
+      "TERRESTRIAL_ANOM": 0.11675,
+      "MARITIME_ANOM": 1.2e-05,
+      "LIFT_ANOM": 0.876525
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 228,
+    "probabilities": {
+      "IDLE": 5e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.005847,
+      "LIFT": 1.2e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 6e-06,
+      "MARITIME_ANOM": 0.994097,
+      "LIFT_ANOM": 3.3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 229,
+    "probabilities": {
+      "IDLE": 0.075027,
+      "TERRESTRIAL": 0.561376,
+      "MARITIME": 0.000351,
+      "LIFT": 0.35437,
+      "IDLE_ANOM": 0.004032,
+      "TERRESTRIAL_ANOM": 0.003109,
+      "MARITIME_ANOM": 0.000232,
+      "LIFT_ANOM": 0.001503
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 230,
+    "probabilities": {
+      "IDLE": 0.051479,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.4e-05,
+      "IDLE_ANOM": 0.948191,
+      "TERRESTRIAL_ANOM": 0.000157,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000145
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 231,
+    "probabilities": {
+      "IDLE": 0.000121,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 0.0,
+      "IDLE_ANOM": 0.770541,
+      "TERRESTRIAL_ANOM": 0.110023,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.119315
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 232,
+    "probabilities": {
+      "IDLE": 9e-06,
+      "TERRESTRIAL": 6.1e-05,
+      "MARITIME": 2e-06,
+      "LIFT": 0.004104,
+      "IDLE_ANOM": 0.001127,
+      "TERRESTRIAL_ANOM": 0.650024,
+      "MARITIME_ANOM": 0.001583,
+      "LIFT_ANOM": 0.343089
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 233,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000529,
+      "LIFT": 2e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 7e-06,
+      "MARITIME_ANOM": 0.999425,
+      "LIFT_ANOM": 3.6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 234,
+    "probabilities": {
+      "IDLE": 2.6e-05,
+      "TERRESTRIAL": 3.9e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.007795,
+      "IDLE_ANOM": 0.004479,
+      "TERRESTRIAL_ANOM": 0.125603,
+      "MARITIME_ANOM": 0.000119,
+      "LIFT_ANOM": 0.861939
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 235,
+    "probabilities": {
+      "IDLE": 1.3e-05,
+      "TERRESTRIAL": 4.8e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.006774,
+      "IDLE_ANOM": 0.006835,
+      "TERRESTRIAL_ANOM": 0.128229,
+      "MARITIME_ANOM": 7.4e-05,
+      "LIFT_ANOM": 0.858027
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 236,
+    "probabilities": {
+      "IDLE": 0.001331,
+      "TERRESTRIAL": 0.000376,
+      "MARITIME": 1e-06,
+      "LIFT": 0.040362,
+      "IDLE_ANOM": 0.144263,
+      "TERRESTRIAL_ANOM": 0.06853,
+      "MARITIME_ANOM": 2.2e-05,
+      "LIFT_ANOM": 0.745116
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 237,
+    "probabilities": {
+      "IDLE": 0.02471,
+      "TERRESTRIAL": 0.073191,
+      "MARITIME": 2.8e-05,
+      "LIFT": 0.889922,
+      "IDLE_ANOM": 0.005561,
+      "TERRESTRIAL_ANOM": 0.001636,
+      "MARITIME_ANOM": 1.6e-05,
+      "LIFT_ANOM": 0.004937
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 238,
+    "probabilities": {
+      "IDLE": 0.047396,
+      "TERRESTRIAL": 8e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000284,
+      "IDLE_ANOM": 0.950627,
+      "TERRESTRIAL_ANOM": 0.00032,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001365
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 239,
+    "probabilities": {
+      "IDLE": 0.001439,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.915929,
+      "LIFT": 0.000745,
+      "IDLE_ANOM": 4e-06,
+      "TERRESTRIAL_ANOM": 3e-06,
+      "MARITIME_ANOM": 0.081876,
+      "LIFT_ANOM": 4e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 240,
+    "probabilities": {
+      "IDLE": 0.012708,
+      "TERRESTRIAL": 0.076468,
+      "MARITIME": 2.7e-05,
+      "LIFT": 0.880569,
+      "IDLE_ANOM": 0.011817,
+      "TERRESTRIAL_ANOM": 0.005901,
+      "MARITIME_ANOM": 3.6e-05,
+      "LIFT_ANOM": 0.012474
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 241,
+    "probabilities": {
+      "IDLE": 0.003436,
+      "TERRESTRIAL": 0.001676,
+      "MARITIME": 0.000355,
+      "LIFT": 0.005877,
+      "IDLE_ANOM": 0.400812,
+      "TERRESTRIAL_ANOM": 0.198249,
+      "MARITIME_ANOM": 0.016478,
+      "LIFT_ANOM": 0.373117
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 242,
+    "probabilities": {
+      "IDLE": 0.998022,
+      "TERRESTRIAL": 0.001468,
+      "MARITIME": 0.0,
+      "LIFT": 0.000356,
+      "IDLE_ANOM": 0.000154,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 243,
+    "probabilities": {
+      "IDLE": 1.3e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.024906,
+      "LIFT": 2.6e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1e-05,
+      "MARITIME_ANOM": 0.975015,
+      "LIFT_ANOM": 3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 244,
+    "probabilities": {
+      "IDLE": 0.04588,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000114,
+      "IDLE_ANOM": 0.952878,
+      "TERRESTRIAL_ANOM": 0.000333,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00079
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 245,
+    "probabilities": {
+      "IDLE": 0.012057,
+      "TERRESTRIAL": 0.101725,
+      "MARITIME": 8.1e-05,
+      "LIFT": 0.853509,
+      "IDLE_ANOM": 0.009079,
+      "TERRESTRIAL_ANOM": 0.008014,
+      "MARITIME_ANOM": 0.000126,
+      "LIFT_ANOM": 0.015409
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 246,
+    "probabilities": {
+      "IDLE": 2.2e-05,
+      "TERRESTRIAL": 5.6e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.001797,
+      "IDLE_ANOM": 0.013491,
+      "TERRESTRIAL_ANOM": 0.341603,
+      "MARITIME_ANOM": 0.000249,
+      "LIFT_ANOM": 0.642782
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 247,
+    "probabilities": {
+      "IDLE": 0.026992,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.4e-05,
+      "IDLE_ANOM": 0.972273,
+      "TERRESTRIAL_ANOM": 0.000401,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000295
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 248,
+    "probabilities": {
+      "IDLE": 0.00088,
+      "TERRESTRIAL": 3.1e-05,
+      "MARITIME": 0.050941,
+      "LIFT": 0.002382,
+      "IDLE_ANOM": 0.003968,
+      "TERRESTRIAL_ANOM": 0.008713,
+      "MARITIME_ANOM": 0.92128,
+      "LIFT_ANOM": 0.011806
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 249,
+    "probabilities": {
+      "IDLE": 0.012085,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.2e-05,
+      "IDLE_ANOM": 0.986952,
+      "TERRESTRIAL_ANOM": 0.000287,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000663
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 250,
+    "probabilities": {
+      "IDLE": 0.237414,
+      "TERRESTRIAL": 0.412236,
+      "MARITIME": 0.002721,
+      "LIFT": 0.259522,
+      "IDLE_ANOM": 0.055669,
+      "TERRESTRIAL_ANOM": 0.018584,
+      "MARITIME_ANOM": 0.002173,
+      "LIFT_ANOM": 0.01168
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 251,
+    "probabilities": {
+      "IDLE": 0.99908,
+      "TERRESTRIAL": 0.000601,
+      "MARITIME": 0.0,
+      "LIFT": 0.000214,
+      "IDLE_ANOM": 0.000105,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 252,
+    "probabilities": {
+      "IDLE": 0.044785,
+      "TERRESTRIAL": 7e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000179,
+      "IDLE_ANOM": 0.953582,
+      "TERRESTRIAL_ANOM": 0.000339,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001107
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 253,
+    "probabilities": {
+      "IDLE": 0.045968,
+      "TERRESTRIAL": 8e-06,
+      "MARITIME": 0.0,
+      "LIFT": 4.1e-05,
+      "IDLE_ANOM": 0.953526,
+      "TERRESTRIAL_ANOM": 0.000263,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000194
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 254,
+    "probabilities": {
+      "IDLE": 0.002022,
+      "TERRESTRIAL": 0.001592,
+      "MARITIME": 0.000653,
+      "LIFT": 0.006571,
+      "IDLE_ANOM": 0.243168,
+      "TERRESTRIAL_ANOM": 0.379419,
+      "MARITIME_ANOM": 0.027605,
+      "LIFT_ANOM": 0.338971
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 255,
+    "probabilities": {
+      "IDLE": 0.002461,
+      "TERRESTRIAL": 0.001717,
+      "MARITIME": 0.001034,
+      "LIFT": 0.007033,
+      "IDLE_ANOM": 0.212711,
+      "TERRESTRIAL_ANOM": 0.376978,
+      "MARITIME_ANOM": 0.048418,
+      "LIFT_ANOM": 0.349648
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 256,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001673,
+      "LIFT": 6e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 6e-06,
+      "MARITIME_ANOM": 0.998271,
+      "LIFT_ANOM": 4.4e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 257,
+    "probabilities": {
+      "IDLE": 0.002226,
+      "TERRESTRIAL": 0.000764,
+      "MARITIME": 5e-06,
+      "LIFT": 0.013691,
+      "IDLE_ANOM": 0.174543,
+      "TERRESTRIAL_ANOM": 0.315933,
+      "MARITIME_ANOM": 0.000126,
+      "LIFT_ANOM": 0.492713
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 258,
+    "probabilities": {
+      "IDLE": 0.013117,
+      "TERRESTRIAL": 0.003442,
+      "MARITIME": 0.030262,
+      "LIFT": 0.028763,
+      "IDLE_ANOM": 0.150696,
+      "TERRESTRIAL_ANOM": 0.143396,
+      "MARITIME_ANOM": 0.375186,
+      "LIFT_ANOM": 0.255138
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 259,
+    "probabilities": {
+      "IDLE": 8e-05,
+      "TERRESTRIAL": 5.5e-05,
+      "MARITIME": 4.2e-05,
+      "LIFT": 0.000975,
+      "IDLE_ANOM": 0.037555,
+      "TERRESTRIAL_ANOM": 0.234056,
+      "MARITIME_ANOM": 0.127505,
+      "LIFT_ANOM": 0.599731
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 260,
+    "probabilities": {
+      "IDLE": 0.003557,
+      "TERRESTRIAL": 0.002367,
+      "MARITIME": 0.000184,
+      "LIFT": 0.007264,
+      "IDLE_ANOM": 0.437303,
+      "TERRESTRIAL_ANOM": 0.216906,
+      "MARITIME_ANOM": 0.009041,
+      "LIFT_ANOM": 0.323378
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 261,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.00157,
+      "LIFT": 8e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 3.1e-05,
+      "MARITIME_ANOM": 0.998307,
+      "LIFT_ANOM": 8.1e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 262,
+    "probabilities": {
+      "IDLE": 0.091903,
+      "TERRESTRIAL": 0.603217,
+      "MARITIME": 0.000274,
+      "LIFT": 0.298716,
+      "IDLE_ANOM": 0.003019,
+      "TERRESTRIAL_ANOM": 0.001847,
+      "MARITIME_ANOM": 0.000158,
+      "LIFT_ANOM": 0.000866
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 263,
+    "probabilities": {
+      "IDLE": 0.004965,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.993791,
+      "TERRESTRIAL_ANOM": 0.000727,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000516
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 264,
+    "probabilities": {
+      "IDLE": 0.000137,
+      "TERRESTRIAL": 0.000124,
+      "MARITIME": 2e-06,
+      "LIFT": 0.01309,
+      "IDLE_ANOM": 0.007836,
+      "TERRESTRIAL_ANOM": 0.258594,
+      "MARITIME_ANOM": 0.00027,
+      "LIFT_ANOM": 0.719948
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 265,
+    "probabilities": {
+      "IDLE": 0.022438,
+      "TERRESTRIAL": 0.103824,
+      "MARITIME": 5.7e-05,
+      "LIFT": 0.850565,
+      "IDLE_ANOM": 0.009912,
+      "TERRESTRIAL_ANOM": 0.004502,
+      "MARITIME_ANOM": 5e-05,
+      "LIFT_ANOM": 0.008651
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 266,
+    "probabilities": {
+      "IDLE": 0.003438,
+      "TERRESTRIAL": 0.001063,
+      "MARITIME": 0.000647,
+      "LIFT": 0.004117,
+      "IDLE_ANOM": 0.422786,
+      "TERRESTRIAL_ANOM": 0.160918,
+      "MARITIME_ANOM": 0.031509,
+      "LIFT_ANOM": 0.375523
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 267,
+    "probabilities": {
+      "IDLE": 0.040981,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.4e-05,
+      "IDLE_ANOM": 0.958542,
+      "TERRESTRIAL_ANOM": 0.000186,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000264
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 268,
+    "probabilities": {
+      "IDLE": 0.001785,
+      "TERRESTRIAL": 0.000144,
+      "MARITIME": 0.047041,
+      "LIFT": 0.005918,
+      "IDLE_ANOM": 0.006281,
+      "TERRESTRIAL_ANOM": 0.019265,
+      "MARITIME_ANOM": 0.895505,
+      "LIFT_ANOM": 0.024061
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 269,
+    "probabilities": {
+      "IDLE": 0.008182,
+      "TERRESTRIAL": 0.003295,
+      "MARITIME": 0.000829,
+      "LIFT": 0.00936,
+      "IDLE_ANOM": 0.510544,
+      "TERRESTRIAL_ANOM": 0.159235,
+      "MARITIME_ANOM": 0.016882,
+      "LIFT_ANOM": 0.291672
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 270,
+    "probabilities": {
+      "IDLE": 7e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.004158,
+      "LIFT": 2e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1.5e-05,
+      "MARITIME_ANOM": 0.995731,
+      "LIFT_ANOM": 6.9e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 271,
+    "probabilities": {
+      "IDLE": 0.013313,
+      "TERRESTRIAL": 0.007771,
+      "MARITIME": 0.001661,
+      "LIFT": 0.013394,
+      "IDLE_ANOM": 0.517032,
+      "TERRESTRIAL_ANOM": 0.202796,
+      "MARITIME_ANOM": 0.016207,
+      "LIFT_ANOM": 0.227826
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 272,
+    "probabilities": {
+      "IDLE": 0.008669,
+      "TERRESTRIAL": 0.000657,
+      "MARITIME": 0.067125,
+      "LIFT": 0.010767,
+      "IDLE_ANOM": 0.092166,
+      "TERRESTRIAL_ANOM": 0.055162,
+      "MARITIME_ANOM": 0.659325,
+      "LIFT_ANOM": 0.106128
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 273,
+    "probabilities": {
+      "IDLE": 0.999007,
+      "TERRESTRIAL": 0.000609,
+      "MARITIME": 0.0,
+      "LIFT": 0.000169,
+      "IDLE_ANOM": 0.000215,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 274,
+    "probabilities": {
+      "IDLE": 0.00036,
+      "TERRESTRIAL": 9.5e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.011399,
+      "IDLE_ANOM": 0.037126,
+      "TERRESTRIAL_ANOM": 0.123347,
+      "MARITIME_ANOM": 4.1e-05,
+      "LIFT_ANOM": 0.827631
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 275,
+    "probabilities": {
+      "IDLE": 0.999054,
+      "TERRESTRIAL": 0.000656,
+      "MARITIME": 0.0,
+      "LIFT": 0.000222,
+      "IDLE_ANOM": 6.8e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 276,
+    "probabilities": {
+      "IDLE": 8.6e-05,
+      "TERRESTRIAL": 0.000139,
+      "MARITIME": 3e-06,
+      "LIFT": 0.009774,
+      "IDLE_ANOM": 0.006392,
+      "TERRESTRIAL_ANOM": 0.326801,
+      "MARITIME_ANOM": 0.000714,
+      "LIFT_ANOM": 0.656091
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 277,
+    "probabilities": {
+      "IDLE": 0.096428,
+      "TERRESTRIAL": 0.115604,
+      "MARITIME": 0.001207,
+      "LIFT": 0.227264,
+      "IDLE_ANOM": 0.349462,
+      "TERRESTRIAL_ANOM": 0.0859,
+      "MARITIME_ANOM": 0.00477,
+      "LIFT_ANOM": 0.119366
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 278,
+    "probabilities": {
+      "IDLE": 0.015264,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.5e-05,
+      "IDLE_ANOM": 0.984126,
+      "TERRESTRIAL_ANOM": 0.000333,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000248
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 279,
+    "probabilities": {
+      "IDLE": 0.008356,
+      "TERRESTRIAL": 0.004269,
+      "MARITIME": 0.002341,
+      "LIFT": 0.010637,
+      "IDLE_ANOM": 0.447662,
+      "TERRESTRIAL_ANOM": 0.213662,
+      "MARITIME_ANOM": 0.038895,
+      "LIFT_ANOM": 0.274177
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 280,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.002063,
+      "LIFT": 9e-06,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 1.9e-05,
+      "MARITIME_ANOM": 0.997854,
+      "LIFT_ANOM": 5.1e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 281,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.002616,
+      "LIFT": 1.3e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1.9e-05,
+      "MARITIME_ANOM": 0.997266,
+      "LIFT_ANOM": 8.4e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 282,
+    "probabilities": {
+      "IDLE": 0.000742,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.941621,
+      "LIFT": 0.000278,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.057356,
+      "LIFT_ANOM": 1e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 283,
+    "probabilities": {
+      "IDLE": 0.003239,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.994031,
+      "TERRESTRIAL_ANOM": 0.001394,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001334
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 284,
+    "probabilities": {
+      "IDLE": 0.003679,
+      "TERRESTRIAL": 0.000731,
+      "MARITIME": 0.03537,
+      "LIFT": 0.008884,
+      "IDLE_ANOM": 0.032533,
+      "TERRESTRIAL_ANOM": 0.097041,
+      "MARITIME_ANOM": 0.753564,
+      "LIFT_ANOM": 0.068199
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 285,
+    "probabilities": {
+      "IDLE": 0.001099,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.933691,
+      "LIFT": 0.000488,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 1e-06,
+      "MARITIME_ANOM": 0.064717,
+      "LIFT_ANOM": 2e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 286,
+    "probabilities": {
+      "IDLE": 0.000649,
+      "TERRESTRIAL": 9e-06,
+      "MARITIME": 0.072693,
+      "LIFT": 0.001248,
+      "IDLE_ANOM": 0.000662,
+      "TERRESTRIAL_ANOM": 0.002191,
+      "MARITIME_ANOM": 0.919678,
+      "LIFT_ANOM": 0.00287
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 287,
+    "probabilities": {
+      "IDLE": 0.998475,
+      "TERRESTRIAL": 0.001116,
+      "MARITIME": 0.0,
+      "LIFT": 0.000314,
+      "IDLE_ANOM": 9.5e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 288,
+    "probabilities": {
+      "IDLE": 0.028405,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000392,
+      "IDLE_ANOM": 0.968597,
+      "TERRESTRIAL_ANOM": 0.00044,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00216
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 289,
+    "probabilities": {
+      "IDLE": 0.998236,
+      "TERRESTRIAL": 0.00139,
+      "MARITIME": 0.0,
+      "LIFT": 0.000318,
+      "IDLE_ANOM": 5.6e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 290,
+    "probabilities": {
+      "IDLE": 0.011528,
+      "TERRESTRIAL": 0.146383,
+      "MARITIME": 6.9e-05,
+      "LIFT": 0.815888,
+      "IDLE_ANOM": 0.006647,
+      "TERRESTRIAL_ANOM": 0.008092,
+      "MARITIME_ANOM": 0.000121,
+      "LIFT_ANOM": 0.011272
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 291,
+    "probabilities": {
+      "IDLE": 0.034257,
+      "TERRESTRIAL": 1.1e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.000523,
+      "IDLE_ANOM": 0.961484,
+      "TERRESTRIAL_ANOM": 0.000628,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.003098
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 292,
+    "probabilities": {
+      "IDLE": 0.043066,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.8e-05,
+      "IDLE_ANOM": 0.956298,
+      "TERRESTRIAL_ANOM": 0.00023,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000364
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 293,
+    "probabilities": {
+      "IDLE": 0.014054,
+      "TERRESTRIAL": 0.026774,
+      "MARITIME": 0.00257,
+      "LIFT": 0.067024,
+      "IDLE_ANOM": 0.312564,
+      "TERRESTRIAL_ANOM": 0.297432,
+      "MARITIME_ANOM": 0.017525,
+      "LIFT_ANOM": 0.262057
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 294,
+    "probabilities": {
+      "IDLE": 2e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.003683,
+      "LIFT": 1.3e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1.7e-05,
+      "MARITIME_ANOM": 0.996225,
+      "LIFT_ANOM": 6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 295,
+    "probabilities": {
+      "IDLE": 0.003402,
+      "TERRESTRIAL": 7.4e-05,
+      "MARITIME": 6e-06,
+      "LIFT": 0.001701,
+      "IDLE_ANOM": 0.184548,
+      "TERRESTRIAL_ANOM": 0.33218,
+      "MARITIME_ANOM": 0.000125,
+      "LIFT_ANOM": 0.477965
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 296,
+    "probabilities": {
+      "IDLE": 0.999257,
+      "TERRESTRIAL": 0.000511,
+      "MARITIME": 0.0,
+      "LIFT": 0.000165,
+      "IDLE_ANOM": 6.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 297,
+    "probabilities": {
+      "IDLE": 0.021627,
+      "TERRESTRIAL": 0.174147,
+      "MARITIME": 0.000122,
+      "LIFT": 0.77223,
+      "IDLE_ANOM": 0.011058,
+      "TERRESTRIAL_ANOM": 0.008761,
+      "MARITIME_ANOM": 0.000177,
+      "LIFT_ANOM": 0.011878
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 298,
+    "probabilities": {
+      "IDLE": 0.99903,
+      "TERRESTRIAL": 0.000665,
+      "MARITIME": 0.0,
+      "LIFT": 0.000217,
+      "IDLE_ANOM": 8.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 299,
+    "probabilities": {
+      "IDLE": 0.029775,
+      "TERRESTRIAL": 0.163697,
+      "MARITIME": 0.000123,
+      "LIFT": 0.780602,
+      "IDLE_ANOM": 0.009651,
+      "TERRESTRIAL_ANOM": 0.006274,
+      "MARITIME_ANOM": 0.000122,
+      "LIFT_ANOM": 0.009757
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 300,
+    "probabilities": {
+      "IDLE": 0.040999,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.6e-05,
+      "IDLE_ANOM": 0.958296,
+      "TERRESTRIAL_ANOM": 0.000271,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000395
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 301,
+    "probabilities": {
+      "IDLE": 0.001089,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.932126,
+      "LIFT": 0.000449,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 1e-06,
+      "MARITIME_ANOM": 0.066331,
+      "LIFT_ANOM": 2e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 302,
+    "probabilities": {
+      "IDLE": 0.010988,
+      "TERRESTRIAL": 0.015665,
+      "MARITIME": 0.002804,
+      "LIFT": 0.062019,
+      "IDLE_ANOM": 0.25897,
+      "TERRESTRIAL_ANOM": 0.276763,
+      "MARITIME_ANOM": 0.021998,
+      "LIFT_ANOM": 0.350794
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 303,
+    "probabilities": {
+      "IDLE": 0.014773,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 9e-06,
+      "IDLE_ANOM": 0.984775,
+      "TERRESTRIAL_ANOM": 0.000259,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000182
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 304,
+    "probabilities": {
+      "IDLE": 0.000395,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.953405,
+      "LIFT": 0.000151,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.046048,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 305,
+    "probabilities": {
+      "IDLE": 0.000293,
+      "TERRESTRIAL": 0.00018,
+      "MARITIME": 1e-05,
+      "LIFT": 0.009933,
+      "IDLE_ANOM": 0.014663,
+      "TERRESTRIAL_ANOM": 0.34392,
+      "MARITIME_ANOM": 0.000831,
+      "LIFT_ANOM": 0.63017
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 306,
+    "probabilities": {
+      "IDLE": 0.022646,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.4e-05,
+      "IDLE_ANOM": 0.975853,
+      "TERRESTRIAL_ANOM": 0.000573,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000901
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 307,
+    "probabilities": {
+      "IDLE": 0.005318,
+      "TERRESTRIAL": 0.001695,
+      "MARITIME": 0.00213,
+      "LIFT": 0.005245,
+      "IDLE_ANOM": 0.447994,
+      "TERRESTRIAL_ANOM": 0.237132,
+      "MARITIME_ANOM": 0.053372,
+      "LIFT_ANOM": 0.247114
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 308,
+    "probabilities": {
+      "IDLE": 0.002349,
+      "TERRESTRIAL": 0.000841,
+      "MARITIME": 0.000346,
+      "LIFT": 0.003673,
+      "IDLE_ANOM": 0.390434,
+      "TERRESTRIAL_ANOM": 0.169607,
+      "MARITIME_ANOM": 0.025502,
+      "LIFT_ANOM": 0.407248
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 309,
+    "probabilities": {
+      "IDLE": 0.011333,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 7e-06,
+      "IDLE_ANOM": 0.987724,
+      "TERRESTRIAL_ANOM": 0.000402,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000534
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 310,
+    "probabilities": {
+      "IDLE": 7e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.010156,
+      "LIFT": 2.1e-05,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 5e-06,
+      "MARITIME_ANOM": 0.989775,
+      "LIFT_ANOM": 3.6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 311,
+    "probabilities": {
+      "IDLE": 0.030672,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000148,
+      "IDLE_ANOM": 0.968003,
+      "TERRESTRIAL_ANOM": 0.0002,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000974
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 312,
+    "probabilities": {
+      "IDLE": 0.99926,
+      "TERRESTRIAL": 0.000475,
+      "MARITIME": 0.0,
+      "LIFT": 0.000167,
+      "IDLE_ANOM": 9.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 313,
+    "probabilities": {
+      "IDLE": 0.00564,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 0.99396,
+      "TERRESTRIAL_ANOM": 0.000236,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000161
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 314,
+    "probabilities": {
+      "IDLE": 3.9e-05,
+      "TERRESTRIAL": 0.000441,
+      "MARITIME": 7e-06,
+      "LIFT": 0.002897,
+      "IDLE_ANOM": 0.009944,
+      "TERRESTRIAL_ANOM": 0.77471,
+      "MARITIME_ANOM": 0.003993,
+      "LIFT_ANOM": 0.207969
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 315,
+    "probabilities": {
+      "IDLE": 4.3e-05,
+      "TERRESTRIAL": 2.4e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.000383,
+      "IDLE_ANOM": 0.00743,
+      "TERRESTRIAL_ANOM": 0.779265,
+      "MARITIME_ANOM": 0.000711,
+      "LIFT_ANOM": 0.212143
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 316,
+    "probabilities": {
+      "IDLE": 1.7e-05,
+      "TERRESTRIAL": 4e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.002421,
+      "IDLE_ANOM": 0.012064,
+      "TERRESTRIAL_ANOM": 0.170779,
+      "MARITIME_ANOM": 0.00014,
+      "LIFT_ANOM": 0.81454
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 317,
+    "probabilities": {
+      "IDLE": 3e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000783,
+      "LIFT": 2.5e-05,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 5.9e-05,
+      "MARITIME_ANOM": 0.998839,
+      "LIFT_ANOM": 0.00029
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 318,
+    "probabilities": {
+      "IDLE": 0.006341,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 0.992155,
+      "TERRESTRIAL_ANOM": 0.000609,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000892
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 319,
+    "probabilities": {
+      "IDLE": 0.025894,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8.5e-05,
+      "IDLE_ANOM": 0.973014,
+      "TERRESTRIAL_ANOM": 0.000231,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000774
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 320,
+    "probabilities": {
+      "IDLE": 0.015009,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2e-05,
+      "IDLE_ANOM": 0.984287,
+      "TERRESTRIAL_ANOM": 0.000439,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000241
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 321,
+    "probabilities": {
+      "IDLE": 0.178237,
+      "TERRESTRIAL": 0.115359,
+      "MARITIME": 6e-06,
+      "LIFT": 0.686588,
+      "IDLE_ANOM": 0.017227,
+      "TERRESTRIAL_ANOM": 0.000863,
+      "MARITIME_ANOM": 1e-06,
+      "LIFT_ANOM": 0.001718
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 322,
+    "probabilities": {
+      "IDLE": 0.006463,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 0.991788,
+      "TERRESTRIAL_ANOM": 0.000581,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001164
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 323,
+    "probabilities": {
+      "IDLE": 2.7e-05,
+      "TERRESTRIAL": 0.000119,
+      "MARITIME": 1.2e-05,
+      "LIFT": 0.0063,
+      "IDLE_ANOM": 0.001557,
+      "TERRESTRIAL_ANOM": 0.682117,
+      "MARITIME_ANOM": 0.004828,
+      "LIFT_ANOM": 0.305041
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 324,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001627,
+      "LIFT": 6e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 7e-06,
+      "MARITIME_ANOM": 0.998313,
+      "LIFT_ANOM": 4.6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 325,
+    "probabilities": {
+      "IDLE": 1.7e-05,
+      "TERRESTRIAL": 2.4e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.002088,
+      "IDLE_ANOM": 0.004008,
+      "TERRESTRIAL_ANOM": 0.294741,
+      "MARITIME_ANOM": 0.00027,
+      "LIFT_ANOM": 0.698851
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 326,
+    "probabilities": {
+      "IDLE": 0.000106,
+      "TERRESTRIAL": 0.000197,
+      "MARITIME": 1e-05,
+      "LIFT": 0.013816,
+      "IDLE_ANOM": 0.005128,
+      "TERRESTRIAL_ANOM": 0.417903,
+      "MARITIME_ANOM": 0.001281,
+      "LIFT_ANOM": 0.561558
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 327,
+    "probabilities": {
+      "IDLE": 0.048473,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8.8e-05,
+      "IDLE_ANOM": 0.950604,
+      "TERRESTRIAL_ANOM": 0.000243,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000588
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 328,
+    "probabilities": {
+      "IDLE": 0.000158,
+      "TERRESTRIAL": 0.000903,
+      "MARITIME": 6.7e-05,
+      "LIFT": 0.015475,
+      "IDLE_ANOM": 0.006055,
+      "TERRESTRIAL_ANOM": 0.702751,
+      "MARITIME_ANOM": 0.007496,
+      "LIFT_ANOM": 0.267096
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 329,
+    "probabilities": {
+      "IDLE": 0.015871,
+      "TERRESTRIAL": 0.012008,
+      "MARITIME": 0.008365,
+      "LIFT": 0.032863,
+      "IDLE_ANOM": 0.323771,
+      "TERRESTRIAL_ANOM": 0.30174,
+      "MARITIME_ANOM": 0.069247,
+      "LIFT_ANOM": 0.236135
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 330,
+    "probabilities": {
+      "IDLE": 0.00591,
+      "TERRESTRIAL": 0.002803,
+      "MARITIME": 0.004513,
+      "LIFT": 0.014749,
+      "IDLE_ANOM": 0.254794,
+      "TERRESTRIAL_ANOM": 0.274923,
+      "MARITIME_ANOM": 0.11581,
+      "LIFT_ANOM": 0.326499
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 331,
+    "probabilities": {
+      "IDLE": 0.998643,
+      "TERRESTRIAL": 0.000952,
+      "MARITIME": 0.0,
+      "LIFT": 0.000254,
+      "IDLE_ANOM": 0.000151,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 332,
+    "probabilities": {
+      "IDLE": 0.003864,
+      "TERRESTRIAL": 0.000527,
+      "MARITIME": 1.6e-05,
+      "LIFT": 0.007391,
+      "IDLE_ANOM": 0.191008,
+      "TERRESTRIAL_ANOM": 0.301885,
+      "MARITIME_ANOM": 0.000272,
+      "LIFT_ANOM": 0.495037
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 333,
+    "probabilities": {
+      "IDLE": 0.998276,
+      "TERRESTRIAL": 0.001304,
+      "MARITIME": 0.0,
+      "LIFT": 0.000341,
+      "IDLE_ANOM": 7.8e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 334,
+    "probabilities": {
+      "IDLE": 0.032682,
+      "TERRESTRIAL": 5e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.1e-05,
+      "IDLE_ANOM": 0.966638,
+      "TERRESTRIAL_ANOM": 0.000334,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000311
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 335,
+    "probabilities": {
+      "IDLE": 0.032723,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.9e-05,
+      "IDLE_ANOM": 0.966816,
+      "TERRESTRIAL_ANOM": 0.000144,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000297
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 336,
+    "probabilities": {
+      "IDLE": 0.137155,
+      "TERRESTRIAL": 0.642068,
+      "MARITIME": 0.001132,
+      "LIFT": 0.208774,
+      "IDLE_ANOM": 0.005484,
+      "TERRESTRIAL_ANOM": 0.003339,
+      "MARITIME_ANOM": 0.000659,
+      "LIFT_ANOM": 0.001388
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 337,
+    "probabilities": {
+      "IDLE": 0.024241,
+      "TERRESTRIAL": 0.111369,
+      "MARITIME": 0.000104,
+      "LIFT": 0.822265,
+      "IDLE_ANOM": 0.018404,
+      "TERRESTRIAL_ANOM": 0.008641,
+      "MARITIME_ANOM": 0.000102,
+      "LIFT_ANOM": 0.014875
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 338,
+    "probabilities": {
+      "IDLE": 0.998746,
+      "TERRESTRIAL": 0.000913,
+      "MARITIME": 0.0,
+      "LIFT": 0.000267,
+      "IDLE_ANOM": 7.4e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 339,
+    "probabilities": {
+      "IDLE": 9e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.006086,
+      "LIFT": 2.6e-05,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 2.5e-05,
+      "MARITIME_ANOM": 0.993775,
+      "LIFT_ANOM": 7.7e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 340,
+    "probabilities": {
+      "IDLE": 0.082644,
+      "TERRESTRIAL": 9e-06,
+      "MARITIME": 0.0,
+      "LIFT": 6.5e-05,
+      "IDLE_ANOM": 0.916993,
+      "TERRESTRIAL_ANOM": 0.00014,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000149
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 341,
+    "probabilities": {
+      "IDLE": 0.037236,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.8e-05,
+      "IDLE_ANOM": 0.962087,
+      "TERRESTRIAL_ANOM": 0.000241,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000396
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 342,
+    "probabilities": {
+      "IDLE": 0.005292,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.991736,
+      "TERRESTRIAL_ANOM": 0.001795,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001176
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 343,
+    "probabilities": {
+      "IDLE": 0.001678,
+      "TERRESTRIAL": 0.000571,
+      "MARITIME": 0.000355,
+      "LIFT": 0.002427,
+      "IDLE_ANOM": 0.374349,
+      "TERRESTRIAL_ANOM": 0.190109,
+      "MARITIME_ANOM": 0.034747,
+      "LIFT_ANOM": 0.395764
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 344,
+    "probabilities": {
+      "IDLE": 0.02762,
+      "TERRESTRIAL": 8e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000433,
+      "IDLE_ANOM": 0.968795,
+      "TERRESTRIAL_ANOM": 0.000611,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.002534
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 345,
+    "probabilities": {
+      "IDLE": 1.3e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.009026,
+      "LIFT": 3.6e-05,
+      "IDLE_ANOM": 5e-06,
+      "TERRESTRIAL_ANOM": 3.7e-05,
+      "MARITIME_ANOM": 0.990777,
+      "LIFT_ANOM": 0.000106
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 346,
+    "probabilities": {
+      "IDLE": 0.043964,
+      "TERRESTRIAL": 5e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8e-05,
+      "IDLE_ANOM": 0.954996,
+      "TERRESTRIAL_ANOM": 0.000363,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000592
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 347,
+    "probabilities": {
+      "IDLE": 6e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000577,
+      "LIFT": 8.5e-05,
+      "IDLE_ANOM": 1.4e-05,
+      "TERRESTRIAL_ANOM": 0.002752,
+      "MARITIME_ANOM": 0.993796,
+      "LIFT_ANOM": 0.00277
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 348,
+    "probabilities": {
+      "IDLE": 0.017557,
+      "TERRESTRIAL": 0.152601,
+      "MARITIME": 0.000126,
+      "LIFT": 0.791275,
+      "IDLE_ANOM": 0.0121,
+      "TERRESTRIAL_ANOM": 0.010545,
+      "MARITIME_ANOM": 0.000209,
+      "LIFT_ANOM": 0.015588
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 349,
+    "probabilities": {
+      "IDLE": 0.999186,
+      "TERRESTRIAL": 0.000537,
+      "MARITIME": 0.0,
+      "LIFT": 0.000175,
+      "IDLE_ANOM": 0.000102,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 350,
+    "probabilities": {
+      "IDLE": 0.04389,
+      "TERRESTRIAL": 0.156786,
+      "MARITIME": 0.000105,
+      "LIFT": 0.777552,
+      "IDLE_ANOM": 0.011109,
+      "TERRESTRIAL_ANOM": 0.003974,
+      "MARITIME_ANOM": 7.3e-05,
+      "LIFT_ANOM": 0.00651
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 351,
+    "probabilities": {
+      "IDLE": 5.3e-05,
+      "TERRESTRIAL": 0.000622,
+      "MARITIME": 4e-06,
+      "LIFT": 0.012839,
+      "IDLE_ANOM": 0.00912,
+      "TERRESTRIAL_ANOM": 0.461476,
+      "MARITIME_ANOM": 0.002198,
+      "LIFT_ANOM": 0.513688
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 352,
+    "probabilities": {
+      "IDLE": 0.998204,
+      "TERRESTRIAL": 0.001366,
+      "MARITIME": 0.0,
+      "LIFT": 0.000343,
+      "IDLE_ANOM": 8.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 353,
+    "probabilities": {
+      "IDLE": 0.024552,
+      "TERRESTRIAL": 0.118509,
+      "MARITIME": 3.9e-05,
+      "LIFT": 0.842624,
+      "IDLE_ANOM": 0.006625,
+      "TERRESTRIAL_ANOM": 0.002546,
+      "MARITIME_ANOM": 3.1e-05,
+      "LIFT_ANOM": 0.005074
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 354,
+    "probabilities": {
+      "IDLE": 0.017749,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8e-06,
+      "IDLE_ANOM": 0.981985,
+      "TERRESTRIAL_ANOM": 0.000135,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000122
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 355,
+    "probabilities": {
+      "IDLE": 0.008014,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 2e-06,
+      "IDLE_ANOM": 0.991605,
+      "TERRESTRIAL_ANOM": 0.000175,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000204
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 356,
+    "probabilities": {
+      "IDLE": 1e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.01177,
+      "LIFT": 1.9e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 4e-06,
+      "MARITIME_ANOM": 0.988173,
+      "LIFT_ANOM": 2.4e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 357,
+    "probabilities": {
+      "IDLE": 0.008031,
+      "TERRESTRIAL": 0.001898,
+      "MARITIME": 0.001186,
+      "LIFT": 0.006072,
+      "IDLE_ANOM": 0.547967,
+      "TERRESTRIAL_ANOM": 0.13695,
+      "MARITIME_ANOM": 0.021045,
+      "LIFT_ANOM": 0.27685
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 358,
+    "probabilities": {
+      "IDLE": 0.020832,
+      "TERRESTRIAL": 0.108522,
+      "MARITIME": 5.6e-05,
+      "LIFT": 0.836734,
+      "IDLE_ANOM": 0.013152,
+      "TERRESTRIAL_ANOM": 0.006673,
+      "MARITIME_ANOM": 7.2e-05,
+      "LIFT_ANOM": 0.013958
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 359,
+    "probabilities": {
+      "IDLE": 9.1e-05,
+      "TERRESTRIAL": 9e-05,
+      "MARITIME": 5e-06,
+      "LIFT": 0.005586,
+      "IDLE_ANOM": 0.006042,
+      "TERRESTRIAL_ANOM": 0.4237,
+      "MARITIME_ANOM": 0.001012,
+      "LIFT_ANOM": 0.563474
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 360,
+    "probabilities": {
+      "IDLE": 0.99903,
+      "TERRESTRIAL": 0.00057,
+      "MARITIME": 0.0,
+      "LIFT": 0.000215,
+      "IDLE_ANOM": 0.000185,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 361,
+    "probabilities": {
+      "IDLE": 6.9e-05,
+      "TERRESTRIAL": 5.8e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.003568,
+      "IDLE_ANOM": 0.010458,
+      "TERRESTRIAL_ANOM": 0.32704,
+      "MARITIME_ANOM": 0.000264,
+      "LIFT_ANOM": 0.658542
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 362,
+    "probabilities": {
+      "IDLE": 0.024323,
+      "TERRESTRIAL": 0.094304,
+      "MARITIME": 5.4e-05,
+      "LIFT": 0.86204,
+      "IDLE_ANOM": 0.008067,
+      "TERRESTRIAL_ANOM": 0.003163,
+      "MARITIME_ANOM": 4.6e-05,
+      "LIFT_ANOM": 0.008002
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 363,
+    "probabilities": {
+      "IDLE": 0.145763,
+      "TERRESTRIAL": 0.091738,
+      "MARITIME": 1.2e-05,
+      "LIFT": 0.742862,
+      "IDLE_ANOM": 0.016037,
+      "TERRESTRIAL_ANOM": 0.000886,
+      "MARITIME_ANOM": 3e-06,
+      "LIFT_ANOM": 0.002699
+    },
+    "predicted_class": "LIFT",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 364,
+    "probabilities": {
+      "IDLE": 0.014898,
+      "TERRESTRIAL": 0.061213,
+      "MARITIME": 2.9e-05,
+      "LIFT": 0.899137,
+      "IDLE_ANOM": 0.009681,
+      "TERRESTRIAL_ANOM": 0.003784,
+      "MARITIME_ANOM": 2.9e-05,
+      "LIFT_ANOM": 0.011229
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 365,
+    "probabilities": {
+      "IDLE": 0.998695,
+      "TERRESTRIAL": 0.000871,
+      "MARITIME": 0.0,
+      "LIFT": 0.000316,
+      "IDLE_ANOM": 0.000118,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 366,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 4.9e-05,
+      "LIFT": 3e-06,
+      "IDLE_ANOM": 5e-06,
+      "TERRESTRIAL_ANOM": 0.000106,
+      "MARITIME_ANOM": 0.998954,
+      "LIFT_ANOM": 0.000883
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 367,
+    "probabilities": {
+      "IDLE": 0.043496,
+      "TERRESTRIAL": 9e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000188,
+      "IDLE_ANOM": 0.954305,
+      "TERRESTRIAL_ANOM": 0.000535,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001468
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 368,
+    "probabilities": {
+      "IDLE": 0.00676,
+      "TERRESTRIAL": 0.103643,
+      "MARITIME": 2.3e-05,
+      "LIFT": 0.869672,
+      "IDLE_ANOM": 0.005177,
+      "TERRESTRIAL_ANOM": 0.005403,
+      "MARITIME_ANOM": 4.8e-05,
+      "LIFT_ANOM": 0.009273
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 369,
+    "probabilities": {
+      "IDLE": 0.001227,
+      "TERRESTRIAL": 0.000156,
+      "MARITIME": 7e-06,
+      "LIFT": 0.001182,
+      "IDLE_ANOM": 0.113797,
+      "TERRESTRIAL_ANOM": 0.608573,
+      "MARITIME_ANOM": 0.000366,
+      "LIFT_ANOM": 0.274692
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 370,
+    "probabilities": {
+      "IDLE": 0.003599,
+      "TERRESTRIAL": 0.001924,
+      "MARITIME": 0.001179,
+      "LIFT": 0.005549,
+      "IDLE_ANOM": 0.332284,
+      "TERRESTRIAL_ANOM": 0.306042,
+      "MARITIME_ANOM": 0.052377,
+      "LIFT_ANOM": 0.297044
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 371,
+    "probabilities": {
+      "IDLE": 2.3e-05,
+      "TERRESTRIAL": 0.000253,
+      "MARITIME": 9e-06,
+      "LIFT": 0.001712,
+      "IDLE_ANOM": 0.004973,
+      "TERRESTRIAL_ANOM": 0.852545,
+      "MARITIME_ANOM": 0.008934,
+      "LIFT_ANOM": 0.131551
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 372,
+    "probabilities": {
+      "IDLE": 0.088921,
+      "TERRESTRIAL": 9e-06,
+      "MARITIME": 0.0,
+      "LIFT": 7.4e-05,
+      "IDLE_ANOM": 0.910738,
+      "TERRESTRIAL_ANOM": 0.000119,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00014
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 373,
+    "probabilities": {
+      "IDLE": 0.069385,
+      "TERRESTRIAL": 0.394032,
+      "MARITIME": 8e-05,
+      "LIFT": 0.528991,
+      "IDLE_ANOM": 0.004023,
+      "TERRESTRIAL_ANOM": 0.001844,
+      "MARITIME_ANOM": 5.7e-05,
+      "LIFT_ANOM": 0.001587
+    },
+    "predicted_class": "LIFT",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 374,
+    "probabilities": {
+      "IDLE": 4e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.004323,
+      "LIFT": 1.4e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 6e-06,
+      "MARITIME_ANOM": 0.995627,
+      "LIFT_ANOM": 2.5e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 375,
+    "probabilities": {
+      "IDLE": 0.01018,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1e-05,
+      "IDLE_ANOM": 0.98907,
+      "TERRESTRIAL_ANOM": 0.000431,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000308
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 376,
+    "probabilities": {
+      "IDLE": 0.998672,
+      "TERRESTRIAL": 0.00098,
+      "MARITIME": 0.0,
+      "LIFT": 0.000261,
+      "IDLE_ANOM": 8.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 377,
+    "probabilities": {
+      "IDLE": 2e-05,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 9.5e-05,
+      "LIFT": 0.001484,
+      "IDLE_ANOM": 0.00243,
+      "TERRESTRIAL_ANOM": 0.227699,
+      "MARITIME_ANOM": 0.350741,
+      "LIFT_ANOM": 0.417524
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 378,
+    "probabilities": {
+      "IDLE": 0.040121,
+      "TERRESTRIAL": 0.065036,
+      "MARITIME": 3.1e-05,
+      "LIFT": 0.859309,
+      "IDLE_ANOM": 0.021818,
+      "TERRESTRIAL_ANOM": 0.003401,
+      "MARITIME_ANOM": 1.7e-05,
+      "LIFT_ANOM": 0.010266
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 379,
+    "probabilities": {
+      "IDLE": 6.3e-05,
+      "TERRESTRIAL": 9e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.001262,
+      "IDLE_ANOM": 0.015919,
+      "TERRESTRIAL_ANOM": 0.091036,
+      "MARITIME_ANOM": 2.5e-05,
+      "LIFT_ANOM": 0.891686
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 380,
+    "probabilities": {
+      "IDLE": 0.002143,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.910443,
+      "LIFT": 0.000932,
+      "IDLE_ANOM": 7e-06,
+      "TERRESTRIAL_ANOM": 4e-06,
+      "MARITIME_ANOM": 0.086462,
+      "LIFT_ANOM": 7e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 381,
+    "probabilities": {
+      "IDLE": 4e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.005259,
+      "LIFT": 1.2e-05,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 7e-06,
+      "MARITIME_ANOM": 0.994686,
+      "LIFT_ANOM": 3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 382,
+    "probabilities": {
+      "IDLE": 0.99912,
+      "TERRESTRIAL": 0.000627,
+      "MARITIME": 0.0,
+      "LIFT": 0.000195,
+      "IDLE_ANOM": 5.8e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 383,
+    "probabilities": {
+      "IDLE": 0.015611,
+      "TERRESTRIAL": 0.095726,
+      "MARITIME": 2.3e-05,
+      "LIFT": 0.872665,
+      "IDLE_ANOM": 0.006321,
+      "TERRESTRIAL_ANOM": 0.003061,
+      "MARITIME_ANOM": 2.4e-05,
+      "LIFT_ANOM": 0.006569
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 384,
+    "probabilities": {
+      "IDLE": 0.001075,
+      "TERRESTRIAL": 0.001944,
+      "MARITIME": 0.000617,
+      "LIFT": 0.014208,
+      "IDLE_ANOM": 0.016218,
+      "TERRESTRIAL_ANOM": 0.727277,
+      "MARITIME_ANOM": 0.023355,
+      "LIFT_ANOM": 0.215305
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 385,
+    "probabilities": {
+      "IDLE": 3.4e-05,
+      "TERRESTRIAL": 7.3e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.006934,
+      "IDLE_ANOM": 0.012798,
+      "TERRESTRIAL_ANOM": 0.137,
+      "MARITIME_ANOM": 5e-05,
+      "LIFT_ANOM": 0.84311
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 386,
+    "probabilities": {
+      "IDLE": 0.000695,
+      "TERRESTRIAL": 6e-05,
+      "MARITIME": 0.002982,
+      "LIFT": 0.00119,
+      "IDLE_ANOM": 0.092256,
+      "TERRESTRIAL_ANOM": 0.141789,
+      "MARITIME_ANOM": 0.540797,
+      "LIFT_ANOM": 0.22023
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 387,
+    "probabilities": {
+      "IDLE": 0.998822,
+      "TERRESTRIAL": 0.000744,
+      "MARITIME": 0.0,
+      "LIFT": 0.000221,
+      "IDLE_ANOM": 0.000213,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 388,
+    "probabilities": {
+      "IDLE": 0.031691,
+      "TERRESTRIAL": 0.163439,
+      "MARITIME": 4.8e-05,
+      "LIFT": 0.792629,
+      "IDLE_ANOM": 0.00531,
+      "TERRESTRIAL_ANOM": 0.002475,
+      "MARITIME_ANOM": 3.6e-05,
+      "LIFT_ANOM": 0.00437
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 389,
+    "probabilities": {
+      "IDLE": 0.027169,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 5e-05,
+      "IDLE_ANOM": 0.971597,
+      "TERRESTRIAL_ANOM": 0.000398,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000783
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 390,
+    "probabilities": {
+      "IDLE": 2.5e-05,
+      "TERRESTRIAL": 1.6e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.002988,
+      "IDLE_ANOM": 0.002447,
+      "TERRESTRIAL_ANOM": 0.169214,
+      "MARITIME_ANOM": 0.000186,
+      "LIFT_ANOM": 0.825122
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 391,
+    "probabilities": {
+      "IDLE": 6e-06,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000196,
+      "IDLE_ANOM": 0.003582,
+      "TERRESTRIAL_ANOM": 0.3286,
+      "MARITIME_ANOM": 3.4e-05,
+      "LIFT_ANOM": 0.667579
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 392,
+    "probabilities": {
+      "IDLE": 0.000787,
+      "TERRESTRIAL": 2.1e-05,
+      "MARITIME": 0.027946,
+      "LIFT": 0.001478,
+      "IDLE_ANOM": 0.006425,
+      "TERRESTRIAL_ANOM": 0.009499,
+      "MARITIME_ANOM": 0.929063,
+      "LIFT_ANOM": 0.024781
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 393,
+    "probabilities": {
+      "IDLE": 1.1e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.033878,
+      "LIFT": 2.3e-05,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 2e-06,
+      "MARITIME_ANOM": 0.966074,
+      "LIFT_ANOM": 1.1e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 394,
+    "probabilities": {
+      "IDLE": 2.3e-05,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.025487,
+      "LIFT": 6.2e-05,
+      "IDLE_ANOM": 4e-06,
+      "TERRESTRIAL_ANOM": 3.7e-05,
+      "MARITIME_ANOM": 0.974324,
+      "LIFT_ANOM": 6.3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 395,
+    "probabilities": {
+      "IDLE": 0.032028,
+      "TERRESTRIAL": 0.099806,
+      "MARITIME": 2.6e-05,
+      "LIFT": 0.848726,
+      "IDLE_ANOM": 0.011059,
+      "TERRESTRIAL_ANOM": 0.00266,
+      "MARITIME_ANOM": 1.6e-05,
+      "LIFT_ANOM": 0.005679
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 396,
+    "probabilities": {
+      "IDLE": 0.000272,
+      "TERRESTRIAL": 0.000955,
+      "MARITIME": 9.1e-05,
+      "LIFT": 0.023383,
+      "IDLE_ANOM": 0.008401,
+      "TERRESTRIAL_ANOM": 0.523361,
+      "MARITIME_ANOM": 0.006152,
+      "LIFT_ANOM": 0.437386
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 397,
+    "probabilities": {
+      "IDLE": 0.000987,
+      "TERRESTRIAL": 3.3e-05,
+      "MARITIME": 0.036382,
+      "LIFT": 0.002068,
+      "IDLE_ANOM": 0.004299,
+      "TERRESTRIAL_ANOM": 0.00834,
+      "MARITIME_ANOM": 0.930321,
+      "LIFT_ANOM": 0.01757
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 398,
+    "probabilities": {
+      "IDLE": 0.000115,
+      "TERRESTRIAL": 0.00035,
+      "MARITIME": 2.4e-05,
+      "LIFT": 0.01407,
+      "IDLE_ANOM": 0.004889,
+      "TERRESTRIAL_ANOM": 0.591196,
+      "MARITIME_ANOM": 0.003556,
+      "LIFT_ANOM": 0.3858
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 399,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.002407,
+      "LIFT": 2e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 2e-06,
+      "MARITIME_ANOM": 0.997585,
+      "LIFT_ANOM": 5e-06
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 400,
+    "probabilities": {
+      "IDLE": 0.999186,
+      "TERRESTRIAL": 0.000441,
+      "MARITIME": 0.0,
+      "LIFT": 0.000173,
+      "IDLE_ANOM": 0.000201,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 401,
+    "probabilities": {
+      "IDLE": 0.001597,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.898719,
+      "LIFT": 0.000807,
+      "IDLE_ANOM": 7e-06,
+      "TERRESTRIAL_ANOM": 4e-06,
+      "MARITIME_ANOM": 0.098858,
+      "LIFT_ANOM": 8e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 402,
+    "probabilities": {
+      "IDLE": 0.020243,
+      "TERRESTRIAL": 0.111992,
+      "MARITIME": 1.8e-05,
+      "LIFT": 0.85824,
+      "IDLE_ANOM": 0.004298,
+      "TERRESTRIAL_ANOM": 0.001665,
+      "MARITIME_ANOM": 1.4e-05,
+      "LIFT_ANOM": 0.003531
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 403,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.002573,
+      "LIFT": 5e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 4e-06,
+      "MARITIME_ANOM": 0.997395,
+      "LIFT_ANOM": 2.3e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 404,
+    "probabilities": {
+      "IDLE": 0.009297,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 5e-05,
+      "IDLE_ANOM": 0.976479,
+      "TERRESTRIAL_ANOM": 0.004104,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.010067
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 405,
+    "probabilities": {
+      "IDLE": 0.187269,
+      "TERRESTRIAL": 0.148301,
+      "MARITIME": 1.9e-05,
+      "LIFT": 0.650686,
+      "IDLE_ANOM": 0.011586,
+      "TERRESTRIAL_ANOM": 0.000705,
+      "MARITIME_ANOM": 4e-06,
+      "LIFT_ANOM": 0.001431
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 406,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.000689,
+      "LIFT": 2e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 5e-06,
+      "MARITIME_ANOM": 0.999271,
+      "LIFT_ANOM": 3.2e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 407,
+    "probabilities": {
+      "IDLE": 0.030654,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.1e-05,
+      "IDLE_ANOM": 0.969147,
+      "TERRESTRIAL_ANOM": 0.0001,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 8.6e-05
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 408,
+    "probabilities": {
+      "IDLE": 6.1e-05,
+      "TERRESTRIAL": 0.000212,
+      "MARITIME": 2.1e-05,
+      "LIFT": 0.007153,
+      "IDLE_ANOM": 0.00395,
+      "TERRESTRIAL_ANOM": 0.680458,
+      "MARITIME_ANOM": 0.003471,
+      "LIFT_ANOM": 0.304674
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 409,
+    "probabilities": {
+      "IDLE": 8.6e-05,
+      "TERRESTRIAL": 0.0003,
+      "MARITIME": 2.2e-05,
+      "LIFT": 0.008255,
+      "IDLE_ANOM": 0.002955,
+      "TERRESTRIAL_ANOM": 0.626668,
+      "MARITIME_ANOM": 0.005452,
+      "LIFT_ANOM": 0.356262
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 410,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000575,
+      "IDLE_ANOM": 0.002326,
+      "TERRESTRIAL_ANOM": 0.269448,
+      "MARITIME_ANOM": 5.9e-05,
+      "LIFT_ANOM": 0.727585
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 411,
+    "probabilities": {
+      "IDLE": 0.014274,
+      "TERRESTRIAL": 0.01233,
+      "MARITIME": 0.001417,
+      "LIFT": 0.027463,
+      "IDLE_ANOM": 0.50397,
+      "TERRESTRIAL_ANOM": 0.199555,
+      "MARITIME_ANOM": 0.012369,
+      "LIFT_ANOM": 0.228622
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 412,
+    "probabilities": {
+      "IDLE": 0.064869,
+      "TERRESTRIAL": 2.2e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.000149,
+      "IDLE_ANOM": 0.934313,
+      "TERRESTRIAL_ANOM": 0.000315,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000333
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 413,
+    "probabilities": {
+      "IDLE": 0.008349,
+      "TERRESTRIAL": 0.003206,
+      "MARITIME": 0.002883,
+      "LIFT": 0.009125,
+      "IDLE_ANOM": 0.488914,
+      "TERRESTRIAL_ANOM": 0.19719,
+      "MARITIME_ANOM": 0.039061,
+      "LIFT_ANOM": 0.251272
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 414,
+    "probabilities": {
+      "IDLE": 0.003658,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.994243,
+      "TERRESTRIAL_ANOM": 0.00094,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001157
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 415,
+    "probabilities": {
+      "IDLE": 5.2e-05,
+      "TERRESTRIAL": 0.000159,
+      "MARITIME": 1.5e-05,
+      "LIFT": 0.005427,
+      "IDLE_ANOM": 0.003438,
+      "TERRESTRIAL_ANOM": 0.710619,
+      "MARITIME_ANOM": 0.002766,
+      "LIFT_ANOM": 0.277525
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 416,
+    "probabilities": {
+      "IDLE": 3e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001942,
+      "LIFT": 2.3e-05,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 2.8e-05,
+      "MARITIME_ANOM": 0.997626,
+      "LIFT_ANOM": 0.000375
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 417,
+    "probabilities": {
+      "IDLE": 0.007655,
+      "TERRESTRIAL": 0.002168,
+      "MARITIME": 0.012485,
+      "LIFT": 0.011026,
+      "IDLE_ANOM": 0.223006,
+      "TERRESTRIAL_ANOM": 0.270353,
+      "MARITIME_ANOM": 0.224822,
+      "LIFT_ANOM": 0.248485
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 418,
+    "probabilities": {
+      "IDLE": 0.009177,
+      "TERRESTRIAL": 0.005115,
+      "MARITIME": 0.000699,
+      "LIFT": 0.01148,
+      "IDLE_ANOM": 0.505008,
+      "TERRESTRIAL_ANOM": 0.197156,
+      "MARITIME_ANOM": 0.011855,
+      "LIFT_ANOM": 0.259508
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 419,
+    "probabilities": {
+      "IDLE": 0.00033,
+      "TERRESTRIAL": 0.000953,
+      "MARITIME": 0.000104,
+      "LIFT": 0.012306,
+      "IDLE_ANOM": 0.011798,
+      "TERRESTRIAL_ANOM": 0.656117,
+      "MARITIME_ANOM": 0.006918,
+      "LIFT_ANOM": 0.311474
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 420,
+    "probabilities": {
+      "IDLE": 0.998736,
+      "TERRESTRIAL": 0.0009,
+      "MARITIME": 0.0,
+      "LIFT": 0.000286,
+      "IDLE_ANOM": 7.9e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 421,
+    "probabilities": {
+      "IDLE": 0.03053,
+      "TERRESTRIAL": 1.8e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.001033,
+      "IDLE_ANOM": 0.962932,
+      "TERRESTRIAL_ANOM": 0.000827,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.004659
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 422,
+    "probabilities": {
+      "IDLE": 9.5e-05,
+      "TERRESTRIAL": 2.7e-05,
+      "MARITIME": 0.000579,
+      "LIFT": 0.003933,
+      "IDLE_ANOM": 0.003368,
+      "TERRESTRIAL_ANOM": 0.267611,
+      "MARITIME_ANOM": 0.385275,
+      "LIFT_ANOM": 0.339111
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 423,
+    "probabilities": {
+      "IDLE": 0.998894,
+      "TERRESTRIAL": 0.00078,
+      "MARITIME": 0.0,
+      "LIFT": 0.000229,
+      "IDLE_ANOM": 9.6e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 424,
+    "probabilities": {
+      "IDLE": 4e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.003345,
+      "LIFT": 1.4e-05,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 1.8e-05,
+      "MARITIME_ANOM": 0.996547,
+      "LIFT_ANOM": 7.1e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 425,
+    "probabilities": {
+      "IDLE": 0.003718,
+      "TERRESTRIAL": 0.000405,
+      "MARITIME": 0.052338,
+      "LIFT": 0.0076,
+      "IDLE_ANOM": 0.02343,
+      "TERRESTRIAL_ANOM": 0.048382,
+      "MARITIME_ANOM": 0.80945,
+      "LIFT_ANOM": 0.054676
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 426,
+    "probabilities": {
+      "IDLE": 0.998808,
+      "TERRESTRIAL": 0.000747,
+      "MARITIME": 0.0,
+      "LIFT": 0.000307,
+      "IDLE_ANOM": 0.000138,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 427,
+    "probabilities": {
+      "IDLE": 0.000702,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.898847,
+      "LIFT": 0.000362,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 2e-06,
+      "MARITIME_ANOM": 0.100083,
+      "LIFT_ANOM": 3e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 428,
+    "probabilities": {
+      "IDLE": 7.1e-05,
+      "TERRESTRIAL": 6.4e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.004591,
+      "IDLE_ANOM": 0.011165,
+      "TERRESTRIAL_ANOM": 0.249148,
+      "MARITIME_ANOM": 0.000157,
+      "LIFT_ANOM": 0.734803
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 429,
+    "probabilities": {
+      "IDLE": 0.026217,
+      "TERRESTRIAL": 0.090117,
+      "MARITIME": 3.9e-05,
+      "LIFT": 0.855119,
+      "IDLE_ANOM": 0.014494,
+      "TERRESTRIAL_ANOM": 0.004369,
+      "MARITIME_ANOM": 3e-05,
+      "LIFT_ANOM": 0.009617
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 430,
+    "probabilities": {
+      "IDLE": 0.998793,
+      "TERRESTRIAL": 0.000886,
+      "MARITIME": 0.0,
+      "LIFT": 0.000257,
+      "IDLE_ANOM": 6.5e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 431,
+    "probabilities": {
+      "IDLE": 0.002775,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.0,
+      "LIFT": 7e-06,
+      "IDLE_ANOM": 0.963247,
+      "TERRESTRIAL_ANOM": 0.008443,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.025528
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 432,
+    "probabilities": {
+      "IDLE": 0.059397,
+      "TERRESTRIAL": 1.1e-05,
+      "MARITIME": 0.0,
+      "LIFT": 6.2e-05,
+      "IDLE_ANOM": 0.940156,
+      "TERRESTRIAL_ANOM": 0.000211,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000162
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 433,
+    "probabilities": {
+      "IDLE": 0.030895,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 8.3e-05,
+      "IDLE_ANOM": 0.967517,
+      "TERRESTRIAL_ANOM": 0.000572,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000928
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 434,
+    "probabilities": {
+      "IDLE": 9.7e-05,
+      "TERRESTRIAL": 0.000342,
+      "MARITIME": 3.3e-05,
+      "LIFT": 0.007892,
+      "IDLE_ANOM": 0.004145,
+      "TERRESTRIAL_ANOM": 0.714882,
+      "MARITIME_ANOM": 0.006081,
+      "LIFT_ANOM": 0.266527
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 435,
+    "probabilities": {
+      "IDLE": 0.037701,
+      "TERRESTRIAL": 0.135486,
+      "MARITIME": 0.000107,
+      "LIFT": 0.792265,
+      "IDLE_ANOM": 0.016097,
+      "TERRESTRIAL_ANOM": 0.006665,
+      "MARITIME_ANOM": 9.3e-05,
+      "LIFT_ANOM": 0.011585
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 436,
+    "probabilities": {
+      "IDLE": 0.000102,
+      "TERRESTRIAL": 0.000224,
+      "MARITIME": 2.5e-05,
+      "LIFT": 0.00497,
+      "IDLE_ANOM": 0.005083,
+      "TERRESTRIAL_ANOM": 0.746543,
+      "MARITIME_ANOM": 0.004097,
+      "LIFT_ANOM": 0.238956
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 437,
+    "probabilities": {
+      "IDLE": 0.006906,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.7e-05,
+      "IDLE_ANOM": 0.987264,
+      "TERRESTRIAL_ANOM": 0.001476,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.004336
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 438,
+    "probabilities": {
+      "IDLE": 0.00027,
+      "TERRESTRIAL": 0.001079,
+      "MARITIME": 5.4e-05,
+      "LIFT": 0.003053,
+      "IDLE_ANOM": 0.028228,
+      "TERRESTRIAL_ANOM": 0.763628,
+      "MARITIME_ANOM": 0.012774,
+      "LIFT_ANOM": 0.190914
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 439,
+    "probabilities": {
+      "IDLE": 0.010261,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 4e-06,
+      "IDLE_ANOM": 0.987852,
+      "TERRESTRIAL_ANOM": 0.001111,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000772
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 440,
+    "probabilities": {
+      "IDLE": 0.998618,
+      "TERRESTRIAL": 0.000992,
+      "MARITIME": 0.0,
+      "LIFT": 0.000315,
+      "IDLE_ANOM": 7.5e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 441,
+    "probabilities": {
+      "IDLE": 0.000458,
+      "TERRESTRIAL": 0.003267,
+      "MARITIME": 0.000176,
+      "LIFT": 0.051885,
+      "IDLE_ANOM": 0.018372,
+      "TERRESTRIAL_ANOM": 0.466128,
+      "MARITIME_ANOM": 0.007491,
+      "LIFT_ANOM": 0.452223
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 442,
+    "probabilities": {
+      "IDLE": 0.003652,
+      "TERRESTRIAL": 0.000405,
+      "MARITIME": 3.3e-05,
+      "LIFT": 0.003994,
+      "IDLE_ANOM": 0.159055,
+      "TERRESTRIAL_ANOM": 0.442169,
+      "MARITIME_ANOM": 0.000538,
+      "LIFT_ANOM": 0.390154
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 443,
+    "probabilities": {
+      "IDLE": 0.000215,
+      "TERRESTRIAL": 0.003204,
+      "MARITIME": 9.3e-05,
+      "LIFT": 0.022946,
+      "IDLE_ANOM": 0.011532,
+      "TERRESTRIAL_ANOM": 0.733622,
+      "MARITIME_ANOM": 0.011463,
+      "LIFT_ANOM": 0.216924
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 444,
+    "probabilities": {
+      "IDLE": 0.00099,
+      "TERRESTRIAL": 0.00636,
+      "MARITIME": 0.0002,
+      "LIFT": 0.024302,
+      "IDLE_ANOM": 0.047367,
+      "TERRESTRIAL_ANOM": 0.654296,
+      "MARITIME_ANOM": 0.010599,
+      "LIFT_ANOM": 0.255887
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 445,
+    "probabilities": {
+      "IDLE": 0.021842,
+      "TERRESTRIAL": 0.06838,
+      "MARITIME": 2e-05,
+      "LIFT": 0.891626,
+      "IDLE_ANOM": 0.008305,
+      "TERRESTRIAL_ANOM": 0.002275,
+      "MARITIME_ANOM": 1.6e-05,
+      "LIFT_ANOM": 0.007537
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 446,
+    "probabilities": {
+      "IDLE": 0.325367,
+      "TERRESTRIAL": 0.595719,
+      "MARITIME": 0.000103,
+      "LIFT": 0.076551,
+      "IDLE_ANOM": 0.001872,
+      "TERRESTRIAL_ANOM": 0.000277,
+      "MARITIME_ANOM": 2.6e-05,
+      "LIFT_ANOM": 8.5e-05
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 447,
+    "probabilities": {
+      "IDLE": 5.9e-05,
+      "TERRESTRIAL": 0.000326,
+      "MARITIME": 1.1e-05,
+      "LIFT": 0.001462,
+      "IDLE_ANOM": 0.011136,
+      "TERRESTRIAL_ANOM": 0.811947,
+      "MARITIME_ANOM": 0.006889,
+      "LIFT_ANOM": 0.168169
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 448,
+    "probabilities": {
+      "IDLE": 0.997658,
+      "TERRESTRIAL": 0.001813,
+      "MARITIME": 0.0,
+      "LIFT": 0.000453,
+      "IDLE_ANOM": 7.7e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 449,
+    "probabilities": {
+      "IDLE": 4.1e-05,
+      "TERRESTRIAL": 0.000647,
+      "MARITIME": 1e-05,
+      "LIFT": 0.008715,
+      "IDLE_ANOM": 0.008367,
+      "TERRESTRIAL_ANOM": 0.62755,
+      "MARITIME_ANOM": 0.006461,
+      "LIFT_ANOM": 0.348208
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 450,
+    "probabilities": {
+      "IDLE": 0.000948,
+      "TERRESTRIAL": 0.006407,
+      "MARITIME": 0.000184,
+      "LIFT": 0.047577,
+      "IDLE_ANOM": 0.030214,
+      "TERRESTRIAL_ANOM": 0.546425,
+      "MARITIME_ANOM": 0.009695,
+      "LIFT_ANOM": 0.35855
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 451,
+    "probabilities": {
+      "IDLE": 0.01191,
+      "TERRESTRIAL": 0.006712,
+      "MARITIME": 0.000318,
+      "LIFT": 0.023587,
+      "IDLE_ANOM": 0.548976,
+      "TERRESTRIAL_ANOM": 0.142177,
+      "MARITIME_ANOM": 0.004092,
+      "LIFT_ANOM": 0.262229
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 452,
+    "probabilities": {
+      "IDLE": 0.017133,
+      "TERRESTRIAL": 0.012168,
+      "MARITIME": 0.005889,
+      "LIFT": 0.021333,
+      "IDLE_ANOM": 0.411109,
+      "TERRESTRIAL_ANOM": 0.293112,
+      "MARITIME_ANOM": 0.043179,
+      "LIFT_ANOM": 0.196077
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 453,
+    "probabilities": {
+      "IDLE": 3e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001162,
+      "LIFT": 3.3e-05,
+      "IDLE_ANOM": 5e-06,
+      "TERRESTRIAL_ANOM": 0.000249,
+      "MARITIME_ANOM": 0.99772,
+      "LIFT_ANOM": 0.000827
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 454,
+    "probabilities": {
+      "IDLE": 0.996984,
+      "TERRESTRIAL": 0.002423,
+      "MARITIME": 0.0,
+      "LIFT": 0.000532,
+      "IDLE_ANOM": 6e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 455,
+    "probabilities": {
+      "IDLE": 0.000147,
+      "TERRESTRIAL": 0.000142,
+      "MARITIME": 7e-06,
+      "LIFT": 0.006453,
+      "IDLE_ANOM": 0.008924,
+      "TERRESTRIAL_ANOM": 0.352661,
+      "MARITIME_ANOM": 0.000906,
+      "LIFT_ANOM": 0.630759
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 456,
+    "probabilities": {
+      "IDLE": 0.00051,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.936894,
+      "LIFT": 0.000193,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.062401,
+      "LIFT_ANOM": 1e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 457,
+    "probabilities": {
+      "IDLE": 5e-06,
+      "TERRESTRIAL": 1.2e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.001577,
+      "IDLE_ANOM": 0.007291,
+      "TERRESTRIAL_ANOM": 0.1196,
+      "MARITIME_ANOM": 3e-05,
+      "LIFT_ANOM": 0.871485
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 458,
+    "probabilities": {
+      "IDLE": 0.010938,
+      "TERRESTRIAL": 0.004884,
+      "MARITIME": 0.009402,
+      "LIFT": 0.018997,
+      "IDLE_ANOM": 0.349219,
+      "TERRESTRIAL_ANOM": 0.235313,
+      "MARITIME_ANOM": 0.105172,
+      "LIFT_ANOM": 0.266074
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 459,
+    "probabilities": {
+      "IDLE": 8e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.010276,
+      "LIFT": 2.7e-05,
+      "IDLE_ANOM": 2e-06,
+      "TERRESTRIAL_ANOM": 2.5e-05,
+      "MARITIME_ANOM": 0.989616,
+      "LIFT_ANOM": 4.6e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 460,
+    "probabilities": {
+      "IDLE": 0.00014,
+      "TERRESTRIAL": 5.8e-05,
+      "MARITIME": 1e-06,
+      "LIFT": 0.007328,
+      "IDLE_ANOM": 0.015932,
+      "TERRESTRIAL_ANOM": 0.142268,
+      "MARITIME_ANOM": 8.4e-05,
+      "LIFT_ANOM": 0.834189
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 461,
+    "probabilities": {
+      "IDLE": 0.001493,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.914275,
+      "LIFT": 0.000706,
+      "IDLE_ANOM": 4e-06,
+      "TERRESTRIAL_ANOM": 3e-06,
+      "MARITIME_ANOM": 0.083514,
+      "LIFT_ANOM": 5e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 462,
+    "probabilities": {
+      "IDLE": 0.001391,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.880153,
+      "LIFT": 0.000799,
+      "IDLE_ANOM": 7e-06,
+      "TERRESTRIAL_ANOM": 6e-06,
+      "MARITIME_ANOM": 0.117633,
+      "LIFT_ANOM": 1.1e-05
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 463,
+    "probabilities": {
+      "IDLE": 0.013482,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.8e-05,
+      "IDLE_ANOM": 0.984704,
+      "TERRESTRIAL_ANOM": 0.000588,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001207
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 464,
+    "probabilities": {
+      "IDLE": 0.015037,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.6e-05,
+      "IDLE_ANOM": 0.982866,
+      "TERRESTRIAL_ANOM": 0.000744,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.001324
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 465,
+    "probabilities": {
+      "IDLE": 0.999032,
+      "TERRESTRIAL": 0.00068,
+      "MARITIME": 0.0,
+      "LIFT": 0.00022,
+      "IDLE_ANOM": 6.8e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 466,
+    "probabilities": {
+      "IDLE": 0.026169,
+      "TERRESTRIAL": 0.196162,
+      "MARITIME": 9.6e-05,
+      "LIFT": 0.761925,
+      "IDLE_ANOM": 0.005901,
+      "TERRESTRIAL_ANOM": 0.004198,
+      "MARITIME_ANOM": 9e-05,
+      "LIFT_ANOM": 0.005458
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 467,
+    "probabilities": {
+      "IDLE": 0.044213,
+      "TERRESTRIAL": 4e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000131,
+      "IDLE_ANOM": 0.954583,
+      "TERRESTRIAL_ANOM": 0.000263,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000807
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 468,
+    "probabilities": {
+      "IDLE": 0.203363,
+      "TERRESTRIAL": 0.670227,
+      "MARITIME": 0.000219,
+      "LIFT": 0.123634,
+      "IDLE_ANOM": 0.001792,
+      "TERRESTRIAL_ANOM": 0.000499,
+      "MARITIME_ANOM": 7.9e-05,
+      "LIFT_ANOM": 0.000187
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 469,
+    "probabilities": {
+      "IDLE": 0.044562,
+      "TERRESTRIAL": 2e-06,
+      "MARITIME": 0.0,
+      "LIFT": 0.000107,
+      "IDLE_ANOM": 0.954657,
+      "TERRESTRIAL_ANOM": 0.000127,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000545
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 470,
+    "probabilities": {
+      "IDLE": 0.034404,
+      "TERRESTRIAL": 6e-06,
+      "MARITIME": 0.0,
+      "LIFT": 3.7e-05,
+      "IDLE_ANOM": 0.964966,
+      "TERRESTRIAL_ANOM": 0.000297,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.00029
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 471,
+    "probabilities": {
+      "IDLE": 0.047544,
+      "TERRESTRIAL": 9e-06,
+      "MARITIME": 0.0,
+      "LIFT": 6.6e-05,
+      "IDLE_ANOM": 0.951937,
+      "TERRESTRIAL_ANOM": 0.000232,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000212
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 472,
+    "probabilities": {
+      "IDLE": 0.039641,
+      "TERRESTRIAL": 0.011379,
+      "MARITIME": 0.104224,
+      "LIFT": 0.054129,
+      "IDLE_ANOM": 0.206803,
+      "TERRESTRIAL_ANOM": 0.135215,
+      "MARITIME_ANOM": 0.304361,
+      "LIFT_ANOM": 0.144248
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 473,
+    "probabilities": {
+      "IDLE": 7.4e-05,
+      "TERRESTRIAL": 0.000118,
+      "MARITIME": 4e-06,
+      "LIFT": 0.009776,
+      "IDLE_ANOM": 0.005251,
+      "TERRESTRIAL_ANOM": 0.398579,
+      "MARITIME_ANOM": 0.000621,
+      "LIFT_ANOM": 0.585577
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 474,
+    "probabilities": {
+      "IDLE": 0.040337,
+      "TERRESTRIAL": 5e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.9e-05,
+      "IDLE_ANOM": 0.959225,
+      "TERRESTRIAL_ANOM": 0.000227,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000177
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 475,
+    "probabilities": {
+      "IDLE": 7.7e-05,
+      "TERRESTRIAL": 0.000129,
+      "MARITIME": 1.3e-05,
+      "LIFT": 0.006005,
+      "IDLE_ANOM": 0.004482,
+      "TERRESTRIAL_ANOM": 0.566173,
+      "MARITIME_ANOM": 0.002452,
+      "LIFT_ANOM": 0.420668
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 476,
+    "probabilities": {
+      "IDLE": 0.176024,
+      "TERRESTRIAL": 0.69892,
+      "MARITIME": 0.000337,
+      "LIFT": 0.12224,
+      "IDLE_ANOM": 0.001584,
+      "TERRESTRIAL_ANOM": 0.000564,
+      "MARITIME_ANOM": 0.000128,
+      "LIFT_ANOM": 0.000202
+    },
+    "predicted_class": "TERRESTRIAL",
+    "true_class": "TERRESTRIAL"
+  },
+  {
+    "sample_index": 477,
+    "probabilities": {
+      "IDLE": 0.001678,
+      "TERRESTRIAL": 0.000481,
+      "MARITIME": 5e-06,
+      "LIFT": 0.023245,
+      "IDLE_ANOM": 0.105231,
+      "TERRESTRIAL_ANOM": 0.205165,
+      "MARITIME_ANOM": 9.3e-05,
+      "LIFT_ANOM": 0.664103
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 478,
+    "probabilities": {
+      "IDLE": 0.011967,
+      "TERRESTRIAL": 0.004762,
+      "MARITIME": 0.008477,
+      "LIFT": 0.012737,
+      "IDLE_ANOM": 0.404667,
+      "TERRESTRIAL_ANOM": 0.267438,
+      "MARITIME_ANOM": 0.080613,
+      "LIFT_ANOM": 0.20934
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 479,
+    "probabilities": {
+      "IDLE": 0.040488,
+      "TERRESTRIAL": 5e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.8e-05,
+      "IDLE_ANOM": 0.959162,
+      "TERRESTRIAL_ANOM": 0.000173,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000144
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 480,
+    "probabilities": {
+      "IDLE": 0.000114,
+      "TERRESTRIAL": 0.000425,
+      "MARITIME": 3.9e-05,
+      "LIFT": 0.004389,
+      "IDLE_ANOM": 0.008463,
+      "TERRESTRIAL_ANOM": 0.766786,
+      "MARITIME_ANOM": 0.006385,
+      "LIFT_ANOM": 0.213399
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 481,
+    "probabilities": {
+      "IDLE": 0.0,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001345,
+      "LIFT": 1e-06,
+      "IDLE_ANOM": 0.0,
+      "TERRESTRIAL_ANOM": 1e-06,
+      "MARITIME_ANOM": 0.998652,
+      "LIFT_ANOM": 2e-06
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 482,
+    "probabilities": {
+      "IDLE": 0.030556,
+      "TERRESTRIAL": 0.162584,
+      "MARITIME": 7.2e-05,
+      "LIFT": 0.78509,
+      "IDLE_ANOM": 0.009845,
+      "TERRESTRIAL_ANOM": 0.004322,
+      "MARITIME_ANOM": 7.3e-05,
+      "LIFT_ANOM": 0.007458
+    },
+    "predicted_class": "LIFT",
+    "true_class": "LIFT"
+  },
+  {
+    "sample_index": 483,
+    "probabilities": {
+      "IDLE": 0.000141,
+      "TERRESTRIAL": 0.000366,
+      "MARITIME": 0.000138,
+      "LIFT": 0.008548,
+      "IDLE_ANOM": 0.00317,
+      "TERRESTRIAL_ANOM": 0.785308,
+      "MARITIME_ANOM": 0.015874,
+      "LIFT_ANOM": 0.186454
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 484,
+    "probabilities": {
+      "IDLE": 0.014343,
+      "TERRESTRIAL": 1e-06,
+      "MARITIME": 0.0,
+      "LIFT": 2.6e-05,
+      "IDLE_ANOM": 0.982197,
+      "TERRESTRIAL_ANOM": 0.001048,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.002385
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 485,
+    "probabilities": {
+      "IDLE": 0.024944,
+      "TERRESTRIAL": 3e-06,
+      "MARITIME": 0.0,
+      "LIFT": 1.8e-05,
+      "IDLE_ANOM": 0.9746,
+      "TERRESTRIAL_ANOM": 0.000255,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.000179
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 486,
+    "probabilities": {
+      "IDLE": 1e-06,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.001315,
+      "LIFT": 6e-06,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 2.2e-05,
+      "MARITIME_ANOM": 0.998618,
+      "LIFT_ANOM": 3.7e-05
+    },
+    "predicted_class": "MARITIME_ANOM",
+    "true_class": "MARITIME_ANOM"
+  },
+  {
+    "sample_index": 487,
+    "probabilities": {
+      "IDLE": 0.011382,
+      "TERRESTRIAL": 0.010937,
+      "MARITIME": 0.001216,
+      "LIFT": 0.029583,
+      "IDLE_ANOM": 0.393442,
+      "TERRESTRIAL_ANOM": 0.242364,
+      "MARITIME_ANOM": 0.015201,
+      "LIFT_ANOM": 0.295874
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 488,
+    "probabilities": {
+      "IDLE": 2e-05,
+      "TERRESTRIAL": 8.2e-05,
+      "MARITIME": 0.0,
+      "LIFT": 0.008338,
+      "IDLE_ANOM": 0.008453,
+      "TERRESTRIAL_ANOM": 0.158969,
+      "MARITIME_ANOM": 0.000117,
+      "LIFT_ANOM": 0.82402
+    },
+    "predicted_class": "LIFT_ANOM",
+    "true_class": "LIFT_ANOM"
+  },
+  {
+    "sample_index": 489,
+    "probabilities": {
+      "IDLE": 3.8e-05,
+      "TERRESTRIAL": 9.1e-05,
+      "MARITIME": 4e-06,
+      "LIFT": 0.002372,
+      "IDLE_ANOM": 0.003396,
+      "TERRESTRIAL_ANOM": 0.710678,
+      "MARITIME_ANOM": 0.001944,
+      "LIFT_ANOM": 0.281478
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 490,
+    "probabilities": {
+      "IDLE": 0.998999,
+      "TERRESTRIAL": 0.000641,
+      "MARITIME": 0.0,
+      "LIFT": 0.000189,
+      "IDLE_ANOM": 0.000171,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 491,
+    "probabilities": {
+      "IDLE": 0.016192,
+      "TERRESTRIAL": 0.005423,
+      "MARITIME": 0.000668,
+      "LIFT": 0.014132,
+      "IDLE_ANOM": 0.603938,
+      "TERRESTRIAL_ANOM": 0.115764,
+      "MARITIME_ANOM": 0.008133,
+      "LIFT_ANOM": 0.235749
+    },
+    "predicted_class": "IDLE_ANOM",
+    "true_class": "IDLE_ANOM"
+  },
+  {
+    "sample_index": 492,
+    "probabilities": {
+      "IDLE": 4.3e-05,
+      "TERRESTRIAL": 0.000115,
+      "MARITIME": 1.8e-05,
+      "LIFT": 0.002159,
+      "IDLE_ANOM": 0.001903,
+      "TERRESTRIAL_ANOM": 0.829325,
+      "MARITIME_ANOM": 0.007189,
+      "LIFT_ANOM": 0.159248
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 493,
+    "probabilities": {
+      "IDLE": 0.000756,
+      "TERRESTRIAL": 0.000669,
+      "MARITIME": 4.6e-05,
+      "LIFT": 0.007732,
+      "IDLE_ANOM": 0.032623,
+      "TERRESTRIAL_ANOM": 0.59615,
+      "MARITIME_ANOM": 0.002085,
+      "LIFT_ANOM": 0.359939
+    },
+    "predicted_class": "TERRESTRIAL_ANOM",
+    "true_class": "TERRESTRIAL_ANOM"
+  },
+  {
+    "sample_index": 494,
+    "probabilities": {
+      "IDLE": 0.999038,
+      "TERRESTRIAL": 0.000615,
+      "MARITIME": 0.0,
+      "LIFT": 0.000206,
+      "IDLE_ANOM": 0.000141,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 495,
+    "probabilities": {
+      "IDLE": 0.000779,
+      "TERRESTRIAL": 0.0,
+      "MARITIME": 0.943421,
+      "LIFT": 0.000294,
+      "IDLE_ANOM": 1e-06,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.055504,
+      "LIFT_ANOM": 1e-06
+    },
+    "predicted_class": "MARITIME",
+    "true_class": "MARITIME"
+  },
+  {
+    "sample_index": 496,
+    "probabilities": {
+      "IDLE": 0.997444,
+      "TERRESTRIAL": 0.002119,
+      "MARITIME": 0.0,
+      "LIFT": 0.000388,
+      "IDLE_ANOM": 5e-05,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  },
+  {
+    "sample_index": 497,
+    "probabilities": {
+      "IDLE": 0.997768,
+      "TERRESTRIAL": 0.001683,
+      "MARITIME": 0.0,
+      "LIFT": 0.000434,
+      "IDLE_ANOM": 0.000115,
+      "TERRESTRIAL_ANOM": 0.0,
+      "MARITIME_ANOM": 0.0,
+      "LIFT_ANOM": 0.0
+    },
+    "predicted_class": "IDLE",
+    "true_class": "IDLE"
+  }
+]
