@@ -88,7 +88,7 @@ class DashboardApp:
         self._setup_tabs()
         
         # Start refresh loop
-        # self.start_refresh_loop()
+        self.start_analytics_refresh_loop()
         
         # Bind window close event
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
@@ -286,7 +286,7 @@ class DashboardApp:
         """
         # TODO: Implement
         
-        # self.stop_refresh_loop()
+        self.stop_analytics_refresh_loop()
         self.root.destroy()
         # self.root.destroy()
 
