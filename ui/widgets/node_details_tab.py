@@ -291,8 +291,6 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
             raise ValueError("Node ID cannot be None")
         if rdentry is None:
             raise ValueError(f"Raw data entry for node {node_id} cannot be None")
-        if mlentry is None:
-            raise ValueError(f"Machine learning entry for node {node_id} cannot be None")
         # if node_id not in rdentry:
         #     raise ValueError(f"Node ID {node_id} not found in raw data entry")
         node_id = rdentry.get("node_id", node_id) #use node_id from raw data entry if available, otherwise use provided node_id
@@ -320,11 +318,16 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         #     motion_class = max(range(len(mlentry)), key=lambda i: mlentry[i]) if mlentry else 0 #get index of max confidence motion class, default to 0 if mlentry is empty
         #     confidence = mlentry[motion_class] if mlentry else 0 #get confidence of predicted motion class, default to 0 if mlentry is empty
         #     anomaly = motion_class >= 4 #assuming motion classes 4-7 are anomalies, might change depending on team discourse. (2/27/2026) -TE
-        classification = mlentry.get("classification", "UNKNOWN") if mlentry else "UNKNOWN"
-        motion_class=Node.motion_states.index(classification)
-        confidenceDic = json.loads(mlentry.get("confidence", "{}")) if mlentry else {} #workaround, DB stores confidence as a nested string
-        confidence = confidenceDic.get(classification, 0) if confidenceDic else 0
-        anomaly = mlentry.get("is_anomaly", False) if mlentry else False
+        if mlentry is None or len(mlentry.keys()) == 0:
+            motion_class = -1
+            confidence = 0
+            anomaly = False
+        else:
+            classification = mlentry.get("classification", "UNKNOWN") if mlentry else "UNKNOWN"
+            motion_class=Node.motion_states.index(classification)
+            confidenceDic = json.loads(mlentry.get("confidence", "{}")) if mlentry else {} #workaround, DB stores confidence as a nested string
+            confidence = confidenceDic.get(classification, 0) if confidenceDic else 0
+            anomaly = mlentry.get("is_anomaly", False) if mlentry else False
         # Build Node object
         node = Node(
             node_id=node_id,
@@ -385,7 +388,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.display_node(node_id)
     def _parse_nodes(self):
         for node_id, rdentry in self.rddict.items():
-            mlentry = self.mldict.get(node_id, [])
+            mlentry = self.mldict.get(node_id) or None
             try:
                 self.load_node(node_id, rdentry, mlentry)
             except Exception as e:
