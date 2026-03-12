@@ -51,7 +51,7 @@ class Node:
             self.maritime_position = {"north": 0.0, "east": 0.0, "up": 0.0}  # meters relative to start
             self.maritime_start_hub = None
             self.maritime_bearing = None  # bearing from start to destination
-            
+            self.inject_flag = inject_anomalies
             self.gravity = GRAVITY_MSS  # m/s² (downward, Z-up frame)
 
         except FileNotFoundError:
@@ -77,7 +77,7 @@ class Node:
                 # Only run the branch for current mode. Idle requires a hub (time_at_hub); waypoints don't have it.
                 if isinstance(current_point, Hub):
                     idleResults = self.idle.generate_reading(current_point)
-                    if self.inject_anomalies:
+                    if self.inject_anomalies and self.inject_flag:
                         processed_idle = self.idle.inject_anomalies(idleResults)
                     else:
                         processed_idle = idleResults
@@ -87,7 +87,7 @@ class Node:
                 if recent_hub_mode == "idle":
                     if hasattr(current_point, "time_at_hub"):
                         idleResults = self.idle.generate_reading(current_point)
-                        if self.inject_anomalies:
+                        if self.inject_anomalies and self.inject_flag:
                             processed_idle = self.idle.inject_anomalies(idleResults)
                         else:
                             processed_idle = idleResults
@@ -97,7 +97,7 @@ class Node:
                     if hasattr(current_point, "mode"):
                         self.lift.set_hub(current_point.lat, current_point.lon, 20)
                         liftResults = self.lift.generate_reading(current_point, current_point.lift_time)
-                        if self.inject_anomalies:
+                        if self.inject_anomalies and self.inject_flag:
                             processed_lift = self.lift.inject_anomalies(liftResults)
                         else:
                             processed_lift = liftResults
@@ -105,7 +105,7 @@ class Node:
                         self.messages += self.add_metadata(liftResults_noisy, "LIFT", current_point, next_point)
                 elif recent_hub_mode == "maritime":
                     maritimeResults = self.maritime.generate_reading(current_point, next_point)
-                    if self.inject_anomalies:
+                    if self.inject_anomalies and self.inject_flag:
                         processed_maritime = self.maritime.inject_anomalies(maritimeResults)
                     else:
                         processed_maritime = maritimeResults
@@ -113,7 +113,7 @@ class Node:
                     self.messages += self.add_metadata(maritimeResults_noisy, "MARITIME", current_point, next_point)
                 elif recent_hub_mode == "terrestrial":
                     terrestrialResults = self.terrestrial.generate_reading(current_point, next_point, self.sample_rate_hz)
-                    if self.inject_anomalies:
+                    if self.inject_anomalies and self.inject_flag:
                         processed_terrestrial = self.terrestrial.inject_anomalies(terrestrialResults)
                     else:
                         processed_terrestrial = terrestrialResults
