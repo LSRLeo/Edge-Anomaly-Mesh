@@ -22,6 +22,15 @@ MESSAGE FORMAT:
 ...
 }
 """
+class MIDGenerator:
+    counter = 0 #this is the class var (static)
+    M_ID_PREFIX = "db_"
+
+    @classmethod
+    def generate_m_id(cls):
+        cls.counter +=1
+        return f"{cls.M_ID_PREFIX}{cls.counter:05d}" #zero pad to 5 digits
+    
 
 class Message(ABC):
     """
