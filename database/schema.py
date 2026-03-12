@@ -83,7 +83,7 @@ class InferenceResults(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     node_id = Column(String, nullable=False)
     timestamp = Column(Float, nullable=False)
-    classification = Column(String, CheckConstraint("classification IN ('IDLE', 'TERRESTRIAL', 'MARITIME', 'LIFT', 'UNKNOWN')"), nullable=False)
+    classification = Column(String, CheckConstraint("classification IN ('IDLE', 'IDLE_ANOM', 'TERRESTRIAL', 'TERRESTRIAL_ANOM', 'MARITIME', 'MARITIME_ANOM', 'LIFT', 'LIFT_ANOM', 'UNKNOWN')"), nullable=False)
     confidence = Column(String, nullable=False)  # JSON string of confidence scores for each class
     is_anomaly = Column(Boolean, nullable=False)
     anomaly_score = Column(Float, nullable=False)
