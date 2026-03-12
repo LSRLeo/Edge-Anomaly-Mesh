@@ -194,8 +194,15 @@ class DashboardApp:
             self._refresh_job = self.root.after(REFRESH_INTERVAL_MS, loop)
 
         loop()
-
-
+        
+    def stop_analytics_refresh_loop(self):
+        """
+        Stop the analytics-only refresh loop.
+        """
+        if self._refresh_job:
+            self.root.after_cancel(self._refresh_job)
+            self._refresh_job = None
+        
     
     # def start_refresh_loop(self):
     #     """
