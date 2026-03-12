@@ -60,14 +60,14 @@ def main():
             incoming_channel = msg["channel"]
             channel = RESPONSE_CHANNELS_MAP.get(incoming_channel)
             data = json.loads(msg["data"])
-            
+            logging.info(f"Received message on channel {incoming_channel}")
+
             if isinstance(data, list):
                 logging.info(f"Received list of messages, processing each one...")
                 for item in data:
                     process_data(manager, channel, item)
 
             else:
-                logging.info(f"Received on {msg['channel']}: {data}")
                 process_data(manager, channel, data)
                     
             # If this is a query request, publish response to UI channels
