@@ -118,7 +118,7 @@ class TableManager:
             node_id=inference_record.node_id,
             timestamp=inference_record.timestamp,
             severity='CRITICAL' if inference_record.anomaly_score >= 0.75 else 'HIGH' if inference_record.anomaly_score >= 0.5 else 'MEDIUM' if inference_record.anomaly_score >= 0.25 else 'LOW',
-            description=f"Anomaly detected with score {inference_record.anomaly_score} and type {inference_record.anomaly_type}",
+            description=f"Anomaly detected with score {inference_record.anomaly_score} and type {inference_record.classification}",
         )
         self.session.add(anomaly_record)
         return anomaly_record
