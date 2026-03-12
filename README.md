@@ -69,7 +69,11 @@ Create a simulation file, from root directory:
 python3 node-simulator/simulation.py sim -t -n node-simulator/nodeConfig.json -r node-simulator/routes/compactAllModes.json --no-a
 ```
 
+Copy the pre-configured data:
+```cp node-simulator/sims/halfAnom.json node-simulator/raw_data.json```
+
 Send messages, from root directory:
+
 ```
 python3 node-simulator/simulation.py redis sensor:raw:
 ```
@@ -303,5 +307,4 @@ pytest tests/test-database/
 - `anomaly_score` must be in range [0, 1]
 - Database queries should respond in < 500ms
 - Handle duplicate/out-of-order messages gracefully
-
 
