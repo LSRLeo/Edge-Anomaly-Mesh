@@ -107,6 +107,7 @@ class AnomalyEvents(Base):
     acknowledged = Column(Boolean, default=False)
     acknowledged_by = Column(String)
     acknowledged_at = Column(Float)
+    user_feedback = Column(String, CheckConstraint("user_feedback IN ('CONFIRM', 'DISPUTE')"), nullable=True)
 
     __table_args__ = (ForeignKeyConstraint(['node_id'], ['nodes.node_id'], name='fk_anomaly_node'),
                       ForeignKeyConstraint(['inference_id'], ['inference_results.id'], name='fk_anomaly_inference'),)
