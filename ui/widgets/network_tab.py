@@ -395,8 +395,10 @@ class NetworkTab(ttk.Frame, DashboardParents):
 
     def get_motion_color(self, motion_class):
         if isinstance(motion_class, int):
+            if motion_class == -1:
+                return 'black'
             motion_class = Node.motion_states[motion_class]
-        color_tuple = self.MOTION_COLORS.get(motion_class, ('gray', False))
+        color_tuple = self.MOTION_COLORS.get(motion_class, ('black', False))
         return color_tuple[0]
     
     def highlight_anomaly(self, node_id: str, is_anomaly: bool):
@@ -534,9 +536,6 @@ class NetworkTab(ttk.Frame, DashboardParents):
         for node_id, node_data in raw_file.items():
             # node_id = node_data["node_id"]
             ml = ml_lookup.get(node_id)
-            if ml is None:
-                print(f'No contents in ML {node_id}')
-                continue
             timestamp = node_data.get("timestamp")
             seq = node_data.get("seq", 0)
             # accel = node_data.get("accel_mss")
@@ -549,8 +548,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
             gyro_z = node_data.get("gyro_z_rads", 0)
 
             # classification = ml["classification"]
-            if ml is None or len(ml.keys()) == 0:
-                print(f'No contents in ML for node {node_id}')
+            if not ml:
+                print(f'No ML data for node {node_id}, rendering as black')
                 classification = "UNKNOWN"
                 mot = -1
                 confidence = 0.0
