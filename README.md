@@ -54,6 +54,16 @@ python3 ml/redis_insteam.py --window-size 100 --stride 100 --model-path ml/model
 
 ### Terminal 3
 
+Start UI Dashboard, from root directory:
+```
+cd ui/
+python3 -m widgets.dashboard_main
+```
+
+### Terminal 4
+
+Once you are ready to start sending messages:
+
 Create a simulation file, from root directory:
 ```
 python3 node-simulator/simulation.py sim -t -n node-simulator/nodeConfig.json -r node-simulator/routes/compactAllModes.json --no-a

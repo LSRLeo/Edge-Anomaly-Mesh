@@ -1,0 +1,4120 @@
+[
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_0",
+    "event_id": "node_001_2026-03-11T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-11T17:51:51.323198",
+    "seq": 0,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": -0.0785826004612954,
+      "y": 0.054653976687634144,
+      "z": -9.600345009534202
+    },
+    "gyro_rads": {
+      "x": -0.017801081050988172,
+      "y": 0.029923305776522652,
+      "z": -0.009999796782718121
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_1",
+    "event_id": "node_001_2026-03-12T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-12T17:51:51.323198",
+    "seq": 1,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0.06881402143406272,
+      "y": 0.09219599339735374,
+      "z": -9.760458367415511
+    },
+    "gyro_rads": {
+      "x": -0.05918194324923219,
+      "y": 0.016878371894635834,
+      "z": 0.017231865367408578
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_2",
+    "event_id": "node_001_2026-03-13T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-13T17:51:51.323198",
+    "seq": 2,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": -0.03482245652974741,
+      "y": 0.08048424870911917,
+      "z": -9.619455462944819
+    },
+    "gyro_rads": {
+      "x": 0.008364901761760404,
+      "y": 0.01039489996433639,
+      "z": 0.012368730466150696
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_3",
+    "event_id": "node_001_2026-03-14T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-14T17:51:51.323198",
+    "seq": 3,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0.020918900216664704,
+      "y": 0.10243758299094438,
+      "z": -9.858093841236336
+    },
+    "gyro_rads": {
+      "x": -0.013397168308957498,
+      "y": -0.014672383356222781,
+      "z": -0.0141055883622533
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_4",
+    "event_id": "node_001_2026-03-15T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-15T17:51:51.323198",
+    "seq": 4,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0.07337626855497585,
+      "y": -0.07117002426555448,
+      "z": -9.75359952980231
+    },
+    "gyro_rads": {
+      "x": -0.0480885628540597,
+      "y": 0.02960234717124947,
+      "z": -0.01931678205160345
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_5",
+    "event_id": "node_001_2026-03-16T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-16T17:51:51.323198",
+    "seq": 5,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": -0.16274483265341164,
+      "y": -0.1158583409958703,
+      "z": -9.83657376043994
+    },
+    "gyro_rads": {
+      "x": 0.07565922083871461,
+      "y": -0.020153482459454294,
+      "z": 0.022441953807574716
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_6",
+    "event_id": "node_001_2026-03-17T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-17T17:51:51.323198",
+    "seq": 6,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": -0.04858957840270297,
+      "y": -0.0932965276657168,
+      "z": -9.630459875515344
+    },
+    "gyro_rads": {
+      "x": 0.002723073412492223,
+      "y": -0.020667561613823382,
+      "z": 0.007344999752817074
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_7",
+    "event_id": "node_001_2026-03-18T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-18T17:51:51.323198",
+    "seq": 7,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0.021254156013700374,
+      "y": -0.10282492109041282,
+      "z": -9.800240247811026
+    },
+    "gyro_rads": {
+      "x": 0.011857528217459895,
+      "y": -0.016158948032597365,
+      "z": -0.00226482113079903
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_8",
+    "event_id": "node_001_2026-03-19T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-19T17:51:51.323198",
+    "seq": 8,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": -0.16220070877430567,
+      "y": 0.008492971621569536,
+      "z": -9.945632809539537
+    },
+    "gyro_rads": {
+      "x": 0.06256711012714491,
+      "y": -0.013642285479355785,
+      "z": 0.015256646063950942
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_9",
+    "event_id": "node_001_2026-03-20T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-20T17:51:51.323198",
+    "seq": 9,
+    "gps": {
+      "lat_deg": 39.74,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": -0.020111094079150266,
+      "y": 0.004529171684071238,
+      "z": -9.634503219185868
+    },
+    "gyro_rads": {
+      "x": 0.014120896455080878,
+      "y": 0.02824074439761298,
+      "z": -0.02190529681205364
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_idle_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_10",
+    "event_id": "node_001_2026-03-21T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-21T17:51:51.323198",
+    "seq": 10,
+    "gps": {
+      "lat_deg": 39.741,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": -0.004520498755379969,
+      "y": -0.046047967591742775,
+      "z": -9.609602038304988
+    },
+    "gyro_rads": {
+      "x": -0.02867458150682445,
+      "y": -0.0257004499919342,
+      "z": 0.008368292343282855
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_11",
+    "event_id": "node_001_2026-03-22T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-22T17:51:51.323198",
+    "seq": 11,
+    "gps": {
+      "lat_deg": 39.741,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0.1274725034245012,
+      "y": -0.014462762650362391,
+      "z": -9.692438080465996
+    },
+    "gyro_rads": {
+      "x": -0.07895926750853428,
+      "y": -0.02563879483739905,
+      "z": 0.0055549833897223745
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_12",
+    "event_id": "node_001_2026-03-23T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-23T17:51:51.323198",
+    "seq": 12,
+    "gps": {
+      "lat_deg": 39.741,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0.05898502754272934,
+      "y": 0.010147838016162652,
+      "z": -9.748287961377256
+    },
+    "gyro_rads": {
+      "x": -0.007733640443707141,
+      "y": 0.02242797534129661,
+      "z": 0.01778536636646918
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_13",
+    "event_id": "node_001_2026-03-24T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-24T17:51:51.323198",
+    "seq": 13,
+    "gps": {
+      "lat_deg": 39.741,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0.1078717740756802,
+      "y": -0.06197645905559149,
+      "z": -9.697526448208937
+    },
+    "gyro_rads": {
+      "x": 0.04227134132573653,
+      "y": -0.031151792039430328,
+      "z": 0.0002668787807374346
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_14",
+    "event_id": "node_001_2026-03-25T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-25T17:51:51.323198",
+    "seq": 14,
+    "gps": {
+      "lat_deg": 39.741,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": -0.03746692659354015,
+      "y": 0.07355241407741843,
+      "z": -9.785848910788504
+    },
+    "gyro_rads": {
+      "x": -0.07774935041853104,
+      "y": 0.0036547004509451426,
+      "z": 0.013933617158332837
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_15",
+    "event_id": "node_001_2026-03-26T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-26T17:51:51.323198",
+    "seq": 15,
+    "gps": {
+      "lat_deg": 39.74101341294077,
+      "lon_deg": -104.98999403521036,
+      "altitude_m": 1609.7
+    },
+    "accel_mss": {
+      "x": 1.5730101512360284,
+      "y": 0.0382911797508255,
+      "z": -9.686490528932833
+    },
+    "gyro_rads": {
+      "x": 0.05092701301636766,
+      "y": 0.0053560185480099835,
+      "z": -0.004717415835462417
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_16",
+    "event_id": "node_001_2026-03-27T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-27T17:51:51.323198",
+    "seq": 16,
+    "gps": {
+      "lat_deg": 39.74103784451175,
+      "lon_deg": -104.98998108966856,
+      "altitude_m": 1614.8500000000001
+    },
+    "accel_mss": {
+      "x": 1.345571886473177,
+      "y": 0.20084644172600408,
+      "z": -9.646522066778232
+    },
+    "gyro_rads": {
+      "x": 0.07389998426064354,
+      "y": 0.0075095529327275316,
+      "z": 0.027261529879268373
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_17",
+    "event_id": "node_001_2026-03-28T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-28T17:51:51.323198",
+    "seq": 17,
+    "gps": {
+      "lat_deg": 39.74107501944542,
+      "lon_deg": -104.98996272640207,
+      "altitude_m": 1620.0
+    },
+    "accel_mss": {
+      "x": 1.4880921974201204,
+      "y": 0.016084219892354437,
+      "z": -9.922622844155226
+    },
+    "gyro_rads": {
+      "x": 0.0373821127763926,
+      "y": 0.006341747042675626,
+      "z": 0.0014417164202231844
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_18",
+    "event_id": "node_001_2026-03-29T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-29T17:51:51.323198",
+    "seq": 18,
+    "gps": {
+      "lat_deg": 39.74112398931396,
+      "lon_deg": -104.98993935164165,
+      "altitude_m": 1625.15
+    },
+    "accel_mss": {
+      "x": 1.3772632609466864,
+      "y": 0.014641672860916777,
+      "z": -9.707296750568036
+    },
+    "gyro_rads": {
+      "x": -0.0688723142496967,
+      "y": -0.03181513806926138,
+      "z": 0.002259450634239728
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_19",
+    "event_id": "node_001_2026-03-30T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-30T17:51:51.323198",
+    "seq": 19,
+    "gps": {
+      "lat_deg": 39.74118623084607,
+      "lon_deg": -104.98990981885025,
+      "altitude_m": 1630.3000000000002
+    },
+    "accel_mss": {
+      "x": 1.5630081228169206,
+      "y": 0.05873421956833847,
+      "z": -9.792932588327824
+    },
+    "gyro_rads": {
+      "x": 0.0752865538811573,
+      "y": -0.0035817816194319563,
+      "z": 0.0044501960006424635
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_20",
+    "event_id": "node_001_2026-03-31T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-03-31T17:51:51.323198",
+    "seq": 20,
+    "gps": {
+      "lat_deg": 39.741234817327445,
+      "lon_deg": -104.98988591965575,
+      "altitude_m": 1635.45
+    },
+    "accel_mss": {
+      "x": -1.5901500694950548,
+      "y": -0.0032549865469049394,
+      "z": -9.969431806436248
+    },
+    "gyro_rads": {
+      "x": 0.06637306318445148,
+      "y": 0.0123348537715265,
+      "z": 0.008263305344694417
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_21",
+    "event_id": "node_001_2026-04-01T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-01T17:51:51.323198",
+    "seq": 21,
+    "gps": {
+      "lat_deg": 39.741271074383015,
+      "lon_deg": -104.98986630257146,
+      "altitude_m": 1640.6000000000001
+    },
+    "accel_mss": {
+      "x": -1.4151473565095856,
+      "y": 0.06256146342395122,
+      "z": -9.850311763910529
+    },
+    "gyro_rads": {
+      "x": 0.029145961815159056,
+      "y": -0.02493525253907454,
+      "z": -0.012452379596672135
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_22",
+    "event_id": "node_001_2026-04-02T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-02T17:51:51.323198",
+    "seq": 22,
+    "gps": {
+      "lat_deg": 39.74129490804742,
+      "lon_deg": -104.9898532482104,
+      "altitude_m": 1645.75
+    },
+    "accel_mss": {
+      "x": -1.4835772965608447,
+      "y": -0.11996847910768198,
+      "z": -9.65320860009389
+    },
+    "gyro_rads": {
+      "x": 0.03464152457936506,
+      "y": -0.0356243548014389,
+      "z": 0.021443468212875606
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_23",
+    "event_id": "node_001_2026-04-03T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-03T17:51:51.323198",
+    "seq": 23,
+    "gps": {
+      "lat_deg": 39.74126270626092,
+      "lon_deg": -104.9898948597387,
+      "altitude_m": 1650.9
+    },
+    "accel_mss": {
+      "x": 1.536471032288876,
+      "y": 0.16043272170421535,
+      "z": -9.936255429193297
+    },
+    "gyro_rads": {
+      "x": 0.00649017406409196,
+      "y": -0.0045119526037573476,
+      "z": 0.006200589393462025
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_24",
+    "event_id": "node_001_2026-04-04T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-04T17:51:51.323198",
+    "seq": 24,
+    "gps": {
+      "lat_deg": 39.74128978456608,
+      "lon_deg": -104.98989200578146,
+      "altitude_m": 1639.5375000000001
+    },
+    "accel_mss": {
+      "x": 1.4789084997717192,
+      "y": -0.1287016757172247,
+      "z": -9.649818761933284
+    },
+    "gyro_rads": {
+      "x": -0.07146887005430023,
+      "y": 0.01988475663916121,
+      "z": -0.004009954398729989
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_25",
+    "event_id": "node_001_2026-04-05T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-05T17:51:51.323198",
+    "seq": 25,
+    "gps": {
+      "lat_deg": 39.74133056077012,
+      "lon_deg": -104.98988925444347,
+      "altitude_m": 1628.1750000000002
+    },
+    "accel_mss": {
+      "x": 1.5160908518751406,
+      "y": -0.11560476940897342,
+      "z": -9.670053017119686
+    },
+    "gyro_rads": {
+      "x": -0.07606903020643635,
+      "y": 0.002672212012910512,
+      "z": 0.004177960693384408
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_26",
+    "event_id": "node_001_2026-04-06T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-06T17:51:51.323198",
+    "seq": 26,
+    "gps": {
+      "lat_deg": 39.7413853188362,
+      "lon_deg": -104.98988531466979,
+      "altitude_m": 1616.8125
+    },
+    "accel_mss": {
+      "x": 1.555277947169152,
+      "y": -0.007898217907359673,
+      "z": -9.629990977291792
+    },
+    "gyro_rads": {
+      "x": 0.052503489771287035,
+      "y": -0.013239298712263769,
+      "z": 0.009185991607509752
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_27",
+    "event_id": "node_001_2026-04-07T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-07T17:51:51.323198",
+    "seq": 27,
+    "gps": {
+      "lat_deg": 39.74145287483088,
+      "lon_deg": -104.98987881292022,
+      "altitude_m": 1605.45
+    },
+    "accel_mss": {
+      "x": 1.4324263184530226,
+      "y": 0.11828339677515781,
+      "z": -9.690696535764744
+    },
+    "gyro_rads": {
+      "x": -0.06121663277256197,
+      "y": 0.03327312521090988,
+      "z": -0.020023765979272638
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_28",
+    "event_id": "node_001_2026-04-08T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-08T17:51:51.323198",
+    "seq": 28,
+    "gps": {
+      "lat_deg": 39.74150728305286,
+      "lon_deg": -104.98987289245667,
+      "altitude_m": 1594.0875
+    },
+    "accel_mss": {
+      "x": -1.4592806639929579,
+      "y": 0.05308430592712597,
+      "z": -9.619076055524905
+    },
+    "gyro_rads": {
+      "x": 0.03911673266065156,
+      "y": 0.017905556537102664,
+      "z": 0.023087295270650218
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_29",
+    "event_id": "node_001_2026-04-09T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-09T17:51:51.323198",
+    "seq": 29,
+    "gps": {
+      "lat_deg": 39.74154879685662,
+      "lon_deg": -104.98986982506237,
+      "altitude_m": 1582.725
+    },
+    "accel_mss": {
+      "x": -1.4448564704380384,
+      "y": -0.14231464271971378,
+      "z": -9.83297634644758
+    },
+    "gyro_rads": {
+      "x": -0.02317014036622265,
+      "y": 0.03760453908418761,
+      "z": -0.007143550587771103
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "False",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_30",
+    "event_id": "node_001_2026-04-10T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-10T17:51:51.323198",
+    "seq": 30,
+    "gps": {
+      "lat_deg": 39.7415767653599,
+      "lon_deg": -104.98986850986918,
+      "altitude_m": 1571.3625
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.02104569526290482,
+      "y": 0.0033330968096756527,
+      "z": -0.009510360761160287
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_31",
+    "event_id": "node_001_2026-04-11T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-11T17:51:51.323198",
+    "seq": 31,
+    "gps": {
+      "lat_deg": 39.74151375482318,
+      "lon_deg": -104.98987750026593,
+      "altitude_m": 1560.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.08007262620519971,
+      "y": 0.01272282284519788,
+      "z": 0.02123256798267755
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_32",
+    "event_id": "node_001_2026-04-12T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-12T17:51:51.323198",
+    "seq": 32,
+    "gps": {
+      "lat_deg": 39.74154111435098,
+      "lon_deg": -104.98988367464835,
+      "altitude_m": 1570.4375
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.05523121363809317,
+      "y": -0.020490588118214033,
+      "z": 0.013249834447814626
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_33",
+    "event_id": "node_001_2026-04-13T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-13T17:51:51.323198",
+    "seq": 33,
+    "gps": {
+      "lat_deg": 39.74158143330901,
+      "lon_deg": -104.9898917562723,
+      "altitude_m": 1580.875
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.07133774336065334,
+      "y": -0.02026115457072488,
+      "z": 0.012260443733430337
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_34",
+    "event_id": "node_001_2026-04-14T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-14T17:51:51.323198",
+    "seq": 34,
+    "gps": {
+      "lat_deg": 39.74163347532192,
+      "lon_deg": -104.98990306445981,
+      "altitude_m": 1591.3125
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.07372846107482828,
+      "y": 0.0193411155567252,
+      "z": -0.0017647971736079833
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_35",
+    "event_id": "node_001_2026-04-15T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-15T17:51:51.323198",
+    "seq": 35,
+    "gps": {
+      "lat_deg": 39.741699881911536,
+      "lon_deg": -104.98991573042923,
+      "altitude_m": 1601.75
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.07904846400223214,
+      "y": 0.002405927077381971,
+      "z": -0.008250492951981558
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_36",
+    "event_id": "node_001_2026-04-16T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-16T17:51:51.323198",
+    "seq": 36,
+    "gps": {
+      "lat_deg": 39.74175444575564,
+      "lon_deg": -104.98992434622429,
+      "altitude_m": 1612.1875
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.03586134458635627,
+      "y": 0.031751896900309315,
+      "z": -0.017469827176111733
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_37",
+    "event_id": "node_001_2026-04-17T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-17T17:51:51.323198",
+    "seq": 37,
+    "gps": {
+      "lat_deg": 39.7417964139765,
+      "lon_deg": -104.98993014706403,
+      "altitude_m": 1622.625
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.034478974942465414,
+      "y": 0.023419089221504673,
+      "z": -0.013694413086526889
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_38",
+    "event_id": "node_001_2026-04-18T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-18T17:51:51.323198",
+    "seq": 38,
+    "gps": {
+      "lat_deg": 39.74182363577306,
+      "lon_deg": -104.9899342093215,
+      "altitude_m": 1633.0625
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.05550639179801245,
+      "y": -0.009535928381231249,
+      "z": 0.020607851751133534
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_39",
+    "event_id": "node_001_2026-04-19T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-19T17:51:51.323198",
+    "seq": 39,
+    "gps": {
+      "lat_deg": 39.74176314415851,
+      "lon_deg": -104.98991921804483,
+      "altitude_m": 1643.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.05746353049269281,
+      "y": -0.0016945880017970086,
+      "z": -0.01361655158046651
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_40",
+    "event_id": "node_001_2026-04-20T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-20T17:51:51.323198",
+    "seq": 40,
+    "gps": {
+      "lat_deg": 39.74178687659312,
+      "lon_deg": -104.98992808840829,
+      "altitude_m": 1640.0625
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.011646331927859133,
+      "y": -0.026129165332974248,
+      "z": -0.012371121930662737
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_41",
+    "event_id": "node_001_2026-04-21T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-21T17:51:51.323198",
+    "seq": 41,
+    "gps": {
+      "lat_deg": 39.741823114766916,
+      "lon_deg": -104.9899389865621,
+      "altitude_m": 1636.625
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.0017504090651771767,
+      "y": 0.01157319710004186,
+      "z": 0.004094335973189643
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_42",
+    "event_id": "node_001_2026-04-22T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-22T17:51:51.323198",
+    "seq": 42,
+    "gps": {
+      "lat_deg": 39.741872429188604,
+      "lon_deg": -104.98995334706547,
+      "altitude_m": 1633.1875
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.04921580388166892,
+      "y": -0.007550442181500644,
+      "z": -0.019969340358669076
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_43",
+    "event_id": "node_001_2026-04-23T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-23T17:51:51.323198",
+    "seq": 43,
+    "gps": {
+      "lat_deg": 39.741933455350484,
+      "lon_deg": -104.98997202906062,
+      "altitude_m": 1629.75
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.04473812931453664,
+      "y": 0.022680128216356316,
+      "z": -0.004421038435751045
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_44",
+    "event_id": "node_001_2026-04-24T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-24T17:51:51.323198",
+    "seq": 44,
+    "gps": {
+      "lat_deg": 39.74198223277387,
+      "lon_deg": -104.98998721160106,
+      "altitude_m": 1626.3125
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.053556466076268974,
+      "y": -0.005422179245661339,
+      "z": -0.01609000629125189
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_45",
+    "event_id": "node_001_2026-04-25T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-25T17:51:51.323198",
+    "seq": 45,
+    "gps": {
+      "lat_deg": 39.74201927836735,
+      "lon_deg": -104.98999767700191,
+      "altitude_m": 1622.875
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.03867809096730118,
+      "y": 0.007404203159678766,
+      "z": 0.017244085935511907
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_46",
+    "event_id": "node_001_2026-04-26T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-26T17:51:51.323198",
+    "seq": 46,
+    "gps": {
+      "lat_deg": 39.74204386418,
+      "lon_deg": -104.99000179843746,
+      "altitude_m": 1619.4375
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.033947389186558624,
+      "y": 0.027493170277815962,
+      "z": 0.022156236712139843
+    },
+    "meta": {
+      "motion_type": "TERRESTRIAL",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_terrestrial_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_47",
+    "event_id": "node_001_2026-04-27T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-27T17:51:51.323198",
+    "seq": 47,
+    "gps": {
+      "lat_deg": 39.742,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.00039671846897185506,
+      "y": -0.027392583968312813,
+      "z": 0.00876391784551667
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_48",
+    "event_id": "node_001_2026-04-28T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-28T17:51:51.323198",
+    "seq": 48,
+    "gps": {
+      "lat_deg": 39.742,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.07889497014370907,
+      "y": -0.007947138959891924,
+      "z": 0.02299958717864962
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_49",
+    "event_id": "node_001_2026-04-29T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-29T17:51:51.323198",
+    "seq": 49,
+    "gps": {
+      "lat_deg": 39.742,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.052643230703187154,
+      "y": -0.015029353520679103,
+      "z": 0.01194935540772832
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_50",
+    "event_id": "node_001_2026-04-30T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-04-30T17:51:51.323198",
+    "seq": 50,
+    "gps": {
+      "lat_deg": 39.742,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.055411258373405,
+      "y": -0.0033480928919582594,
+      "z": 0.015775009626482057
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_51",
+    "event_id": "node_001_2026-05-01T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-01T17:51:51.323198",
+    "seq": 51,
+    "gps": {
+      "lat_deg": 39.742,
+      "lon_deg": -104.99,
+      "altitude_m": 1609.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.0533067044389264,
+      "y": 0.003815979356986915,
+      "z": -0.007472547727202488
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_52",
+    "event_id": "node_001_2026-05-02T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-02T17:51:51.323198",
+    "seq": 52,
+    "gps": {
+      "lat_deg": 39.74200332472971,
+      "lon_deg": -104.99001155933229,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.022461093556386806,
+      "y": 0.06811030623945638,
+      "z": 0.00873963405578896
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_53",
+    "event_id": "node_001_2026-05-03T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-03T17:51:51.323198",
+    "seq": 53,
+    "gps": {
+      "lat_deg": 39.742009333583475,
+      "lon_deg": -104.99002389074015,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.11611012021642794,
+      "y": 0.025366080915774192,
+      "z": 0.02521333305113593
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_54",
+    "event_id": "node_001_2026-05-04T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-04T17:51:51.323198",
+    "seq": 54,
+    "gps": {
+      "lat_deg": 39.74201820496502,
+      "lon_deg": -104.99002475417417,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.05087310799636729,
+      "y": -0.0036407723808589147,
+      "z": -0.0038639826146922903
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_55",
+    "event_id": "node_001_2026-05-05T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-05T17:51:51.323198",
+    "seq": 55,
+    "gps": {
+      "lat_deg": 39.74202817842261,
+      "lon_deg": -104.99000746761256,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.047870803012947945,
+      "y": -0.028956637691902348,
+      "z": 0.0031740635557489677
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_56",
+    "event_id": "node_001_2026-05-06T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-06T17:51:51.323198",
+    "seq": 56,
+    "gps": {
+      "lat_deg": 39.74204119015271,
+      "lon_deg": -104.98997678116774,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.07445920480508658,
+      "y": -0.07210543873308858,
+      "z": -0.0057938091568880004
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_57",
+    "event_id": "node_001_2026-05-07T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-07T17:51:51.323198",
+    "seq": 57,
+    "gps": {
+      "lat_deg": 39.742056393403516,
+      "lon_deg": -104.98994441979355,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.16392922137441215,
+      "y": -0.030487776620865534,
+      "z": -0.02266193478917109
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_58",
+    "event_id": "node_001_2026-05-08T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-08T17:51:51.323198",
+    "seq": 58,
+    "gps": {
+      "lat_deg": 39.74207573088399,
+      "lon_deg": -104.98992523121149,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.09187071461921732,
+      "y": -0.010950757617436331,
+      "z": -0.01929704895191446
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_59",
+    "event_id": "node_001_2026-05-09T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-09T17:51:51.323198",
+    "seq": 59,
+    "gps": {
+      "lat_deg": 39.74209792084832,
+      "lon_deg": -104.98992319102469,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.04449570676350452,
+      "y": 0.04405629777747003,
+      "z": -0.011715783211860068
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_60",
+    "event_id": "node_001_2026-05-10T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-10T17:51:51.323198",
+    "seq": 60,
+    "gps": {
+      "lat_deg": 39.74212302109531,
+      "lon_deg": -104.9899334031203,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.020123402400034296,
+      "y": 0.06787596033628757,
+      "z": -0.021716823125532497
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_61",
+    "event_id": "node_001_2026-05-11T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-11T17:51:51.323198",
+    "seq": 61,
+    "gps": {
+      "lat_deg": 39.742145971109196,
+      "lon_deg": -104.9899434998115,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.09904052492491208,
+      "y": 0.08543463046696807,
+      "z": 0.015884879961743047
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_62",
+    "event_id": "node_001_2026-05-12T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-12T17:51:51.323198",
+    "seq": 62,
+    "gps": {
+      "lat_deg": 39.74216488530188,
+      "lon_deg": -104.98994218776632,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.008886986426529103,
+      "y": -0.03195208231408726,
+      "z": 0.008722760748233374
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_63",
+    "event_id": "node_001_2026-05-13T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-13T17:51:51.323198",
+    "seq": 63,
+    "gps": {
+      "lat_deg": 39.74217893941792,
+      "lon_deg": -104.98992463470849,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.06074343493589402,
+      "y": -0.08400023809816685,
+      "z": 0.037022887697746906
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_64",
+    "event_id": "node_001_2026-05-14T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-14T17:51:51.323198",
+    "seq": 64,
+    "gps": {
+      "lat_deg": 39.742190313577126,
+      "lon_deg": -104.98989503263718,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.06237414925852619,
+      "y": -0.1039737986207451,
+      "z": 0.008974049048278265
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_65",
+    "event_id": "node_001_2026-05-15T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-15T17:51:51.323198",
+    "seq": 65,
+    "gps": {
+      "lat_deg": 39.74219959098281,
+      "lon_deg": -104.98986528345189,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.11197223778900374,
+      "y": -0.0523076201523044,
+      "z": 0.041894883576492736
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_66",
+    "event_id": "node_001_2026-05-16T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-16T17:51:51.323198",
+    "seq": 66,
+    "gps": {
+      "lat_deg": 39.74220851001156,
+      "lon_deg": -104.98984904151968,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.02489168433498616,
+      "y": 0.013513281221019045,
+      "z": -0.009753334789825244
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_67",
+    "event_id": "node_001_2026-05-17T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-17T17:51:51.323198",
+    "seq": 67,
+    "gps": {
+      "lat_deg": 39.74221555592052,
+      "lon_deg": -104.98984950689118,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.0429013417338509,
+      "y": 0.04030449799865921,
+      "z": 0.008756019180084345
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_68",
+    "event_id": "node_001_2026-05-18T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-18T17:51:51.323198",
+    "seq": 68,
+    "gps": {
+      "lat_deg": 39.742221051259435,
+      "lon_deg": -104.98986185816784,
+      "altitude_m": 1611.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.07134761214946295,
+      "y": 0.07584551460817202,
+      "z": -0.000639873118630856
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_69",
+    "event_id": "node_001_2026-05-19T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-19T17:51:51.323198",
+    "seq": 69,
+    "gps": {
+      "lat_deg": 39.74220228503666,
+      "lon_deg": -104.98999004537106,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.07660696648981477,
+      "y": 0.055989819803438534,
+      "z": 0.046774613256768405
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_70",
+    "event_id": "node_001_2026-05-20T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-20T17:51:51.323198",
+    "seq": 70,
+    "gps": {
+      "lat_deg": 39.74220783815069,
+      "lon_deg": -104.99000089508753,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.11842081529800359,
+      "y": 0.032858655370674665,
+      "z": 0.03924364129105119
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_71",
+    "event_id": "node_001_2026-05-21T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-21T17:51:51.323198",
+    "seq": 71,
+    "gps": {
+      "lat_deg": 39.742215425797106,
+      "lon_deg": -104.99000097766584,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.03148415490476447,
+      "y": -0.022968108691031854,
+      "z": 0.029640449801085628
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_72",
+    "event_id": "node_001_2026-05-22T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-22T17:51:51.323198",
+    "seq": 72,
+    "gps": {
+      "lat_deg": 39.742225447792556,
+      "lon_deg": -104.98998447447066,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.05055185868624186,
+      "y": -0.04461011018634937,
+      "z": -0.014041954004674072
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_73",
+    "event_id": "node_001_2026-05-23T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-23T17:51:51.323198",
+    "seq": 73,
+    "gps": {
+      "lat_deg": 39.742238038829385,
+      "lon_deg": -104.98995670095708,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.019164703909661657,
+      "y": -0.05575654646511674,
+      "z": -0.029451234431915833
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_74",
+    "event_id": "node_001_2026-05-24T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-24T17:51:51.323198",
+    "seq": 74,
+    "gps": {
+      "lat_deg": 39.742253671321855,
+      "lon_deg": -104.9899300345175,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.14003415248414505,
+      "y": -0.06399110804577891,
+      "z": -0.021058750859892967
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_75",
+    "event_id": "node_001_2026-05-25T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-25T17:51:51.323198",
+    "seq": 75,
+    "gps": {
+      "lat_deg": 39.74227233219831,
+      "lon_deg": -104.98991404087516,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.03232709803957748,
+      "y": 0.008326047891987522,
+      "z": -0.02974571210811841
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_76",
+    "event_id": "node_001_2026-05-26T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-26T17:51:51.323198",
+    "seq": 76,
+    "gps": {
+      "lat_deg": 39.74229307404642,
+      "lon_deg": -104.98991531998755,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.005999872698647668,
+      "y": 0.028828770755327388,
+      "z": -0.024337257178383663
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_77",
+    "event_id": "node_001_2026-05-27T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-27T17:51:51.323198",
+    "seq": 77,
+    "gps": {
+      "lat_deg": 39.74231706307241,
+      "lon_deg": -104.98992863142382,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.08071141222473414,
+      "y": 0.05789760307290452,
+      "z": -0.0070343224177523206
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_78",
+    "event_id": "node_001_2026-05-28T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-28T17:51:51.323198",
+    "seq": 78,
+    "gps": {
+      "lat_deg": 39.742337732705046,
+      "lon_deg": -104.98994294544856,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.0818162211836947,
+      "y": 0.07815270858168068,
+      "z": 0.007852958281796553
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_79",
+    "event_id": "node_001_2026-05-29T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-29T17:51:51.323198",
+    "seq": 79,
+    "gps": {
+      "lat_deg": 39.74235439756152,
+      "lon_deg": -104.98994396645523,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.05947324477617583,
+      "y": 0.001081610396066462,
+      "z": -0.0011105097096989099
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_80",
+    "event_id": "node_001_2026-05-30T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-30T17:51:51.323198",
+    "seq": 80,
+    "gps": {
+      "lat_deg": 39.742369190118616,
+      "lon_deg": -104.98992842474614,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.06015028332010393,
+      "y": -0.0566787681296258,
+      "z": 0.03226819090478489
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_81",
+    "event_id": "node_001_2026-05-31T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-05-31T17:51:51.323198",
+    "seq": 81,
+    "gps": {
+      "lat_deg": 39.74237992698836,
+      "lon_deg": -104.98989981272257,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.10641923906823683,
+      "y": -0.05381025403057206,
+      "z": 0.02116370195053934
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_82",
+    "event_id": "node_001_2026-06-01T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-01T17:51:51.323198",
+    "seq": 82,
+    "gps": {
+      "lat_deg": 39.74238745622331,
+      "lon_deg": -104.98987258894832,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.18224704597650873,
+      "y": -0.03785826461519121,
+      "z": 0.044411367679003985
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_83",
+    "event_id": "node_001_2026-06-02T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-02T17:51:51.323198",
+    "seq": 83,
+    "gps": {
+      "lat_deg": 39.74239131612723,
+      "lon_deg": -104.9898570488616,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.12094866908091167,
+      "y": 0.023030107017978012,
+      "z": 0.013078566485635315
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_84",
+    "event_id": "node_001_2026-06-03T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-03T17:51:51.323198",
+    "seq": 84,
+    "gps": {
+      "lat_deg": 39.742393474097085,
+      "lon_deg": -104.98985929388887,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.07452555172715433,
+      "y": 0.048000901105645644,
+      "z": 0.011547885518106017
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_85",
+    "event_id": "node_001_2026-06-04T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-04T17:51:51.323198",
+    "seq": 85,
+    "gps": {
+      "lat_deg": 39.742392819376185,
+      "lon_deg": -104.9898726053872,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.1383433146885112,
+      "y": 0.0797418223509822,
+      "z": 0.0019561497375020706
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_86",
+    "event_id": "node_001_2026-06-05T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-05T17:51:51.323198",
+    "seq": 86,
+    "gps": {
+      "lat_deg": 39.74240206510499,
+      "lon_deg": -104.98998198062152,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.014247960449870006,
+      "y": 0.05204654900611263,
+      "z": 0.0050464756443948065
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_87",
+    "event_id": "node_001_2026-06-06T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-06T17:51:51.323198",
+    "seq": 87,
+    "gps": {
+      "lat_deg": 39.74240680112029,
+      "lon_deg": -104.9899933924746,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.0899698308699913,
+      "y": 0.07009342420014252,
+      "z": 0.013777958895799495
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_88",
+    "event_id": "node_001_2026-06-07T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-07T17:51:51.323198",
+    "seq": 88,
+    "gps": {
+      "lat_deg": 39.74241540911079,
+      "lon_deg": -104.98999294615372,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.07906767634917815,
+      "y": -0.023643617116465347,
+      "z": 0.010648649322475397
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_89",
+    "event_id": "node_001_2026-06-08T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-08T17:51:51.323198",
+    "seq": 89,
+    "gps": {
+      "lat_deg": 39.74242535165949,
+      "lon_deg": -104.98997604257704,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.013856008874335647,
+      "y": -0.07165666129791279,
+      "z": -0.020972863326169627
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_90",
+    "event_id": "node_001_2026-06-09T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-09T17:51:51.323198",
+    "seq": 90,
+    "gps": {
+      "lat_deg": 39.74243741930597,
+      "lon_deg": -104.98994829985988,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.09164428647284087,
+      "y": -0.0922595666439886,
+      "z": -0.0347621156379202
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_91",
+    "event_id": "node_001_2026-06-10T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-10T17:51:51.323198",
+    "seq": 91,
+    "gps": {
+      "lat_deg": 39.742451526873694,
+      "lon_deg": -104.98992107118148,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.11563983259631878,
+      "y": -0.03631949598181951,
+      "z": -0.02550169709740239
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_92",
+    "event_id": "node_001_2026-06-11T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-11T17:51:51.323198",
+    "seq": 92,
+    "gps": {
+      "lat_deg": 39.74246830659453,
+      "lon_deg": -104.9899071151285,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.13250086700426386,
+      "y": -0.025254163252237796,
+      "z": -0.02018500954817246
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_93",
+    "event_id": "node_001_2026-06-12T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-12T17:51:51.323198",
+    "seq": 93,
+    "gps": {
+      "lat_deg": 39.742489074115795,
+      "lon_deg": -104.98991055158231,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.02851718090489897,
+      "y": 0.07608184396936113,
+      "z": -0.029484008471282748
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_94",
+    "event_id": "node_001_2026-06-13T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-13T17:51:51.323198",
+    "seq": 94,
+    "gps": {
+      "lat_deg": 39.742512868960226,
+      "lon_deg": -104.98992644549097,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.08206974664811613,
+      "y": 0.061389215360149206,
+      "z": 0.006334760135298205
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_95",
+    "event_id": "node_001_2026-06-14T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-14T17:51:51.323198",
+    "seq": 95,
+    "gps": {
+      "lat_deg": 39.74253451775449,
+      "lon_deg": -104.98994285712456,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.07316761054606649,
+      "y": 0.04280200555341442,
+      "z": 0.014953960607723506
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_96",
+    "event_id": "node_001_2026-06-15T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-15T17:51:51.323198",
+    "seq": 96,
+    "gps": {
+      "lat_deg": 39.74255297751372,
+      "lon_deg": -104.98994647149145,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.12705002870343726,
+      "y": -0.01210349804916206,
+      "z": 0.0024918240770646152
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_97",
+    "event_id": "node_001_2026-06-16T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-16T17:51:51.323198",
+    "seq": 97,
+    "gps": {
+      "lat_deg": 39.74256735387626,
+      "lon_deg": -104.98993152881444,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.047038505116616995,
+      "y": -0.07345423845571752,
+      "z": 0.02205813677009156
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_98",
+    "event_id": "node_001_2026-06-17T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-17T17:51:51.323198",
+    "seq": 98,
+    "gps": {
+      "lat_deg": 39.74257849060983,
+      "lon_deg": -104.98990483055164,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.1094254554192419,
+      "y": -0.07351987559796822,
+      "z": 0.026148114350213306
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_99",
+    "event_id": "node_001_2026-06-18T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-18T17:51:51.323198",
+    "seq": 99,
+    "gps": {
+      "lat_deg": 39.742586932483256,
+      "lon_deg": -104.98987709188071,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.16365296797491527,
+      "y": -0.03709831147837789,
+      "z": 0.037211843768366004
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_100",
+    "event_id": "node_001_2026-06-19T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-19T17:51:51.323198",
+    "seq": 100,
+    "gps": {
+      "lat_deg": 39.74259189783605,
+      "lon_deg": -104.98986101116269,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.08309825845426375,
+      "y": 0.024672712702382412,
+      "z": -0.007581043794074175
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_101",
+    "event_id": "node_001_2026-06-20T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-20T17:51:51.323198",
+    "seq": 101,
+    "gps": {
+      "lat_deg": 39.74259553669518,
+      "lon_deg": -104.98986281084485,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.024365819006931726,
+      "y": 0.07281325230836062,
+      "z": -0.0022441430055408665
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_102",
+    "event_id": "node_001_2026-06-21T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-21T17:51:51.323198",
+    "seq": 102,
+    "gps": {
+      "lat_deg": 39.74259599734547,
+      "lon_deg": -104.98987550497455,
+      "altitude_m": 1608.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.058435671957628804,
+      "y": 0.07261643022905222,
+      "z": -0.023050120494604864
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_103",
+    "event_id": "node_001_2026-06-22T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-22T17:51:51.323198",
+    "seq": 103,
+    "gps": {
+      "lat_deg": 39.7426036954244,
+      "lon_deg": -104.98998399067871,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.08925981319263308,
+      "y": 0.09185432372934395,
+      "z": 0.03782317105185863
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_104",
+    "event_id": "node_001_2026-06-23T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-23T17:51:51.323198",
+    "seq": 104,
+    "gps": {
+      "lat_deg": 39.742609995681484,
+      "lon_deg": -104.98999540497432,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.10493800601947295,
+      "y": 0.07463590700123426,
+      "z": 0.03559794157959067
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_105",
+    "event_id": "node_001_2026-06-24T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-24T17:51:51.323198",
+    "seq": 105,
+    "gps": {
+      "lat_deg": 39.742617843048286,
+      "lon_deg": -104.98999604203954,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.05564046153104504,
+      "y": -0.022657839984876842,
+      "z": 0.006170716713652246
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_106",
+    "event_id": "node_001_2026-06-25T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-25T17:51:51.323198",
+    "seq": 106,
+    "gps": {
+      "lat_deg": 39.742630103191075,
+      "lon_deg": -104.98998050673846,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.056531835060164286,
+      "y": -0.03157413918054976,
+      "z": 0.00617910960946354
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_107",
+    "event_id": "node_001_2026-06-26T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-26T17:51:51.323198",
+    "seq": 107,
+    "gps": {
+      "lat_deg": 39.7426457822931,
+      "lon_deg": -104.98995380424151,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.06305106143196362,
+      "y": -0.07725192774392153,
+      "z": 0.0014635565909673649
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_108",
+    "event_id": "node_001_2026-06-27T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-27T17:51:51.323198",
+    "seq": 108,
+    "gps": {
+      "lat_deg": 39.74266371958386,
+      "lon_deg": -104.98992871559668,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.07508550249953708,
+      "y": -0.05005897111749237,
+      "z": -0.01793648884972023
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_109",
+    "event_id": "node_001_2026-06-28T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-28T17:51:51.323198",
+    "seq": 109,
+    "gps": {
+      "lat_deg": 39.7426830113327,
+      "lon_deg": -104.9899170064969,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.144552783622449,
+      "y": -0.015596782075303366,
+      "z": -0.0285211902363963
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_110",
+    "event_id": "node_001_2026-06-29T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-29T17:51:51.323198",
+    "seq": 110,
+    "gps": {
+      "lat_deg": 39.7427040078621,
+      "lon_deg": -104.98992395931083,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.02839524513777751,
+      "y": 0.07954999973789109,
+      "z": -0.02999059015007378
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_111",
+    "event_id": "node_001_2026-06-30T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-06-30T17:51:51.323198",
+    "seq": 111,
+    "gps": {
+      "lat_deg": 39.74272726521141,
+      "lon_deg": -104.98994252460052,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.11354907818840587,
+      "y": 0.07086301541803827,
+      "z": 0.002598180406149616
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_112",
+    "event_id": "node_001_2026-07-01T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-01T17:51:51.323198",
+    "seq": 112,
+    "gps": {
+      "lat_deg": 39.742746454517125,
+      "lon_deg": -104.98996180033191,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.10999300784841194,
+      "y": 0.06104219506530908,
+      "z": -0.017045169348312537
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_113",
+    "event_id": "node_001_2026-07-02T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-02T17:51:51.323198",
+    "seq": 113,
+    "gps": {
+      "lat_deg": 39.74276193549986,
+      "lon_deg": -104.98996881934382,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.017040913926845133,
+      "y": 0.0018655072665418075,
+      "z": 0.007796050934250089
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_114",
+    "event_id": "node_001_2026-07-03T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-03T17:51:51.323198",
+    "seq": 114,
+    "gps": {
+      "lat_deg": 39.74277405866633,
+      "lon_deg": -104.98995814302444,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.05040963874885377,
+      "y": -0.061719719259229144,
+      "z": 0.04498386099362929
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_115",
+    "event_id": "node_001_2026-07-04T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-04T17:51:51.323198",
+    "seq": 115,
+    "gps": {
+      "lat_deg": 39.74278264182209,
+      "lon_deg": -104.98993611240347,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.017562874640428383,
+      "y": -0.07272914029327167,
+      "z": 0.0405281359287262
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_116",
+    "event_id": "node_001_2026-07-05T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-05T17:51:51.323198",
+    "seq": 116,
+    "gps": {
+      "lat_deg": 39.74278973909773,
+      "lon_deg": -104.98991261993572,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.1870143463681535,
+      "y": -0.08549297129910119,
+      "z": 0.02676223866064216
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_117",
+    "event_id": "node_001_2026-07-06T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-06T17:51:51.323198",
+    "seq": 117,
+    "gps": {
+      "lat_deg": 39.74279430344176,
+      "lon_deg": -104.98990086255361,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.07933144031529049,
+      "y": 0.011473223262397898,
+      "z": 0.019574633479232172
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_118",
+    "event_id": "node_001_2026-07-07T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-07T17:51:51.323198",
+    "seq": 118,
+    "gps": {
+      "lat_deg": 39.74279640659875,
+      "lon_deg": -104.9899053695427,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.032808782016530764,
+      "y": 0.03979290104426293,
+      "z": 0.01458209568308693
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_119",
+    "event_id": "node_001_2026-07-08T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-08T17:51:51.323198",
+    "seq": 119,
+    "gps": {
+      "lat_deg": 39.74279446447801,
+      "lon_deg": -104.98992316776192,
+      "altitude_m": 1607.5
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.15239226430925656,
+      "y": 0.10811904098008757,
+      "z": -0.014361476328641494
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_120",
+    "event_id": "node_001_2026-07-09T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-09T17:51:51.323198",
+    "seq": 120,
+    "gps": {
+      "lat_deg": 39.74280327943396,
+      "lon_deg": -104.9899938933182,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.14288580209940832,
+      "y": 0.10467943605573078,
+      "z": 0.019957096605292966
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_121",
+    "event_id": "node_001_2026-07-10T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-10T17:51:51.323198",
+    "seq": 121,
+    "gps": {
+      "lat_deg": 39.742808952386696,
+      "lon_deg": -104.99000461932954,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.1679777799900254,
+      "y": 0.05828240337182927,
+      "z": 0.01750498248171934
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_122",
+    "event_id": "node_001_2026-07-11T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-11T17:51:51.323198",
+    "seq": 122,
+    "gps": {
+      "lat_deg": 39.742818373734615,
+      "lon_deg": -104.99000452880644,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.016644850582157367,
+      "y": 0.021926600017978717,
+      "z": 0.013687663222211845
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_123",
+    "event_id": "node_001_2026-07-12T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-12T17:51:51.323198",
+    "seq": 123,
+    "gps": {
+      "lat_deg": 39.74283062451803,
+      "lon_deg": -104.98998778440233,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.05528945170376226,
+      "y": -0.039418768810342404,
+      "z": 0.009337785917998116
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_124",
+    "event_id": "node_001_2026-07-13T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-13T17:51:51.323198",
+    "seq": 124,
+    "gps": {
+      "lat_deg": 39.74284536051582,
+      "lon_deg": -104.98995906393694,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.11460213617479403,
+      "y": -0.0681641910356486,
+      "z": -0.017100037394263055
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_125",
+    "event_id": "node_001_2026-07-14T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-14T17:51:51.323198",
+    "seq": 125,
+    "gps": {
+      "lat_deg": 39.74286352816925,
+      "lon_deg": -104.98992984370595,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.09874410754353603,
+      "y": -0.050234865240631706,
+      "z": -0.02950082708887277
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_126",
+    "event_id": "node_001_2026-07-15T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-15T17:51:51.323198",
+    "seq": 126,
+    "gps": {
+      "lat_deg": 39.742885037742276,
+      "lon_deg": -104.98991287898778,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.0320450936461807,
+      "y": 0.00901179090619901,
+      "z": -0.03782593971550956
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_127",
+    "event_id": "node_001_2026-07-16T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-16T17:51:51.323198",
+    "seq": 127,
+    "gps": {
+      "lat_deg": 39.74290898786924,
+      "lon_deg": -104.98991325118598,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.05317721684061517,
+      "y": 0.04655487999002236,
+      "z": -0.0050247169926257475
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_128",
+    "event_id": "node_001_2026-07-17T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-17T17:51:51.323198",
+    "seq": 128,
+    "gps": {
+      "lat_deg": 39.74293567897108,
+      "lon_deg": -104.98992484603718,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.043288728982113896,
+      "y": 0.09350621679751325,
+      "z": -0.03039665352244336
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_129",
+    "event_id": "node_001_2026-07-18T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-18T17:51:51.323198",
+    "seq": 129,
+    "gps": {
+      "lat_deg": 39.74296079204092,
+      "lon_deg": -104.98993622196362,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.09957318803940972,
+      "y": 0.05882519989432345,
+      "z": -0.004254135094010722
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_130",
+    "event_id": "node_001_2026-07-19T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-19T17:51:51.323198",
+    "seq": 130,
+    "gps": {
+      "lat_deg": 39.7429830040969,
+      "lon_deg": -104.98993603130002,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.0990728840999963,
+      "y": 0.01595781111980077,
+      "z": 0.018239939933598667
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_131",
+    "event_id": "node_001_2026-07-20T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-20T17:51:51.323198",
+    "seq": 131,
+    "gps": {
+      "lat_deg": 39.74300464116565,
+      "lon_deg": -104.98991952689715,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.017276019920615435,
+      "y": -0.06259992524639399,
+      "z": 0.018669850552236595
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_132",
+    "event_id": "node_001_2026-07-21T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-21T17:51:51.323198",
+    "seq": 132,
+    "gps": {
+      "lat_deg": 39.743023617416284,
+      "lon_deg": -104.98989079330073,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.03879045506421096,
+      "y": -0.08836012537465492,
+      "z": 0.0397989254551912
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_133",
+    "event_id": "node_001_2026-07-22T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-22T17:51:51.323198",
+    "seq": 133,
+    "gps": {
+      "lat_deg": 39.743041121309325,
+      "lon_deg": -104.98986302088592,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.0617083578385473,
+      "y": -0.07031473779990456,
+      "z": 0.043563895672320024
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_134",
+    "event_id": "node_001_2026-07-23T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-23T17:51:51.323198",
+    "seq": 134,
+    "gps": {
+      "lat_deg": 39.7430539066676,
+      "lon_deg": -104.989846132901,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.08657413375136674,
+      "y": -0.02327106106438186,
+      "z": -0.009321084562461552
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_135",
+    "event_id": "node_001_2026-07-24T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-24T17:51:51.323198",
+    "seq": 135,
+    "gps": {
+      "lat_deg": 39.74306168675544,
+      "lon_deg": -104.98984560279074,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.02432216367411143,
+      "y": 0.04935801412281046,
+      "z": 0.0037445274312357417
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_136",
+    "event_id": "node_001_2026-07-25T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-25T17:51:51.323198",
+    "seq": 136,
+    "gps": {
+      "lat_deg": 39.74306602621082,
+      "lon_deg": -104.9898564017043,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.15747182007917424,
+      "y": 0.07683769100438126,
+      "z": 0.0008169523705601738
+    },
+    "meta": {
+      "motion_type": "MARITIME",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_maritime_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_137",
+    "event_id": "node_001_2026-07-26T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-26T17:51:51.323198",
+    "seq": 137,
+    "gps": {
+      "lat_deg": 39.743,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.009469302574911041,
+      "y": -0.02543147176467363,
+      "z": -0.010135426285297231
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_lift_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_138",
+    "event_id": "node_001_2026-07-27T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-27T17:51:51.323198",
+    "seq": 138,
+    "gps": {
+      "lat_deg": 39.743,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.021932086294652695,
+      "y": -0.006820765453894929,
+      "z": -0.016103131099723424
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_lift_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_139",
+    "event_id": "node_001_2026-07-28T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-28T17:51:51.323198",
+    "seq": 139,
+    "gps": {
+      "lat_deg": 39.743,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": -0.03693939803892558,
+      "y": -0.02361638363784433,
+      "z": -0.005245734364932199
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_lift_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_140",
+    "event_id": "node_001_2026-07-29T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-29T17:51:51.323198",
+    "seq": 140,
+    "gps": {
+      "lat_deg": 39.743,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.026952897525668876,
+      "y": -0.018465491350858336,
+      "z": -0.007444059052695386
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_lift_01"
+    }
+  },
+  {
+    "m_type": "raw-data",
+    "m_id": "node_001_141",
+    "event_id": "node_001_2026-07-30T17:51:51.323198",
+    "node_id": "node_001",
+    "timestamp": "2026-07-30T17:51:51.323198",
+    "seq": 141,
+    "gps": {
+      "lat_deg": 39.743,
+      "lon_deg": -104.99,
+      "altitude_m": 1610.0
+    },
+    "accel_mss": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro_rads": {
+      "x": 0.020789640893424048,
+      "y": -0.016087515586149168,
+      "z": 0.010948499408531686
+    },
+    "meta": {
+      "motion_type": "IDLE",
+      "is_anomaly": "True",
+      "anomaly_type": "",
+      "location": "hub_compact_lift_01"
+    }
+  }
+]

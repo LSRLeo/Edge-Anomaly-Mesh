@@ -1,5 +1,6 @@
 import argparse
 import json
+from datetime import datetime
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -9,7 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Visualize latitude/longitude from a simulator raw data JSON file.\n\n"
+            "Visualize latitude/longitude or accelerometer data from a simulator raw data JSON file.\n\n"
             "The filename is interpreted relative to the node-simulator directory.\n"
             "If omitted, defaults to 'raw_data.json'."
         )
@@ -19,6 +20,11 @@ def parse_args() -> argparse.Namespace:
         nargs="?",
         default="raw_data.json",
         help="Name or path of the simulation JSON file (relative to node-simulator).",
+    )
+    parser.add_argument(
+        "--accel",
+        action="store_true",
+        help="Plot accelerometer (accel x, y, z vs time) instead of GPS lat/lon/alt.",
     )
     parser.add_argument(
         "--hubs",
@@ -67,6 +73,43 @@ def load_lat_lon(json_path: Path):
             anomaly_flags.append(is_anom)
 
     return lats, lons, alts, motion_types, anomaly_flags
+
+
+def load_accel_time(json_path: Path):
+    """Load timestamps and accel_mss x, y, z from raw data JSON. Returns (times_s, accel_x, accel_y, accel_z)."""
+    if not json_path.exists():
+        raise FileNotFoundError(f"Simulation file not found: {json_path}")
+
+    with json_path.open("r") as f:
+        data = json.load(f)
+
+    if not isinstance(data, list):
+        raise ValueError(f"Expected a list of messages in {json_path}, got {type(data)}")
+
+    times_s = []
+    accel_x = []
+    accel_y = []
+    accel_z = []
+    t0 = None
+
+    for msg in data:
+        ts_str = msg.get("timestamp")
+        acc = msg.get("accel_mss") or {}
+        if ts_str is None or not acc:
+            continue
+        try:
+            dt = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+            t = dt.timestamp()
+        except (TypeError, ValueError):
+            t = len(times_s) * 0.02  # fallback: assume 50 Hz
+        if t0 is None:
+            t0 = t
+        times_s.append(t - t0)
+        accel_x.append(acc.get("x", 0.0))
+        accel_y.append(acc.get("y", 0.0))
+        accel_z.append(acc.get("z", 0.0))
+
+    return times_s, accel_x, accel_y, accel_z
 
 
 def load_hubs_from_route(route_path: Path):
@@ -144,10 +187,45 @@ def _plot_hubs(ax, hubs, kind, color="black"):
             ax.text(h["lon"], h["lat"], h["alt"], h["label"], fontsize=7, color=color)
 
 
+def plot_accel_views(times_s, accel_x, accel_y, accel_z, title: str):
+    """Create a figure with three subplots: accel x, y, z vs time. Returns the figure."""
+    if not times_s or not accel_x:
+        fig = plt.figure(figsize=(10, 6))
+        fig.suptitle(title, fontsize=14)
+        ax = fig.add_subplot(1, 1, 1)
+        ax.text(0.5, 0.5, "No accelerometer data found.", ha="center", va="center", transform=ax.transAxes)
+        return fig
+
+    fig = plt.figure(figsize=(12, 8))
+    fig.suptitle(title, fontsize=14)
+
+    ax1 = fig.add_subplot(3, 1, 1)
+    ax1.plot(times_s, accel_x, "-", linewidth=0.8, alpha=0.9, color="C0")
+    ax1.set_ylabel("Accel X (m/s²)")
+    ax1.set_title("Accel X vs time")
+    ax1.grid(True, alpha=0.3)
+
+    ax2 = fig.add_subplot(3, 1, 2)
+    ax2.plot(times_s, accel_y, "-", linewidth=0.8, alpha=0.9, color="C1")
+    ax2.set_ylabel("Accel Y (m/s²)")
+    ax2.set_title("Accel Y vs time")
+    ax2.grid(True, alpha=0.3)
+
+    ax3 = fig.add_subplot(3, 1, 3)
+    ax3.plot(times_s, accel_z, "-", linewidth=0.8, alpha=0.9, color="C2")
+    ax3.set_xlabel("Time (s)")
+    ax3.set_ylabel("Accel Z (m/s²)")
+    ax3.set_title("Accel Z vs time")
+    ax3.grid(True, alpha=0.3)
+
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    return fig
+
+
 def plot_views(lats, lons, alts, motion_types, anomaly_flags, title: str, hubs=None):
     if not lats or not lons or not alts:
         print("No GPS latitude/longitude/altitude data found to plot.")
-        return
+        return None
 
     has_motion_types = any(mt is not None for mt in motion_types)
     color_map = {
@@ -384,6 +462,17 @@ def main():
     # Resolve path relative to node-simulator directory regardless of CWD
     project_root = Path(__file__).resolve().parents[1]
     json_path = (project_root / args.filename).resolve()
+
+    if args.accel:
+        try:
+            times_s, accel_x, accel_y, accel_z = load_accel_time(json_path)
+        except (FileNotFoundError, ValueError, json.JSONDecodeError) as e:
+            print(f"Error: {e}")
+            return
+        title = f"Accelerometer from {json_path.name}"
+        plot_accel_views(times_s, accel_x, accel_y, accel_z, title)
+        plt.show()
+        return
 
     try:
         lats, lons, alts, motion_types, anomaly_flags = load_lat_lon(json_path)
