@@ -385,7 +385,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         self.display_node(node_id)
     def _parse_nodes(self):
         for node_id, rdentry in self.rddict.items():
-            mlentry = self.mldict.get(node_id, [])
+            mlentry = self.mldict.get(node_id) or None
             try:
                 self.load_node(node_id, rdentry, mlentry)
             except Exception as e:
