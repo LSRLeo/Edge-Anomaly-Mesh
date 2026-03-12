@@ -179,6 +179,23 @@ class DashboardApp:
         # TODO: Implement
         self.notebook.select(index)
         # pass
+
+    def start_analytics_refresh_loop(self):
+        """
+        Periodically refresh only the Analytics tab.
+        """
+        def loop():
+            if self.analytics_tab and not self._is_refreshing:
+                self._is_refreshing = True
+                try:
+                    self.analytics_tab.refresh()
+                finally:
+                    self._is_refreshing = False
+            self._refresh_job = self.root.after(REFRESH_INTERVAL_MS, loop)
+
+        loop()
+
+
     
     # def start_refresh_loop(self):
     #     """
