@@ -46,13 +46,34 @@ python3 database/redis_listener.py
 
 ### Terminal 2
 
+Once you are ready to start sending messages.  Either:
+
+a) create a simulation file, from root directory:
+```
+cd node-simulator/
+python3 simulation.py sim -t -n nodeConfig.json -r routes/compactAllModes.json --no-a
+```
+
+b) copy the pre-configured data:
+```
+cp sims/halfAnom.json raw_data.json
+```
+
+Send messages, from root directory:
+
+```
+python3 simulation.py redis sensor:raw:
+```
+
+### Terminal 3
+
 Start ML model, from root directory:
 
 ```
 python3 ml/redis_insteam.py --window-size 100 --stride 100 --model-path ml/models/motion_classifier.pt
 ```
 
-### Terminal 3
+### Terminal 4
 
 Start UI Dashboard, from root directory:
 ```
@@ -60,25 +81,6 @@ cd ui/
 python3 -m widgets.dashboard_main
 ```
 
-### Terminal 4
-
-Once you are ready to start sending messages.  Either:
-
-a) create a simulation file, from root directory:
-```
-python3 node-simulator/simulation.py sim -t -n node-simulator/nodeConfig.json -r node-simulator/routes/compactAllModes.json --no-a
-```
-
-b) copy the pre-configured data:
-```
-cp node-simulator/sims/halfAnom.json node-simulator/raw_data.json
-```
-
-Send messages, from root directory:
-
-```
-python3 node-simulator/simulation.py redis sensor:raw:
-```
 
 ## Background & Motivation
 
