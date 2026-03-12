@@ -20,7 +20,7 @@ RESPONSE_CHANNELS_MAP = {
     "ui:query": "ui:responses",
 } #CAN ADD MORE CHANNELS LATER
 #TODO map m-types to channels as needed or based on responding_to field in message
-
+#TODO validate response messages before sending to UI channels
 
 def publish_response(channel:str, message: Dict[str, Any]) -> None:
     #used to send response to UI channels, can expand to other channels as needed

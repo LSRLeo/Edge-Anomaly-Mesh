@@ -20,6 +20,8 @@ MESSAGE FORMAT:
 ...
 }
 """
+
+
 class MIDGenerator:
     """Generates MID for db responses"""
     counter = 0 #this is the class var (static)
@@ -160,7 +162,7 @@ class MessageData(Message):
     Abstract class for message data. Messages that do not return any response. 
     '''   
     @abstractmethod
-    def execute(self, db_manager: TableManager) -> Optional[ErrorResponse]:
+    def execute(self, db_manager: TableManager) -> None:
         """Inserts Data into the DB"""
         pass
 
