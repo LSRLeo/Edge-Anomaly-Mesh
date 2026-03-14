@@ -211,8 +211,11 @@ class RedisSubscriber:
             window_metadata = []
             for event in window:
                 meta = event.get("meta", {})
-                terrain_str = meta.get("sim_mode") or meta.get("mode") or event.get("mode")
-                anomaly = meta.get("anomaly", False) or meta.get("has_anomaly", False) or event.get("anomaly", False)
+                terrain_str = (meta.get("sim_mode") or meta.get("mode") or
+                               meta.get("motion_type") or event.get("mode"))
+                raw_anomaly = (meta.get("is_anomaly") or meta.get("anomaly") or
+                               meta.get("has_anomaly") or event.get("anomaly"))
+                anomaly = str(raw_anomaly).lower() == "true" if raw_anomaly is not None else False
                 terrain_idx = TERRAIN_MAP.get(terrain_str.upper()) if terrain_str else None
                 ground_truth = terrain_idx + (4 if anomaly else 0) if terrain_idx is not None else None
                 window_metadata.append({

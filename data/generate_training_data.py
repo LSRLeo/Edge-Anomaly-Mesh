@@ -765,7 +765,7 @@ class TrainingDataGenerator:
                 "accel_mss": accel,
                 "gyro_rads": gyro,
                 "meta": {
-                    "motion_type": "IDLE",
+                    "motion_type": "IDLE_ANOM" if is_anomaly else "IDLE",
                     "is_anomaly": str(is_anomaly),
                     "anomaly_type": current_anomaly,
                     "location": hub.hub_id
@@ -824,7 +824,7 @@ class TrainingDataGenerator:
                 "accel_mss": accel,
                 "gyro_rads": gyro,
                 "meta": {
-                    "motion_type": "LIFT",
+                    "motion_type": "LIFT_ANOM" if is_anomaly else "LIFT",
                     "is_anomaly": str(is_anomaly),
                     "anomaly_type": current_anomaly,
                     "location": hub.hub_id
@@ -901,7 +901,7 @@ class TrainingDataGenerator:
                 "accel_mss": accel,
                 "gyro_rads": gyro,
                 "meta": {
-                    "motion_type": motion_type,
+                    "motion_type": f"{motion_type}_ANOM" if is_anomaly else motion_type,
                     "is_anomaly": str(is_anomaly),
                     "anomaly_type": current_anomaly,
                     "location": ""
@@ -1278,7 +1278,7 @@ class TrainingDataGenerator:
                     "accel_mss": accel,
                     "gyro_rads": gyro,
                     "meta": {
-                        "motion_type": motion_type,
+                        "motion_type": f"{motion_type}_ANOM" if is_anomaly_class else motion_type,
                         "is_anomaly": str(is_anomaly_class),
                         "anomaly_type": anomaly_type_used,
                         "location": hub.hub_id
