@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** Kailar-Hayes
 **Email(s):** 165724913+Kailar-Hayes@users.noreply.github.com, kailar.hayes@du.edu
-**Report Generated:** 2026-03-03 14:12:29
-**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
+**Report Generated:** 2026-03-15 16:02:08
+**Branches Analyzed:** origin/sprint-3
 
 ---
 
@@ -11,65 +11,73 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 20 |
-| Lines Added | 1,738 |
-| Lines Deleted | 983 |
-| Net Lines Changed | +755 |
-| PRs Created | 6 |
+| Total Commits | 27 |
+| Lines Added | 802,021 |
+| Lines Deleted | 1,353 |
+| Net Lines Changed | +800,668 |
+| PRs Created | 10 |
 | PRs Assigned | 6 |
-| PRs Reviewed | 8 |
-| PRs Commented | 7 |
-| PRs Merged (as merger) | 13 |
-| Issues Created | 19 |
-| Issues Commented | 1 |
-| Files Changed | 18 |
+| PRs Reviewed | 17 |
+| PRs Commented | 15 |
+| PRs Merged (as merger) | 21 |
+| Issues Created | 14 |
+| Issues Commented | 5 |
+| Files Changed | 27 |
 
 ---
 
 ## Issues
 
-### Created (19)
-#61, #62, #63, #64, #65, #66, #67, #68, #69, #70, #86, #103, #211, #264, #293, #303, #392, #393, #410
+### Created (14)
+#63, #103, #211, #264, #293, #303, #392, #410, #482, #507, #529, #547, #570, #574
 
-### Commented (1)
-#84
+### Commented (5)
+#84, #474, #476, #547, #574
 
 ---
 
 ## Pull Requests
 
-### Created (6)
-#152, #320, #398, #429, #454, #461
+### Created (10)
+#152, #320, #398, #429, #454, #461, #508, #509, #530, #548
 
 ### Assigned (6)
 #113, #137, #185, #198, #428, #457
 
-### Reviewed (8)
-#156, #185, #198, #206, #321, #404, #428, #457
+### Reviewed (17)
+#156, #185, #198, #206, #321, #404, #428, #457, #511, #513, #522, #524, #528, #561, #596, #598, #599
 
-### Commented (7)
-#156, #185, #206, #321, #404, #428, #457
+### Commented (15)
+#156, #185, #206, #321, #404, #428, #457, #511, #513, #522, #524, #528, #561, #596, #598
 
-### Merged (as merger) (13)
-#137, #152, #156, #185, #206, #321, #363, #404, #428, #429, #454, #457, #460
+### Merged (as merger) (21)
+#137, #152, #156, #185, #206, #321, #363, #404, #428, #429, #454, #457, #460, #511, #513, #522, #524, #528, #596, #598, #599
 
 ---
 
 ## Commits
 
-Total non-merge commits in sprint-2 branches: **20**
+Total non-merge commits in sprint-3 branch: **27**
 
 ### Code Changes
-- **Lines Added:** 1,738
-- **Lines Deleted:** 983
-- **Net Change:** +755
+- **Lines Added:** 802,021
+- **Lines Deleted:** 1,353
+- **Net Change:** +800,668
 
 ---
 
-## Files Changed (18)
+## Files Changed (27)
 
 - `.gitignore`
 - `database/anomaly_events.db`
+- `database/db_message.py`
+- `database/db_message_manager.py`
+- `database/db_table_manager.py`
+- `database/example-data/example_inference_results.json`
+- `database/example-data/sample_message_data.json`
+- `database/example-data/sample_message_requests.json`
+- `database/example-data/sample_message_responses.json`
+- `database/example-data/sample_raw_data.json`
 - `database/example_inference_results.json`
 - `database/inference_results.db`
 - `database/message_outputs.md`
@@ -86,57 +94,10 @@ Total non-merge commits in sprint-2 branches: **20**
 - `database/sensor_data.db-shm`
 - `database/sensor_data.db-wal`
 - `database/test_queries.py`
+- `simulator/raw_data.json`
 
 ---
 
 ## Timeline
 
-| Date | Day | Commits | Issues Created | Issues Commented | PRs Created | PRs Merged | PRs Reviewed | PRs Commented |
-|------|-----|---------|----------------|------------------|-------------|------------|--------------|---------------|
-| | | | **Week 3:** Jan 19 - Jan 25 | | | | | |
-| 2026-01-23 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-24 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-25 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 4:** Jan 26 - Feb 01 | | | | | |
-| 2026-01-26 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-27 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-28 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-29 | Thu | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-30 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-31 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-01 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 5:** Feb 02 - Feb 08 | | | | | |
-| 2026-02-02 | Mon | 0 | 10 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-03 | Tue | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-04 | Wed | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-05 | Thu | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-06 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-07 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-08 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 6:** Feb 09 - Feb 15 | | | | | |
-| 2026-02-09 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-10 | Tue | 3 | 0 | 0 | 0 | 1 | 0 | 0 |
-| 2026-02-11 | Wed | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-| 2026-02-12 | Thu | 0 | 0 | 0 | 0 | 1 | 1 | 1 |
-| 2026-02-13 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-14 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-15 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 7:** Feb 16 - Feb 22 | | | | | |
-| 2026-02-16 | Mon | 0 | 0 | 0 | 0 | 2 | 2 | 1 |
-| 2026-02-17 | Tue | 1 | 0 | 0 | 0 | 1 | 1 | 1 |
-| 2026-02-18 | Wed | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-19 | Thu | 1 | 3 | 1 | 0 | 0 | 0 | 0 |
-| 2026-02-20 | Fri | 0 | 0 | 0 | 1 | 1 | 1 | 1 |
-| 2026-02-21 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
-| 2026-02-23 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-24 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-25 | Wed | 1 | 2 | 0 | 0 | 1 | 0 | 0 |
-| 2026-02-26 | Thu | 5 | 1 | 0 | 2 | 2 | 2 | 2 |
-| 2026-02-27 | Fri | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
-| 2026-02-28 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-03-01 | Sun | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 9:** Mar 02 - Mar 08 | | | | | |
-| 2026-03-02 | Mon | 3 | 0 | 0 | 2 | 3 | 1 | 1 |
-| 2026-03-03 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+![Activity Timeline](timeline_kailar_hayes.png)

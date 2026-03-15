@@ -5,7 +5,10 @@ import json
 import subprocess
 import os
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, date as date_class, timedelta
+
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 # Sprint-2 branches to analyze
 SPRINT2_BRANCHES = [
@@ -15,8 +18,16 @@ SPRINT2_BRANCHES = [
     'origin/ui-team-sprint-2',
 ]
 
+# Sprint-3 branch to analyze
+SPRINT3_BRANCHES = [
+    'origin/sprint-3',
+]
+
+# Target milestones for issue filtering (all sprints)
+TARGET_MILESTONES = ['W26-Sprint-1', 'W26-Sprint-2', 'W26-Sprint-3']
+
 # Join branches for git log commands
-BRANCH_SPEC = ' '.join(SPRINT2_BRANCHES)
+BRANCH_SPEC = ' '.join(SPRINT3_BRANCHES)
 
 # Previous branches (kept for future reference)
 SPRINT1_BRANCHES = [
@@ -50,7 +61,7 @@ def run_cmd(cmd):
     return result.stdout.strip()
 
 def get_commit_stats():
-    """Get commit counts and lines changed per email from sprint-2 branches."""
+    """Get commit counts and lines changed per email from sprint-3 branch."""
     stats = {}
     emails = run_cmd(f"git log {BRANCH_SPEC} --format='%ae' | sort | uniq").split('\n')
 
@@ -79,9 +90,16 @@ def get_github_data():
     pr_data = run_cmd("gh pr list --state all --limit 500 --json number,author,state,mergedBy,assignees,reviews,createdAt,mergedAt,closedAt 2>/dev/null")
     prs = json.loads(pr_data) if pr_data else []
 
-    # Get all issues (open and closed)
-    issues_data = run_cmd("gh issue list --state all --limit 500 --json number,author,state,createdAt 2>/dev/null")
-    issues = json.loads(issues_data) if issues_data else []
+    # Get all issues (open and closed) with milestone info
+    issues_data = run_cmd("gh issue list --state all --limit 500 --json number,author,state,createdAt,milestone 2>/dev/null")
+    all_issues = json.loads(issues_data) if issues_data else []
+
+    # Filter to only include issues from target milestones
+    issues = []
+    for issue in all_issues:
+        milestone = issue.get('milestone')
+        if milestone and milestone.get('title') in TARGET_MILESTONES:
+            issues.append(issue)
 
     # Get issue comments
     comments_data = run_cmd("gh api repos/ComputerScienceUniversityofDenver/edge-anomly-mesh/issues/comments --paginate 2>/dev/null")
@@ -321,7 +339,7 @@ def get_contributor_timeline(emails, gh_usernames, prs, issues, comments, pr_com
 
 
 def get_files_changed_by_emails(emails):
-    """Get list of files changed by contributor across their emails in sprint-2 branches."""
+    """Get list of files changed by contributor across their emails in sprint-3 branch."""
     files = set()
     for email in emails:
         output = run_cmd(f"git log {BRANCH_SPEC} --author='{email}' --no-merges --name-only --pretty=format: | sort | uniq")
@@ -422,9 +440,8 @@ def get_pr_comment_stats(gh_usernames, pr_comments):
 
     return sorted(commented_prs)
 
-def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments, pr_comments, contributor_timeline, global_date_range):
+def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments, pr_comments, contributor_timeline, global_date_range, reports_dir):
     """Generate a markdown report for a contributor."""
-    from datetime import date as date_class, timedelta
     # Aggregate commit stats across all emails
     total_commits = 0
     total_added = 0
@@ -482,7 +499,7 @@ def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comme
 **GitHub Username(s):** {', '.join(gh_usernames)}
 **Email(s):** {', '.join(emails)}
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Branches Analyzed:** {', '.join(SPRINT2_BRANCHES)}
+**Branches Analyzed:** {', '.join(SPRINT3_BRANCHES)}
 
 ---
 
@@ -536,7 +553,7 @@ def generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comme
 
 ## Commits
 
-Total non-merge commits in sprint-2 branches: **{total_commits}**
+Total non-merge commits in sprint-3 branch: **{total_commits}**
 
 ### Code Changes
 - **Lines Added:** {total_added:,}
@@ -555,61 +572,21 @@ Total non-merge commits in sprint-2 branches: **{total_commits}**
 
 """
 
-    # Week calculation helpers (same as summary)
-    week1_start = date_class(2026, 1, 5)
-
-    def get_week_number(date_str):
-        d = date_class.fromisoformat(date_str)
-        if d < week1_start:
-            return 0
-        days_since = (d - week1_start).days
-        return (days_since // 7) + 1
-
-    def get_week_range(week_num):
-        start = week1_start + timedelta(days=(week_num - 1) * 7)
-        end = start + timedelta(days=6)
-        return f"{start.strftime('%b %d')} - {end.strftime('%b %d')}"
-
-    day_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-
-    report += """| Date | Day | Commits | Issues Created | Issues Commented | PRs Created | PRs Merged | PRs Reviewed | PRs Commented |
-|------|-----|---------|----------------|------------------|-------------|------------|--------------|---------------|
-"""
-
-    start_date, end_date = global_date_range
-    current_date = start_date
-    current_week = None
-
-    while current_date <= end_date:
-        date_str = current_date.isoformat()
-        week_num = get_week_number(date_str)
-        day_name = day_names[current_date.weekday()]
-
-        # Add week header row
-        if week_num != current_week:
-            date_range = get_week_range(week_num)
-            report += f"| | | | **Week {week_num}:** {date_range} | | | | | |\n"
-        current_week = week_num
-
-        # Get activity for this day, or zeros if no activity
-        day = contributor_timeline.get(date_str, {
-            'commits': 0, 'issues_created': 0, 'issues_commented': 0,
-            'prs_created': 0, 'prs_merged': 0, 'prs_reviewed': 0, 'prs_commented': 0
-        })
-        report += f"| {date_str} | {day_name} | {day['commits']} | {day['issues_created']} | {day['issues_commented']} | {day['prs_created']} | {day['prs_merged']} | {day['prs_reviewed']} | {day['prs_commented']} |\n"
-
-        current_date += timedelta(days=1)
+    # Generate timeline plot for this contributor
+    plot_filename = generate_contributor_timeline_plot(name, contributor_timeline, global_date_range, reports_dir)
+    report += f"![Activity Timeline]({plot_filename})\n"
 
     return report
 
 def main():
-    print("Gathering git contributor data from sprint-2 branches...")
-    print(f"  Branches: {', '.join(SPRINT2_BRANCHES)}")
+    print("Gathering git contributor data from sprint-3 branch...")
+    print(f"  Branches: {', '.join(SPRINT3_BRANCHES)}")
     commit_stats = get_commit_stats()
 
     print("Gathering GitHub PR and issue data...")
     prs, issues, comments, pr_comments = get_github_data()
-    print(f"  Found {len(prs)} PRs, {len(issues)} issues, {len(comments)} issue comments, {len(pr_comments)} PR comments")
+    print(f"  Found {len(prs)} PRs, {len(issues)} issues (milestones: {', '.join(TARGET_MILESTONES)})")
+    print(f"  Found {len(comments)} issue comments, {len(pr_comments)} PR comments")
 
     print("Building timeline data...")
     timeline = get_timeline_data(prs, issues, comments, pr_comments)
@@ -638,7 +615,7 @@ def main():
         gh_usernames = gh_usernames_map.get(name, [])
         print(f"  Building timeline for {name}...")
         contributor_timeline = get_contributor_timeline(emails, gh_usernames, prs, issues, comments, pr_comments)
-        report = generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments, pr_comments, contributor_timeline, global_date_range)
+        report = generate_report(name, gh_usernames, emails, commit_stats, prs, issues, comments, pr_comments, contributor_timeline, global_date_range, reports_dir)
 
         # Create filename from name
         filename = name.lower().replace(' ', '_') + '.md'
@@ -650,14 +627,147 @@ def main():
 
     # Generate summary report
     print("\nGenerating summary report...")
-    summary = generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, comments, pr_comments, timeline)
+    summary = generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, comments, pr_comments, timeline, reports_dir)
     with open(os.path.join(reports_dir, 'SUMMARY.md'), 'w') as f:
         f.write(summary)
     print("  Created: SUMMARY.md")
 
     print("\nDone!")
 
-def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, comments, pr_comments, timeline):
+def generate_contributor_timeline_plot(name, contributor_timeline, global_date_range, reports_dir):
+    """Generate a PNG timeline plot for an individual contributor."""
+    start_date, end_date = global_date_range
+
+    # Build date list and data arrays
+    dates = []
+    commits = []
+    issues_created = []
+    prs_created = []
+    prs_merged = []
+
+    current_date = start_date
+    while current_date <= end_date:
+        date_str = current_date.isoformat()
+        dates.append(current_date)
+
+        day = contributor_timeline.get(date_str, {
+            'commits': 0, 'issues_created': 0, 'prs_created': 0, 'prs_merged': 0
+        })
+        commits.append(day.get('commits', 0))
+        issues_created.append(day.get('issues_created', 0))
+        prs_created.append(day.get('prs_created', 0))
+        prs_merged.append(day.get('prs_merged', 0))
+
+        current_date += timedelta(days=1)
+
+    # Generate plot
+    fig, ax = plt.subplots(figsize=(12, 5))
+    ax.plot(dates, commits, '-', label='Commits', linewidth=1.5, alpha=0.8)
+    ax.plot(dates, issues_created, '-', label='Issues Created', linewidth=1.5, alpha=0.8)
+    ax.plot(dates, prs_created, '-', label='PRs Created', linewidth=1.5, alpha=0.8)
+    ax.plot(dates, prs_merged, '-', label='PRs Merged', linewidth=1.5, alpha=0.8)
+
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=mdates.MO))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
+    plt.xticks(rotation=45)
+
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Count')
+    ax.set_title(f'Activity Timeline: {name}')
+    ax.legend(loc='upper left')
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+
+    filename = f"timeline_{name.lower().replace(' ', '_')}.png"
+    plt.savefig(os.path.join(reports_dir, filename), dpi=150)
+    plt.close()
+
+    return filename
+
+
+def generate_timeline_plots(timeline, reports_dir):
+    """Generate PNG line plots for weekly and daily timeline data."""
+    # Week calculation helpers
+    week1_start = date_class(2026, 1, 5)
+
+    def get_week_number(date_str):
+        d = date_class.fromisoformat(date_str)
+        if d < week1_start:
+            return 0
+        days_since = (d - week1_start).days
+        return (days_since // 7) + 1
+
+    def get_week_range(week_num):
+        start = week1_start + timedelta(days=(week_num - 1) * 7)
+        end = start + timedelta(days=6)
+        return f"{start.strftime('%b %d')} - {end.strftime('%b %d')}"
+
+    # Filter and sort dates chronologically starting from Jan 5
+    filtered_dates = sorted([d for d in timeline.keys() if d >= '2026-01-05'])
+
+    # Aggregate by week
+    weekly = {}
+    for date_str in filtered_dates:
+        week_num = get_week_number(date_str)
+        if week_num not in weekly:
+            weekly[week_num] = {
+                'commits': 0, 'issues_created': 0, 'issues_commented': 0,
+                'prs_created': 0, 'prs_merged': 0, 'prs_reviewed': 0, 'prs_commented': 0
+            }
+        day = timeline[date_str]
+        for key in weekly[week_num]:
+            weekly[week_num][key] += day[key]
+
+    # Generate Weekly Plot
+    weeks = sorted(weekly.keys())
+    week_labels = [f"W{w}" for w in weeks]
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(week_labels, [weekly[w]['commits'] for w in weeks], 'o-', label='Commits', linewidth=2, markersize=6)
+    ax.plot(week_labels, [weekly[w]['issues_created'] for w in weeks], 's-', label='Issues Created', linewidth=2, markersize=6)
+    ax.plot(week_labels, [weekly[w]['prs_created'] for w in weeks], '^-', label='PRs Created', linewidth=2, markersize=6)
+    ax.plot(week_labels, [weekly[w]['prs_merged'] for w in weeks], 'd-', label='PRs Merged', linewidth=2, markersize=6)
+    ax.plot(week_labels, [weekly[w]['prs_reviewed'] for w in weeks], 'x-', label='PRs Reviewed', linewidth=2, markersize=6)
+
+    ax.set_xlabel('Week')
+    ax.set_ylabel('Count')
+    ax.set_title('Weekly Activity Timeline')
+    ax.legend(loc='upper left')
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(os.path.join(reports_dir, 'timeline_weekly.png'), dpi=150)
+    plt.close()
+
+    # Generate Daily Plot
+    dates = [date_class.fromisoformat(d) for d in filtered_dates]
+    commits = [timeline[d]['commits'] for d in filtered_dates]
+    issues = [timeline[d]['issues_created'] for d in filtered_dates]
+    prs_created = [timeline[d]['prs_created'] for d in filtered_dates]
+    prs_merged = [timeline[d]['prs_merged'] for d in filtered_dates]
+
+    fig, ax = plt.subplots(figsize=(14, 6))
+    ax.plot(dates, commits, '-', label='Commits', linewidth=1.5, alpha=0.8)
+    ax.plot(dates, issues, '-', label='Issues Created', linewidth=1.5, alpha=0.8)
+    ax.plot(dates, prs_created, '-', label='PRs Created', linewidth=1.5, alpha=0.8)
+    ax.plot(dates, prs_merged, '-', label='PRs Merged', linewidth=1.5, alpha=0.8)
+
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=mdates.MO))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
+    plt.xticks(rotation=45)
+
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Count')
+    ax.set_title('Daily Activity Timeline')
+    ax.legend(loc='upper left')
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(os.path.join(reports_dir, 'timeline_daily.png'), dpi=150)
+    plt.close()
+
+    return 'timeline_weekly.png', 'timeline_daily.png'
+
+
+def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, comments, pr_comments, timeline, reports_dir):
     """Generate a summary report of all contributors."""
     rows = []
 
@@ -751,7 +861,8 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
     summary = f"""# Contributor Summary Report
 
 **Repository:** edge-anomaly-mesh
-**Branches:** {', '.join(SPRINT2_BRANCHES)}
+**Branches:** {', '.join(SPRINT3_BRANCHES)}
+**Issue Milestones:** {', '.join(TARGET_MILESTONES)}
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ---
@@ -774,7 +885,7 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
 
 **Column Definitions:**
 - **Contributions** — Weighted score: (Commits × 50%) + (Issues × 25%) + (PRs × 25%)
-- **Commits** — Non-merge commits authored in sprint-2 branches
+- **Commits** — Non-merge commits authored in sprint-3 branch
 - **Commit +/-** — Percentage points above/below expected for team (expected = 100% / team size)
 - **Files** — Unique files changed
 - **Issues** — GitHub issues created
@@ -806,99 +917,24 @@ def generate_summary(email_groups, gh_usernames_map, commit_stats, prs, issues, 
 
     summary += f"| **TOTAL** | | **{total_contributions:.1f}** | **{total_commits}** | | **{total_files}** | **{total_issues_created}** | **{total_issues_commented}** | **{total_prs_created}** | **{total_prs_reviewed}** | **{total_prs_commented}** | **{total_merge_commits}** |\n"
 
-    # Add timeline section
-    from datetime import date as date_class, timedelta
+    # Generate timeline plots
+    print("  Generating timeline plots...")
+    weekly_plot, daily_plot = generate_timeline_plots(timeline, reports_dir)
 
-    # Week 1 starts on January 5, 2026 (Monday)
-    week1_start = date_class(2026, 1, 5)
-
-    def get_week_number(date_str):
-        """Get week number where Week 1 starts Jan 5, 2026."""
-        d = date_class.fromisoformat(date_str)
-        if d < week1_start:
-            return 0  # Before Week 1
-        days_since = (d - week1_start).days
-        return (days_since // 7) + 1
-
-    def get_week_range(week_num):
-        """Get the date range string for a week number."""
-        start = week1_start + timedelta(days=(week_num - 1) * 7)
-        end = start + timedelta(days=6)
-        return f"{start.strftime('%b %d')} - {end.strftime('%b %d')}"
-
-    # Filter and sort dates chronologically starting from Jan 5
-    filtered_dates = sorted([d for d in timeline.keys() if d >= '2026-01-05'])
-
-    # Aggregate by week
-    weekly = {}
-    for date_str in filtered_dates:
-        week_num = get_week_number(date_str)
-        if week_num not in weekly:
-            weekly[week_num] = {
-                'commits': 0, 'issues_created': 0, 'issues_commented': 0,
-                'prs_created': 0, 'prs_merged': 0, 'prs_reviewed': 0, 'prs_commented': 0
-            }
-        day = timeline[date_str]
-        for key in weekly[week_num]:
-            weekly[week_num][key] += day[key]
-
-    # By Week table
-    summary += """
+    # Add timeline section with embedded images
+    summary += f"""
 ---
 
 ## Timeline
 
-### By Week
+### Weekly Activity
 
-| Week | Dates | Commits | Issues Created | Issues Commented | PRs Created | PRs Merged | PRs Reviewed | PRs Commented |
-|------|-------|---------|----------------|------------------|-------------|------------|--------------|---------------|
-"""
-    for week_num in sorted(weekly.keys()):
-        w = weekly[week_num]
-        date_range = get_week_range(week_num)
-        summary += f"| Week {week_num} | {date_range} | {w['commits']} | {w['issues_created']} | {w['issues_commented']} | {w['prs_created']} | {w['prs_merged']} | {w['prs_reviewed']} | {w['prs_commented']} |\n"
+![Weekly Timeline]({weekly_plot})
 
-    # By Day table with week boundaries - show ALL days in the range
-    summary += """
-### By Day
+### Daily Activity
 
-| Date | Day | Commits | Issues Created | Issues Commented | PRs Created | PRs Merged | PRs Reviewed | PRs Commented |
-|------|-----|---------|----------------|------------------|-------------|------------|--------------|---------------|
-"""
-    day_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    current_week = None
+![Daily Timeline]({daily_plot})
 
-    # Determine the date range: from earliest activity to today (or latest activity)
-    if filtered_dates:
-        start_date = date_class.fromisoformat(filtered_dates[0])
-        end_date = max(date_class.fromisoformat(filtered_dates[-1]), date_class.today())
-    else:
-        start_date = week1_start
-        end_date = date_class.today()
-
-    # Iterate through every day in the range
-    current_date = start_date
-    while current_date <= end_date:
-        date_str = current_date.isoformat()
-        week_num = get_week_number(date_str)
-        day_name = day_names[current_date.weekday()]
-
-        # Add week header row (centered)
-        if week_num != current_week:
-            date_range = get_week_range(week_num)
-            summary += f"| | | | **Week {week_num}:** {date_range} | | | | | |\n"
-        current_week = week_num
-
-        # Get activity for this day, or zeros if no activity
-        day = timeline.get(date_str, {
-            'commits': 0, 'issues_created': 0, 'issues_commented': 0,
-            'prs_created': 0, 'prs_merged': 0, 'prs_reviewed': 0, 'prs_commented': 0
-        })
-        summary += f"| {date_str} | {day_name} | {day['commits']} | {day['issues_created']} | {day['issues_commented']} | {day['prs_created']} | {day['prs_merged']} | {day['prs_reviewed']} | {day['prs_commented']} |\n"
-
-        current_date += timedelta(days=1)
-
-    summary += """
 ---
 
 *Contributions = (Commits × 50%) + (Issues Created + Issues Commented × 25%) + (PRs Created + PRs Closed + PRs Reviewed + PRs Commented + PRs Merged × 25%)*

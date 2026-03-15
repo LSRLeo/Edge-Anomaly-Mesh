@@ -2,8 +2,8 @@
 
 **GitHub Username(s):** arios123
 **Email(s):** 124832719+arios123@users.noreply.github.com, aldorios369@gmail.com
-**Report Generated:** 2026-03-03 14:12:03
-**Branches Analyzed:** origin/db-team-sprint-2, origin/de-team-sprint-2, origin/ml-team-sprint-2, origin/ui-team-sprint-2
+**Report Generated:** 2026-03-15 16:01:29
+**Branches Analyzed:** origin/sprint-3
 
 ---
 
@@ -11,25 +11,25 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Commits | 33 |
-| Lines Added | 598,015 |
-| Lines Deleted | 602,876 |
-| Net Lines Changed | -4,861 |
-| PRs Created | 11 |
+| Total Commits | 48 |
+| Lines Added | 768,852 |
+| Lines Deleted | 604,976 |
+| Net Lines Changed | +163,876 |
+| PRs Created | 14 |
 | PRs Assigned | 2 |
-| PRs Reviewed | 26 |
+| PRs Reviewed | 28 |
 | PRs Commented | 7 |
-| PRs Merged (as merger) | 24 |
-| Issues Created | 37 |
+| PRs Merged (as merger) | 28 |
+| Issues Created | 33 |
 | Issues Commented | 0 |
-| Files Changed | 48 |
+| Files Changed | 66 |
 
 ---
 
 ## Issues
 
-### Created (37)
-#6, #7, #8, #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19, #20, #21, #22, #23, #24, #25, #26, #27, #28, #115, #123, #125, #126, #127, #128, #130, #220, #384, #385, #386, #406, #426, #451
+### Created (33)
+#7, #8, #9, #10, #11, #14, #15, #16, #17, #18, #19, #20, #22, #25, #26, #27, #28, #115, #123, #125, #126, #127, #128, #130, #220, #384, #385, #386, #406, #426, #451, #485, #559
 
 ### Commented (0)
 None
@@ -38,46 +38,62 @@ None
 
 ## Pull Requests
 
-### Created (11)
-#141, #159, #160, #174, #175, #178, #387, #389, #433, #436, #446
+### Created (14)
+#141, #159, #160, #174, #175, #178, #387, #389, #433, #436, #446, #560, #586, #591
 
 ### Assigned (2)
 #138, #140
 
-### Reviewed (26)
-#138, #140, #162, #164, #169, #171, #177, #179, #180, #188, #189, #191, #192, #351, #352, #360, #362, #382, #401, #402, #414, #416, #420, #437, #447, #450
+### Reviewed (28)
+#138, #140, #162, #164, #169, #171, #177, #179, #180, #188, #189, #191, #192, #351, #352, #360, #362, #382, #401, #402, #414, #416, #420, #437, #447, #450, #498, #577
 
 ### Commented (7)
 #138, #140, #351, #360, #362, #382, #420
 
-### Merged (as merger) (24)
-#140, #162, #164, #171, #177, #180, #188, #189, #191, #192, #351, #352, #360, #362, #365, #382, #401, #402, #414, #416, #420, #437, #447, #450
+### Merged (as merger) (28)
+#140, #162, #164, #171, #177, #180, #188, #189, #191, #192, #351, #352, #360, #362, #365, #382, #401, #402, #414, #416, #420, #437, #447, #450, #498, #577, #587, #591
 
 ---
 
 ## Commits
 
-Total non-merge commits in sprint-2 branches: **33**
+Total non-merge commits in sprint-3 branch: **48**
 
 ### Code Changes
-- **Lines Added:** 598,015
-- **Lines Deleted:** 602,876
-- **Net Change:** -4,861
+- **Lines Added:** 768,852
+- **Lines Deleted:** 604,976
+- **Net Change:** +163,876
 
 ---
 
-## Files Changed (48)
+## Files Changed (66)
 
+- `README.md`
 - `node-simulator/README.md`
 - `node-simulator/redis/redis_setup.py`
 - `node-simulator/redisFiles/redis_pub.py`
 - `node-simulator/redisFiles/redis_setup.py`
 - `node-simulator/requirements.txt`
+- `node-simulator/routes/compactAllModes.json`
 - `node-simulator/routes/exampleHub.json`
+- `node-simulator/sims/NotBad.json`
+- `node-simulator/sims/halfAnom.json`
+- `node-simulator/sims/halfAnomGPS.json`
+- `node-simulator/sims/linear.json`
+- `node-simulator/sims/maritimeAnom.json`
+- `node-simulator/sims/noAnom.json`
+- `node-simulator/sims/ourAnom.json`
+- `node-simulator/sims/terrestrialAnom.json`
 - `node-simulator/simulation.py`
 - `node-simulator/src/anomalies.py`
+- `node-simulator/src/constants.py`
+- `node-simulator/src/idle.py`
+- `node-simulator/src/lift.py`
+- `node-simulator/src/maritime.py`
 - `node-simulator/src/node.py`
 - `node-simulator/src/route.py`
+- `node-simulator/src/terrestrial.py`
+- `node-simulator/src/visualize.py`
 - `simulator/.gitignore`
 - `simulator/README.md`
 - `simulator/base.py`
@@ -116,57 +132,11 @@ Total non-merge commits in sprint-2 branches: **33**
 - `simulator/src/noise.py`
 - `simulator/src/route.py`
 - `simulator/src/terrestrial.py`
+- `test_data/full_simulation.json`
+- `test_data/raw_data.json`
 
 ---
 
 ## Timeline
 
-| Date | Day | Commits | Issues Created | Issues Commented | PRs Created | PRs Merged | PRs Reviewed | PRs Commented |
-|------|-----|---------|----------------|------------------|-------------|------------|--------------|---------------|
-| | | | **Week 3:** Jan 19 - Jan 25 | | | | | |
-| 2026-01-23 | Fri | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-24 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-25 | Sun | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 4:** Jan 26 - Feb 01 | | | | | |
-| 2026-01-26 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-27 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-28 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-29 | Thu | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-30 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-01-31 | Sat | 0 | 23 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-01 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 5:** Feb 02 - Feb 08 | | | | | |
-| 2026-02-02 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-03 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-04 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-05 | Thu | 0 | 6 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-06 | Fri | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-07 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-08 | Sun | 1 | 0 | 0 | 1 | 1 | 3 | 2 |
-| | | | **Week 6:** Feb 09 - Feb 15 | | | | | |
-| 2026-02-09 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-10 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-11 | Wed | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-12 | Thu | 6 | 0 | 0 | 2 | 2 | 2 | 0 |
-| 2026-02-13 | Fri | 3 | 0 | 0 | 0 | 1 | 2 | 0 |
-| 2026-02-14 | Sat | 0 | 0 | 0 | 3 | 1 | 2 | 0 |
-| 2026-02-15 | Sun | 6 | 0 | 0 | 0 | 1 | 1 | 0 |
-| | | | **Week 7:** Feb 16 - Feb 22 | | | | | |
-| 2026-02-16 | Mon | 0 | 0 | 0 | 0 | 4 | 4 | 0 |
-| 2026-02-17 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-18 | Wed | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-19 | Thu | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-20 | Fri | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-21 | Sat | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-22 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 8:** Feb 23 - Mar 01 | | | | | |
-| 2026-02-23 | Mon | 0 | 0 | 0 | 0 | 2 | 2 | 1 |
-| 2026-02-24 | Tue | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-02-25 | Wed | 2 | 3 | 0 | 2 | 4 | 3 | 3 |
-| 2026-02-26 | Thu | 3 | 2 | 0 | 1 | 5 | 5 | 1 |
-| 2026-02-27 | Fri | 0 | 0 | 0 | 1 | 1 | 1 | 0 |
-| 2026-02-28 | Sat | 4 | 1 | 0 | 1 | 2 | 2 | 0 |
-| 2026-03-01 | Sun | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| | | | **Week 9:** Mar 02 - Mar 08 | | | | | |
-| 2026-03-02 | Mon | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 2026-03-03 | Tue | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+![Activity Timeline](timeline_aldo_rios.png)
