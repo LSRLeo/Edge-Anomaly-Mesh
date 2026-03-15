@@ -190,6 +190,9 @@ class DashboardApp:
                 self._is_refreshing = True
                 try:
                     self.analytics_tab.refresh()
+                    self.network_tab.refresh()
+                    self.anomalies_tab.refresh()
+                    self.node_details_tab.refresh()
                 finally:
                     self._is_refreshing = False
             self._refresh_job = self.root.after(REFRESH_INTERVAL_MS, loop)

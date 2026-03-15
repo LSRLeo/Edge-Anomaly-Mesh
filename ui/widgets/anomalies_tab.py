@@ -481,6 +481,7 @@ class AnomaliesTab(ttk.Frame, DashboardParents):
                 if self._redis_section is not None:
                     self.messages = self.redis_reader.drain_log_queue() #get latest messages from redis reader for display in RedisMonitorSection
                     self._redis_section._build_rows() #rebuild the anomaly rows with updated node data
+                    self._list_section._build_rows()
                 
 
                 
