@@ -79,16 +79,16 @@ class RedisMonitorSection(ttk.Frame):
     def __init__(self, parent, dashboard: 'DashboardApp', title= "Redis Monitor"):
 
         super().__init__(parent)
-        self.parent = parent
-        self.dashboard = dashboard
-        self.title = title
+        self.parent: Any = parent
+        self.dashboard: 'DashboardApp' = dashboard
+        self.title: str = title
         # self._on_open_node = on_open_node
         self._canvas: Optional[tk.Canvas] = None
         self._rows_frame: Optional[ttk.Frame] = None
-        self._status_var = tk.StringVar(value="Ready")
+        self._status_var: tk.StringVar = tk.StringVar(value="Ready")
         self._rows: List[Dict[str, Any]] = []
         
-        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+        self.motion_states: List[str] = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
         
         self._build_ui()
     def _build_ui(self):

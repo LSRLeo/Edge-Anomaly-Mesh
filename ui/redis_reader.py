@@ -9,20 +9,20 @@ RESPONSE_TIMEOUT = 3.0  # seconds to wait for a Redis response
 
 class RedisReader:
     def __init__(self, q_channel_name, r_channel_name, r, psubscriber):
-        self.q_channel_name = q_channel_name
-        self.r_channel_name = r_channel_name
-        self.redis_host = r.connection_pool.connection_kwargs['host']
-        self.redis_port = r.connection_pool.connection_kwargs['port']
-        self.nodes = []
-        self.publisher = r
-        self.mldict = {}
-        self.rddict = {}
-        self.message_counter = 1
-        self.message_counter_lock = threading.Lock()
-        self.refresh_lock = threading.Lock()
-        self._stop_refresh = threading.Event()
-        self.logQueue = Queue(maxsize=50)
-        self.logLock = threading.Lock()
+        self.q_channel_name: str = q_channel_name
+        self.r_channel_name: str = r_channel_name
+        self.redis_host: str = r.connection_pool.connection_kwargs['host']
+        self.redis_port: int = r.connection_pool.connection_kwargs['port']
+        self.nodes: list = []
+        self.publisher: redis_module.Redis = r
+        self.mldict: dict = {}
+        self.rddict: dict = {}
+        self.message_counter: int = 1
+        self.message_counter_lock: threading.Lock = threading.Lock()
+        self.refresh_lock: threading.Lock = threading.Lock()
+        self._stop_refresh: threading.Event = threading.Event()
+        self.logQueue: Queue = Queue(maxsize=50)
+        self.logLock: threading.Lock = threading.Lock()
 
     def _next_m_id(self):
         with self.message_counter_lock:

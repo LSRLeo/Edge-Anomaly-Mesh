@@ -16,6 +16,7 @@ from tkinter import ttk
 from typing import Optional
 import sys
 import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import redis
 import threading
 from redis_reader import RedisReader
@@ -55,9 +56,9 @@ class DashboardApp:
             redis_reader: An instance of RedisReader for data access
             test_mode: If True, runs in test mode with mock data
         """
-        self.root = root
+        self.root: tk.Tk = root
         self.root.title("Edge Anomaly Mesh - Dashboard")
-        self.redis_reader = redis_reader
+        self.redis_reader: RedisReader = redis_reader
         self.test_mode = test_mode
         self.root.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
         
@@ -110,7 +111,7 @@ class DashboardApp:
         """
         # TODO: Implement menu bar
         
-        menubar = tk.Menu(self.root)
+        menubar: tk.Menu = tk.Menu(self.root)
         self.root.config(menu=menubar)
         
         # File menu

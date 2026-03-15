@@ -11,9 +11,9 @@ class DashboardParents():
     def __init__(self, redis_reader: Optional[RedisReader], parent: ttk.Notebook, dashboard: 'DashboardApp', test_mode=False):
         if redis_reader is None:
             redis_reader = None
-        self.redis_reader = redis_reader
-        self. dashboard = dashboard
-        self.test_mode = test_mode
+        self.redis_reader: Optional[RedisReader] = redis_reader
+        self.dashboard: 'DashboardApp' = dashboard
+        self.test_mode: bool = test_mode
     
     @abstractmethod
     def refresh(self):
@@ -27,21 +27,21 @@ class DashboardParents():
 class Node:
     motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOM", "TERRESTRIAL_ANOM", "MARITIME_ANOM", "LIFT_ANOM"] #key for motion class index to string
     def __init__(self, node_id: str, timestamp:str, seq, accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, lat: float, lon: float, motion_class: int, anomaly: bool, confidence: float):
-        self.node_id = node_id
-        self.timestamp = timestamp
-        self.seq = seq
-        self.accel_x = accel_x
-        self.accel_y = accel_y
-        self.accel_z = accel_z
-        self.gyro_x = gyro_x
-        self.gyro_y = gyro_y
-        self.gyro_z = gyro_z
-        self.lat = lat
-        self.lon = lon
-        self.motion_class = motion_class
-        self.anomaly = anomaly
-        self.confidence = confidence
-        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOM", "TERRESTRIAL_ANOM", "MARITIME_ANOM", "LIFT_ANOM"] #key for motion class index to string
+        self.node_id: str = node_id
+        self.timestamp: str = timestamp
+        self.seq: int = seq
+        self.accel_x: float = accel_x
+        self.accel_y: float = accel_y
+        self.accel_z: float = accel_z
+        self.gyro_x: float = gyro_x
+        self.gyro_y: float = gyro_y
+        self.gyro_z: float = gyro_z
+        self.lat: float = lat
+        self.lon: float = lon
+        self.motion_class: int = motion_class
+        self.anomaly: bool = anomaly
+        self.confidence: float = confidence
+        self.motion_states: list[str] = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOM", "TERRESTRIAL_ANOM", "MARITIME_ANOM", "LIFT_ANOM"] #key for motion class index to string
     def updateMotion(self, motion_class, confidence: float):
         if isinstance(motion_class, int):
             self.motion_class = motion_class

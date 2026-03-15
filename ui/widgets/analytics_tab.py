@@ -78,10 +78,9 @@ class AnalyticsComponent(ABC):
     
     Defines interface for updating with new data.
     """
-    
     def __init__(self, parent: ttk.Frame, title: str, row: int, col: int):
-        self.parent = parent
-        self.frame = ttk.LabelFrame(parent, text=title)
+        self.parent: ttk.Frame = parent
+        self.frame: ttk.LabelFrame = ttk.LabelFrame(parent, text=title)
         self.frame.grid(row=row, column=col, sticky='nsew', padx=5, pady=5)
         self.setup()
         

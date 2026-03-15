@@ -101,19 +101,19 @@ class NetworkTab(ttk.Frame, DashboardParents):
             dashboard: Reference to main dashboard for callbacks
         """
         
-        self.parent = parent
+        self.parent: ttk.Notebook = parent
 
         #super().__init__(parent)
         # Replace super with individual inheritance since it now has two parents
         ttk.Frame.__init__(self, parent)
         DashboardParents.__init__(self, redis_reader, parent, dashboard)
 
-        self.redis_reader = redis_reader
+        self.redis_reader: Optional[RedisReader] = redis_reader
 
         # Init test mode
         self.test_mode = test_mode
 
-        self.dashboard = dashboard
+        self.dashboard: DashboardParents = dashboard
         # Dict[node_id: str, node_data: dict]
         self.test_nodes: Dict[str, dict] = {} 
 
@@ -124,8 +124,8 @@ class NetworkTab(ttk.Frame, DashboardParents):
         self.base_map_image: Optional[Image.Image] = None
         self.map_photo: Optional[ImageTk.PhotoImage] = None
         self.map_item_id: Optional[int] = None
-        self.map_offset_x = 0
-        self.map_offset_y = 0
+        self.map_offset_x: int = 0
+        self.map_offset_y: int = 0
         
         # Track drawn node items: {node_id: canvas_item_id}
         self.node_items: Dict[str, int] = {}
@@ -258,7 +258,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
                               xscrollcommand=h_scroll.set)
         # Load map image once; it will be dynamically resized with the canvas.
         self.base_map_image = Image.open("widgets/widgetextras/mercator.jpg")
-        self.projection = MercatorProjection(self.base_map_image.width, self.base_map_image.height)
+        self.projection: MercatorProjection = MercatorProjection(self.base_map_image.width, self.base_map_image.height)
         self.canvas.bind("<Configure>", self._on_canvas_resize)
 
         # Draw Nodes
@@ -305,7 +305,7 @@ class NetworkTab(ttk.Frame, DashboardParents):
             
             
     
-    def draw_nodes(self, nodes: Dict[str, object]):
+    def draw_nodes(self, nodes: Dict[str, Node]):
         """
         Draw all nodes on the canvas.
         
