@@ -6,8 +6,8 @@ import subprocess
 from collections import defaultdict
 from datetime import datetime
 
-# Target milestone
-TARGET_MILESTONE = 'W26-Sprint 2'
+# Target milestones (all sprints, excluding backlogs)
+TARGET_MILESTONES = ['W26-Sprint-1', 'W26-Sprint-2', 'W26-Sprint-3']
 
 # Target issues per person
 TARGET_PER_PERSON = 10
@@ -65,10 +65,14 @@ def get_issues():
 
 
 def is_target_milestone(milestone):
-    """Check if milestone matches target milestone."""
+    """Check if milestone matches target milestones (excludes backlogs)."""
     if not milestone:
         return False
-    return milestone.get('title', '') == TARGET_MILESTONE
+    title = milestone.get('title', '')
+    # Exclude backlogs
+    if 'backlog' in title.lower():
+        return False
+    return title in TARGET_MILESTONES
 
 
 def get_team_label(labels):
@@ -121,10 +125,12 @@ def generate_report(issues):
         return by_assignee, unassigned
 
     # Build report
-    report = f"""# Issue Report: {TARGET_MILESTONE}
+    milestones_str = ', '.join(TARGET_MILESTONES)
+    report = f"""# Issue Report: All Sprints
 
 **Repository:** edge-anomaly-mesh
 **Report Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Milestones:** {milestones_str}
 **Target per Person:** {TARGET_PER_PERSON} issues
 **Total Issues:** {len(filtered_issues)}
 
@@ -273,7 +279,7 @@ def main():
 
     # Count target milestone issues
     target_count = sum(1 for i in issues if is_target_milestone(i.get('milestone')))
-    print(f"  Found {target_count} issues in {TARGET_MILESTONE}")
+    print(f"  Found {target_count} issues across {len(TARGET_MILESTONES)} milestones (excluding backlogs)")
 
     print("Generating report...")
     report = generate_report(issues)
