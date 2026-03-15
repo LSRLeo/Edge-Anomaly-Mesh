@@ -87,7 +87,7 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         """
         super().__init__(parent)
         
-        self.dashboard = dashboard
+        self.dashboard: DashboardApp = dashboard
         self.test_mode = test_mode
         
         # Current node
@@ -106,10 +106,10 @@ class NodeDetailsTab(ttk.Frame, DashboardParents):
         # self.trend_fig: Optional[Figure] = None
         # self.trend_ax = None
         # self.trend_canvas: Optional[FigureCanvasTkAgg] = None
-        self.mldict = {} #machine learning dictionary
-        self.rddict = {} #raw data dictionary
-        self.nodes = {} #dict of node_id to Node object
-        self.motion_states = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
+        self.mldict: Dict = {} #machine learning dictionary
+        self.rddict: Dict = {} #raw data dictionary
+        self.nodes: Dict = {} #dict of node_id to Node object
+        self.motion_states: list[str] = ["IDLE", "TERRESTRIAL", "MARITIME", "LIFT", "IDLE_ANOMALY", "TERRESTRIAL_ANOMALY", "MARITIME_ANOMALY", "LIFT_ANOMALY"] #key for motion class index to string
         # self.populate_test_nodes() #populate the nodes dict with test data from test_nodes.json
         self.refresh() #initial refresh to populate data from redis
         
